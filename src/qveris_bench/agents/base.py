@@ -89,9 +89,7 @@ class AgentTrial:
 
 
 def _function_call(response: object) -> dict[str, Any]:
-    if not isinstance(response, dict):
-        raise AgentTrialError("Responses client returned an unsupported response")
-    output = response.get("output")
+    output = _response_mapping(response).get("output")
     if not isinstance(output, list) or len(output) != 1:
         raise AgentTrialError("agent trial must produce exactly one function call")
     call = output[0]
@@ -105,15 +103,25 @@ def _function_call(response: object) -> dict[str, Any]:
 
 
 def _output_tokens(response: object) -> int:
-    if not isinstance(response, dict):
-        raise AgentTrialError("response usage is required")
-    usage = response.get("usage")
+    usage = _response_mapping(response).get("usage")
     if not isinstance(usage, dict):
         raise AgentTrialError("response usage is required")
     tokens = usage.get("output_tokens")
     if not isinstance(tokens, int) or tokens < 0:
         raise AgentTrialError("response token usage is malformed")
     return tokens
+
+
+def _response_mapping(response: object) -> dict[str, Any]:
+    if isinstance(response, dict):
+        return response
+    model_dump = getattr(response, "model_dump", None)
+    if not callable(model_dump):
+        raise AgentTrialError("Responses client returned an unsupported response")
+    dumped = model_dump()
+    if not isinstance(dumped, dict):
+        raise AgentTrialError("Responses client returned an unsupported response")
+    return dumped
 
 
 def _validate_arguments(
