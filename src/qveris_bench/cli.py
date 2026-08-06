@@ -3,6 +3,8 @@ from typing import Annotated
 
 import typer
 
+from qveris_bench.catalog.service import CapCatalogService
+from qveris_bench.catalog.validation import CapValidationError
 from qveris_bench.models.schema_export import check_schemas, export_schemas
 
 app = typer.Typer(
@@ -11,12 +13,41 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 schema_app = typer.Typer(help="Export and verify benchmark JSON Schemas.")
+cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
 app.add_typer(schema_app, name="schema")
+app.add_typer(cap_app, name="cap")
 
 
 @app.callback()
 def main() -> None:
     """Run QVeris capability benchmarks."""
+
+
+@cap_app.command("list")
+def cap_list(
+    root: Annotated[Path, typer.Option(help="CAP Pack root directory.")] = Path(
+        "cap_packs"
+    ),
+) -> None:
+    """List validated CAP definitions."""
+    try:
+        caps = CapCatalogService().list(root)
+    except ValueError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    for cap in caps:
+        typer.echo(f"{cap.cap_id}@{cap.version}\t{cap.name}")
+
+
+@cap_app.command("validate")
+def cap_validate(path: Path) -> None:
+    """Validate one CAP definition."""
+    try:
+        cap = CapCatalogService().validate(path)
+    except CapValidationError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Valid CAP: {cap.cap_id}@{cap.version}")
 
 
 @schema_app.command("export")

@@ -1,0 +1,12 @@
+cap_id: example-cap
+version: 1.0.0
+name: Example Capability
+business_use: Explain the developer decision this capability supports.
+scope:
+  - State one included task boundary.
+exclusions:
+  - State one explicitly excluded task.
+markets: []
+asset_types: []
+sources:
+  - source_type: qveris_original
