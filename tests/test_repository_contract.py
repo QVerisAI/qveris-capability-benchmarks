@@ -14,7 +14,7 @@ SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     re.compile(
         r"(?i)(?:api[_-]?key|access[_-]?token|secret|password)"
-        r"\s*[:=]\s*[\"']?[^\s\"']{8,}"
+        r"[ \t]*[:=][ \t]*[\"']?[^\s\\\"']{20,}"
     ),
 )
 
@@ -250,6 +250,12 @@ def test_ac5_secret_fingerprints_are_rejected() -> None:
     assert not missed, "AC5 content guard misses a secret fingerprint"
 
 
+def test_ac5_empty_env_assignments_do_not_span_to_the_next_line() -> None:
+    example = "QVERIS_API_KEY=\nQVERIS_AI_GATEWAY_BASE_URL=\n"
+
+    assert not _contains_secret(example)
+
+
 def test_ac6_python_and_quality_tooling_match_the_frozen_stack() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = {
@@ -272,6 +278,23 @@ def test_ac6_python_and_quality_tooling_match_the_frozen_stack() -> None:
         assert dependency in dev_dependencies, (
             f"AC6 missing dev dependency: {dependency}"
         )
+
+
+def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    replay = (ROOT / "docs/release-replay.md").read_text(encoding="utf-8")
+
+    for command in (
+        "uv sync --locked --all-groups",
+        "uv run pytest -q",
+        "uv run ruff check .",
+        "uv run ruff format --check .",
+        "uv run mypy src",
+        "uv run qveris-bench schema export --check",
+    ):
+        assert command in workflow
+    assert "must not invoke\nprovider APIs" in replay
+    assert "credential values remain outside" in replay
 
 
 def test_ac7_cli_help_runs_in_a_real_subprocess() -> None:

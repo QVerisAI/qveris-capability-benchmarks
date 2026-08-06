@@ -158,6 +158,36 @@ def _write_inputs(
         ]
     suite_path = root / "cap_pack" / "suite.yaml"
     suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+    (root / "cap_pack" / "provider-bindings.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "access_paths": [
+                    {
+                        "access_path_id": "fmp-official-api",
+                        "provider_id": "financial-modeling-prep",
+                        "canonical_interface": "get-holdings",
+                        "official_source": "https://financial-modeling-prep.example.com/docs",
+                    },
+                    {
+                        "access_path_id": "demo-native-mcp",
+                        "provider_id": "demo-market-data",
+                        "canonical_interface": "get-holdings",
+                        "official_source": "https://demo-market-data.example.com/docs",
+                    },
+                ]
+            },
+            sort_keys=False,
+        )
+    )
+    (root / "cap_pack" / "outcome-rules.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "completion_requires": ["non-empty holdings"],
+                "negative_control_requires": ["evidenced negative response"],
+            },
+            sort_keys=False,
+        )
+    )
     return suite_path, cases_path, providers_root
 
 
@@ -207,6 +237,18 @@ def test_ac3_run_keys_are_unique_and_stable(tmp_path: Path) -> None:
 
     assert len(first_keys) == len(set(first_keys)), "AC3 run keys must be unique"
     assert first_keys == second_keys, "AC3 run keys must be stable"
+
+
+def test_ac3_every_planned_cell_freezes_the_atomic_case_input(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+
+    compiled = compile_suite(suite_path, cases_path, providers_root)
+    inputs = {cell.case_id: cell.case_input for cell in compiled.run_plan.cells}
+
+    assert inputs == {
+        "spy-holdings": {"symbol": "SPY"},
+        "invalid-symbol": {"symbol": "INVALID_ETF_123"},
+    }
 
 
 def test_ac4_missing_case_or_access_path_reference_fails_closed(tmp_path: Path) -> None:

@@ -1,0 +1,21 @@
+access_paths:
+  - access_path_id: alpha-vantage-etf-holdings
+    provider_id: alpha-vantage
+    canonical_interface: ETF_PROFILE
+    official_source: https://www.alphavantage.co/documentation/
+  - access_path_id: fmp-etf-holdings
+    provider_id: financial-modeling-prep
+    canonical_interface: etf-holdings
+    official_source: https://financialmodelingprep.com/stable/etf/holdings?symbol=SPY
+  - access_path_id: finnhub-etf-holdings
+    provider_id: finnhub
+    canonical_interface: etf-holdings
+    official_source: https://finnhub.io/docs/api/etf-holdings
+  - access_path_id: eodhd-etf-holdings
+    provider_id: eodhd
+    canonical_interface: fundamentals
+    official_source: https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds
+  - access_path_id: twelve-data-etf-holdings
+    provider_id: twelve-data
+    canonical_interface: etfs-world
+    official_source: https://twelvedata.com/docs

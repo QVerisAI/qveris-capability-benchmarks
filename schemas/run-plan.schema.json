@@ -47,6 +47,11 @@
           "title": "Case Id",
           "type": "string"
         },
+        "case_input": {
+          "additionalProperties": true,
+          "title": "Case Input",
+          "type": "object"
+        },
         "mode": {
           "$ref": "#/$defs/RunMode"
         },
