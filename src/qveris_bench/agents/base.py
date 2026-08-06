@@ -58,7 +58,6 @@ class AgentTrial:
                 input=prompt,
                 tools=[tool],
                 parallel_tool_calls=False,
-                tool_choice={"type": "function", "name": self._protocol.canonical_tool},
             ),
             timeout=self._protocol.timeout_seconds,
         )
