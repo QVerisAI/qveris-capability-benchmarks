@@ -135,3 +135,25 @@ def _document(result: AdapterResult) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise QverisProtocolError("QVeris response must be an object")
     return document
+
+
+def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
+    if isinstance(value, dict):
+        keys = sorted(key for key in value if isinstance(key, str))
+        shape: dict[str, object] = {"type": "object", "keys": keys}
+        if depth > 0:
+            shape["fields"] = {
+                key: public_response_shape(value[key], depth - 1) for key in keys
+            }
+        return shape
+    if isinstance(value, list):
+        return {"type": "array", "length": len(value)}
+    if value is None:
+        return {"type": "null"}
+    if isinstance(value, bool):
+        return {"type": "boolean"}
+    if isinstance(value, (int, float)):
+        return {"type": "number"}
+    if isinstance(value, str):
+        return {"type": "string"}
+    return {"type": type(value).__name__}

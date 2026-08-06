@@ -64,7 +64,20 @@ def test_ac3_direct_workflow_executes_only_fixed_registered_bindings() -> None:
     assert "inputs:" not in workflow
     assert "--binding-id ${{ matrix.binding_id }}" in workflow
     assert '--raw-artifact-dir "$RUNNER_TEMP/qveris-raw"' in workflow
+    assert "--response-shape" not in workflow
     assert "qveris-finance" not in workflow
+    assert workflow.count("alpha-vantage-spy-holdings") == 1
+    assert workflow.count("fiu-spy-holdings") == 1
+    assert workflow.count("twelve-data-spy-holdings") == 1
+
+
+def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
+    workflow = Path(".github/workflows/qveris-direct-diagnostic.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
     assert workflow.count("alpha-vantage-spy-holdings") == 1
     assert workflow.count("fiu-spy-holdings") == 1
     assert workflow.count("twelve-data-spy-holdings") == 1

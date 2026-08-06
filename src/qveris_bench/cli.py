@@ -16,6 +16,7 @@ from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestr
 from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
+    public_response_shape,
 )
 from qveris_bench.execution.qveris_binding import (
     load_registered_qveris_direct_binding,
@@ -144,6 +145,10 @@ def qveris_execute(
         Path | None,
         typer.Option(help="Private raw artifact directory outside the repo."),
     ] = None,
+    response_shape: Annotated[
+        bool,
+        typer.Option(help="Emit a value-free response shape for CAP extractor work."),
+    ] = False,
 ) -> None:
     """Execute one discovery-bound QVeris tool without printing its raw response."""
     api_key = os.environ.get("QVERIS_API_KEY")
@@ -177,7 +182,7 @@ def qveris_execute(
                 )
             finally:
                 await client.close()
-            return {
+            summary: dict[str, object] = {
                 "access_path_id": binding.access_path_id,
                 "tool_id": binding.tool_id,
                 "binding_id": binding.binding_id,
@@ -187,6 +192,12 @@ def qveris_execute(
                 "raw_digest": result.result.raw_digest,
                 "request_id": result.result.request_id,
             }
+            if response_shape:
+                document = json.loads(
+                    result.result.raw_path.read_text(encoding="utf-8")
+                )
+                summary["response_shape"] = public_response_shape(document)
+            return summary
 
         typer.echo(json.dumps(asyncio.run(execute()), ensure_ascii=False))
     except (OSError, ValueError) as exc:

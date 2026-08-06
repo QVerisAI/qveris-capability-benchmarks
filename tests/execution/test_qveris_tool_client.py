@@ -12,6 +12,7 @@ from qveris_bench.execution.qveris import (
     QverisProtocolError,
     QverisToolClient,
     execute_discovered_tool,
+    public_response_shape,
 )
 
 
@@ -117,3 +118,31 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
         assert len(calls) == 1, "AC Direct execution must not call an unbound tool"
 
     asyncio.run(run())
+
+
+def test_ac_qveris_response_shape_exposes_no_provider_values() -> None:
+    shape = public_response_shape(
+        {
+            "data": {"symbol": "SPY", "holdings": [{"ticker": "AAPL"}]},
+            "request_id": "private-request-id",
+        }
+    )
+
+    assert shape == {
+        "type": "object",
+        "keys": ["data", "request_id"],
+        "fields": {
+            "data": {
+                "type": "object",
+                "keys": ["holdings", "symbol"],
+                "fields": {
+                    "holdings": {"type": "array", "length": 1},
+                    "symbol": {"type": "string"},
+                },
+            },
+            "request_id": {"type": "string"},
+        },
+    }
+    assert "SPY" not in repr(shape)
+    assert "AAPL" not in repr(shape)
+    assert "private-request-id" not in repr(shape)
