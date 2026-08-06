@@ -1,0 +1,18 @@
+provider:
+  provider_id: example-provider
+  official_name: Example Provider
+  website: https://example.com/
+  market_coverage: []
+  testing_authorization: Describe the approved test terms.
+  qveris_integration: false
+access_paths:
+  - access_path_id: example-official-api
+    provider_id: example-provider
+    path_type: official_api
+    credential_env:
+      - EXAMPLE_API_KEY
+    official_source: https://example.com/docs
+    plan_name: Sandbox
+    authorization: Internal benchmark use
+    canonical_interface: example-operation
+    agent_trial_eligible: false

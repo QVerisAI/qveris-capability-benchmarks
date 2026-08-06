@@ -6,6 +6,15 @@ import typer
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
 from qveris_bench.models.schema_export import check_schemas, export_schemas
+from qveris_bench.providers.qualification import (
+    QualificationDecision,
+    QualificationDisposition,
+)
+from qveris_bench.providers.repository import (
+    ProviderRegistryRepository,
+    ProviderValidationError,
+    qualify_provider_file,
+)
 
 app = typer.Typer(
     name="qveris-bench",
@@ -14,8 +23,10 @@ app = typer.Typer(
 )
 schema_app = typer.Typer(help="Export and verify benchmark JSON Schemas.")
 cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
+provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
+app.add_typer(provider_app, name="provider")
 
 
 @app.callback()
@@ -48,6 +59,58 @@ def cap_validate(path: Path) -> None:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(f"Valid CAP: {cap.cap_id}@{cap.version}")
+
+
+@provider_app.command("validate")
+def provider_validate(path: Path) -> None:
+    """Validate one Provider and its Access Paths."""
+    try:
+        record = ProviderRegistryRepository(path.parent).load(path)
+    except ProviderValidationError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(
+        f"Valid Provider: {record.provider_id} "
+        f"({len(record.access_paths)} access paths)"
+    )
+
+
+@provider_app.command("qualify")
+def provider_qualify(
+    path: Path,
+    disposition: Annotated[
+        QualificationDisposition, typer.Option(help="Terminal cohort disposition.")
+    ],
+    reason: Annotated[str, typer.Option(help="Evidence-based decision reason.")],
+    evidence_digest: Annotated[str, typer.Option(help="SHA-256 evidence reference.")],
+) -> None:
+    """Record a terminal Provider qualification decision."""
+    try:
+        decision = QualificationDecision(
+            disposition=disposition,
+            reason=reason,
+            evidence_digest=evidence_digest,
+        )
+        record = qualify_provider_file(path, decision)
+    except (ValueError, ProviderValidationError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Qualified Provider: {record.provider_id} -> {disposition.value}")
+
+
+@provider_app.command("cohort-check")
+def provider_cohort_check(
+    root: Annotated[Path, typer.Option(help="Provider registry root.")] = Path(
+        "providers"
+    ),
+) -> None:
+    """Verify every Provider has a terminal cohort disposition."""
+    try:
+        records = ProviderRegistryRepository(root).cohort_check()
+    except ValueError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Frozen cohort: {len(records)} provider(s)")
 
 
 @schema_app.command("export")
