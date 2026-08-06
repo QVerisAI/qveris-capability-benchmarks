@@ -15,6 +15,12 @@ from qveris_bench.providers.repository import (
     ProviderValidationError,
     qualify_provider_file,
 )
+from qveris_bench.suites.compiler import (
+    CompiledSuite,
+    compile_suite,
+    write_frozen_suite,
+    write_run_plan,
+)
 
 app = typer.Typer(
     name="qveris-bench",
@@ -24,9 +30,11 @@ app = typer.Typer(
 schema_app = typer.Typer(help="Export and verify benchmark JSON Schemas.")
 cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
 provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
+suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
 app.add_typer(provider_app, name="provider")
+app.add_typer(suite_app, name="suite")
 
 
 @app.callback()
@@ -111,6 +119,53 @@ def provider_cohort_check(
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(f"Frozen cohort: {len(records)} provider(s)")
+
+
+def _compile_suite_from_cli(
+    suite_path: Path, cases: Path | None, providers_root: Path
+) -> CompiledSuite:
+    cases_path = cases or suite_path.with_name("cases.yaml")
+    try:
+        return compile_suite(suite_path, cases_path, providers_root)
+    except ValueError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+
+
+@suite_app.command("freeze")
+def suite_freeze(
+    suite_path: Path,
+    cases: Annotated[Path | None, typer.Option(help="Cases YAML path.")] = None,
+    providers_root: Annotated[
+        Path, typer.Option(help="Provider registry root.")
+    ] = Path("providers"),
+    output: Annotated[Path | None, typer.Option(help="Frozen suite output.")] = None,
+) -> None:
+    """Freeze resolved suite inputs and write their fingerprint."""
+    compiled = _compile_suite_from_cli(suite_path, cases, providers_root)
+    output_path = output or suite_path.with_name("suite.frozen.json")
+    write_frozen_suite(compiled, output_path)
+    typer.echo(f"Frozen suite {compiled.fingerprint} -> {output_path}")
+
+
+@suite_app.command("plan")
+def suite_plan(
+    suite_path: Path,
+    cases: Annotated[Path | None, typer.Option(help="Cases YAML path.")] = None,
+    providers_root: Annotated[
+        Path, typer.Option(help="Provider registry root.")
+    ] = Path("providers"),
+    output: Annotated[Path | None, typer.Option(help="Run Plan output.")] = None,
+) -> None:
+    """Expand a frozen suite into deterministic run cells."""
+    compiled = _compile_suite_from_cli(suite_path, cases, providers_root)
+    output_path = output or suite_path.with_name("run-plan.json")
+    write_run_plan(compiled, output_path)
+    applicable = sum(cell.applicable for cell in compiled.run_plan.cells)
+    typer.echo(
+        f"Planned {len(compiled.run_plan.cells)} cells, "
+        f"{applicable} applicable calls -> {output_path}"
+    )
 
 
 @schema_app.command("export")

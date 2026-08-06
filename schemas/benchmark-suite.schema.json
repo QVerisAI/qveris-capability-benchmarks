@@ -47,6 +47,48 @@
       "title": "AgentProtocol",
       "type": "object"
     },
+    "ApplicabilityRule": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RunMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason": {
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "access_path_id",
+        "reason"
+      ],
+      "title": "ApplicabilityRule",
+      "type": "object"
+    },
     "RunMode": {
       "enum": [
         "direct",
@@ -116,6 +158,14 @@
       },
       "minItems": 1,
       "title": "Modes",
+      "type": "array"
+    },
+    "not_applicable": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ApplicabilityRule"
+      },
+      "title": "Not Applicable",
       "type": "array"
     },
     "rounds": {

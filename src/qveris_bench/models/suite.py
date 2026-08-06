@@ -29,6 +29,13 @@ class AgentProtocol(FrozenModel):
     timeout_seconds: float = Field(gt=0)
 
 
+class ApplicabilityRule(FrozenModel):
+    case_id: StableId
+    access_path_id: StableId
+    mode: RunMode | None = None
+    reason: str = Field(min_length=10)
+
+
 class BenchmarkSuite(FrozenModel):
     suite_id: StableId
     version: SemanticVersion
@@ -40,6 +47,7 @@ class BenchmarkSuite(FrozenModel):
     rounds: int = Field(ge=1)
     environment: dict[str, str] = Field(default_factory=dict)
     agent_protocol: AgentProtocol | None = None
+    not_applicable: tuple[ApplicabilityRule, ...] = ()
 
     @model_validator(mode="after")
     def require_agent_protocol(self) -> BenchmarkSuite:

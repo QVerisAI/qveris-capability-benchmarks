@@ -22,6 +22,7 @@ class RunCell(FrozenModel):
     mode: RunMode
     round: int = Field(ge=1)
     applicable: bool = True
+    applicability_reason: str | None = None
     state: CellState = CellState.PLANNED
 
 

@@ -23,6 +23,18 @@
           "title": "Access Path Id",
           "type": "string"
         },
+        "applicability_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability Reason"
+        },
         "applicable": {
           "default": true,
           "title": "Applicable",
