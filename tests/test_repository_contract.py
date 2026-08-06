@@ -188,7 +188,7 @@ def test_ac5_tracked_files_exclude_secrets_raw_evidence_and_local_runs() -> None
     unsafe_paths = [str(path) for path in tracked if _is_unsafe_path(path)]
     secret_files = []
     for path in tracked:
-        if path == Path(".env.example") or _is_unsafe_path(path):
+        if _is_unsafe_path(path):
             continue
         contents = (ROOT / path).read_bytes()
         if b"\0" not in contents and _contains_secret(contents.decode(errors="ignore")):
@@ -196,6 +196,23 @@ def test_ac5_tracked_files_exclude_secrets_raw_evidence_and_local_runs() -> None
 
     assert not unsafe_paths, f"AC5 unsafe files are tracked: {unsafe_paths}"
     assert not secret_files, f"AC5 secret-looking values are tracked: {secret_files}"
+
+
+def test_ac5_env_example_contains_names_without_values() -> None:
+    populated = []
+    for line_number, line in enumerate(
+        (ROOT / ".env.example").read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        name, separator, value = stripped.partition("=")
+        if not separator or not name or value.strip():
+            populated.append(line_number)
+
+    assert not populated, (
+        f"AC5 .env.example assignments must be present and empty: lines {populated}"
+    )
 
 
 def test_ac5_adversarial_unsafe_paths_are_rejected() -> None:
