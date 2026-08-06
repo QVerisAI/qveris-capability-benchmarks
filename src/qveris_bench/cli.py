@@ -147,11 +147,29 @@ def public_discovery_summary(
                 "name": item.get("name"),
                 "provider_id": detail.get("provider_id"),
                 "provider_name": detail.get("provider_name"),
-                "parameters": detail.get("params", []),
+                "parameters": _public_parameters(detail.get("params", [])),
                 "expected_cost": detail.get("expected_cost"),
             }
         )
     return {"result_count": len(results), "tools": tools}
+
+
+def _public_parameters(value: object) -> list[dict[str, object]]:
+    if not isinstance(value, list):
+        return []
+    parameters: list[dict[str, object]] = []
+    for parameter in value:
+        if not isinstance(parameter, dict):
+            continue
+        name = parameter.get("name")
+        type_name = parameter.get("type")
+        required = parameter.get("required")
+        if not isinstance(name, str) or not isinstance(type_name, str):
+            continue
+        if not isinstance(required, bool):
+            continue
+        parameters.append({"name": name, "type": type_name, "required": required})
+    return parameters
 
 
 @cap_app.command("list")
