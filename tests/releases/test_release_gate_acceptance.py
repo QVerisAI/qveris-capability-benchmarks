@@ -7,8 +7,8 @@ from qveris_bench.models.enums import (
     RedactionStatus,
 )
 from qveris_bench.models.evidence import EvidenceBundle
-from qveris_bench.models.run import RunCell
 from qveris_bench.models.release import BenchmarkRelease
+from qveris_bench.models.run import RunCell
 from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
 
 
