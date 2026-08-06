@@ -56,6 +56,10 @@ def test_ac1_agent_trial_receives_exactly_one_canonical_tool() -> None:
         assert client.request is not None
         assert client.request["parallel_tool_calls"] is False
         assert len(client.request["tools"]) == 1
+        assert client.request["tool_choice"] == {
+            "type": "function",
+            "name": "get-quote",
+        }
 
     asyncio.run(run())
 
@@ -116,5 +120,49 @@ def test_ac1_agent_trial_rejects_token_budget_overrun() -> None:
         trial = AgentTrial(OverBudget(), protocol, {"type": "object"}, lambda _: None)
         with pytest.raises(AgentTrialError, match="token"):
             await trial.run("Quote AAPL")
+
+    asyncio.run(run())
+
+
+def test_ac_agent_trial_accepts_openai_sdk_response_objects() -> None:
+    class SdkResponse:
+        def model_dump(self) -> dict[str, object]:
+            return {
+                "output": [
+                    {
+                        "type": "function_call",
+                        "name": "get-quote",
+                        "arguments": '{"symbol":"AAPL"}',
+                    }
+                ],
+                "usage": {"output_tokens": 1},
+            }
+
+    async def run() -> None:
+        class SdkClient:
+            async def create(self, **kwargs: object) -> object:
+                return SdkResponse()
+
+        protocol = AgentProtocol(
+            model="test-model",
+            prompt_version="1.0.0",
+            canonical_tool="get-quote",
+            maximum_calls=1,
+            token_budget=100,
+            timeout_seconds=10,
+        )
+        trial = AgentTrial(
+            SdkClient(),
+            protocol,
+            {
+                "type": "object",
+                "properties": {"symbol": {"type": "string"}},
+                "required": ["symbol"],
+                "additionalProperties": False,
+            },
+            lambda _: {"price": 10},
+        )
+
+        assert (await trial.run("Quote AAPL")).proposed_arguments == {"symbol": "AAPL"}
 
     asyncio.run(run())
