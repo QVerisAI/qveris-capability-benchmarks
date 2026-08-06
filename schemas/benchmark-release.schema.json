@@ -1,0 +1,144 @@
+{
+  "$defs": {
+    "ReleaseFact": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": true,
+          "propertyNames": {
+            "not": {
+              "anyOf": [
+                {
+                  "pattern": "[s][c][o][r][e]"
+                },
+                {
+                  "pattern": "[r][a][t][i][n][g]"
+                },
+                {
+                  "pattern": "[a][g][e][n][t][f][r][i][e][n][d][l][y]"
+                }
+              ]
+            }
+          },
+          "title": "Details",
+          "type": "object"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "fact_type": {
+          "$ref": "#/$defs/ReleaseFactType"
+        }
+      },
+      "required": [
+        "fact_type"
+      ],
+      "title": "ReleaseFact",
+      "type": "object"
+    },
+    "ReleaseFactType": {
+      "enum": [
+        "outcome",
+        "evidence",
+        "limitation",
+        "access_path",
+        "provider_feedback"
+      ],
+      "title": "ReleaseFactType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "developer_selection_facts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ReleaseFact"
+      },
+      "title": "Developer Selection Facts",
+      "type": "array"
+    },
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "limitations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "outcome_ids": {
+      "default": [],
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Outcome Ids",
+      "type": "array"
+    },
+    "provider_feedback_facts": {
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$": {
+          "items": {
+            "$ref": "#/$defs/ReleaseFact"
+          },
+          "type": "array"
+        }
+      },
+      "propertyNames": {
+        "maxLength": 128,
+        "minLength": 1
+      },
+      "title": "Provider Feedback Facts",
+      "type": "object"
+    },
+    "release_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Release Id",
+      "type": "string"
+    },
+    "run_plan_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Run Plan Digest",
+      "type": "string"
+    },
+    "suite_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Fingerprint",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "release_id",
+    "version",
+    "suite_fingerprint",
+    "run_plan_digest"
+  ],
+  "title": "BenchmarkRelease",
+  "type": "object"
+}

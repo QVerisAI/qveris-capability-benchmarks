@@ -1,0 +1,201 @@
+{
+  "$defs": {
+    "AgentProtocol": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_tool": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Canonical Tool",
+          "type": "string"
+        },
+        "maximum_calls": {
+          "minimum": 1,
+          "title": "Maximum Calls",
+          "type": "integer"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "prompt_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "timeout_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Timeout Seconds",
+          "type": "number"
+        },
+        "token_budget": {
+          "minimum": 1,
+          "title": "Token Budget",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "model",
+        "prompt_version",
+        "canonical_tool",
+        "maximum_calls",
+        "token_budget",
+        "timeout_seconds"
+      ],
+      "title": "AgentProtocol",
+      "type": "object"
+    },
+    "ApplicabilityRule": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RunMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason": {
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "access_path_id",
+        "reason"
+      ],
+      "title": "ApplicabilityRule",
+      "type": "object"
+    },
+    "RunMode": {
+      "enum": [
+        "direct",
+        "agent_trial"
+      ],
+      "title": "RunMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "access_path_ids": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Access Path Ids",
+      "type": "array"
+    },
+    "agent_protocol": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgentProtocol"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "cap_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Cap Id",
+      "type": "string"
+    },
+    "cap_version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Cap Version",
+      "type": "string"
+    },
+    "case_ids": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Case Ids",
+      "type": "array"
+    },
+    "environment": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Environment",
+      "type": "object"
+    },
+    "modes": {
+      "items": {
+        "$ref": "#/$defs/RunMode"
+      },
+      "minItems": 1,
+      "title": "Modes",
+      "type": "array"
+    },
+    "not_applicable": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ApplicabilityRule"
+      },
+      "title": "Not Applicable",
+      "type": "array"
+    },
+    "rounds": {
+      "minimum": 1,
+      "title": "Rounds",
+      "type": "integer"
+    },
+    "suite_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "suite_id",
+    "version",
+    "cap_id",
+    "cap_version",
+    "case_ids",
+    "access_path_ids",
+    "modes",
+    "rounds"
+  ],
+  "title": "BenchmarkSuite",
+  "type": "object"
+}

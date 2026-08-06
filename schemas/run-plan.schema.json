@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "CellState": {
+      "enum": [
+        "planned",
+        "running",
+        "completed",
+        "provider_negative",
+        "infra_blocked",
+        "not_applicable",
+        "excluded"
+      ],
+      "title": "CellState",
+      "type": "string"
+    },
+    "RunCell": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "applicability_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability Reason"
+        },
+        "applicable": {
+          "default": true,
+          "title": "Applicable",
+          "type": "boolean"
+        },
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/RunMode"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "round": {
+          "minimum": 1,
+          "title": "Round",
+          "type": "integer"
+        },
+        "run_key": {
+          "minLength": 1,
+          "title": "Run Key",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/CellState",
+          "default": "planned"
+        }
+      },
+      "required": [
+        "run_key",
+        "case_id",
+        "provider_id",
+        "access_path_id",
+        "mode",
+        "round"
+      ],
+      "title": "RunCell",
+      "type": "object"
+    },
+    "RunMode": {
+      "enum": [
+        "direct",
+        "agent_trial"
+      ],
+      "title": "RunMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cells": {
+      "items": {
+        "$ref": "#/$defs/RunCell"
+      },
+      "title": "Cells",
+      "type": "array"
+    },
+    "suite_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Fingerprint",
+      "type": "string"
+    },
+    "suite_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Suite Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "suite_id",
+    "suite_fingerprint",
+    "cells"
+  ],
+  "title": "RunPlan",
+  "type": "object"
+}

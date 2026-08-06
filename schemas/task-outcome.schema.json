@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "FailureAttribution": {
+      "enum": [
+        "invalid_parameters",
+        "provider_validation_error",
+        "provider_runtime_error",
+        "auth_or_entitlement",
+        "rate_limited",
+        "network_or_timeout",
+        "empty_or_partial_data",
+        "truncated_or_unpaged",
+        "response_interpretation_error",
+        "agent_output_error",
+        "benchmark_system_error",
+        "unknown"
+      ],
+      "title": "FailureAttribution",
+      "type": "string"
+    },
+    "OutcomeStatus": {
+      "enum": [
+        "completed",
+        "partial",
+        "failed",
+        "blocked",
+        "not_applicable"
+      ],
+      "title": "OutcomeStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence_refs": {
+      "default": [],
+      "items": {
+        "pattern": "^sha256:[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "failure_attribution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FailureAttribution"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "status": {
+      "$ref": "#/$defs/OutcomeStatus"
+    },
+    "unmet_conditions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unmet Conditions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "title": "TaskOutcome",
+  "type": "object"
+}

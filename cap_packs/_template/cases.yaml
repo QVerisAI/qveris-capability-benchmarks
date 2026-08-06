@@ -1,0 +1,13 @@
+cases:
+  - case_id: example-valid-case
+    cap_id: example-cap
+    question: State one atomic business question.
+    input:
+      symbol: AAPL
+    negative_control: false
+    expected_observations:
+      - returned symbol
+    completion_conditions:
+      - a provider response is captured
+    disclosure_limits: []
+    applicable_provider_ids: []
