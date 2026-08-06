@@ -14,7 +14,7 @@ from qveris_bench.suites.bindings import (
     load_provider_bindings,
     validate_provider_bindings,
 )
-from qveris_bench.suites.compiler import SuiteCompilationError, compile_suite
+from qveris_bench.suites.compiler import compile_suite
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,7 +31,7 @@ def test_ac1_stock_quote_pack_reuses_the_versioned_direct_contract() -> None:
     assert suite.cap_id == cap.cap_id
     assert suite.cap_version == cap.version
     assert [mode.value for mode in suite.modes] == ["direct"]
-    assert len(suite.access_path_ids) == 2
+    assert suite.access_path_ids == ("finnhub-stock-quote",)
     assert {case.case_id for case in cases} == set(suite.case_ids)
 
 
@@ -44,35 +44,34 @@ def test_ac2_stock_quote_pack_has_success_and_negative_control() -> None:
     assert cases["invalid-stock"].completion_conditions == ("validation_error",)
 
 
-def test_ac3_stock_quote_bindings_are_exactly_two_official_candidates() -> None:
+def test_ac3_stock_quote_binding_is_the_single_attributable_direct_candidate() -> None:
     data = yaml.safe_load((PACK / "provider-bindings.yaml").read_text())
     bindings = data["access_paths"]
 
-    assert len(bindings) == 2
-    assert len({binding["provider_id"] for binding in bindings}) == 2
-    assert len({binding["access_path_id"] for binding in bindings}) == 2
-    assert all(
-        binding["official_source"].startswith("https://") for binding in bindings
-    )
+    assert bindings == [
+        {
+            "access_path_id": "finnhub-stock-quote",
+            "provider_id": "finnhub",
+            "canonical_interface": "quote",
+            "official_source": "https://finnhub.io/docs/api/quote",
+        }
+    ]
 
 
-def test_ac3_quote_candidates_are_not_runnable_without_authorization() -> None:
+def test_ac3_stock_quote_direct_candidate_is_included_and_compiles() -> None:
     records = ProviderRegistryRepository(PROVIDERS).cohort_check()
     paths = {
         path.access_path_id: path for record in records for path in record.access_paths
     }
     suite = load_suite(PACK / "suite.yaml")
 
-    assert all(
-        paths[path_id].qualification.disposition.value == "excluded"
-        for path_id in suite.access_path_ids
-    )
+    assert paths["finnhub-stock-quote"].qualification.disposition.value == "included"
     validate_provider_bindings(
         load_provider_bindings(PACK / "provider-bindings.yaml"),
         tuple(paths[path_id] for path_id in suite.access_path_ids),
     )
-    with pytest.raises(SuiteCompilationError, match="not included"):
-        compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
+    compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
+    assert compiled.run_plan.cells[0].provider_id == "finnhub"
 
 
 def test_ac4_stock_quote_outcomes_remain_categorical() -> None:
