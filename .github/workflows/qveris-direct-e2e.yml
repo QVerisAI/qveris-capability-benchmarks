@@ -19,6 +19,8 @@ jobs:
           - alpha-vantage-invalid-etf
           - fiu-spy-holdings
           - fiu-invalid-etf
+          - finnhub-aapl-quote
+          - finnhub-invalid-stock
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

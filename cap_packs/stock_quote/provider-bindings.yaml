@@ -1,9 +1,5 @@
 access_paths:
-  - access_path_id: alpha-vantage-stock-quote
-    provider_id: alpha-vantage
-    canonical_interface: GLOBAL_QUOTE
-    official_source: https://www.alphavantage.co/documentation/
-  - access_path_id: fmp-stock-quote
-    provider_id: financial-modeling-prep
+  - access_path_id: finnhub-stock-quote
+    provider_id: finnhub
     canonical_interface: quote
-    official_source: https://financialmodelingprep.com/stable/quote?symbol=AAPL
+    official_source: https://finnhub.io/docs/api/quote

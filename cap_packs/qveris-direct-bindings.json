@@ -1,6 +1,28 @@
 {
   "bindings": [
     {
+      "binding_id": "finnhub-aapl-quote",
+      "suite_id": "stock-quote-v1",
+      "version": "1.0.0",
+      "access_path_id": "finnhub-stock-quote",
+      "provider_id": "finnhub",
+      "discovery_query": "US stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+      "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+      "parameters": {"symbol": "AAPL"}
+    },
+    {
+      "binding_id": "finnhub-invalid-stock",
+      "suite_id": "stock-quote-v1",
+      "version": "1.0.0",
+      "access_path_id": "finnhub-stock-quote",
+      "provider_id": "finnhub",
+      "discovery_query": "US stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+      "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+      "parameters": {"symbol": "NOTASTOCK"}
+    },
+    {
       "binding_id": "fiu-spy-holdings",
       "suite_id": "etf-holdings-v1",
       "version": "1.0.0",
