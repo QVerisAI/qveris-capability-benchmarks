@@ -8,6 +8,7 @@ from typing import Annotated, cast
 
 import httpx
 import typer
+from pydantic import TypeAdapter, ValidationError
 
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
@@ -23,6 +24,7 @@ from qveris_bench.execution.qveris_binding import (
     validate_qveris_direct_binding,
 )
 from qveris_bench.execution.resume import RunStateStore
+from qveris_bench.models.base import EvidenceRef
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.provider import QualificationDecision
@@ -220,6 +222,12 @@ def qveris_execute(
 def public_discovery_summary(
     results: list[object], descriptions: dict[str, object], discovery_raw_digest: str
 ) -> dict[str, object]:
+    try:
+        validated_digest = TypeAdapter(EvidenceRef).validate_python(
+            discovery_raw_digest
+        )
+    except ValidationError as exc:
+        raise ValueError("discovery raw digest is invalid") from exc
     detailed_results = descriptions.get("results", [])
     if not isinstance(detailed_results, list):
         detailed_results = []
@@ -244,7 +252,7 @@ def public_discovery_summary(
             }
         )
     return {
-        "discovery_raw_digest": discovery_raw_digest,
+        "discovery_raw_digest": validated_digest,
         "result_count": len(results),
         "tools": tools,
     }

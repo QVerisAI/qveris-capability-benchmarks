@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from pytest import MonkeyPatch
 
 from qveris_bench.cli import public_discovery_summary, qveris_repository_root
@@ -47,6 +48,12 @@ def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> No
             }
         ],
     }, "AC1 discovery logs must exclude account balances and unreviewed raw metadata"
+
+
+@pytest.mark.parametrize("digest", ["not-a-digest", "sha256:" + "a" * 63])
+def test_ac1_discovery_output_rejects_invalid_evidence_digest(digest: str) -> None:
+    with pytest.raises(ValueError, match="digest"):
+        public_discovery_summary([], {}, digest)
 
 
 def test_ac2_discovery_workflow_does_not_interpolate_manual_inputs_into_shell() -> None:
