@@ -12,6 +12,21 @@ from qveris_bench.execution.http import HttpAdapter
 from qveris_bench.execution.request import TransportRequest
 
 DEFAULT_QVERIS_API_BASE_URL = "https://qveris.ai/api/v1"
+_PUBLIC_RESPONSE_KEYS = frozenset(
+    {
+        "code",
+        "composition",
+        "data",
+        "error",
+        "holdings",
+        "message",
+        "result",
+        "results",
+        "status",
+        "symbol",
+        "weights",
+    }
+)
 
 
 class QverisProtocolError(ValueError):
@@ -139,8 +154,16 @@ def _document(result: AdapterResult) -> dict[str, Any]:
 
 def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
     if isinstance(value, dict):
-        keys = sorted(key for key in value if isinstance(key, str))
-        shape: dict[str, object] = {"type": "object", "keys": keys}
+        keys = sorted(
+            key
+            for key in value
+            if isinstance(key, str) and key in _PUBLIC_RESPONSE_KEYS
+        )
+        shape: dict[str, object] = {
+            "type": "object",
+            "keys": keys,
+            "field_count": len(value),
+        }
         if depth > 0:
             shape["fields"] = {
                 key: public_response_shape(value[key], depth - 1) for key in keys

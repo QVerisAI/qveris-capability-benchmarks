@@ -130,19 +130,34 @@ def test_ac_qveris_response_shape_exposes_no_provider_values() -> None:
 
     assert shape == {
         "type": "object",
-        "keys": ["data", "request_id"],
+        "keys": ["data"],
+        "field_count": 2,
         "fields": {
             "data": {
                 "type": "object",
                 "keys": ["holdings", "symbol"],
+                "field_count": 2,
                 "fields": {
                     "holdings": {"type": "array", "length": 1},
                     "symbol": {"type": "string"},
                 },
-            },
-            "request_id": {"type": "string"},
+            }
         },
     }
     assert "SPY" not in repr(shape)
     assert "AAPL" not in repr(shape)
     assert "private-request-id" not in repr(shape)
+
+
+def test_ac_qveris_response_shape_redacts_dynamic_object_keys() -> None:
+    shape = public_response_shape({"data": {"holdings": {"AAPL": 0.07}}})
+
+    assert shape["fields"] == {
+        "data": {
+            "type": "object",
+            "keys": ["holdings"],
+            "field_count": 1,
+            "fields": {"holdings": {"type": "object", "keys": [], "field_count": 1}},
+        }
+    }
+    assert "AAPL" not in repr(shape)
