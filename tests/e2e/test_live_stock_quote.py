@@ -52,17 +52,26 @@ def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
         raise AssertionError("live Stock Quote binding does not match frozen contract")
 
 
-def _safe_failure_reason(error: StockQuoteExtractionError | ExtractionError) -> str:
+def _safe_response_failure_reason(
+    error: StockQuoteExtractionError, *, negative_control: bool
+) -> str:
+    if negative_control:
+        return "invalid_negative_response"
     message = str(error)
-    if "stale observation field" in message:
-        return "stale_timestamp"
     if "timestamp" in message:
         return "invalid_timestamp"
     if "price" in message:
         return "invalid_price"
-    if "unavailable quote" in message:
-        return "unexpected_quote_availability"
-    return "schema_rejection"
+    return "unrecognized_provider_response"
+
+
+def _safe_observation_failure_reason(error: ExtractionError) -> str | None:
+    message = str(error)
+    if "stale observation field: timestamp" in message:
+        return "stale_timestamp"
+    if "future observation field: timestamp" in message:
+        return "future_timestamp"
+    return None
 
 
 @pytest.mark.skipif(
@@ -118,11 +127,25 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                         "1.0.0",
                         negative_control=negative_control,
                     )
-                except (StockQuoteExtractionError, ExtractionError) as exc:
+                except StockQuoteExtractionError as exc:
+                    control = "negative" if negative_control else "positive"
+                    reason = _safe_response_failure_reason(
+                        exc, negative_control=negative_control
+                    )
+                    raise AssertionError(
+                        f"live Finnhub {control} response failed "
+                        f"Stock Quote CAP: {reason}"
+                    ) from None
+                except ExtractionError as exc:
+                    observation_reason = _safe_observation_failure_reason(exc)
+                    if observation_reason is None:
+                        raise AssertionError(
+                            "local Stock Quote observation contract failed"
+                        ) from None
                     control = "negative" if negative_control else "positive"
                     raise AssertionError(
                         f"live Finnhub {control} response failed "
-                        f"Stock Quote CAP: {_safe_failure_reason(exc)}"
+                        f"Stock Quote CAP: {observation_reason}"
                     ) from None
                 assert observation.facts
         finally:
@@ -145,9 +168,39 @@ def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> No
         _validate_fixed_binding(redirected_query)
 
 
-def test_ac_live_stock_quote_uses_value_free_failure_categories() -> None:
-    stale_error = ExtractionError("stale observation field: timestamp")
-    assert _safe_failure_reason(stale_error) == "stale_timestamp"
-    assert _safe_failure_reason(StockQuoteExtractionError("price is invalid")) == (
-        "invalid_price"
-    )
+@pytest.mark.parametrize(
+    ("error", "negative_control", "expected"),
+    (
+        (StockQuoteExtractionError("price is invalid"), False, "invalid_price"),
+        (StockQuoteExtractionError("timestamp is invalid"), False, "invalid_timestamp"),
+        (
+            StockQuoteExtractionError("response must be an object"),
+            False,
+            "unrecognized_provider_response",
+        ),
+        (
+            StockQuoteExtractionError("negative control lacks an unavailable quote"),
+            True,
+            "invalid_negative_response",
+        ),
+    ),
+)
+def test_ac_live_stock_quote_uses_value_free_response_categories(
+    error: StockQuoteExtractionError, negative_control: bool, expected: str
+) -> None:
+    actual = _safe_response_failure_reason(error, negative_control=negative_control)
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
+    ("error", "expected"),
+    (
+        (ExtractionError("stale observation field: timestamp"), "stale_timestamp"),
+        (ExtractionError("future observation field: timestamp"), "future_timestamp"),
+        (ExtractionError("observation provenance is invalid"), None),
+    ),
+)
+def test_ac_live_stock_quote_separates_local_observation_errors(
+    error: ExtractionError, expected: str | None
+) -> None:
+    assert _safe_observation_failure_reason(error) == expected
