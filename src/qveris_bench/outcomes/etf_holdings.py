@@ -16,7 +16,7 @@ def extract_alpha_vantage_etf_holdings(
     if negative_control:
         if holdings:
             raise EtfHoldingsExtractionError("negative control returned holdings")
-        if not _has_invalid_symbol_error(document):
+        if not _has_invalid_symbol_error(document, symbol):
             raise EtfHoldingsExtractionError(
                 "negative control lacks a validation error"
             )
@@ -67,7 +67,7 @@ def _weight(value: object) -> float:
     return numeric
 
 
-def _has_invalid_symbol_error(document: dict[str, Any]) -> bool:
+def _has_invalid_symbol_error(document: dict[str, Any], symbol: str) -> bool:
     result = document.get("result")
     if not isinstance(result, dict):
         return False
@@ -86,4 +86,18 @@ def _has_invalid_symbol_error(document: dict[str, Any]) -> bool:
     if not isinstance(message, str):
         return False
     normalized = message.casefold()
-    return "invalid" in normalized and ("symbol" in normalized or "etf" in normalized)
+    blocked_terms = (
+        "api key",
+        "auth",
+        "rate",
+        "limit",
+        "internal",
+        "server",
+        "request",
+    )
+    return (
+        symbol.casefold() in normalized
+        and "invalid" in normalized
+        and ("symbol" in normalized or "etf" in normalized)
+        and not any(term in normalized for term in blocked_terms)
+    )

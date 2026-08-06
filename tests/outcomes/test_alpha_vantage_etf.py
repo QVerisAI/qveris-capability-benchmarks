@@ -79,6 +79,18 @@ def test_ac_alpha_vantage_negative_top_level_runtime_message_is_rejected() -> No
         )
 
 
+def test_ac_alpha_vantage_negative_rejects_invalid_api_key_message() -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
+        extract_alpha_vantage_etf_holdings(
+            {
+                "error_message": "invalid API key for ETF endpoint",
+                "result": {"data": {}},
+            },
+            "NOTANETF",
+            negative_control=True,
+        )
+
+
 def test_ac_alpha_vantage_negative_empty_data_without_error_is_rejected() -> None:
     with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
         extract_alpha_vantage_etf_holdings(
