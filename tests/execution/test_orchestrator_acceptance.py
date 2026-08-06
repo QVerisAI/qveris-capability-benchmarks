@@ -1,0 +1,120 @@
+import asyncio
+from pathlib import Path
+
+from qveris_bench.execution.events import EventLog
+from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
+from qveris_bench.execution.resume import RunStateStore
+from qveris_bench.models.enums import CellState
+from qveris_bench.models.run import RunCell, RunPlan
+
+
+def test_ac3_orchestrator_executes_planned_cells_in_order(tmp_path: Path) -> None:
+    async def run() -> None:
+        observed: list[str] = []
+
+        async def execute(cell: RunCell) -> CellExecutionResult:
+            observed.append(cell.run_key)
+            return CellExecutionResult(CellState.COMPLETED)
+
+        plan = RunPlan(
+            suite_id="suite-1",
+            suite_fingerprint="a" * 64,
+            cells=(
+                RunCell(
+                    run_key="one",
+                    case_id="case-1",
+                    provider_id="p-1",
+                    access_path_id="a-1",
+                    mode="direct",
+                    round=1,
+                ),
+                RunCell(
+                    run_key="two",
+                    case_id="case-1",
+                    provider_id="p-1",
+                    access_path_id="a-1",
+                    mode="direct",
+                    round=2,
+                ),
+            ),
+        )
+        orchestrator = RunOrchestrator(RunStateStore(tmp_path / "state.json"), execute)
+        states = await orchestrator.run(plan)
+        assert observed == ["one", "two"]
+        assert states["two"] is CellState.COMPLETED
+
+    asyncio.run(run())
+
+
+def test_ac3_executor_error_is_resumable(tmp_path: Path) -> None:
+    async def run() -> None:
+        async def execute(_: RunCell) -> CellExecutionResult:
+            raise RuntimeError("network lost")
+
+        plan = RunPlan(
+            suite_id="suite-1",
+            suite_fingerprint="a" * 64,
+            cells=(
+                RunCell(
+                    run_key="one",
+                    case_id="case-1",
+                    provider_id="p-1",
+                    access_path_id="a-1",
+                    mode="direct",
+                    round=1,
+                ),
+            ),
+        )
+        orchestrator = RunOrchestrator(RunStateStore(tmp_path / "state.json"), execute)
+        await orchestrator.run(plan)
+        states = RunStateStore(tmp_path / "state.json").read(plan.suite_fingerprint)
+        assert states["one"] is CellState.INFRA_BLOCKED
+
+    asyncio.run(run())
+
+
+def test_ac3_infra_failure_does_not_stop_later_cells_and_emits_trace(
+    tmp_path: Path,
+) -> None:
+    async def run() -> None:
+        async def execute(cell: RunCell) -> CellExecutionResult:
+            if cell.run_key == "one":
+                raise RuntimeError("temporary infrastructure error")
+            return CellExecutionResult(CellState.COMPLETED)
+
+        plan = RunPlan(
+            suite_id="suite-1",
+            suite_fingerprint="a" * 64,
+            cells=(
+                RunCell(
+                    run_key="one",
+                    case_id="case-1",
+                    provider_id="p-1",
+                    access_path_id="a-1",
+                    mode="direct",
+                    round=1,
+                ),
+                RunCell(
+                    run_key="two",
+                    case_id="case-1",
+                    provider_id="p-1",
+                    access_path_id="a-1",
+                    mode="direct",
+                    round=2,
+                ),
+            ),
+        )
+        log = EventLog(tmp_path / "events.jsonl")
+        orchestrator = RunOrchestrator(
+            RunStateStore(tmp_path / "state.json"), execute, event_log=log
+        )
+        states = await orchestrator.run(plan)
+        assert states == {"one": CellState.INFRA_BLOCKED, "two": CellState.COMPLETED}
+        assert [event.event_type for event in log.read()] == [
+            "request",
+            "error",
+            "request",
+            "completion",
+        ]
+
+    asyncio.run(run())

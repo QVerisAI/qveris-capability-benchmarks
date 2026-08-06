@@ -1,12 +1,18 @@
+import asyncio
+import importlib
+from collections.abc import Callable
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, cast
 
 import typer
 
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
-from qveris_bench.models.enums import QualificationDisposition
+from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
+from qveris_bench.execution.resume import RunStateStore
+from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.provider import QualificationDecision
+from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
 from qveris_bench.providers.repository import (
     ProviderRegistryRepository,
@@ -169,6 +175,59 @@ def suite_plan(
         f"Planned {len(compiled.run_plan.cells)} cells, "
         f"{applicable} applicable calls -> {output_path}"
     )
+
+
+def _load_executor(reference: str) -> Callable[[RunCell], object]:
+    module_name, separator, attribute = reference.partition(":")
+    if not separator or not module_name or not attribute:
+        raise ValueError("executor must use module:function notation")
+    executor = getattr(importlib.import_module(module_name), attribute)
+    if not callable(executor):
+        raise ValueError("executor reference is not callable")
+    return cast(Callable[[RunCell], object], executor)
+
+
+async def _run_plan(
+    plan: RunPlan, state_path: Path, executor_reference: str
+) -> dict[str, CellState]:
+    executor = _load_executor(executor_reference)
+
+    async def execute(cell: RunCell) -> CellExecutionResult:
+        result = executor(cell)
+        if hasattr(result, "__await__"):
+            result = await result
+        if not isinstance(result, CellExecutionResult):
+            raise ValueError("executor must return CellExecutionResult")
+        return result
+
+    return await RunOrchestrator(RunStateStore(state_path), execute).run(plan)
+
+
+@app.command("run")
+def run_execute(
+    plan_path: Path,
+    executor: Annotated[str, typer.Option(help="Async executor as module:function.")],
+    state: Annotated[Path | None, typer.Option(help="Run state JSON path.")] = None,
+) -> None:
+    """Execute a frozen plan with an explicit provider executor."""
+    try:
+        plan = RunPlan.model_validate_json(plan_path.read_text())
+        state_path = state or plan_path.with_name("state.json")
+        states = asyncio.run(_run_plan(plan, state_path, executor))
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Run completed: {len(states)} state entries -> {state_path}")
+
+
+@app.command("resume")
+def run_resume(
+    plan_path: Path,
+    executor: Annotated[str, typer.Option(help="Async executor as module:function.")],
+    state: Annotated[Path | None, typer.Option(help="Run state JSON path.")] = None,
+) -> None:
+    """Resume only infra-blocked cells of a matching frozen plan."""
+    run_execute(plan_path, executor, state)
 
 
 @schema_app.command("export")
