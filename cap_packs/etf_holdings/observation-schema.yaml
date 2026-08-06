@@ -1,4 +1,17 @@
-required_fields: [symbol, holdings]
+required_fields: [symbol, holdings, weights]
 field_types:
   symbol: string
+  holdings: array
+  weights: number_array
+field_constraints:
+  symbol: {non_empty: true}
+  holdings: {non_empty: true}
+  weights: {non_empty: true}
 additional_fields: true
+negative_control:
+  required_fields: [validation_error]
+  field_types:
+    validation_error: string
+  field_constraints:
+    validation_error: {non_empty: true}
+  additional_fields: false

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 import yaml
 
 from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.outcomes.evaluator import evaluate_outcome
+from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -28,7 +32,7 @@ def test_ac2_stock_quote_pack_has_success_and_negative_control() -> None:
     cases = {case.case_id: case for case in load_cases(PACK / "cases.yaml")}
 
     assert cases["aapl-quote"].input == {"symbol": "AAPL"}
-    assert "price" in cases["aapl-quote"].completion_conditions
+    assert cases["aapl-quote"].completion_conditions == ("symbol", "price", "timestamp")
     assert cases["invalid-stock"].negative_control
     assert cases["invalid-stock"].completion_conditions == ("validation_error",)
 
@@ -48,5 +52,38 @@ def test_ac3_stock_quote_bindings_are_exactly_two_official_candidates() -> None:
 def test_ac4_stock_quote_outcomes_remain_categorical() -> None:
     rules = yaml.safe_load((PACK / "outcome-rules.yaml").read_text())
 
-    assert rules["completion_requires"] == ["symbol", "price"]
+    assert rules["completion_requires"] == ["symbol", "price", "timestamp"]
     assert rules["negative_control_requires"] == ["validation_error"]
+
+
+def test_ac5_stock_quote_requires_current_finite_price_or_an_error_fact() -> None:
+    timestamp = datetime.now(UTC).isoformat()
+    observation = extract_observation(
+        PACK / "observation-schema.yaml",
+        {"symbol": "AAPL", "price": 200.0, "timestamp": timestamp},
+        "sha256:" + "a" * 64,
+        "1.0.0",
+    )
+    outcome = evaluate_outcome(
+        ("symbol", "price", "timestamp"), observation.facts, observation.evidence_ref
+    )
+    assert outcome.unmet_conditions == ()
+    with pytest.raises(ExtractionError, match="stale"):
+        extract_observation(
+            PACK / "observation-schema.yaml",
+            {
+                "symbol": "AAPL",
+                "price": 200.0,
+                "timestamp": (datetime.now(UTC) - timedelta(minutes=16)).isoformat(),
+            },
+            "sha256:" + "a" * 64,
+            "1.0.0",
+        )
+    error = extract_observation(
+        PACK / "observation-schema.yaml",
+        {"validation_error": "unknown stock"},
+        "sha256:" + "a" * 64,
+        "1.0.0",
+        negative_control=True,
+    )
+    assert error.facts == {"validation_error": "unknown stock"}

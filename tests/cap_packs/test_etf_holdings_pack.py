@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.outcomes.evaluator import evaluate_outcome
+from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,7 +53,35 @@ def test_ac4_etf_holdings_rules_describe_facts_not_scores() -> None:
     observation_schema = yaml.safe_load((PACK / "observation-schema.yaml").read_text())
     outcome_rules = yaml.safe_load((PACK / "outcome-rules.yaml").read_text())
 
-    assert observation_schema["required_fields"] == ["symbol", "holdings"]
-    assert outcome_rules["completion_requires"] == ["symbol", "holdings"]
+    assert observation_schema["required_fields"] == ["symbol", "holdings", "weights"]
+    assert outcome_rules["completion_requires"] == ["symbol", "holdings", "weights"]
     text = (PACK / "outcome-rules.yaml").read_text().lower()
     assert "score" not in text
+
+
+def test_ac5_etf_observation_requires_weighted_holdings_or_an_error_fact() -> None:
+    observation = extract_observation(
+        PACK / "observation-schema.yaml",
+        {"symbol": "SPY", "holdings": ["AAPL"], "weights": [0.07]},
+        "sha256:" + "a" * 64,
+        "1.0.0",
+    )
+    outcome = evaluate_outcome(
+        ("symbol", "holdings", "weights"), observation.facts, observation.evidence_ref
+    )
+    assert outcome.unmet_conditions == ()
+    with pytest.raises(ExtractionError, match="weights"):
+        extract_observation(
+            PACK / "observation-schema.yaml",
+            {"symbol": "SPY", "holdings": ["AAPL"]},
+            "sha256:" + "a" * 64,
+            "1.0.0",
+        )
+    error = extract_observation(
+        PACK / "observation-schema.yaml",
+        {"validation_error": "unknown ETF"},
+        "sha256:" + "a" * 64,
+        "1.0.0",
+        negative_control=True,
+    )
+    assert error.facts == {"validation_error": "unknown ETF"}

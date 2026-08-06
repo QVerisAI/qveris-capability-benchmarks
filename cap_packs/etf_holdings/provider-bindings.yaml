@@ -11,11 +11,11 @@ access_paths:
     provider_id: finnhub
     canonical_interface: etf-holdings
     official_source: https://finnhub.io/docs/api/etf-holdings
-  - access_path_id: polygon-etf-holdings
-    provider_id: polygon
-    canonical_interface: etf-holdings
-    official_source: https://polygon.io/docs
-  - access_path_id: tiingo-etf-holdings
-    provider_id: tiingo
-    canonical_interface: etf-holdings
-    official_source: https://www.tiingo.com/documentation/
+  - access_path_id: eodhd-etf-holdings
+    provider_id: eodhd
+    canonical_interface: fundamentals
+    official_source: https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds
+  - access_path_id: twelve-data-etf-holdings
+    provider_id: twelve-data
+    canonical_interface: etfs-world
+    official_source: https://twelvedata.com/docs

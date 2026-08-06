@@ -5,7 +5,7 @@ cases:
     input: {symbol: AAPL}
     negative_control: false
     expected_observations: [symbol, price, timestamp]
-    completion_conditions: [symbol, price]
+    completion_conditions: [symbol, price, timestamp]
     disclosure_limits: []
     applicable_provider_ids: []
   - case_id: invalid-stock
