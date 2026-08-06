@@ -34,6 +34,10 @@ def test_ac_stock_quote_smoke_release_rebuilds_from_safe_evidence() -> None:
     assert {cell["run_key"] for cell in run_plan["cells"]} == {
         cell.run_key for cell in cells
     }
+    expected_terminal = {
+        cells[0].run_key: ("finnhub-aapl-quote", "provider_negative"),
+        cells[1].run_key: ("finnhub-invalid-stock", "completed"),
+    }
     for bundle in evidence:
         matching = [
             path
@@ -41,6 +45,16 @@ def test_ac_stock_quote_smoke_release_rebuilds_from_safe_evidence() -> None:
             if bundle.public_digest == sha256_digest(path.read_bytes())
         ]
         assert matching, bundle.evidence_id
+        artifact = json.loads(matching[0].read_text())
+        binding_id, outcome = expected_terminal[bundle.run_key]
+        assert artifact["binding_id"] == binding_id
+        assert artifact["outcome"] == outcome
+        assert artifact["raw_digest"] == bundle.raw_digest
+        assert artifact["suite_fingerprint"] == bundle.suite_fingerprint
+        assert artifact["extractor_version"] == bundle.extractor_version
+        assert artifact["redaction_status"] == bundle.redaction_status.value
+        assert artifact["disclosure_level"] == bundle.disclosure_level.value
+        assert artifact["license_status"] == bundle.license_status.value
 
 
 def _load(name: str) -> list[dict[str, object]]:
