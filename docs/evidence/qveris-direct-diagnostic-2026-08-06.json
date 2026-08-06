@@ -1,0 +1,21 @@
+{
+  "evidence_type": "qveris_direct_diagnostic",
+  "executed_at": "2026-08-06T12:50:40Z",
+  "workflow_run": "https://github.com/QVerisAI/qveris-capability-benchmarks/actions/runs/31103141396",
+  "records": [
+    {
+      "binding_id": "twelve-data-spy-holdings",
+      "access_path_id": "twelve-data-etf-holdings",
+      "status_code": 200,
+      "raw_digest": "sha256:e157d45a5ec296399c7537eaa568b40a48e28ebba36a07fcbbc9ed07ca2b0d75",
+      "response_shape": "result.data.code,message,status"
+    },
+    {
+      "binding_id": "twelve-data-invalid-etf",
+      "access_path_id": "twelve-data-etf-holdings",
+      "status_code": 200,
+      "raw_digest": "sha256:5fedbc490b92b2fbac569b87b4c3b2d67b703baf8bbea5e2e1ecfe7b2b19e0db",
+      "response_shape": "result.data.code,message,status"
+    }
+  ]
+}

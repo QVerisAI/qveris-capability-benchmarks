@@ -6,6 +6,7 @@ import pytest
 import yaml
 
 from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.outcomes.evaluator import evaluate_outcome
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.providers.repository import ProviderRegistryRepository
@@ -48,7 +49,7 @@ def test_ac3_etf_holdings_bindings_are_distinct_attributable_direct_paths() -> N
     data = yaml.safe_load((PACK / "provider-bindings.yaml").read_text())
     bindings = data["access_paths"]
 
-    assert len(bindings) == 3
+    assert len(bindings) == 2
     assert len({binding["provider_id"] for binding in bindings}) == len(bindings)
     assert len({binding["access_path_id"] for binding in bindings}) == len(bindings)
     assert all(
@@ -69,7 +70,6 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
     assert set(suite.access_path_ids) == {
         "alpha-vantage-etf-holdings",
         "fiu-etf-holdings",
-        "twelve-data-etf-holdings",
     }
     assert all(
         paths[path_id].qualification.disposition.value == "included"
@@ -84,7 +84,22 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
         tuple(paths[path_id] for path_id in suite.access_path_ids),
     )
     compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
-    assert len(compiled.run_plan.cells) == 18
+    assert len(compiled.run_plan.cells) == 12
+
+
+def test_ac3_twelve_data_exclusion_references_direct_diagnostic_evidence() -> None:
+    records = ProviderRegistryRepository(PROVIDERS).cohort_check()
+    twelve_data = next(
+        record for record in records if record.provider_id == "twelve-data"
+    )
+    path = twelve_data.access_paths[0]
+    evidence_path = ROOT / "docs/evidence/qveris-direct-diagnostic-2026-08-06.json"
+
+    assert path.qualification is not None
+    assert path.qualification.disposition.value == "excluded"
+    assert path.qualification.evidence_digest == sha256_digest(
+        evidence_path.read_bytes()
+    )
 
 
 def test_ac4_etf_holdings_rules_describe_facts_not_scores() -> None:
