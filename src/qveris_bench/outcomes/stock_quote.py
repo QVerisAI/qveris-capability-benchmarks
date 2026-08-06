@@ -51,14 +51,26 @@ def _timestamp(value: object) -> str:
     timestamp = float(value)
     if not isfinite(timestamp) or timestamp <= 0 or not timestamp.is_integer():
         raise StockQuoteExtractionError("timestamp is invalid")
-    return datetime.fromtimestamp(int(timestamp), UTC).isoformat()
+    try:
+        return datetime.fromtimestamp(int(timestamp), UTC).isoformat()
+    except (OverflowError, OSError, ValueError) as exc:
+        raise StockQuoteExtractionError("timestamp is invalid") from exc
 
 
 def _is_unavailable_quote(data: dict[str, Any]) -> bool:
     return (
-        data.get("c") == 0
-        and data.get("t") == 0
+        _is_numeric_zero(data.get("c"))
+        and _is_numeric_zero(data.get("t"))
         and data.get("d") is None
         and data.get("dp") is None
-        and all(data.get(field) == 0 for field in ("h", "l", "o", "pc"))
+        and all(_is_numeric_zero(data.get(field)) for field in ("h", "l", "o", "pc"))
+    )
+
+
+def _is_numeric_zero(value: object) -> bool:
+    return (
+        not isinstance(value, bool)
+        and isinstance(value, (int, float))
+        and isfinite(value)
+        and value == 0
     )

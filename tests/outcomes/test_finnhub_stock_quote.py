@@ -64,3 +64,32 @@ def test_ac_finnhub_negative_rejects_ambiguous_or_runtime_responses() -> None:
             "NOTASTOCK",
             negative_control=True,
         )
+
+
+def test_ac_finnhub_negative_rejects_boolean_unavailable_envelope() -> None:
+    with pytest.raises(StockQuoteExtractionError, match="unavailable quote"):
+        extract_finnhub_stock_quote(
+            {
+                "result": {
+                    "data": {
+                        "c": False,
+                        "d": None,
+                        "dp": None,
+                        "h": False,
+                        "l": False,
+                        "o": False,
+                        "pc": False,
+                        "t": False,
+                    }
+                }
+            },
+            "NOTASTOCK",
+            negative_control=True,
+        )
+
+
+def test_ac_finnhub_quote_normalizes_out_of_range_timestamp_errors() -> None:
+    with pytest.raises(StockQuoteExtractionError, match="timestamp"):
+        extract_finnhub_stock_quote(
+            {"result": {"data": {"c": 201.0, "t": 10**100}}}, "AAPL"
+        )
