@@ -137,3 +137,13 @@ def test_ac7_live_agent_workflow_uses_only_benchmark_secret_and_flash_model() ->
     assert "QVERIS_AGENT_MODEL: deepseek-v4-flash" in workflow
     assert 'RUN_LIVE_AGENT: "1"' in workflow
     assert "inputs:" not in workflow
+
+
+def test_ac8_live_stock_quote_workflow_uses_only_fixed_qveris_bindings() -> None:
+    workflow = Path(".github/workflows/live-stock-quote-e2e.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert 'RUN_LIVE_STOCK_QUOTE: "1"' in workflow
+    assert "inputs:" not in workflow
+    assert "FINNHUB_API_KEY" not in workflow
