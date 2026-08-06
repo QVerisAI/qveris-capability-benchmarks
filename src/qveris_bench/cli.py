@@ -206,7 +206,7 @@ def qveris_execute(
                 document = json.loads(
                     result.result.raw_path.read_text(encoding="utf-8")
                 )
-                summary["response_shape"] = public_response_shape(document)
+                summary["response_shape"] = public_response_shape(document, depth=4)
             else:
                 summary["request_id"] = result.result.request_id
             return summary

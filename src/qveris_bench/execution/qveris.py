@@ -24,6 +24,8 @@ _PUBLIC_RESPONSE_KEYS = frozenset(
         "results",
         "status",
         "symbol",
+        "ticker",
+        "weight",
         "weights",
     }
 )
@@ -170,7 +172,10 @@ def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
             }
         return shape
     if isinstance(value, list):
-        return {"type": "array", "length": len(value)}
+        array_shape: dict[str, object] = {"type": "array", "length": len(value)}
+        if value and depth > 0:
+            array_shape["item_shape"] = public_response_shape(value[0], depth - 1)
+        return array_shape
     if value is None:
         return {"type": "null"}
     if isinstance(value, bool):
