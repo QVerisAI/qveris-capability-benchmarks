@@ -52,6 +52,19 @@ def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
         raise AssertionError("live Stock Quote binding does not match frozen contract")
 
 
+def _safe_failure_reason(error: StockQuoteExtractionError | ExtractionError) -> str:
+    message = str(error)
+    if "stale observation field" in message:
+        return "stale_timestamp"
+    if "timestamp" in message:
+        return "invalid_timestamp"
+    if "price" in message:
+        return "invalid_price"
+    if "unavailable quote" in message:
+        return "unexpected_quote_availability"
+    return "schema_rejection"
+
+
 @pytest.mark.skipif(
     os.environ.get("RUN_LIVE_STOCK_QUOTE") != "1",
     reason="live stock quote run is disabled",
@@ -105,11 +118,11 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                         "1.0.0",
                         negative_control=negative_control,
                     )
-                except (StockQuoteExtractionError, ExtractionError):
+                except (StockQuoteExtractionError, ExtractionError) as exc:
                     control = "negative" if negative_control else "positive"
                     raise AssertionError(
-                        f"live Finnhub {control} response did not satisfy "
-                        "Stock Quote CAP"
+                        f"live Finnhub {control} response failed "
+                        f"Stock Quote CAP: {_safe_failure_reason(exc)}"
                     ) from None
                 assert observation.facts
         finally:
@@ -130,3 +143,11 @@ def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> No
     redirected_query = binding.model_copy(update={"discovery_query": "other query"})
     with pytest.raises(AssertionError, match="frozen contract"):
         _validate_fixed_binding(redirected_query)
+
+
+def test_ac_live_stock_quote_uses_value_free_failure_categories() -> None:
+    stale_error = ExtractionError("stale observation field: timestamp")
+    assert _safe_failure_reason(stale_error) == "stale_timestamp"
+    assert _safe_failure_reason(StockQuoteExtractionError("price is invalid")) == (
+        "invalid_price"
+    )
