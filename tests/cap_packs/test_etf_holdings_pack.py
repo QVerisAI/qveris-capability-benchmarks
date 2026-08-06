@@ -6,6 +6,7 @@ import pytest
 import yaml
 
 from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.outcomes.evaluator import evaluate_outcome
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.providers.repository import ProviderRegistryRepository
@@ -84,6 +85,21 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
     )
     compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
     assert len(compiled.run_plan.cells) == 12
+
+
+def test_ac3_twelve_data_exclusion_references_direct_diagnostic_evidence() -> None:
+    records = ProviderRegistryRepository(PROVIDERS).cohort_check()
+    twelve_data = next(
+        record for record in records if record.provider_id == "twelve-data"
+    )
+    path = twelve_data.access_paths[0]
+    evidence_path = ROOT / "docs/evidence/qveris-direct-diagnostic-2026-08-06.json"
+
+    assert path.qualification is not None
+    assert path.qualification.disposition.value == "excluded"
+    assert path.qualification.evidence_digest == sha256_digest(
+        evidence_path.read_bytes()
+    )
 
 
 def test_ac4_etf_holdings_rules_describe_facts_not_scores() -> None:

@@ -18,10 +18,13 @@ explicit tool IDs with `QVERIS_API_KEY`; their Provider attribution is retained 
 the registry. `qveris_finance.*` automatic-routing tools are intentionally excluded:
 they do not provide a stable underlying Provider identity for this benchmark.
 
-The remaining candidates lack a discovered QVeris Direct ETF-holdings interface in
-the US scope. They remain excluded until a qualifying path and authorization are
-recorded. This record is configuration evidence, not execution evidence.
+Financial Modeling Prep, Finnhub, and EODHD lack a discovered QVeris Direct
+ETF-holdings interface in the US scope. They remain excluded until a qualifying
+path and authorization are recorded. This record is configuration evidence, not
+execution evidence.
 
-The 2026-08-06 fixed Direct diagnostic found that Twelve Data's positive and
-negative controls both returned its error envelope, so it is excluded from the
-ETF Holdings runnable cohort pending a successful positive control.
+Twelve Data was discovered but did not qualify: the 2026-08-06 fixed Direct
+diagnostic recorded the same error envelope for its positive and negative controls.
+The value-free run provenance and raw-response digests are in
+`docs/evidence/qveris-direct-diagnostic-2026-08-06.json`; it is excluded pending
+a successful positive control.
