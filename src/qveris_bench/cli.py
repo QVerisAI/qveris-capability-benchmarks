@@ -17,7 +17,10 @@ from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
 )
-from qveris_bench.execution.qveris_binding import load_registered_qveris_direct_binding
+from qveris_bench.execution.qveris_binding import (
+    load_registered_qveris_direct_binding,
+    validate_qveris_direct_binding,
+)
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
@@ -51,6 +54,9 @@ provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
+_QVERIS_DIRECT_SUITES = {
+    "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
+}
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
 app.add_typer(provider_app, name="provider")
@@ -152,6 +158,10 @@ def qveris_execute(
         binding = load_registered_qveris_direct_binding(
             Path("cap_packs/qveris-direct-bindings.json"), binding_id
         )
+        suite_path = _QVERIS_DIRECT_SUITES.get(binding.suite_id)
+        if suite_path is None:
+            raise ValueError("binding suite is not registered for Direct execution")
+        validate_qveris_direct_binding(binding, suite_path, Path("providers"))
 
         async def execute() -> dict[str, object]:
             client = QverisToolClient(

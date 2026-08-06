@@ -2,18 +2,60 @@ from pathlib import Path
 
 import pytest
 
-from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.execution.qveris_binding import (
     QverisDirectBindingError,
-    load_qveris_direct_binding,
     load_registered_qveris_direct_binding,
+    validate_qveris_direct_binding,
 )
 from qveris_bench.suites.fingerprint import canonical_json_bytes
 
 
-def test_ac1_direct_binding_requires_its_frozen_digest(tmp_path: Path) -> None:
-    path = tmp_path / "direct-binding.json"
+def test_ac1_direct_binding_must_belong_to_an_included_suite_path(
+    tmp_path: Path,
+) -> None:
+    providers = tmp_path / "providers"
+    provider_path = providers / "fiu" / "provider.yaml"
+    provider_path.parent.mkdir(parents=True)
+    provider_path.write_text(
+        """provider:
+  provider_id: fiu
+  official_name: FIU
+  website: https://example.com/
+  testing_authorization: QVeris Direct Test
+  qveris_integration: true
+access_paths:
+  - access_path_id: fiu-etf-holdings
+    provider_id: fiu
+    path_type: official_api
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://example.com/docs
+    canonical_interface: ETF_HOLDINGS
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris provides an attributable Direct path.
+      evidence_digest: >-
+        sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+"""
+    )
+    suite_path = tmp_path / "suite.yaml"
+    suite_path.write_text(
+        """suite_id: etf-holdings-v1
+version: 1.0.0
+cap_id: etf-holdings
+cap_version: 1.0.0
+case_ids: [spy-holdings]
+access_path_ids: [fiu-etf-holdings]
+modes: [direct]
+rounds: 3
+environment: {}
+agent_protocol: null
+not_applicable: []
+"""
+    )
     payload = {
+        "binding_id": "fiu-spy-holdings",
+        "suite_id": "etf-holdings-v1",
         "version": "1.0.0",
         "access_path_id": "fiu-etf-holdings",
         "provider_id": "fiu",
@@ -22,15 +64,15 @@ def test_ac1_direct_binding_requires_its_frozen_digest(tmp_path: Path) -> None:
         "tool_id": "fiu.tool.v1",
         "parameters": {"symbol": "SPY.US"},
     }
-    path.write_bytes(canonical_json_bytes(payload))
-
-    binding = load_qveris_direct_binding(
-        path, sha256_digest(canonical_json_bytes(payload))
-    )
+    registry = tmp_path / "qveris-direct-bindings.json"
+    registry.write_bytes(canonical_json_bytes({"bindings": [payload]}))
+    binding = load_registered_qveris_direct_binding(registry, "fiu-spy-holdings")
 
     assert binding.tool_id == "fiu.tool.v1"
-    with pytest.raises(QverisDirectBindingError, match="digest mismatch"):
-        load_qveris_direct_binding(path, "sha256:" + "b" * 64)
+    validate_qveris_direct_binding(binding, suite_path, providers)
+    suite_path.write_text(suite_path.read_text().replace("fiu-etf-holdings", "other"))
+    with pytest.raises(QverisDirectBindingError, match="not in the frozen suite"):
+        validate_qveris_direct_binding(binding, suite_path, providers)
 
 
 def test_ac2_direct_execution_resolves_only_a_registered_binding(
@@ -43,6 +85,7 @@ def test_ac2_direct_execution_resolves_only_a_registered_binding(
                 "bindings": [
                     {
                         "binding_id": "fiu-spy-holdings",
+                        "suite_id": "etf-holdings-v1",
                         "version": "1.0.0",
                         "access_path_id": "fiu-etf-holdings",
                         "provider_id": "fiu",

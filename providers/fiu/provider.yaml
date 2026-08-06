@@ -1,19 +1,19 @@
 provider:
-  provider_id: twelve-data
-  official_name: Twelve Data
-  website: https://twelvedata.com/
+  provider_id: fiu
+  official_name: Fund Insight
+  website: https://www.fundinsight.net/
   market_coverage: [US]
   testing_authorization: QVeris exposes an attributable Direct Test connector.
   qveris_integration: true
 access_paths:
-  - access_path_id: twelve-data-etf-holdings
-    provider_id: twelve-data
+  - access_path_id: fiu-etf-holdings
+    provider_id: fiu
     path_type: qveris_connector
     credential_env: [QVERIS_API_KEY]
-    official_source: https://twelvedata.com/docs
-    canonical_interface: etfs-world
+    official_source: https://www.fundinsight.net/terms-of-service
+    canonical_interface: US_F10_FUND_CONSTITUENT
     agent_trial_eligible: false
     qualification:
       disposition: included
-      reason: QVeris exposes an attributable ETF composition Direct path.
+      reason: QVeris exposes an attributable US ETF constituent Direct path.
       evidence_digest: sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3

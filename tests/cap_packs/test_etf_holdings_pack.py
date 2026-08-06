@@ -13,7 +13,7 @@ from qveris_bench.suites.bindings import (
     load_provider_bindings,
     validate_provider_bindings,
 )
-from qveris_bench.suites.compiler import SuiteCompilationError, compile_suite
+from qveris_bench.suites.compiler import compile_suite
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,11 +44,11 @@ def test_ac2_etf_holdings_pack_covers_success_and_negative_control() -> None:
     assert cases["invalid-etf"].completion_conditions == ("validation_error",)
 
 
-def test_ac3_etf_holdings_bindings_are_distinct_official_candidates() -> None:
+def test_ac3_etf_holdings_bindings_are_distinct_attributable_direct_paths() -> None:
     data = yaml.safe_load((PACK / "provider-bindings.yaml").read_text())
     bindings = data["access_paths"]
 
-    assert 5 <= len(bindings) <= 8
+    assert len(bindings) == 3
     assert len({binding["provider_id"] for binding in bindings}) == len(bindings)
     assert len({binding["access_path_id"] for binding in bindings}) == len(bindings)
     assert all(
@@ -56,7 +56,7 @@ def test_ac3_etf_holdings_bindings_are_distinct_official_candidates() -> None:
     )
 
 
-def test_ac3_candidate_cohort_is_explicitly_excluded_until_authorized() -> None:
+def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
     records = ProviderRegistryRepository(PROVIDERS).cohort_check()
     paths = {
         path.access_path_id: path for record in records for path in record.access_paths
@@ -66,16 +66,25 @@ def test_ac3_candidate_cohort_is_explicitly_excluded_until_authorized() -> None:
     assert all(
         paths[path_id].qualification is not None for path_id in suite.access_path_ids
     )
+    assert set(suite.access_path_ids) == {
+        "alpha-vantage-etf-holdings",
+        "fiu-etf-holdings",
+        "twelve-data-etf-holdings",
+    }
     assert all(
-        paths[path_id].qualification.disposition.value == "excluded"
+        paths[path_id].qualification.disposition.value == "included"
+        for path_id in suite.access_path_ids
+    )
+    assert all(
+        paths[path_id].provider_id != "qveris-finance"
         for path_id in suite.access_path_ids
     )
     validate_provider_bindings(
         load_provider_bindings(PACK / "provider-bindings.yaml"),
         tuple(paths[path_id] for path_id in suite.access_path_ids),
     )
-    with pytest.raises(SuiteCompilationError, match="not included"):
-        compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
+    compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
+    assert len(compiled.run_plan.cells) == 18
 
 
 def test_ac4_etf_holdings_rules_describe_facts_not_scores() -> None:
