@@ -60,6 +60,11 @@ def _weight(value: object) -> float:
             numeric = float(value[:-1]) / 100
         except ValueError as exc:
             raise EtfHoldingsExtractionError("weight is invalid") from exc
+    elif isinstance(value, str):
+        try:
+            numeric = float(value)
+        except ValueError as exc:
+            raise EtfHoldingsExtractionError("weight is invalid") from exc
     else:
         raise EtfHoldingsExtractionError("weight is invalid")
     if not 0 <= numeric <= 1:

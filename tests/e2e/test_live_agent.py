@@ -14,8 +14,11 @@ from qveris_bench.execution.base import AdapterResult
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import load_registered_qveris_direct_binding
 from qveris_bench.models.suite import AgentProtocol
-from qveris_bench.outcomes.etf_holdings import extract_alpha_vantage_etf_holdings
-from qveris_bench.outcomes.extractor import extract_observation
+from qveris_bench.outcomes.etf_holdings import (
+    EtfHoldingsExtractionError,
+    extract_alpha_vantage_etf_holdings,
+)
+from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -80,13 +83,18 @@ def test_ac_live_deepseek_flash_runs_one_alpha_etf_tool(tmp_path: Path) -> None:
         assert isinstance(result, AdapterResult)
         assert result.raw_path.is_file()
         document = json.loads(result.raw_path.read_text(encoding="utf-8"))
-        facts = extract_alpha_vantage_etf_holdings(document, "SPY")
-        observation = extract_observation(
-            ROOT / "cap_packs/etf_holdings/observation-schema.yaml",
-            facts,
-            result.raw_digest,
-            "1.0.0",
-        )
+        try:
+            facts = extract_alpha_vantage_etf_holdings(document, "SPY")
+            observation = extract_observation(
+                ROOT / "cap_packs/etf_holdings/observation-schema.yaml",
+                facts,
+                result.raw_digest,
+                "1.0.0",
+            )
+        except (EtfHoldingsExtractionError, ExtractionError):
+            raise AssertionError(
+                "live Alpha response did not satisfy the ETF CAP"
+            ) from None
         assert observation.facts["holdings"]
 
     asyncio.run(run())

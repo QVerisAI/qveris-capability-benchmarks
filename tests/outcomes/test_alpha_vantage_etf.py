@@ -13,7 +13,7 @@ def test_ac_alpha_vantage_positive_response_becomes_weighted_observation() -> No
                 "data": {
                     "holdings": [
                         {"symbol": "AAPL", "weight": "7.25%"},
-                        {"symbol": "MSFT", "weight": 0.061},
+                        {"symbol": "MSFT", "weight": "0.061"},
                     ]
                 }
             }
