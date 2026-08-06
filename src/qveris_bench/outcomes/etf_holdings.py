@@ -8,13 +8,17 @@ class EtfHoldingsExtractionError(ValueError):
 
 
 def extract_alpha_vantage_etf_holdings(
-    document: dict[str, Any], symbol: str, *, negative_control: bool = False
+    document: object, symbol: str, *, negative_control: bool = False
 ) -> dict[str, Any]:
+    if not isinstance(document, dict):
+        raise EtfHoldingsExtractionError("response must be an object")
     holdings = _holdings(document)
     if negative_control:
         if holdings:
             raise EtfHoldingsExtractionError("negative control returned holdings")
-        return {"validation_error": "provider returned no holdings"}
+        if not _has_explicit_error(document):
+            raise EtfHoldingsExtractionError("negative control lacks an explicit error")
+        return {"validation_error": "provider returned explicit validation response"}
     if not holdings:
         raise EtfHoldingsExtractionError("positive control returned no holdings")
 
@@ -59,3 +63,15 @@ def _weight(value: object) -> float:
     if not 0 <= numeric <= 1:
         raise EtfHoldingsExtractionError("weight is outside [0, 1]")
     return numeric
+
+
+def _has_explicit_error(document: dict[str, Any]) -> bool:
+    result = document.get("result")
+    if not isinstance(result, dict):
+        return False
+    error = result.get("error")
+    if isinstance(error, str):
+        return bool(error)
+    if isinstance(error, dict):
+        return bool(error)
+    return False

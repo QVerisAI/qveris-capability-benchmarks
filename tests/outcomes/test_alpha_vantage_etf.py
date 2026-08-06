@@ -30,8 +30,17 @@ def test_ac_alpha_vantage_positive_response_becomes_weighted_observation() -> No
 
 def test_ac_alpha_vantage_negative_empty_holdings_is_a_validation_fact() -> None:
     assert extract_alpha_vantage_etf_holdings(
-        {"result": {"data": {}}}, "NOTANETF", negative_control=True
-    ) == {"validation_error": "provider returned no holdings"}
+        {"result": {"data": {}, "error": {"code": "invalid_symbol"}}},
+        "NOTANETF",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+def test_ac_alpha_vantage_negative_empty_data_without_error_is_rejected() -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="explicit error"):
+        extract_alpha_vantage_etf_holdings(
+            {"result": {"data": {}}}, "NOTANETF", negative_control=True
+        )
 
 
 def test_ac_alpha_vantage_rejects_unmarked_percentages() -> None:
@@ -40,3 +49,8 @@ def test_ac_alpha_vantage_rejects_unmarked_percentages() -> None:
             {"result": {"data": {"holdings": [{"symbol": "AAPL", "weight": 7.25}]}}},
             "SPY",
         )
+
+
+def test_ac_alpha_vantage_rejects_non_object_responses() -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="response must be an object"):
+        extract_alpha_vantage_etf_holdings([], "SPY")
