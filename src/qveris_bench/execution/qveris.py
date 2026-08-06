@@ -98,6 +98,28 @@ class QverisToolClient:
         await self._adapter.close()
 
 
+async def execute_discovered_tool(
+    client: QverisToolClient,
+    search_artifact_id: str,
+    query: str,
+    tool_id: str,
+    parameters: dict[str, object],
+) -> AdapterResult:
+    search = await client.search(search_artifact_id, query)
+    document = _document(search.result)
+    results = document.get("results", [])
+    discovered_ids = {
+        item.get("tool_id")
+        for item in results
+        if isinstance(item, dict) and isinstance(item.get("tool_id"), str)
+    }
+    if tool_id not in discovered_ids:
+        raise QverisProtocolError("tool_id was not returned by discovery")
+    return await client.execute(
+        f"{search_artifact_id}-execute", tool_id, search.search_id, parameters
+    )
+
+
 def _document(result: AdapterResult) -> dict[str, Any]:
     try:
         document = json.loads(result.raw_path.read_text(encoding="utf-8"))
