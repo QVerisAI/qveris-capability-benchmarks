@@ -1,0 +1,66 @@
+from datetime import UTC, datetime
+
+import pytest
+
+from qveris_bench.outcomes.stock_quote import (
+    StockQuoteExtractionError,
+    extract_finnhub_stock_quote,
+)
+
+
+def test_ac_finnhub_positive_quote_becomes_current_observation() -> None:
+    facts = extract_finnhub_stock_quote(
+        {"result": {"data": {"c": 201.0, "t": 1_700_000_000}}}, "AAPL"
+    )
+
+    assert facts == {
+        "symbol": "AAPL",
+        "price": 201.0,
+        "timestamp": datetime.fromtimestamp(1_700_000_000, UTC).isoformat(),
+    }
+
+
+def test_ac_finnhub_invalid_symbol_quote_becomes_validation_fact() -> None:
+    assert extract_finnhub_stock_quote(
+        {
+            "result": {
+                "data": {
+                    "c": 0,
+                    "d": None,
+                    "dp": None,
+                    "h": 0,
+                    "l": 0,
+                    "o": 0,
+                    "pc": 0,
+                    "t": 0,
+                }
+            }
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned an unavailable quote"}
+
+
+@pytest.mark.parametrize(
+    "document",
+    [
+        {"result": {"data": {"c": 0, "t": 1_700_000_000}}},
+        {"result": {"data": {"c": 201.0, "t": 0}}},
+        {"result": {"data": {"c": "201", "t": 1_700_000_000}}},
+        {"result": {"data": {"c": 201.0, "t": "1700000000"}}},
+    ],
+)
+def test_ac_finnhub_quote_rejects_malformed_or_unavailable_positive_data(
+    document: object,
+) -> None:
+    with pytest.raises(StockQuoteExtractionError):
+        extract_finnhub_stock_quote(document, "AAPL")
+
+
+def test_ac_finnhub_negative_rejects_ambiguous_or_runtime_responses() -> None:
+    with pytest.raises(StockQuoteExtractionError, match="unavailable quote"):
+        extract_finnhub_stock_quote(
+            {"result": {"data": {"c": 0, "t": 1_700_000_000}}},
+            "NOTASTOCK",
+            negative_control=True,
+        )
