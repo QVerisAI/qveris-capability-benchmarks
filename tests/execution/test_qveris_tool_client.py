@@ -12,6 +12,7 @@ from qveris_bench.execution.qveris import (
     QverisProtocolError,
     QverisToolClient,
     execute_discovered_tool,
+    public_response_shape,
 )
 
 
@@ -117,3 +118,46 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
         assert len(calls) == 1, "AC Direct execution must not call an unbound tool"
 
     asyncio.run(run())
+
+
+def test_ac_qveris_response_shape_exposes_no_provider_values() -> None:
+    shape = public_response_shape(
+        {
+            "data": {"symbol": "SPY", "holdings": [{"ticker": "AAPL"}]},
+            "request_id": "private-request-id",
+        }
+    )
+
+    assert shape == {
+        "type": "object",
+        "keys": ["data"],
+        "field_count": 2,
+        "fields": {
+            "data": {
+                "type": "object",
+                "keys": ["holdings", "symbol"],
+                "field_count": 2,
+                "fields": {
+                    "holdings": {"type": "array", "length": 1},
+                    "symbol": {"type": "string"},
+                },
+            }
+        },
+    }
+    assert "SPY" not in repr(shape)
+    assert "AAPL" not in repr(shape)
+    assert "private-request-id" not in repr(shape)
+
+
+def test_ac_qveris_response_shape_redacts_dynamic_object_keys() -> None:
+    shape = public_response_shape({"data": {"holdings": {"AAPL": 0.07}}})
+
+    assert shape["fields"] == {
+        "data": {
+            "type": "object",
+            "keys": ["holdings"],
+            "field_count": 1,
+            "fields": {"holdings": {"type": "object", "keys": [], "field_count": 1}},
+        }
+    }
+    assert "AAPL" not in repr(shape)

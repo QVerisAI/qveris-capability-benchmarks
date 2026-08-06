@@ -16,6 +16,7 @@ from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestr
 from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
+    public_response_shape,
 )
 from qveris_bench.execution.qveris_binding import (
     load_registered_qveris_direct_binding,
@@ -57,6 +58,7 @@ qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tool
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
 }
+_REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
 app.add_typer(provider_app, name="provider")
@@ -135,6 +137,13 @@ def _raw_artifact_dir_from_env() -> Path | None:
     return Path(value) if value else None
 
 
+def qveris_repository_root() -> Path:
+    binding_registry = _REPOSITORY_ROOT / "cap_packs/qveris-direct-bindings.json"
+    if not binding_registry.is_file():
+        raise ValueError("trusted QVeris benchmark repository data is unavailable")
+    return _REPOSITORY_ROOT
+
+
 @qveris_app.command("execute")
 def qveris_execute(
     binding_id: Annotated[
@@ -144,6 +153,10 @@ def qveris_execute(
         Path | None,
         typer.Option(help="Private raw artifact directory outside the repo."),
     ] = None,
+    response_shape: Annotated[
+        bool,
+        typer.Option(help="Emit a value-free response shape for CAP extractor work."),
+    ] = False,
 ) -> None:
     """Execute one discovery-bound QVeris tool without printing its raw response."""
     api_key = os.environ.get("QVERIS_API_KEY")
@@ -155,17 +168,20 @@ def qveris_execute(
         typer.echo("private raw artifact directory is required", err=True)
         raise typer.Exit(code=1)
     try:
+        repository_root = qveris_repository_root()
         binding = load_registered_qveris_direct_binding(
-            Path("cap_packs/qveris-direct-bindings.json"), binding_id
+            repository_root / "cap_packs/qveris-direct-bindings.json", binding_id
         )
         suite_path = _QVERIS_DIRECT_SUITES.get(binding.suite_id)
         if suite_path is None:
             raise ValueError("binding suite is not registered for Direct execution")
-        validate_qveris_direct_binding(binding, suite_path, Path("providers"))
+        validate_qveris_direct_binding(
+            binding, repository_root / suite_path, repository_root / "providers"
+        )
 
         async def execute() -> dict[str, object]:
             client = QverisToolClient(
-                httpx.AsyncClient(), RawArtifactStore(raw_dir, Path.cwd()), api_key
+                httpx.AsyncClient(), RawArtifactStore(raw_dir, repository_root), api_key
             )
             try:
                 result = await execute_discovered_tool(
@@ -177,7 +193,7 @@ def qveris_execute(
                 )
             finally:
                 await client.close()
-            return {
+            summary: dict[str, object] = {
                 "access_path_id": binding.access_path_id,
                 "tool_id": binding.tool_id,
                 "binding_id": binding.binding_id,
@@ -185,8 +201,15 @@ def qveris_execute(
                 "discovery_raw_digest": result.search.result.raw_digest,
                 "status_code": result.result.status_code,
                 "raw_digest": result.result.raw_digest,
-                "request_id": result.result.request_id,
             }
+            if response_shape:
+                document = json.loads(
+                    result.result.raw_path.read_text(encoding="utf-8")
+                )
+                summary["response_shape"] = public_response_shape(document)
+            else:
+                summary["request_id"] = result.result.request_id
+            return summary
 
         typer.echo(json.dumps(asyncio.run(execute()), ensure_ascii=False))
     except (OSError, ValueError) as exc:

@@ -12,6 +12,21 @@ from qveris_bench.execution.http import HttpAdapter
 from qveris_bench.execution.request import TransportRequest
 
 DEFAULT_QVERIS_API_BASE_URL = "https://qveris.ai/api/v1"
+_PUBLIC_RESPONSE_KEYS = frozenset(
+    {
+        "code",
+        "composition",
+        "data",
+        "error",
+        "holdings",
+        "message",
+        "result",
+        "results",
+        "status",
+        "symbol",
+        "weights",
+    }
+)
 
 
 class QverisProtocolError(ValueError):
@@ -135,3 +150,33 @@ def _document(result: AdapterResult) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise QverisProtocolError("QVeris response must be an object")
     return document
+
+
+def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
+    if isinstance(value, dict):
+        keys = sorted(
+            key
+            for key in value
+            if isinstance(key, str) and key in _PUBLIC_RESPONSE_KEYS
+        )
+        shape: dict[str, object] = {
+            "type": "object",
+            "keys": keys,
+            "field_count": len(value),
+        }
+        if depth > 0:
+            shape["fields"] = {
+                key: public_response_shape(value[key], depth - 1) for key in keys
+            }
+        return shape
+    if isinstance(value, list):
+        return {"type": "array", "length": len(value)}
+    if value is None:
+        return {"type": "null"}
+    if isinstance(value, bool):
+        return {"type": "boolean"}
+    if isinstance(value, (int, float)):
+        return {"type": "number"}
+    if isinstance(value, str):
+        return {"type": "string"}
+    return {"type": type(value).__name__}

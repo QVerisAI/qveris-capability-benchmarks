@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from qveris_bench.cli import public_discovery_summary
+from pytest import MonkeyPatch
+
+from qveris_bench.cli import public_discovery_summary, qveris_repository_root
 
 
 def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> None:
@@ -64,7 +66,30 @@ def test_ac3_direct_workflow_executes_only_fixed_registered_bindings() -> None:
     assert "inputs:" not in workflow
     assert "--binding-id ${{ matrix.binding_id }}" in workflow
     assert '--raw-artifact-dir "$RUNNER_TEMP/qveris-raw"' in workflow
+    assert "--response-shape" not in workflow
     assert "qveris-finance" not in workflow
     assert workflow.count("alpha-vantage-spy-holdings") == 1
     assert workflow.count("fiu-spy-holdings") == 1
     assert workflow.count("twelve-data-spy-holdings") == 1
+
+
+def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
+    workflow = Path(".github/workflows/qveris-direct-diagnostic.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
+    assert workflow.count("alpha-vantage-spy-holdings") == 1
+    assert workflow.count("fiu-spy-holdings") == 1
+    assert workflow.count("twelve-data-spy-holdings") == 1
+
+
+def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
+    tmp_path: Path, monkeypatch: MonkeyPatch
+) -> None:
+    (tmp_path / "cap_packs").mkdir()
+    (tmp_path / "cap_packs" / "qveris-direct-bindings.json").write_text("{}")
+    monkeypatch.chdir(tmp_path)
+
+    assert qveris_repository_root() != tmp_path
