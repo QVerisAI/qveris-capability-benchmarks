@@ -25,6 +25,14 @@ class QualificationDisposition(StrEnum):
     EXCLUDED = "excluded"
 
 
+class ReleaseFactType(StrEnum):
+    OUTCOME = "outcome"
+    EVIDENCE = "evidence"
+    LIMITATION = "limitation"
+    ACCESS_PATH = "access_path"
+    PROVIDER_FEEDBACK = "provider_feedback"
+
+
 class RunMode(StrEnum):
     DIRECT = "direct"
     AGENT_TRIAL = "agent_trial"

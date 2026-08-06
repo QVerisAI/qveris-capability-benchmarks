@@ -13,6 +13,7 @@ from qveris_bench.models.base import (
     Sha256,
     StableId,
 )
+from qveris_bench.models.enums import ReleaseFactType
 
 
 def _reject_aggregate_keys(value: Any) -> None:
@@ -30,12 +31,26 @@ def _reject_aggregate_keys(value: Any) -> None:
 
 
 class ReleaseFact(FrozenModel):
-    fact_type: str = Field(min_length=1)
-    details: dict[str, Any] = Field(default_factory=dict)
+    fact_type: ReleaseFactType
+    details: dict[str, Any] = Field(
+        default_factory=dict,
+        json_schema_extra={
+            "propertyNames": {
+                "not": {
+                    "anyOf": [
+                        {"pattern": "[s][c][o][r][e]"},
+                        {"pattern": "[r][a][t][i][n][g]"},
+                        {"pattern": "[a][g][e][n][t][f][r][i][e][n][d][l][y]"},
+                    ]
+                }
+            },
+        },
+    )
     evidence_refs: tuple[EvidenceRef, ...] = ()
 
     @model_validator(mode="after")
     def reject_aggregate_fields(self) -> ReleaseFact:
+        _reject_aggregate_keys({"fact_type": self.fact_type})
         _reject_aggregate_keys(self.details)
         return self
 

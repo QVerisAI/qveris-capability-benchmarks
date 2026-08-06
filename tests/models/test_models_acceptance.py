@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import jsonschema
 import pytest
 from pydantic import ValidationError
 
@@ -196,8 +197,37 @@ def test_ac8_release_fact_details_reject_nested_aggregate_fields() -> None:
             run_plan_digest="sha256:" + "b" * 64,
             developer_selection_facts=(
                 {
-                    "fact_type": "provider-observation",
+                    "fact_type": "outcome",
                     "details": {"provider_score": 100},
                 },
             ),
         )
+
+
+def test_ac8_release_fact_rejects_aggregate_fact_type() -> None:
+    with pytest.raises(ValidationError, match="provider_score"):
+        BenchmarkRelease(
+            release_id="etf-holdings-2026-q3-v1",
+            version="1.0.0",
+            suite_fingerprint="a" * 64,
+            run_plan_digest="sha256:" + "b" * 64,
+            developer_selection_facts=(
+                {"fact_type": "provider_score", "details": {"value": 100}},
+            ),
+        )
+
+
+def test_ac8_exported_release_schema_rejects_aggregate_fact_fields() -> None:
+    schema = BenchmarkRelease.model_json_schema(mode="validation")
+    instance = {
+        "release_id": "etf-holdings-2026-q3-v1",
+        "version": "1.0.0",
+        "suite_fingerprint": "a" * 64,
+        "run_plan_digest": "sha256:" + "b" * 64,
+        "developer_selection_facts": (
+            {"fact_type": "outcome", "details": {"provider_score": 100}},
+        ),
+    }
+
+    with pytest.raises(jsonschema.ValidationError, match="provider_score"):
+        jsonschema.validate(instance, schema)

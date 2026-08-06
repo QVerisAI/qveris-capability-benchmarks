@@ -30,6 +30,7 @@ qveris-bench = "qveris_bench.cli:app"
 
 [dependency-groups]
 dev = [
+  "jsonschema>=4.26.0",
   "mypy>=1.17.0",
   "pytest>=8.4.0",
   "ruff>=0.12.0",

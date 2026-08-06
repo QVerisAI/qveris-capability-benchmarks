@@ -5,6 +5,21 @@
       "properties": {
         "details": {
           "additionalProperties": true,
+          "propertyNames": {
+            "not": {
+              "anyOf": [
+                {
+                  "pattern": "[s][c][o][r][e]"
+                },
+                {
+                  "pattern": "[r][a][t][i][n][g]"
+                },
+                {
+                  "pattern": "[a][g][e][n][t][f][r][i][e][n][d][l][y]"
+                }
+              ]
+            }
+          },
           "title": "Details",
           "type": "object"
         },
@@ -18,9 +33,7 @@
           "type": "array"
         },
         "fact_type": {
-          "minLength": 1,
-          "title": "Fact Type",
-          "type": "string"
+          "$ref": "#/$defs/ReleaseFactType"
         }
       },
       "required": [
@@ -28,6 +41,17 @@
       ],
       "title": "ReleaseFact",
       "type": "object"
+    },
+    "ReleaseFactType": {
+      "enum": [
+        "outcome",
+        "evidence",
+        "limitation",
+        "access_path",
+        "provider_feedback"
+      ],
+      "title": "ReleaseFactType",
+      "type": "string"
     }
   },
   "additionalProperties": false,
