@@ -171,5 +171,6 @@ def test_ac_qveris_response_shape_can_expose_nested_structural_fields() -> None:
     assert shape["fields"]["result"]["fields"]["data"]["fields"]["holdings"] == {
         "type": "array",
         "length": 1,
+        "item_shape": {"type": "object", "keys": ["ticker"], "field_count": 1},
     }
     assert "AAPL" not in repr(shape)
