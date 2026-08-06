@@ -99,3 +99,13 @@ def test_ac6_diagnostic_cli_requests_nested_value_free_shape() -> None:
     source = Path("src/qveris_bench/cli.py").read_text()
 
     assert "public_response_shape(document, depth=4)" in source
+
+
+def test_ac7_live_agent_workflow_uses_only_benchmark_secret_and_flash_model() -> None:
+    workflow = Path(".github/workflows/live-agent-e2e.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "QVERIS_AGENT_MODEL: deepseek-v4-flash" in workflow
+    assert 'RUN_LIVE_AGENT: "1"' in workflow
+    assert "inputs:" not in workflow

@@ -56,6 +56,10 @@ def test_ac1_agent_trial_receives_exactly_one_canonical_tool() -> None:
         assert client.request is not None
         assert client.request["parallel_tool_calls"] is False
         assert len(client.request["tools"]) == 1
+        assert client.request["tool_choice"] == {
+            "type": "function",
+            "name": "get-quote",
+        }
 
     asyncio.run(run())
 
