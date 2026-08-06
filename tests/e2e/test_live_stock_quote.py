@@ -9,6 +9,7 @@ import pytest
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import (
+    QverisDirectBinding,
     load_registered_qveris_direct_binding,
     validate_qveris_direct_binding,
 )
@@ -19,6 +20,33 @@ from qveris_bench.outcomes.stock_quote import (
 )
 
 ROOT = Path(__file__).resolve().parents[2]
+_FINNHUB_DISCOVERY_DIGEST = (
+    "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126"
+)
+_EXPECTED_BINDINGS = {
+    "finnhub-aapl-quote": {
+        "discovery_digest": _FINNHUB_DISCOVERY_DIGEST,
+        "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+        "parameters": {"symbol": "AAPL"},
+    },
+    "finnhub-invalid-stock": {
+        "discovery_digest": _FINNHUB_DISCOVERY_DIGEST,
+        "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+        "parameters": {"symbol": "NOTASTOCK"},
+    },
+}
+
+
+def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
+    expected = _EXPECTED_BINDINGS.get(binding.binding_id)
+    if expected is None:
+        raise AssertionError("live Stock Quote binding is not allowlisted")
+    if (
+        binding.discovery_digest != expected["discovery_digest"]
+        or binding.tool_id != expected["tool_id"]
+        or binding.parameters != expected["parameters"]
+    ):
+        raise AssertionError("live Stock Quote binding does not match frozen contract")
 
 
 @pytest.mark.skipif(
@@ -50,6 +78,7 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                 assert binding.suite_id == "stock-quote-v1"
                 assert binding.access_path_id == "finnhub-stock-quote"
                 assert binding.provider_id == "finnhub"
+                _validate_fixed_binding(binding)
                 result = await execute_discovered_tool(
                     client,
                     f"{binding_id}-search",
@@ -84,3 +113,13 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
             await client.close()
 
     asyncio.run(run())
+
+
+def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> None:
+    binding = load_registered_qveris_direct_binding(
+        ROOT / "cap_packs/qveris-direct-bindings.json", "finnhub-aapl-quote"
+    )
+    redirected = binding.model_copy(update={"tool_id": "other.provider.quote"})
+
+    with pytest.raises(AssertionError, match="frozen contract"):
+        _validate_fixed_binding(redirected)
