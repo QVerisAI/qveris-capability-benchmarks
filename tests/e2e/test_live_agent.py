@@ -7,6 +7,7 @@ import httpx
 import pytest
 
 from qveris_bench.agents.base import AgentTrial
+from qveris_bench.agents.frozen import merge_frozen_parameters
 from qveris_bench.agents.gateway import qveris_responses_client
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.base import AdapterResult
@@ -37,20 +38,23 @@ def test_ac_live_deepseek_flash_runs_one_alpha_etf_tool(tmp_path: Path) -> None:
         )
 
         async def invoke(arguments: dict[str, object]) -> object:
+            parameters = merge_frozen_parameters(
+                binding.parameters, arguments, ("symbol",)
+            )
             return (
                 await execute_discovered_tool(
                     tool_client,
                     "agent-alpha-vantage-search",
                     binding.discovery_query,
                     binding.tool_id,
-                    arguments,
+                    parameters,
                 )
             ).result
 
         protocol = AgentProtocol(
             model=os.environ.get("QVERIS_AGENT_MODEL", "deepseek-v4-flash"),
             prompt_version="1.0.0",
-            canonical_tool="alpha_vantage_etf_profile",
+            canonical_tool="alpha-vantage-etf-profile",
             maximum_calls=1,
             token_budget=512,
             timeout_seconds=60,
