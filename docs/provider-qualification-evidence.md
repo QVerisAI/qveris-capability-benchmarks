@@ -4,16 +4,20 @@ This record covers the v1 ETF Holdings and Stock Quote candidates below. It reco
 only configuration and authorization facts; it is not benchmark evidence and makes
 no statement about provider task outcomes.
 
-| Provider | Official interface source | Credential environment variable |
-| --- | --- | --- |
-| Alpha Vantage | https://www.alphavantage.co/documentation/ | `ALPHA_VANTAGE_API_KEY` |
-| Financial Modeling Prep | https://financialmodelingprep.com/stable/etf/holdings?symbol=SPY | `FMP_API_KEY` |
-| Finnhub | https://finnhub.io/docs/api/etf-holdings | `FINNHUB_API_KEY` |
-| EODHD | https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds | `EODHD_API_TOKEN` |
-| Twelve Data | https://twelvedata.com/docs | `TWELVE_DATA_API_KEY` |
+| Provider | Direct Test path | Credential environment variable | Cohort status |
+| --- | --- | --- | --- |
+| Alpha Vantage | `alphavantage.etf.profile.retrieve` | `QVERIS_API_KEY` | included |
+| Fund Insight | `fiu_mcp_server.postapiusf10fundconstituent` | `QVERIS_API_KEY` | included |
+| Twelve Data | `twelvedata.etfs.world.composition.retrieve` | `QVERIS_API_KEY` | included |
+| Financial Modeling Prep | https://financialmodelingprep.com/stable/etf/holdings?symbol=SPY | `FMP_API_KEY` | excluded |
+| Finnhub | https://finnhub.io/docs/api/etf-holdings | `FINNHUB_API_KEY` | excluded |
+| EODHD | https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds | `EODHD_API_TOKEN` | excluded |
 
-At the time of this record, no QVeris-controlled credential or explicit benchmark
-execution authorization was present for these paths. Each is therefore excluded
-from the frozen cohort. A later inclusion requires a new terminal qualification
-decision backed by authorization and successful Direct Test evidence; it must not
-reuse this record as execution evidence.
+The included paths were discovered through QVeris on 2026-08-06 and are frozen as
+explicit tool IDs with `QVERIS_API_KEY`; their Provider attribution is retained in
+the registry. `qveris_finance.*` automatic-routing tools are intentionally excluded:
+they do not provide a stable underlying Provider identity for this benchmark.
+
+The remaining candidates lack a discovered QVeris Direct ETF-holdings interface in
+the US scope. They remain excluded until a qualifying path and authorization are
+recorded. This record is configuration evidence, not execution evidence.

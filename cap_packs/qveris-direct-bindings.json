@@ -1,0 +1,70 @@
+{
+  "bindings": [
+    {
+      "binding_id": "fiu-spy-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "fiu-etf-holdings",
+      "provider_id": "fiu",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+      "parameters": {"symbol": "SPY.US"}
+    },
+    {
+      "binding_id": "fiu-invalid-etf",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "fiu-etf-holdings",
+      "provider_id": "fiu",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+      "parameters": {"symbol": "NOTANETF.US"}
+    },
+    {
+      "binding_id": "twelve-data-spy-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "twelve-data-etf-holdings",
+      "provider_id": "twelve-data",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "twelvedata.etfs.world.composition.retrieve.v1.fa2aaf4c",
+      "parameters": {"symbol": "SPY"}
+    },
+    {
+      "binding_id": "twelve-data-invalid-etf",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "twelve-data-etf-holdings",
+      "provider_id": "twelve-data",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "twelvedata.etfs.world.composition.retrieve.v1.fa2aaf4c",
+      "parameters": {"symbol": "NOTANETF"}
+    },
+    {
+      "binding_id": "alpha-vantage-spy-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "provider_id": "alpha-vantage",
+      "discovery_query": "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+      "discovery_digest": "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+      "tool_id": "alphavantage.etf.profile.retrieve.v1.467a92c0",
+      "parameters": {"function": "ETF_PROFILE", "symbol": "SPY"}
+    },
+    {
+      "binding_id": "alpha-vantage-invalid-etf",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "provider_id": "alpha-vantage",
+      "discovery_query": "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+      "discovery_digest": "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+      "tool_id": "alphavantage.etf.profile.retrieve.v1.467a92c0",
+      "parameters": {"function": "ETF_PROFILE", "symbol": "NOTANETF"}
+    }
+  ]
+}

@@ -5,9 +5,14 @@ import json
 from pathlib import Path
 
 import httpx
+import pytest
 
 from qveris_bench.evidence.store import RawArtifactStore
-from qveris_bench.execution.qveris import QverisToolClient
+from qveris_bench.execution.qveris import (
+    QverisProtocolError,
+    QverisToolClient,
+    execute_discovered_tool,
+)
 
 
 def _store(tmp_path: Path) -> RawArtifactStore:
@@ -78,5 +83,37 @@ def test_ac_qveris_tool_description_uses_only_frozen_ids(tmp_path: Path) -> None
 
         assert result.raw_path.exists()
         await client.close()
+
+    asyncio.run(run())
+
+
+def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
+    tmp_path: Path,
+) -> None:
+    async def run() -> None:
+        calls: list[httpx.Request] = []
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            calls.append(request)
+            return httpx.Response(200, json={"search_id": "search-123", "results": []})
+
+        client = QverisToolClient(
+            httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            _store(tmp_path),
+            "controlled-key",
+        )
+        try:
+            with pytest.raises(QverisProtocolError, match="not returned by discovery"):
+                await execute_discovered_tool(
+                    client,
+                    "search",
+                    "ETF holdings",
+                    "frozen-tool",
+                    {"symbol": "SPY"},
+                )
+        finally:
+            await client.close()
+
+        assert len(calls) == 1, "AC Direct execution must not call an unbound tool"
 
     asyncio.run(run())

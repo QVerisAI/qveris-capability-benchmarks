@@ -54,3 +54,17 @@ def test_ac2_discovery_workflow_does_not_interpolate_manual_inputs_into_shell() 
     assert '"${{ inputs.limit }}"' not in workflow
     assert '"$DISCOVERY_QUERY"' in workflow
     assert '"$DISCOVERY_LIMIT"' in workflow
+
+
+def test_ac3_direct_workflow_executes_only_fixed_registered_bindings() -> None:
+    workflow = Path(".github/workflows/qveris-direct-e2e.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "inputs:" not in workflow
+    assert "--binding-id ${{ matrix.binding_id }}" in workflow
+    assert '--raw-artifact-dir "$RUNNER_TEMP/qveris-raw"' in workflow
+    assert "qveris-finance" not in workflow
+    assert workflow.count("alpha-vantage-spy-holdings") == 1
+    assert workflow.count("fiu-spy-holdings") == 1
+    assert workflow.count("twelve-data-spy-holdings") == 1
