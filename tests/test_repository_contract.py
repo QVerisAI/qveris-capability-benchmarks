@@ -296,7 +296,9 @@ def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
     assert "uses:" not in workflow
     assert 'git fetch --depth=1 origin "$GITHUB_SHA"' in workflow
     assert "python3.12 -m pip install" in workflow
-    assert "uv==0.12.2" in workflow
+    assert "uv-0.12.2" in workflow
+    assert "files.pythonhosted.org" in workflow
+    assert "sha256sum --check" in workflow
     assert "must not invoke\nprovider APIs" in replay
     assert "credential values remain outside" in replay
 

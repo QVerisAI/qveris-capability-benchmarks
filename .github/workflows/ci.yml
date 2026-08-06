@@ -20,7 +20,10 @@ jobs:
           git checkout --detach FETCH_HEAD
       - name: Install the pinned uv bootstrap
         run: |
-          python3.12 -m pip install --user --disable-pip-version-check "uv==0.12.2"
+          uv_wheel="/tmp/uv-0.12.2-py3-none-manylinux_2_17_x86_64.whl"
+          curl --fail --location --retry 3 --output "$uv_wheel" "https://files.pythonhosted.org/packages/a7/fe/a87be2a492440945e745b0dc81aef7fea9730d8194af88d854b7641f5ddf/uv-0.12.2-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+          echo "3a8d93d1fe019561b70494a8e1332492afb5f14dadc33d5239569d0964164d10  $uv_wheel" | sha256sum --check
+          python3.12 -m pip install --user --disable-pip-version-check "$uv_wheel"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - run: uv sync --locked --all-groups
       - run: uv run pytest -q
