@@ -8,7 +8,10 @@ import pytest
 
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
-from qveris_bench.execution.qveris_binding import load_registered_qveris_direct_binding
+from qveris_bench.execution.qveris_binding import (
+    load_registered_qveris_direct_binding,
+    validate_qveris_direct_binding,
+)
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.outcomes.stock_quote import (
     StockQuoteExtractionError,
@@ -39,6 +42,14 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                 binding = load_registered_qveris_direct_binding(
                     ROOT / "cap_packs/qveris-direct-bindings.json", binding_id
                 )
+                validate_qveris_direct_binding(
+                    binding,
+                    ROOT / "cap_packs/stock_quote/suite.yaml",
+                    ROOT / "providers",
+                )
+                assert binding.suite_id == "stock-quote-v1"
+                assert binding.access_path_id == "finnhub-stock-quote"
+                assert binding.provider_id == "finnhub"
                 result = await execute_discovered_tool(
                     client,
                     f"{binding_id}-search",
