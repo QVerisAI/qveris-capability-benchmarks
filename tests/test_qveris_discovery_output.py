@@ -94,6 +94,19 @@ def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
     assert "twelve-data-spy-holdings" not in workflow
 
 
+def test_ac4_finnhub_diagnostic_limits_execution_to_quote_bindings() -> None:
+    workflow = Path(".github/workflows/finnhub-quote-diagnostic.yml").read_text()
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
+    assert workflow.count("finnhub-aapl-quote") == 1
+    assert workflow.count("finnhub-invalid-stock") == 1
+    assert "alpha-vantage" not in workflow
+    assert "fiu-" not in workflow
+
+
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
     tmp_path: Path, monkeypatch: MonkeyPatch
 ) -> None:

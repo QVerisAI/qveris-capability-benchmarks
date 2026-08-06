@@ -1,0 +1,31 @@
+name: Finnhub Quote Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        binding_id:
+          - finnhub-aapl-quote
+          - finnhub-invalid-stock
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: |
+          uv run qveris-bench qveris execute \
+            --binding-id ${{ matrix.binding_id }} \
+            --response-shape \
+            --raw-artifact-dir "$RUNNER_TEMP/qveris-raw"
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
