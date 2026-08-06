@@ -19,8 +19,6 @@ jobs:
   search:
     runs-on: ubuntu-latest
     environment: benchmark-e2e
-    env:
-      QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -29,6 +27,10 @@ jobs:
       - run: uv sync --locked --all-groups
       - run: |
           uv run qveris-bench qveris search \
-            --query "${{ inputs.query }}" \
-            --limit "${{ inputs.limit }}" \
+            --query "$DISCOVERY_QUERY" \
+            --limit "$DISCOVERY_LIMIT" \
             --raw-artifact-dir "$RUNNER_TEMP/qveris-raw"
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          DISCOVERY_QUERY: ${{ inputs.query }}
+          DISCOVERY_LIMIT: ${{ inputs.limit }}
