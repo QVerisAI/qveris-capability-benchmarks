@@ -7,7 +7,3 @@ access_paths:
     provider_id: fiu
     canonical_interface: US_F10_FUND_CONSTITUENT
     official_source: https://www.fundinsight.net/terms-of-service
-  - access_path_id: twelve-data-etf-holdings
-    provider_id: twelve-data
-    canonical_interface: etfs-world
-    official_source: https://twelvedata.com/docs

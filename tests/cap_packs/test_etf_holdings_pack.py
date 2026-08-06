@@ -48,7 +48,7 @@ def test_ac3_etf_holdings_bindings_are_distinct_attributable_direct_paths() -> N
     data = yaml.safe_load((PACK / "provider-bindings.yaml").read_text())
     bindings = data["access_paths"]
 
-    assert len(bindings) == 3
+    assert len(bindings) == 2
     assert len({binding["provider_id"] for binding in bindings}) == len(bindings)
     assert len({binding["access_path_id"] for binding in bindings}) == len(bindings)
     assert all(
@@ -69,7 +69,6 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
     assert set(suite.access_path_ids) == {
         "alpha-vantage-etf-holdings",
         "fiu-etf-holdings",
-        "twelve-data-etf-holdings",
     }
     assert all(
         paths[path_id].qualification.disposition.value == "included"
@@ -84,7 +83,7 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
         tuple(paths[path_id] for path_id in suite.access_path_ids),
     )
     compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
-    assert len(compiled.run_plan.cells) == 18
+    assert len(compiled.run_plan.cells) == 12
 
 
 def test_ac4_etf_holdings_rules_describe_facts_not_scores() -> None:

@@ -19,8 +19,6 @@ jobs:
           - alpha-vantage-invalid-etf
           - fiu-spy-holdings
           - fiu-invalid-etf
-          - twelve-data-spy-holdings
-          - twelve-data-invalid-etf
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

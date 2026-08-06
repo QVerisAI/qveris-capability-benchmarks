@@ -70,7 +70,7 @@ def test_ac3_direct_workflow_executes_only_fixed_registered_bindings() -> None:
     assert "qveris-finance" not in workflow
     assert workflow.count("alpha-vantage-spy-holdings") == 1
     assert workflow.count("fiu-spy-holdings") == 1
-    assert workflow.count("twelve-data-spy-holdings") == 1
+    assert "twelve-data-spy-holdings" not in workflow
 
 
 def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
@@ -82,7 +82,7 @@ def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
     assert "--response-shape" in workflow
     assert workflow.count("alpha-vantage-spy-holdings") == 1
     assert workflow.count("fiu-spy-holdings") == 1
-    assert workflow.count("twelve-data-spy-holdings") == 1
+    assert "twelve-data-spy-holdings" not in workflow
 
 
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
