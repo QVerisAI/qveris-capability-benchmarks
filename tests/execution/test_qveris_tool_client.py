@@ -176,6 +176,21 @@ def test_ac_qveris_response_shape_can_expose_nested_structural_fields() -> None:
     assert "AAPL" not in repr(shape)
 
 
+def test_ac_qveris_response_shape_allows_documented_finnhub_quote_keys() -> None:
+    shape = public_response_shape(
+        {"result": {"data": {"c": 201.0, "t": 1_700_000_000}}}, depth=4
+    )
+
+    assert shape["fields"]["result"]["fields"]["data"] == {
+        "type": "object",
+        "keys": ["c", "t"],
+        "field_count": 2,
+        "fields": {"c": {"type": "number"}, "t": {"type": "number"}},
+    }
+    assert "201.0" not in repr(shape)
+    assert "1700000000" not in repr(shape)
+
+
 def test_ac_qveris_response_shape_exposes_only_allowlisted_error_structure() -> None:
     shape = public_response_shape(
         {
