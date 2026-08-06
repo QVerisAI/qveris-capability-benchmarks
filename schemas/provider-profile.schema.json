@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "market_coverage": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Market Coverage",
+      "type": "array"
+    },
+    "official_name": {
+      "minLength": 1,
+      "title": "Official Name",
+      "type": "string"
+    },
+    "provider_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "qveris_integration": {
+      "default": false,
+      "title": "Qveris Integration",
+      "type": "boolean"
+    },
+    "testing_authorization": {
+      "minLength": 1,
+      "title": "Testing Authorization",
+      "type": "string"
+    },
+    "website": {
+      "format": "uri",
+      "maxLength": 2083,
+      "minLength": 1,
+      "title": "Website",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provider_id",
+    "official_name",
+    "website",
+    "testing_authorization"
+  ],
+  "title": "ProviderProfile",
+  "type": "object"
+}

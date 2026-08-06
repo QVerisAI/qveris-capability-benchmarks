@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "DisclosureLevel": {
+      "enum": [
+        "private",
+        "summary_only",
+        "sanitized_public"
+      ],
+      "title": "DisclosureLevel",
+      "type": "string"
+    },
+    "LicenseStatus": {
+      "enum": [
+        "pending",
+        "cleared",
+        "restricted"
+      ],
+      "title": "LicenseStatus",
+      "type": "string"
+    },
+    "RedactionStatus": {
+      "enum": [
+        "pending",
+        "sanitized",
+        "not_publishable"
+      ],
+      "title": "RedactionStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "disclosure_level": {
+      "$ref": "#/$defs/DisclosureLevel"
+    },
+    "evidence_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "extractor_version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Extractor Version",
+      "type": "string"
+    },
+    "license_status": {
+      "$ref": "#/$defs/LicenseStatus"
+    },
+    "public_digest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Public Digest"
+    },
+    "raw_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Raw Digest",
+      "type": "string"
+    },
+    "redaction_status": {
+      "$ref": "#/$defs/RedactionStatus"
+    },
+    "suite_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Fingerprint",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "raw_digest",
+    "redaction_status",
+    "disclosure_level",
+    "license_status",
+    "extractor_version",
+    "suite_fingerprint"
+  ],
+  "title": "EvidenceBundle",
+  "type": "object"
+}

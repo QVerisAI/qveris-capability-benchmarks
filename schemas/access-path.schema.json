@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "AccessPathType": {
+      "enum": [
+        "native_mcp",
+        "official_openapi",
+        "official_api",
+        "official_sdk",
+        "benchmark_wrapper",
+        "qveris_connector"
+      ],
+      "title": "AccessPathType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "access_path_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Access Path Id",
+      "type": "string"
+    },
+    "agent_trial_eligible": {
+      "title": "Agent Trial Eligible",
+      "type": "boolean"
+    },
+    "authorization": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Authorization"
+    },
+    "canonical_interface": {
+      "minLength": 1,
+      "title": "Canonical Interface",
+      "type": "string"
+    },
+    "credential_env": {
+      "default": [],
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]*$",
+        "type": "string"
+      },
+      "title": "Credential Env",
+      "type": "array"
+    },
+    "official_source": {
+      "format": "uri",
+      "maxLength": 2083,
+      "minLength": 1,
+      "title": "Official Source",
+      "type": "string"
+    },
+    "path_type": {
+      "$ref": "#/$defs/AccessPathType"
+    },
+    "plan_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Plan Name"
+    },
+    "provider_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Provider Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "access_path_id",
+    "provider_id",
+    "path_type",
+    "official_source",
+    "canonical_interface",
+    "agent_trial_eligible"
+  ],
+  "title": "AccessPath",
+  "type": "object"
+}

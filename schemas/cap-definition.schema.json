@@ -1,0 +1,159 @@
+{
+  "$defs": {
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{7,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Commit"
+        },
+        "internal_reference": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Internal Reference"
+        },
+        "repository": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repository"
+        },
+        "source_type": {
+          "$ref": "#/$defs/SourceType"
+        },
+        "task_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Id"
+        }
+      },
+      "required": [
+        "source_type"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "SourceType": {
+      "enum": [
+        "external_repository",
+        "public_benchmark",
+        "customer_question",
+        "developer_query",
+        "provider_submission",
+        "search_demand",
+        "qveris_original"
+      ],
+      "title": "SourceType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "asset_types": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Asset Types",
+      "type": "array"
+    },
+    "business_use": {
+      "minLength": 10,
+      "title": "Business Use",
+      "type": "string"
+    },
+    "cap_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Cap Id",
+      "type": "string"
+    },
+    "exclusions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclusions",
+      "type": "array"
+    },
+    "markets": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Markets",
+      "type": "array"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "scope": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Scope",
+      "type": "array"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Sources",
+      "type": "array"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "cap_id",
+    "version",
+    "name",
+    "business_use",
+    "scope",
+    "sources"
+  ],
+  "title": "CapDefinition",
+  "type": "object"
+}
