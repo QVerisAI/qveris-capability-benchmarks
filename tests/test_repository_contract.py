@@ -300,6 +300,7 @@ def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
     assert "uv-0.12.2" in workflow
     assert "files.pythonhosted.org" in workflow
     assert "sha256sum --check" in workflow
+    assert "--no-deps --no-index" in workflow
     assert "must not invoke\nprovider APIs" in replay
     assert "credential values remain outside" in replay
 
