@@ -174,3 +174,31 @@ def test_ac_qveris_response_shape_can_expose_nested_structural_fields() -> None:
         "item_shape": {"type": "object", "keys": ["ticker"], "field_count": 1},
     }
     assert "AAPL" not in repr(shape)
+
+
+def test_ac_qveris_response_shape_exposes_only_allowlisted_error_structure() -> None:
+    shape = public_response_shape(
+        {
+            "result": {
+                "data": {},
+                "error_code": "invalid_symbol",
+                "error_message": "NOTANETF is not a valid symbol",
+                "request_id": "private-request-id",
+            }
+        },
+        depth=3,
+    )
+
+    assert shape["fields"]["result"] == {
+        "type": "object",
+        "keys": ["data", "error_code", "error_message"],
+        "field_count": 4,
+        "fields": {
+            "data": {"type": "object", "keys": [], "field_count": 0, "fields": {}},
+            "error_code": {"type": "string"},
+            "error_message": {"type": "string"},
+        },
+    }
+    assert "invalid_symbol" not in repr(shape)
+    assert "NOTANETF" not in repr(shape)
+    assert "private-request-id" not in repr(shape)
