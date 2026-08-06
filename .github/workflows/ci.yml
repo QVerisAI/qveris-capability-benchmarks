@@ -12,10 +12,16 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
-        with:
-          python-version: "3.12"
+      - name: Check out the triggering commit
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Install the pinned uv bootstrap
+        run: |
+          python3.12 -m pip install --user --disable-pip-version-check "uv==0.12.2"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - run: uv sync --locked --all-groups
       - run: uv run pytest -q
       - run: uv run ruff check .
