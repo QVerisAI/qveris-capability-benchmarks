@@ -17,7 +17,7 @@ from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
 )
-from qveris_bench.execution.qveris_binding import load_qveris_direct_binding
+from qveris_bench.execution.qveris_binding import load_registered_qveris_direct_binding
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
@@ -131,9 +131,8 @@ def _raw_artifact_dir_from_env() -> Path | None:
 
 @qveris_app.command("execute")
 def qveris_execute(
-    binding_path: Annotated[Path, typer.Option(help="Immutable Direct binding JSON.")],
-    binding_digest: Annotated[
-        str, typer.Option(help="Expected binding SHA-256 digest.")
+    binding_id: Annotated[
+        str, typer.Option(help="Registered frozen Direct binding ID.")
     ],
     raw_artifact_dir: Annotated[
         Path | None,
@@ -150,7 +149,9 @@ def qveris_execute(
         typer.echo("private raw artifact directory is required", err=True)
         raise typer.Exit(code=1)
     try:
-        binding = load_qveris_direct_binding(binding_path, binding_digest)
+        binding = load_registered_qveris_direct_binding(
+            Path("cap_packs/qveris-direct-bindings.json"), binding_id
+        )
 
         async def execute() -> dict[str, object]:
             client = QverisToolClient(
@@ -169,7 +170,7 @@ def qveris_execute(
             return {
                 "access_path_id": binding.access_path_id,
                 "tool_id": binding.tool_id,
-                "binding_digest": binding_digest,
+                "binding_id": binding.binding_id,
                 "discovery_digest": binding.discovery_digest,
                 "discovery_raw_digest": result.search.result.raw_digest,
                 "status_code": result.result.status_code,
