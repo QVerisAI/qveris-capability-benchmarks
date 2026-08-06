@@ -95,9 +95,7 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
 
         def handler(request: httpx.Request) -> httpx.Response:
             calls.append(request)
-            return httpx.Response(
-                200, json={"search_id": "search-123", "results": []}
-            )
+            return httpx.Response(200, json={"search_id": "search-123", "results": []})
 
         client = QverisToolClient(
             httpx.AsyncClient(transport=httpx.MockTransport(handler)),
