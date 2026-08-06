@@ -36,8 +36,28 @@ def test_ac_alpha_vantage_negative_empty_holdings_is_a_validation_fact() -> None
     ) == {"validation_error": "provider returned explicit validation response"}
 
 
+@pytest.mark.parametrize(
+    "error",
+    [
+        {"code": "rate_limited"},
+        {"code": "authentication_failed"},
+        {"code": "internal_error"},
+        "rate limited",
+    ],
+)
+def test_ac_alpha_vantage_negative_rejects_non_validation_errors(
+    error: object,
+) -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
+        extract_alpha_vantage_etf_holdings(
+            {"result": {"data": {}, "error": error}},
+            "NOTANETF",
+            negative_control=True,
+        )
+
+
 def test_ac_alpha_vantage_negative_empty_data_without_error_is_rejected() -> None:
-    with pytest.raises(EtfHoldingsExtractionError, match="explicit error"):
+    with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
         extract_alpha_vantage_etf_holdings(
             {"result": {"data": {}}}, "NOTANETF", negative_control=True
         )

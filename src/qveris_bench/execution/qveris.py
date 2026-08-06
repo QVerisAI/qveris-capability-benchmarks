@@ -18,6 +18,8 @@ _PUBLIC_RESPONSE_KEYS = frozenset(
         "composition",
         "data",
         "error",
+        "error_code",
+        "error_message",
         "holdings",
         "message",
         "result",

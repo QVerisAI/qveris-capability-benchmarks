@@ -16,8 +16,10 @@ def extract_alpha_vantage_etf_holdings(
     if negative_control:
         if holdings:
             raise EtfHoldingsExtractionError("negative control returned holdings")
-        if not _has_explicit_error(document):
-            raise EtfHoldingsExtractionError("negative control lacks an explicit error")
+        if not _has_invalid_symbol_error(document):
+            raise EtfHoldingsExtractionError(
+                "negative control lacks a validation error"
+            )
         return {"validation_error": "provider returned explicit validation response"}
     if not holdings:
         raise EtfHoldingsExtractionError("positive control returned no holdings")
@@ -65,13 +67,17 @@ def _weight(value: object) -> float:
     return numeric
 
 
-def _has_explicit_error(document: dict[str, Any]) -> bool:
+def _has_invalid_symbol_error(document: dict[str, Any]) -> bool:
     result = document.get("result")
     if not isinstance(result, dict):
         return False
+    candidates = [result.get("error_code"), result.get("code")]
     error = result.get("error")
-    if isinstance(error, str):
-        return bool(error)
     if isinstance(error, dict):
-        return bool(error)
-    return False
+        candidates.append(error.get("code"))
+    return any(
+        isinstance(candidate, str)
+        and candidate.casefold().replace("-", "_")
+        in {"invalid_symbol", "invalid_etf", "unknown_symbol"}
+        for candidate in candidates
+    )
