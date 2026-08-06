@@ -24,6 +24,12 @@ class QverisSearch:
     result: AdapterResult
 
 
+@dataclass(frozen=True)
+class QverisDirectExecution:
+    search: QverisSearch
+    result: AdapterResult
+
+
 class QverisToolClient:
     def __init__(
         self,
@@ -104,7 +110,7 @@ async def execute_discovered_tool(
     query: str,
     tool_id: str,
     parameters: dict[str, object],
-) -> AdapterResult:
+) -> QverisDirectExecution:
     search = await client.search(search_artifact_id, query)
     document = _document(search.result)
     results = document.get("results", [])
@@ -115,9 +121,10 @@ async def execute_discovered_tool(
     }
     if tool_id not in discovered_ids:
         raise QverisProtocolError("tool_id was not returned by discovery")
-    return await client.execute(
+    result = await client.execute(
         f"{search_artifact_id}-execute", tool_id, search.search_id, parameters
     )
+    return QverisDirectExecution(search=search, result=result)
 
 
 def _document(result: AdapterResult) -> dict[str, Any]:

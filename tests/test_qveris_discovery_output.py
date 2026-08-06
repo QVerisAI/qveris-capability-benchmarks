@@ -1,8 +1,6 @@
 from pathlib import Path
 
-import pytest
-
-from qveris_bench.cli import parse_qveris_parameters, public_discovery_summary
+from qveris_bench.cli import public_discovery_summary
 
 
 def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> None:
@@ -56,9 +54,3 @@ def test_ac2_discovery_workflow_does_not_interpolate_manual_inputs_into_shell() 
     assert '"${{ inputs.limit }}"' not in workflow
     assert '"$DISCOVERY_QUERY"' in workflow
     assert '"$DISCOVERY_LIMIT"' in workflow
-
-
-def test_ac3_qveris_execute_parameters_require_a_json_object() -> None:
-    assert parse_qveris_parameters('{"symbol":"SPY"}') == {"symbol": "SPY"}
-    with pytest.raises(ValueError, match="JSON object"):
-        parse_qveris_parameters("[]")

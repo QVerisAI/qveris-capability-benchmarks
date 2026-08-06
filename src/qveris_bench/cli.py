@@ -17,6 +17,7 @@ from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
 )
+from qveris_bench.execution.qveris_binding import load_qveris_direct_binding
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
@@ -128,23 +129,12 @@ def _raw_artifact_dir_from_env() -> Path | None:
     return Path(value) if value else None
 
 
-def parse_qveris_parameters(value: str) -> dict[str, object]:
-    try:
-        parameters = json.loads(value)
-    except json.JSONDecodeError as exc:
-        raise ValueError("parameters must be a JSON object") from exc
-    if not isinstance(parameters, dict):
-        raise ValueError("parameters must be a JSON object")
-    return parameters
-
-
 @qveris_app.command("execute")
 def qveris_execute(
-    query: Annotated[str, typer.Option(help="Frozen discovery query.")],
-    tool_id: Annotated[
-        str, typer.Option(help="Tool ID required by the frozen binding.")
+    binding_path: Annotated[Path, typer.Option(help="Immutable Direct binding JSON.")],
+    binding_digest: Annotated[
+        str, typer.Option(help="Expected binding SHA-256 digest.")
     ],
-    parameters: Annotated[str, typer.Option(help="Frozen tool parameters as JSON.")],
     raw_artifact_dir: Annotated[
         Path | None,
         typer.Option(help="Private raw artifact directory outside the repo."),
@@ -160,7 +150,7 @@ def qveris_execute(
         typer.echo("private raw artifact directory is required", err=True)
         raise typer.Exit(code=1)
     try:
-        parsed_parameters = parse_qveris_parameters(parameters)
+        binding = load_qveris_direct_binding(binding_path, binding_digest)
 
         async def execute() -> dict[str, object]:
             client = QverisToolClient(
@@ -170,17 +160,21 @@ def qveris_execute(
                 result = await execute_discovered_tool(
                     client,
                     "qveris-direct-search",
-                    query,
-                    tool_id,
-                    parsed_parameters,
+                    binding.discovery_query,
+                    binding.tool_id,
+                    binding.parameters,
                 )
             finally:
                 await client.close()
             return {
-                "tool_id": tool_id,
-                "status_code": result.status_code,
-                "raw_digest": result.raw_digest,
-                "request_id": result.request_id,
+                "access_path_id": binding.access_path_id,
+                "tool_id": binding.tool_id,
+                "binding_digest": binding_digest,
+                "discovery_digest": binding.discovery_digest,
+                "discovery_raw_digest": result.search.result.raw_digest,
+                "status_code": result.result.status_code,
+                "raw_digest": result.result.raw_digest,
+                "request_id": result.result.request_id,
             }
 
         typer.echo(json.dumps(asyncio.run(execute()), ensure_ascii=False))
