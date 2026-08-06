@@ -11,6 +11,7 @@ from qveris_bench.models.evidence import EvidenceBundle
 @dataclass(frozen=True)
 class EvidenceIndexEntry:
     evidence_id: str
+    run_key: str
     raw_digest: str
     public_digest: str
     extractor_version: str
@@ -25,6 +26,7 @@ class EvidenceIndexEntry:
             raise ValueError("an evidence index entry requires a public digest")
         return cls(
             evidence_id=bundle.evidence_id,
+            run_key=bundle.run_key,
             raw_digest=bundle.raw_digest,
             public_digest=bundle.public_digest,
             extractor_version=bundle.extractor_version,

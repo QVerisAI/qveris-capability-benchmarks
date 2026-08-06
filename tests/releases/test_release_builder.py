@@ -29,6 +29,7 @@ def test_ac3_release_builder_is_reproducible_and_emits_only_facts() -> None:
     )
     evidence = EvidenceBundle(
         evidence_id="cell-1",
+        run_key="cell-1",
         raw_digest="sha256:" + "c" * 64,
         public_digest="sha256:" + "d" * 64,
         redaction_status=RedactionStatus.SANITIZED,

@@ -34,8 +34,15 @@ def validate_release_inputs(
         raise ReleaseGateError("duplicate evidence IDs")
     if set(release.evidence_ids) != evidence_ids:
         raise ReleaseGateError("release evidence IDs do not match evidence bundles")
-    applicable_keys = {cell.run_key for cell in cells if cell.applicable}
-    if not applicable_keys <= evidence_ids:
+    cell_run_keys = [cell.run_key for cell in cells]
+    if len(set(cell_run_keys)) != len(cell_run_keys):
+        raise ReleaseGateError("duplicate cell run keys")
+    applicable_run_keys = [cell.run_key for cell in cells if cell.applicable]
+    applicable_keys = set(applicable_run_keys)
+    evidence_run_keys = [bundle.run_key for bundle in evidence]
+    if len(set(evidence_run_keys)) != len(evidence_run_keys):
+        raise ReleaseGateError("duplicate evidence run keys")
+    if applicable_keys != set(evidence_run_keys):
         raise ReleaseGateError("applicable cells require matching evidence")
     for bundle in evidence:
         if bundle.suite_fingerprint != release.suite_fingerprint:
