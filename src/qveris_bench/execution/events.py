@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from qveris_bench.evidence.redaction import redact_text
 from qveris_bench.models.run import ObservationEvent
 
 
@@ -13,11 +15,12 @@ class EventLog:
 
     def append(self, event_type: str, details: dict[str, Any]) -> ObservationEvent:
         existing = self.read()
+        safe_details = json.loads(redact_text(json.dumps(details)).text)
         event = ObservationEvent(
             sequence=len(existing),
             occurred_at=datetime.now(UTC),
             event_type=event_type,
-            details=details,
+            details=safe_details,
         )
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a") as stream:

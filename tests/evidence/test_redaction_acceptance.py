@@ -18,6 +18,15 @@ def test_ac1_redaction_removes_secrets_from_transport_artifacts() -> None:
     assert "[REDACTED]" in sanitized.text
 
 
+def test_ac1_redaction_removes_json_authorization_and_camel_case_tokens() -> None:
+    artifact = '{"authorization":"Bearer value-secret","accessToken":"other-secret"}'
+
+    sanitized = redact_text(artifact)
+
+    assert "value-secret" not in sanitized.text
+    assert "other-secret" not in sanitized.text
+
+
 def test_ac1_redaction_removes_phone_and_account_identifiers() -> None:
     sanitized = redact_text("phone=+1 415-555-0100 account_id=acct_123456789")
 
