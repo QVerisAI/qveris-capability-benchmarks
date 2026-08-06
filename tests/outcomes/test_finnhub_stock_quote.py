@@ -93,3 +93,14 @@ def test_ac_finnhub_quote_normalizes_out_of_range_timestamp_errors() -> None:
         extract_finnhub_stock_quote(
             {"result": {"data": {"c": 201.0, "t": 10**100}}}, "AAPL"
         )
+
+
+def test_ac_finnhub_quote_rejects_huge_numeric_values_as_domain_errors() -> None:
+    with pytest.raises(StockQuoteExtractionError, match="price"):
+        extract_finnhub_stock_quote(
+            {"result": {"data": {"c": 10**1000, "t": 1_700_000_000}}}, "AAPL"
+        )
+    with pytest.raises(StockQuoteExtractionError, match="timestamp"):
+        extract_finnhub_stock_quote(
+            {"result": {"data": {"c": 201.0, "t": 10**1000}}}, "AAPL"
+        )

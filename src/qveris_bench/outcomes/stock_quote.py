@@ -39,7 +39,10 @@ def _quote_data(document: object) -> dict[str, Any]:
 def _positive_number(value: object, field: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise StockQuoteExtractionError(f"{field} is invalid")
-    numeric = float(value)
+    try:
+        numeric = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise StockQuoteExtractionError(f"{field} is invalid") from exc
     if not isfinite(numeric) or numeric <= 0:
         raise StockQuoteExtractionError(f"{field} is invalid")
     return numeric
@@ -48,7 +51,10 @@ def _positive_number(value: object, field: str) -> float:
 def _timestamp(value: object) -> str:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise StockQuoteExtractionError("timestamp is invalid")
-    timestamp = float(value)
+    try:
+        timestamp = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise StockQuoteExtractionError("timestamp is invalid") from exc
     if not isfinite(timestamp) or timestamp <= 0 or not timestamp.is_integer():
         raise StockQuoteExtractionError("timestamp is invalid")
     try:
@@ -68,9 +74,9 @@ def _is_unavailable_quote(data: dict[str, Any]) -> bool:
 
 
 def _is_numeric_zero(value: object) -> bool:
-    return (
-        not isinstance(value, bool)
-        and isinstance(value, (int, float))
-        and isfinite(value)
-        and value == 0
-    )
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return isfinite(value) and value == 0
+    except OverflowError:
+        return False
