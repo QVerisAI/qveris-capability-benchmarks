@@ -28,9 +28,11 @@ the project in public spaces.
 
 ## Enforcement
 
-Report unacceptable behavior privately through the contact method in `SECURITY.md`.
-All reports will be reviewed promptly and fairly. Retaliation against a reporter is
-not tolerated.
+Report unacceptable behavior through the private `Conduct Report` process in
+`SECURITY.md`. Maintainers will acknowledge reports privately, protect the
+reporter's confidentiality, avoid conflicts of interest, document the outcome, and
+apply proportionate corrective action. Retaliation against a reporter is not
+tolerated.
 
 ## Attribution
 

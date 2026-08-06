@@ -257,9 +257,10 @@ SDK, OpenAI's Python SDK for the initial Agent backend, pytest, Ruff, and mypy.
 ## 11. v1 scope
 
 v1 implements stages 1–4, file-backed contracts, HTTP and MCP access paths, Direct
-Tests, eligible native constrained Agent Trials, an ETF Holdings CAP, a Stock Quote
-smoke CAP, private/public evidence separation, categorical outcomes, deterministic
-release bundles, safety gates, and an internal second-operator replay.
+Tests, eligible native constrained Agent Trials, an ETF Holdings CAP with 5–8
+providers and at least three rounds, and a Stock Quote smoke CAP with two providers.
+It also implements private/public evidence separation, categorical outcomes,
+deterministic release bundles, safety gates, and an internal second-operator replay.
 
 v1 does not implement SEO automation, CMS, a leaderboard website, supplier or CRM
 systems, external developer BYOK, scheduled retesting, multi-Agent or multi-model
