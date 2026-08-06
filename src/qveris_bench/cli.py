@@ -5,11 +5,9 @@ import typer
 
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
+from qveris_bench.models.enums import QualificationDisposition
+from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.models.schema_export import check_schemas, export_schemas
-from qveris_bench.providers.qualification import (
-    QualificationDecision,
-    QualificationDisposition,
-)
 from qveris_bench.providers.repository import (
     ProviderRegistryRepository,
     ProviderValidationError,
@@ -86,6 +84,9 @@ def provider_validate(path: Path) -> None:
 @provider_app.command("qualify")
 def provider_qualify(
     path: Path,
+    access_path_id: Annotated[
+        str, typer.Option(help="Access Path receiving the terminal decision.")
+    ],
     disposition: Annotated[
         QualificationDisposition, typer.Option(help="Terminal cohort disposition.")
     ],
@@ -99,7 +100,7 @@ def provider_qualify(
             reason=reason,
             evidence_digest=evidence_digest,
         )
-        record = qualify_provider_file(path, decision)
+        record = qualify_provider_file(path, access_path_id, decision)
     except (ValueError, ProviderValidationError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
@@ -122,11 +123,11 @@ def provider_cohort_check(
 
 
 def _compile_suite_from_cli(
-    suite_path: Path, cases: Path | None, providers_root: Path
+    suite_path: Path, cases: Path | None, providers_root: Path, cap: Path | None
 ) -> CompiledSuite:
     cases_path = cases or suite_path.with_name("cases.yaml")
     try:
-        return compile_suite(suite_path, cases_path, providers_root)
+        return compile_suite(suite_path, cases_path, providers_root, cap)
     except ValueError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
@@ -136,13 +137,14 @@ def _compile_suite_from_cli(
 def suite_freeze(
     suite_path: Path,
     cases: Annotated[Path | None, typer.Option(help="Cases YAML path.")] = None,
+    cap: Annotated[Path | None, typer.Option(help="CAP definition YAML path.")] = None,
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
     output: Annotated[Path | None, typer.Option(help="Frozen suite output.")] = None,
 ) -> None:
     """Freeze resolved suite inputs and write their fingerprint."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root)
+    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
     output_path = output or suite_path.with_name("suite.frozen.json")
     write_frozen_suite(compiled, output_path)
     typer.echo(f"Frozen suite {compiled.fingerprint} -> {output_path}")
@@ -152,13 +154,14 @@ def suite_freeze(
 def suite_plan(
     suite_path: Path,
     cases: Annotated[Path | None, typer.Option(help="Cases YAML path.")] = None,
+    cap: Annotated[Path | None, typer.Option(help="CAP definition YAML path.")] = None,
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
     output: Annotated[Path | None, typer.Option(help="Run Plan output.")] = None,
 ) -> None:
     """Expand a frozen suite into deterministic run cells."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root)
+    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
     output_path = output or suite_path.with_name("run-plan.json")
     write_run_plan(compiled, output_path)
     applicable = sum(cell.applicable for cell in compiled.run_plan.cells)

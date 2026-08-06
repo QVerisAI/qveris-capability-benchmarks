@@ -185,3 +185,19 @@ def test_ac8_release_contract_exposes_stage_five_and_six_facts_without_scores() 
             run_plan_digest="sha256:" + "b" * 64,
             provider_score=99,
         )
+
+
+def test_ac8_release_fact_details_reject_nested_aggregate_fields() -> None:
+    with pytest.raises(ValidationError, match="provider_score"):
+        BenchmarkRelease(
+            release_id="etf-holdings-2026-q3-v1",
+            version="1.0.0",
+            suite_fingerprint="a" * 64,
+            run_plan_digest="sha256:" + "b" * 64,
+            developer_selection_facts=(
+                {
+                    "fact_type": "provider-observation",
+                    "details": {"provider_score": 100},
+                },
+            ),
+        )

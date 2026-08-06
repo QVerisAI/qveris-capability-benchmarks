@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.models.enums import QualificationDisposition
 from qveris_bench.models.provider import AccessPath
 from qveris_bench.models.run import RunPlan
 from qveris_bench.models.suite import BenchmarkCase, BenchmarkSuite
-from qveris_bench.providers.qualification import QualificationDisposition
 from qveris_bench.providers.repository import (
     ProviderRegistryEntry,
     ProviderRegistryRepository,
@@ -70,10 +71,20 @@ def _resolve_access_paths(
     for path_id in suite.access_path_ids:
         access_path, record = path_index[path_id]
         if (
-            record.qualification is None
-            or record.qualification.disposition is not QualificationDisposition.INCLUDED
+            access_path.qualification is None
+            or access_path.qualification.disposition
+            is not QualificationDisposition.INCLUDED
         ):
             raise SuiteCompilationError(f"Access Path is not included: {path_id}")
+        if (
+            suite.agent_protocol is not None
+            and access_path.agent_trial_eligible
+            and access_path.canonical_interface != suite.agent_protocol.canonical_tool
+        ):
+            raise SuiteCompilationError(
+                f"Agent canonical tool {suite.agent_protocol.canonical_tool} does not "
+                f"match {path_id} interface {access_path.canonical_interface}"
+            )
         resolved.append(access_path)
     return tuple(resolved)
 
@@ -93,9 +104,22 @@ def _snapshot(
 
 
 def compile_suite(
-    suite_path: Path, cases_path: Path, providers_root: Path
+    suite_path: Path,
+    cases_path: Path,
+    providers_root: Path,
+    cap_path: Path | None = None,
 ) -> CompiledSuite:
     suite = load_suite(suite_path)
+    resolved_cap_path = cap_path or suite_path.with_name("cap.yaml")
+    try:
+        cap = validate_cap_file(resolved_cap_path)
+    except ValueError as exc:
+        raise SuiteCompilationError(str(exc)) from exc
+    if cap.cap_id != suite.cap_id or cap.version != suite.cap_version:
+        raise SuiteCompilationError(
+            f"suite CAP {suite.cap_id}@{suite.cap_version} does not match "
+            f"{cap.cap_id}@{cap.version}"
+        )
     cases = _resolve_cases(suite, load_cases(cases_path))
     records = ProviderRegistryRepository(providers_root).cohort_check()
     access_paths = _resolve_access_paths(suite, records)

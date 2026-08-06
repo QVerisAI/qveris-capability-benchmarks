@@ -1,27 +1,13 @@
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import Protocol
 
-from pydantic import Field
-
-from qveris_bench.models.base import EvidenceRef, FrozenModel
+from qveris_bench.models.provider import QualificationDecision
 
 
-class QualificationDisposition(StrEnum):
-    INCLUDED = "included"
-    EXCLUDED = "excluded"
-
-
-class QualificationDecision(FrozenModel):
-    disposition: QualificationDisposition
-    reason: str = Field(min_length=10)
-    evidence_digest: EvidenceRef
-
-
-class QualifiedProviderRecord(Protocol):
+class QualifiedAccessPath(Protocol):
     @property
-    def provider_id(self) -> str: ...
+    def access_path_id(self) -> str: ...
 
     @property
     def qualification(self) -> QualificationDecision | None: ...
@@ -32,12 +18,14 @@ class CohortValidationError(ValueError):
 
 
 def check_frozen_cohort(
-    records: tuple[QualifiedProviderRecord, ...],
+    access_paths: tuple[QualifiedAccessPath, ...],
 ) -> None:
     unqualified = [
-        record.provider_id for record in records if record.qualification is None
+        access_path.access_path_id
+        for access_path in access_paths
+        if access_path.qualification is None
     ]
     if unqualified:
         raise CohortValidationError(
-            "providers missing terminal qualification: " + ", ".join(unqualified)
+            "Access Paths missing terminal qualification: " + ", ".join(unqualified)
         )

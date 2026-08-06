@@ -1,26 +1,22 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
-import yaml
 from pydantic import ValidationError
 
 from qveris_bench.models.cap import CapDefinition
+from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
 
 class CapValidationError(ValueError):
     pass
 
 
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+def _load_yaml_mapping(path: Path) -> dict[str, object]:
     try:
-        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        return load_yaml_mapping(path)
+    except YamlDocumentError as exc:
         raise CapValidationError(f"{path}: unable to load CAP YAML: {exc}") from exc
-    if not isinstance(loaded, dict):
-        raise CapValidationError(f"{path}: CAP YAML root must be a mapping")
-    return loaded
 
 
 def validate_cap_file(path: Path) -> CapDefinition:

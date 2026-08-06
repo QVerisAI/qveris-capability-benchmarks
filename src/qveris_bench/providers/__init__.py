@@ -1,7 +1,5 @@
-from qveris_bench.providers.qualification import (
-    QualificationDecision,
-    QualificationDisposition,
-)
+from qveris_bench.models.enums import QualificationDisposition
+from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.providers.repository import (
     ProviderRegistryEntry,
     ProviderRegistryRepository,

@@ -20,6 +20,11 @@ class AccessPathType(StrEnum):
     QVERIS_CONNECTOR = "qveris_connector"
 
 
+class QualificationDisposition(StrEnum):
+    INCLUDED = "included"
+    EXCLUDED = "excluded"
+
+
 class RunMode(StrEnum):
     DIRECT = "direct"
     AGENT_TRIAL = "agent_trial"

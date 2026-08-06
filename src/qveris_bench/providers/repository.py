@@ -7,15 +7,17 @@ import yaml
 from pydantic import Field, ValidationError, model_validator
 
 from qveris_bench.models.base import FrozenModel
-from qveris_bench.models.provider import AccessPath, ProviderProfile
+from qveris_bench.models.provider import (
+    AccessPath,
+    ProviderProfile,
+    QualificationDecision,
+)
 from qveris_bench.providers.credentials import (
     CredentialReferenceError,
     validate_credential_reference,
 )
-from qveris_bench.providers.qualification import (
-    QualificationDecision,
-    check_frozen_cohort,
-)
+from qveris_bench.providers.qualification import check_frozen_cohort
+from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
 
 class ProviderValidationError(ValueError):
@@ -29,7 +31,6 @@ class DuplicateProviderIdentityError(ValueError):
 class ProviderRegistryEntry(FrozenModel):
     provider: ProviderProfile
     access_paths: tuple[AccessPath, ...] = Field(min_length=1)
-    qualification: QualificationDecision | None = None
 
     @property
     def provider_id(self) -> str:
@@ -54,14 +55,11 @@ class ProviderRegistryEntry(FrozenModel):
 
 def _load_yaml_mapping(path: Path) -> dict[str, Any]:
     try:
-        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        return load_yaml_mapping(path)
+    except YamlDocumentError as exc:
         raise ProviderValidationError(
             f"{path}: unable to load provider YAML: {exc}"
         ) from exc
-    if not isinstance(loaded, dict):
-        raise ProviderValidationError(f"{path}: provider YAML root must be a mapping")
-    return loaded
 
 
 class ProviderRegistryRepository:
@@ -99,16 +97,31 @@ class ProviderRegistryRepository:
 
     def cohort_check(self) -> tuple[ProviderRegistryEntry, ...]:
         records = self.list()
-        check_frozen_cohort(records)
+        check_frozen_cohort(
+            tuple(
+                access_path for record in records for access_path in record.access_paths
+            )
+        )
         return records
 
 
 def qualify_provider_file(
-    path: Path, decision: QualificationDecision
+    path: Path, access_path_id: str, decision: QualificationDecision
 ) -> ProviderRegistryEntry:
     repository = ProviderRegistryRepository(path.parent)
     repository.load(path)
     data = _load_yaml_mapping(path)
-    data["qualification"] = decision.model_dump(mode="json")
+    access_paths = data.get("access_paths")
+    if not isinstance(access_paths, list):
+        raise ProviderValidationError(f"{path}: access_paths must be a list")
+    for access_path in access_paths:
+        if (
+            isinstance(access_path, dict)
+            and access_path.get("access_path_id") == access_path_id
+        ):
+            access_path["qualification"] = decision.model_dump(mode="json")
+            break
+    else:
+        raise ProviderValidationError(f"{path}: unknown Access Path {access_path_id}")
     path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
     return repository.load(path)

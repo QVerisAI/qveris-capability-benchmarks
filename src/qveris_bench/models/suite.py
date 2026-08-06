@@ -51,6 +51,24 @@ class BenchmarkSuite(FrozenModel):
 
     @model_validator(mode="after")
     def require_agent_protocol(self) -> BenchmarkSuite:
+        for field_name, values in (
+            ("case_ids", self.case_ids),
+            ("access_path_ids", self.access_path_ids),
+            ("modes", self.modes),
+        ):
+            if len(values) != len(set(values)):
+                raise ValueError(f"duplicate {field_name}")
+        if RunMode.DIRECT not in self.modes:
+            raise ValueError("modes must include direct")
         if RunMode.AGENT_TRIAL in self.modes and self.agent_protocol is None:
             raise ValueError("agent_trial mode requires agent_protocol")
+        for rule in self.not_applicable:
+            if rule.case_id not in self.case_ids:
+                raise ValueError(f"not_applicable references {rule.case_id}")
+            if rule.access_path_id not in self.access_path_ids:
+                raise ValueError(f"not_applicable references {rule.access_path_id}")
+            if rule.mode is not None and rule.mode not in self.modes:
+                raise ValueError(
+                    f"not_applicable references unavailable mode {rule.mode}"
+                )
         return self

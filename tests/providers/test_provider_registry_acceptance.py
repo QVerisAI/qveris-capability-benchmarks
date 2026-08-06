@@ -46,7 +46,7 @@ def _provider_data(
         ],
     }
     if qualified:
-        data["qualification"] = {
+        data["access_paths"][0]["qualification"] = {
             "disposition": "included",
             "reason": "Official interface and approved test credential are available.",
             "evidence_digest": "sha256:" + "a" * 64,
@@ -71,6 +71,11 @@ def test_ac1_provider_entity_and_access_paths_load_separately(tmp_path: Path) ->
             "canonical_interface": "fmp-etf-holder",
         }
     )
+    second_path["qualification"] = {
+        "disposition": "excluded",
+        "reason": "QVeris path is not approved for this frozen cohort.",
+        "evidence_digest": "sha256:" + "c" * 64,
+    }
     data["access_paths"].append(second_path)
     _write_provider(tmp_path / "fmp" / "provider.yaml", data)
 
@@ -81,6 +86,10 @@ def test_ac1_provider_entity_and_access_paths_load_separately(tmp_path: Path) ->
         "fmp-official-api",
         "fmp-qveris-connector",
     ], "AC1 Native and QVeris Access Paths must remain distinct"
+    assert [path.qualification.disposition for path in records[0].access_paths] == [
+        "included",
+        "excluded",
+    ], "AC1 each Access Path must retain its own terminal disposition"
 
 
 def test_ac2_duplicate_provider_or_access_path_identity_is_rejected(
@@ -104,6 +113,15 @@ def test_ac3_access_path_provider_mismatch_is_rejected(tmp_path: Path) -> None:
         ProviderRegistryRepository(tmp_path).load(path)
 
 
+def test_ac3_duplicate_yaml_keys_are_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "provider.yaml"
+    _write_provider(path, _provider_data())
+    path.write_text("provider: {}\n" + path.read_text())
+
+    with pytest.raises(ProviderValidationError, match="duplicate key"):
+        ProviderRegistryRepository(tmp_path).load(path)
+
+
 def test_ac4_frozen_cohort_requires_terminal_disposition(tmp_path: Path) -> None:
     _write_provider(
         tmp_path / "fmp" / "provider.yaml",
@@ -111,7 +129,7 @@ def test_ac4_frozen_cohort_requires_terminal_disposition(tmp_path: Path) -> None
     )
     repository = ProviderRegistryRepository(tmp_path)
 
-    with pytest.raises(CohortValidationError, match="financial-modeling-prep"):
+    with pytest.raises(CohortValidationError, match="fmp-official-api"):
         repository.cohort_check()
 
 
@@ -120,17 +138,18 @@ def test_ac5_terminal_dispositions_retain_reason_and_evidence(
     tmp_path: Path, disposition: str
 ) -> None:
     data = _provider_data()
-    data["qualification"]["disposition"] = disposition
+    data["access_paths"][0]["qualification"]["disposition"] = disposition
     path = tmp_path / "provider.yaml"
     _write_provider(path, data)
 
     record = ProviderRegistryRepository(tmp_path).load(path)
 
-    assert record.qualification is not None, "AC5 qualification must be terminal"
-    assert record.qualification.disposition == disposition, (
+    qualification = record.access_paths[0].qualification
+    assert qualification is not None, "AC5 qualification must be terminal"
+    assert qualification.disposition == disposition, (
         "AC5 terminal disposition must round-trip"
     )
-    assert record.qualification.evidence_digest.startswith("sha256:"), (
+    assert qualification.evidence_digest.startswith("sha256:"), (
         "AC5 terminal decision must retain evidence"
     )
 
@@ -155,6 +174,8 @@ def test_ac8_installed_provider_cli_validates_qualifies_and_checks_cohort(
             "provider",
             "qualify",
             str(path),
+            "--access-path-id",
+            "fmp-official-api",
             "--disposition",
             "included",
             "--reason",

@@ -16,3 +16,7 @@ access_paths:
     authorization: Internal benchmark use
     canonical_interface: example-operation
     agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Example template is not a frozen benchmark cohort.
+      evidence_digest: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

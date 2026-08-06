@@ -20,8 +20,10 @@ missing.
 
 ## Terminal qualification
 
-A frozen cohort accepts only `included` and `excluded` terminal dispositions. Every
-decision requires a plain-language reason and a SHA-256 evidence reference.
+A frozen cohort accepts only `included` and `excluded` terminal dispositions for
+each Access Path. Every decision requires a plain-language reason and a SHA-256
+evidence reference. One Provider may therefore have an included native interface
+and an excluded QVeris or wrapper path without conflating their evidence.
 Unavailable credentials, unclear authorization, unsupported markets, and duplicate
 or unofficial interfaces are explicit exclusion reasons rather than silent drops.
 

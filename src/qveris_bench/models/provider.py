@@ -4,8 +4,8 @@ from typing import Annotated
 
 from pydantic import Field, HttpUrl
 
-from qveris_bench.models.base import FrozenModel, StableId
-from qveris_bench.models.enums import AccessPathType
+from qveris_bench.models.base import EvidenceRef, FrozenModel, StableId
+from qveris_bench.models.enums import AccessPathType, QualificationDisposition
 
 EnvironmentVariable = Annotated[str, Field(pattern=r"^[A-Z][A-Z0-9_]*$")]
 
@@ -19,6 +19,12 @@ class ProviderProfile(FrozenModel):
     qveris_integration: bool = False
 
 
+class QualificationDecision(FrozenModel):
+    disposition: QualificationDisposition
+    reason: str = Field(min_length=10)
+    evidence_digest: EvidenceRef
+
+
 class AccessPath(FrozenModel):
     access_path_id: StableId
     provider_id: StableId
@@ -29,3 +35,4 @@ class AccessPath(FrozenModel):
     authorization: str | None = None
     canonical_interface: str = Field(min_length=1)
     agent_trial_eligible: bool
+    qualification: QualificationDecision | None = None

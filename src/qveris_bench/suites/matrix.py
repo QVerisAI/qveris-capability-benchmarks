@@ -71,5 +71,13 @@ def expand_run_plan(
     return RunPlan(
         suite_id=suite.suite_id,
         suite_fingerprint=fingerprint,
-        cells=tuple(cells),
+        cells=_require_unique_run_keys(cells),
     )
+
+
+def _require_unique_run_keys(cells: list[RunCell]) -> tuple[RunCell, ...]:
+    keys = [cell.run_key for cell in cells]
+    duplicates = sorted({key for key in keys if keys.count(key) > 1})
+    if duplicates:
+        raise ValueError("duplicate run_key: " + ", ".join(duplicates))
+    return tuple(cells)

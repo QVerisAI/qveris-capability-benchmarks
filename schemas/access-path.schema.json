@@ -11,6 +11,39 @@
       ],
       "title": "AccessPathType",
       "type": "string"
+    },
+    "QualificationDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "$ref": "#/$defs/QualificationDisposition"
+        },
+        "evidence_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Evidence Digest",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "disposition",
+        "reason",
+        "evidence_digest"
+      ],
+      "title": "QualificationDecision",
+      "type": "object"
+    },
+    "QualificationDisposition": {
+      "enum": [
+        "included",
+        "excluded"
+      ],
+      "title": "QualificationDisposition",
+      "type": "string"
     }
   },
   "additionalProperties": false,
@@ -80,6 +113,17 @@
       "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
       "title": "Provider Id",
       "type": "string"
+    },
+    "qualification": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/QualificationDecision"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [

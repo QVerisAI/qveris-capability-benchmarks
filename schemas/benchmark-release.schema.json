@@ -1,11 +1,41 @@
 {
+  "$defs": {
+    "ReleaseFact": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "fact_type": {
+          "minLength": 1,
+          "title": "Fact Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fact_type"
+      ],
+      "title": "ReleaseFact",
+      "type": "object"
+    }
+  },
   "additionalProperties": false,
   "properties": {
     "developer_selection_facts": {
       "default": [],
       "items": {
-        "additionalProperties": true,
-        "type": "object"
+        "$ref": "#/$defs/ReleaseFact"
       },
       "title": "Developer Selection Facts",
       "type": "array"
@@ -44,8 +74,7 @@
       "patternProperties": {
         "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$": {
           "items": {
-            "additionalProperties": true,
-            "type": "object"
+            "$ref": "#/$defs/ReleaseFact"
           },
           "type": "array"
         }

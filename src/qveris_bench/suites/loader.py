@@ -1,26 +1,27 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
-import yaml
-from pydantic import ValidationError
+from pydantic import Field, ValidationError
 
+from qveris_bench.models.base import FrozenModel
 from qveris_bench.models.suite import BenchmarkCase, BenchmarkSuite
+from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
 
 class SuiteLoadError(ValueError):
     pass
 
 
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+class CasesDocument(FrozenModel):
+    cases: tuple[BenchmarkCase, ...] = Field(min_length=1)
+
+
+def _load_yaml_mapping(path: Path) -> dict[str, object]:
     try:
-        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        return load_yaml_mapping(path)
+    except YamlDocumentError as exc:
         raise SuiteLoadError(f"{path}: unable to load suite input: {exc}") from exc
-    if not isinstance(loaded, dict):
-        raise SuiteLoadError(f"{path}: YAML root must be a mapping")
-    return loaded
 
 
 def load_suite(path: Path) -> BenchmarkSuite:
@@ -31,12 +32,8 @@ def load_suite(path: Path) -> BenchmarkSuite:
 
 
 def load_cases(path: Path) -> tuple[BenchmarkCase, ...]:
-    data = _load_yaml_mapping(path)
-    raw_cases = data.get("cases")
-    if not isinstance(raw_cases, list):
-        raise SuiteLoadError(f"{path}: cases must be a list")
     try:
-        cases = tuple(BenchmarkCase.model_validate(item) for item in raw_cases)
+        cases = CasesDocument.model_validate(_load_yaml_mapping(path)).cases
     except ValidationError as exc:
         raise SuiteLoadError(f"{path}: invalid case: {exc}") from exc
     identities = [case.case_id for case in cases]

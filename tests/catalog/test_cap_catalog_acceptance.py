@@ -84,6 +84,15 @@ def test_ac4_non_mapping_yaml_is_rejected_with_path(tmp_path: Path) -> None:
         validate_cap_file(path)
 
 
+def test_ac4_duplicate_yaml_keys_are_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "cap.yaml"
+    _write_cap(path)
+    path.write_text("cap_id: duplicate\n" + path.read_text())
+
+    with pytest.raises(CapValidationError, match="duplicate key"):
+        validate_cap_file(path)
+
+
 def test_ac5_catalog_is_sorted_and_skips_template_directory(tmp_path: Path) -> None:
     _write_cap(
         tmp_path / "zeta" / "cap.yaml",

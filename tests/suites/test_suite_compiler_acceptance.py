@@ -43,13 +43,13 @@ def _provider_data(
                 "official_source": f"https://{provider_id}.example.com/docs",
                 "canonical_interface": "get-holdings",
                 "agent_trial_eligible": agent_eligible,
+                "qualification": {
+                    "disposition": "included",
+                    "reason": "Official machine interface is available for testing.",
+                    "evidence_digest": "sha256:" + digest_char * 64,
+                },
             }
         ],
-        "qualification": {
-            "disposition": "included",
-            "reason": "Official machine interface is available for testing.",
-            "evidence_digest": "sha256:" + digest_char * 64,
-        },
     }
 
 
@@ -107,6 +107,21 @@ def _write_inputs(
                         "completion_conditions": ["evidenced negative response"],
                     },
                 ]
+            },
+            sort_keys=False,
+        )
+    )
+
+    cap_path = root / "cap_pack" / "cap.yaml"
+    cap_path.write_text(
+        yaml.safe_dump(
+            {
+                "cap_id": "etf-holdings",
+                "version": "1.0.0",
+                "name": "ETF Holdings",
+                "business_use": "Compare constituent-level ETF data providers.",
+                "scope": ["US-listed ETFs"],
+                "sources": [{"source_type": "qveris_original"}],
             },
             sort_keys=False,
         )
@@ -201,6 +216,71 @@ def test_ac4_missing_case_or_access_path_reference_fails_closed(tmp_path: Path) 
     suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
 
     with pytest.raises(SuiteCompilationError, match="missing-case"):
+        compile_suite(suite_path, cases_path, providers_root)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("modes", ["agent_trial"]),
+        ("case_ids", ["spy-holdings", "spy-holdings"]),
+        ("access_path_ids", ["fmp-official-api", "fmp-official-api"]),
+        ("modes", ["direct", "direct"]),
+    ],
+)
+def test_ac4_direct_mode_and_unique_selectors_are_required(
+    tmp_path: Path, field: str, value: list[str]
+) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+    suite = yaml.safe_load(suite_path.read_text())
+    suite[field] = value
+    suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+
+    with pytest.raises(ValueError, match=field):
+        compile_suite(suite_path, cases_path, providers_root)
+
+
+def test_ac4_not_applicable_rule_must_reference_frozen_matrix(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+    suite = yaml.safe_load(suite_path.read_text())
+    suite["not_applicable"] = [
+        {
+            "case_id": "unknown-case",
+            "access_path_id": "demo-native-mcp",
+            "reason": "This invalid rule must not be ignored.",
+        }
+    ]
+    suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+
+    with pytest.raises(ValueError, match="unknown-case"):
+        compile_suite(suite_path, cases_path, providers_root)
+
+
+def test_ac4_agent_tool_must_match_eligible_canonical_interface(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+    suite = yaml.safe_load(suite_path.read_text())
+    suite["agent_protocol"]["canonical_tool"] = "different-tool"
+    suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+
+    with pytest.raises(SuiteCompilationError, match="different-tool"):
+        compile_suite(suite_path, cases_path, providers_root)
+
+
+def test_ac4_cap_version_must_match_cap_definition(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+    suite = yaml.safe_load(suite_path.read_text())
+    suite["cap_version"] = "9.9.9"
+    suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+
+    with pytest.raises(SuiteCompilationError, match="9.9.9"):
+        compile_suite(suite_path, cases_path, providers_root)
+
+
+def test_ac4_duplicate_yaml_keys_fail_closed(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+    suite_path.write_text("suite_id: duplicate\n" + suite_path.read_text())
+
+    with pytest.raises(ValueError, match="duplicate key"):
         compile_suite(suite_path, cases_path, providers_root)
 
 

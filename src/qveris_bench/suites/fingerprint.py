@@ -10,7 +10,9 @@ class ResumeFingerprintError(ValueError):
 
 
 def canonical_json_bytes(value: Any) -> bytes:
-    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+    return (
+        json.dumps(value, allow_nan=False, indent=2, sort_keys=True) + "\n"
+    ).encode()
 
 
 def suite_fingerprint(snapshot: dict[str, Any]) -> str:

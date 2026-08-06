@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from qveris_bench.suites.compiler import compile_suite
+from qveris_bench.suites.fingerprint import canonical_json_bytes
 
 from .test_suite_compiler_acceptance import _provider_data, _write_inputs
 
@@ -46,7 +48,7 @@ def test_ac6_fingerprint_covers_excluded_candidate_cohort(tmp_path: Path) -> Non
         False,
         "c",
     )
-    excluded["qualification"]["disposition"] = "excluded"
+    excluded["access_paths"][0]["qualification"]["disposition"] = "excluded"
     excluded_path = providers_root / "excluded" / "provider.yaml"
     excluded_path.parent.mkdir(parents=True)
     excluded_path.write_text(yaml.safe_dump(excluded, sort_keys=False))
@@ -56,3 +58,8 @@ def test_ac6_fingerprint_covers_excluded_candidate_cohort(tmp_path: Path) -> Non
     assert first.fingerprint != second.fingerprint, (
         "AC6 terminal excluded candidates are part of the frozen cohort"
     )
+
+
+def test_ac6_canonical_json_rejects_non_standard_nan() -> None:
+    with pytest.raises(ValueError):
+        canonical_json_bytes({"value": float("nan")})
