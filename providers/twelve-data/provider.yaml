@@ -15,5 +15,5 @@ access_paths:
     agent_trial_eligible: false
     qualification:
       disposition: excluded
-      reason: Direct diagnostic returns an error structure for the positive control.
+      reason: Direct diagnostic does not expose the expected holdings structure.
       evidence_digest: sha256:a99ded8f868c20f5ffe0cd1c69db885653203f1e7b0adf2941884ef5d75347ee

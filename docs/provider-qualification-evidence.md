@@ -24,7 +24,8 @@ path and authorization are recorded. This record is configuration evidence, not
 execution evidence.
 
 Twelve Data was discovered but did not qualify: the 2026-08-06 fixed Direct
-diagnostic recorded the same error envelope for its positive and negative controls.
+diagnostic recorded the same non-holdings response shape for its positive and
+negative controls.
 The value-free run provenance and raw-response digests are in
 `docs/evidence/qveris-direct-diagnostic-2026-08-06.json`; it is excluded pending
 a successful positive control.
