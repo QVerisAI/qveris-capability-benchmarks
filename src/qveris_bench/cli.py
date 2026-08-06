@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import json
 from collections.abc import Callable
 from pathlib import Path
 from typing import Annotated, cast
@@ -11,7 +12,9 @@ from qveris_bench.catalog.validation import CapValidationError
 from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
+from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.provider import QualificationDecision
+from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
 from qveris_bench.providers.repository import (
@@ -19,6 +22,9 @@ from qveris_bench.providers.repository import (
     ProviderValidationError,
     qualify_provider_file,
 )
+from qveris_bench.releases.builder import build_release
+from qveris_bench.releases.canonical import release_digest
+from qveris_bench.releases.verify import verify_release
 from qveris_bench.suites.compiler import (
     CompiledSuite,
     compile_suite,
@@ -35,10 +41,12 @@ schema_app = typer.Typer(help="Export and verify benchmark JSON Schemas.")
 cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
 provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
+release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
 app.add_typer(provider_app, name="provider")
 app.add_typer(suite_app, name="suite")
+app.add_typer(release_app, name="release")
 
 
 @app.callback()
@@ -228,6 +236,49 @@ def run_resume(
 ) -> None:
     """Resume only infra-blocked cells of a matching frozen plan."""
     run_execute(plan_path, executor, state)
+
+
+def _load_json_model_list(
+    path: Path, model: type[RunCell] | type[EvidenceBundle]
+) -> tuple[object, ...]:
+    document = json.loads(path.read_text())
+    if not isinstance(document, list):
+        raise ValueError(f"{path} must contain a JSON array")
+    return tuple(model.model_validate(item) for item in document)
+
+
+@release_app.command("build")
+def release_build(
+    release_path: Path,
+    cells_path: Path,
+    evidence_path: Path,
+    output: Annotated[Path, typer.Option(help="Immutable release JSON output.")],
+) -> None:
+    """Build an immutable release from validated machine-readable inputs."""
+    try:
+        release = BenchmarkRelease.model_validate_json(release_path.read_text())
+        cells = _load_json_model_list(cells_path, RunCell)
+        evidence = _load_json_model_list(evidence_path, EvidenceBundle)
+        content = build_release(
+            release,
+            cast(tuple[RunCell, ...], cells),
+            cast(tuple[EvidenceBundle, ...], evidence),
+        )
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(content)
+    typer.echo(f"Built release {release_digest(content)} -> {output}")
+
+
+@release_app.command("verify")
+def release_verify(path: Path, digest: Annotated[str, typer.Option()]) -> None:
+    """Verify an immutable release against its canonical digest."""
+    if not verify_release(path, digest):
+        typer.echo("release digest mismatch", err=True)
+        raise typer.Exit(code=1)
+    typer.echo(f"Verified release {digest}")
 
 
 @schema_app.command("export")
