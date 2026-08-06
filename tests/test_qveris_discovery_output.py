@@ -104,9 +104,13 @@ def test_ac4_finnhub_diagnostic_limits_execution_to_quote_bindings() -> None:
     assert "inputs:" not in workflow
     assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
     assert "--response-shape" in workflow
-    assert document["jobs"]["diagnostic"]["strategy"]["matrix"][
-        "binding_id"
-    ] == ["finnhub-aapl-quote", "finnhub-invalid-stock"]
+    matrix = document["jobs"]["diagnostic"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id"}
+    assert matrix["binding_id"] == [
+        "finnhub-aapl-quote",
+        "finnhub-invalid-stock",
+    ]
+    assert workflow.count("--binding-id") == 1
 
 
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
