@@ -13,7 +13,10 @@ from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
-from qveris_bench.execution.qveris import QverisToolClient
+from qveris_bench.execution.qveris import (
+    QverisToolClient,
+    execute_discovered_tool,
+)
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
@@ -123,6 +126,67 @@ def qveris_search(
 def _raw_artifact_dir_from_env() -> Path | None:
     value = os.environ.get("QVERIS_BENCH_RAW_ARTIFACT_DIR")
     return Path(value) if value else None
+
+
+def parse_qveris_parameters(value: str) -> dict[str, object]:
+    try:
+        parameters = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise ValueError("parameters must be a JSON object") from exc
+    if not isinstance(parameters, dict):
+        raise ValueError("parameters must be a JSON object")
+    return parameters
+
+
+@qveris_app.command("execute")
+def qveris_execute(
+    query: Annotated[str, typer.Option(help="Frozen discovery query.")],
+    tool_id: Annotated[
+        str, typer.Option(help="Tool ID required by the frozen binding.")
+    ],
+    parameters: Annotated[str, typer.Option(help="Frozen tool parameters as JSON.")],
+    raw_artifact_dir: Annotated[
+        Path | None,
+        typer.Option(help="Private raw artifact directory outside the repo."),
+    ] = None,
+) -> None:
+    """Execute one discovery-bound QVeris tool without printing its raw response."""
+    api_key = os.environ.get("QVERIS_API_KEY")
+    raw_dir = raw_artifact_dir or _raw_artifact_dir_from_env()
+    if not api_key:
+        typer.echo("QVERIS_API_KEY is required", err=True)
+        raise typer.Exit(code=1)
+    if raw_dir is None:
+        typer.echo("private raw artifact directory is required", err=True)
+        raise typer.Exit(code=1)
+    try:
+        parsed_parameters = parse_qveris_parameters(parameters)
+
+        async def execute() -> dict[str, object]:
+            client = QverisToolClient(
+                httpx.AsyncClient(), RawArtifactStore(raw_dir, Path.cwd()), api_key
+            )
+            try:
+                result = await execute_discovered_tool(
+                    client,
+                    "qveris-direct-search",
+                    query,
+                    tool_id,
+                    parsed_parameters,
+                )
+            finally:
+                await client.close()
+            return {
+                "tool_id": tool_id,
+                "status_code": result.status_code,
+                "raw_digest": result.raw_digest,
+                "request_id": result.request_id,
+            }
+
+        typer.echo(json.dumps(asyncio.run(execute()), ensure_ascii=False))
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
 
 
 def public_discovery_summary(
