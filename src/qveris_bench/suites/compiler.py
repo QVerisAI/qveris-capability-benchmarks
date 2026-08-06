@@ -13,6 +13,7 @@ from qveris_bench.providers.repository import (
     ProviderRegistryEntry,
     ProviderRegistryRepository,
 )
+from qveris_bench.suites.bindings import validate_provider_bindings
 from qveris_bench.suites.fingerprint import (
     assert_resume_fingerprint,
     canonical_json_bytes,
@@ -123,6 +124,12 @@ def compile_suite(
     cases = _resolve_cases(suite, load_cases(cases_path))
     records = ProviderRegistryRepository(providers_root).cohort_check()
     access_paths = _resolve_access_paths(suite, records)
+    bindings_path = suite_path.with_name("provider-bindings.yaml")
+    if bindings_path.is_file():
+        try:
+            validate_provider_bindings(bindings_path, access_paths)
+        except ValueError as exc:
+            raise SuiteCompilationError(str(exc)) from exc
     snapshot = _snapshot(suite, cases, access_paths, records)
     fingerprint = suite_fingerprint(snapshot)
     run_plan = expand_run_plan(suite, cases, access_paths, fingerprint)
