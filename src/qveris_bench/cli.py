@@ -1,15 +1,19 @@
 import asyncio
 import importlib
 import json
+import os
 from collections.abc import Callable
 from pathlib import Path
 from typing import Annotated, cast
 
+import httpx
 import typer
 
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
+from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
+from qveris_bench.execution.qveris import QverisToolClient
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
@@ -42,16 +46,78 @@ cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
 provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
+qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
 app.add_typer(provider_app, name="provider")
 app.add_typer(suite_app, name="suite")
 app.add_typer(release_app, name="release")
+app.add_typer(qveris_app, name="qveris")
 
 
 @app.callback()
 def main() -> None:
     """Run QVeris capability benchmarks."""
+
+
+@qveris_app.command("search")
+def qveris_search(
+    query: Annotated[str, typer.Option(help="Capability query for tool discovery.")],
+    limit: Annotated[int, typer.Option(min=1, max=50)] = 10,
+    raw_artifact_dir: Annotated[
+        Path | None,
+        typer.Option(help="Private raw artifact directory outside the repo."),
+    ] = None,
+) -> None:
+    """Run a QVeris tool search without executing a provider tool."""
+    api_key = os.environ.get("QVERIS_API_KEY")
+    raw_dir = raw_artifact_dir or _raw_artifact_dir_from_env()
+    if not api_key:
+        typer.echo("QVERIS_API_KEY is required", err=True)
+        raise typer.Exit(code=1)
+    if raw_dir is None:
+        typer.echo("private raw artifact directory is required", err=True)
+        raise typer.Exit(code=1)
+
+    async def search() -> dict[str, object]:
+        client = QverisToolClient(
+            httpx.AsyncClient(),
+            RawArtifactStore(raw_dir, Path.cwd()),
+            api_key,
+        )
+        try:
+            result = await client.search("qveris-search", query, limit)
+            document = json.loads(result.result.raw_path.read_text(encoding="utf-8"))
+        finally:
+            await client.close()
+        if not isinstance(document, dict):
+            raise ValueError("QVeris search response must be an object")
+        results = document.get("results", [])
+        if not isinstance(results, list):
+            raise ValueError("QVeris search results must be a list")
+        return {
+            "result_count": len(results),
+            "tools": [
+                {
+                    key: item.get(key)
+                    for key in ("tool_id", "name", "description", "parameters")
+                    if key in item
+                }
+                for item in results
+                if isinstance(item, dict)
+            ],
+        }
+
+    try:
+        typer.echo(json.dumps(asyncio.run(search()), ensure_ascii=False, indent=2))
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+
+
+def _raw_artifact_dir_from_env() -> Path | None:
+    value = os.environ.get("QVERIS_BENCH_RAW_ARTIFACT_DIR")
+    return Path(value) if value else None
 
 
 @cap_app.command("list")
