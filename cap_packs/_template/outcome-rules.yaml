@@ -1,0 +1,4 @@
+completion_requires:
+  - a provider response is captured
+negative_control_requires:
+  - a provider validation error is captured

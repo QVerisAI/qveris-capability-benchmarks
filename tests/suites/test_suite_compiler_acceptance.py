@@ -158,6 +158,36 @@ def _write_inputs(
         ]
     suite_path = root / "cap_pack" / "suite.yaml"
     suite_path.write_text(yaml.safe_dump(suite, sort_keys=False))
+    (root / "cap_pack" / "provider-bindings.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "access_paths": [
+                    {
+                        "access_path_id": "fmp-official-api",
+                        "provider_id": "financial-modeling-prep",
+                        "canonical_interface": "get-holdings",
+                        "official_source": "https://financial-modeling-prep.example.com/docs",
+                    },
+                    {
+                        "access_path_id": "demo-native-mcp",
+                        "provider_id": "demo-market-data",
+                        "canonical_interface": "get-holdings",
+                        "official_source": "https://demo-market-data.example.com/docs",
+                    },
+                ]
+            },
+            sort_keys=False,
+        )
+    )
+    (root / "cap_pack" / "outcome-rules.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "completion_requires": ["non-empty holdings"],
+                "negative_control_requires": ["evidenced negative response"],
+            },
+            sort_keys=False,
+        )
+    )
     return suite_path, cases_path, providers_root
 
 

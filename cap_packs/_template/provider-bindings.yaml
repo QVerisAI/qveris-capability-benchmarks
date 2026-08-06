@@ -1,0 +1,5 @@
+access_paths:
+  - access_path_id: example-official-api
+    provider_id: example-provider
+    canonical_interface: example-operation
+    official_source: https://example.com/docs

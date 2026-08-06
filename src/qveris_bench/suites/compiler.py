@@ -13,7 +13,11 @@ from qveris_bench.providers.repository import (
     ProviderRegistryEntry,
     ProviderRegistryRepository,
 )
-from qveris_bench.suites.bindings import validate_provider_bindings
+from qveris_bench.suites.bindings import (
+    ProviderBindings,
+    load_provider_bindings,
+    validate_provider_bindings,
+)
 from qveris_bench.suites.fingerprint import (
     assert_resume_fingerprint,
     canonical_json_bytes,
@@ -21,6 +25,11 @@ from qveris_bench.suites.fingerprint import (
 )
 from qveris_bench.suites.loader import load_cases, load_suite
 from qveris_bench.suites.matrix import expand_run_plan
+from qveris_bench.suites.outcome_rules import (
+    OutcomeRules,
+    load_outcome_rules,
+    validate_outcome_rules,
+)
 
 
 class SuiteCompilationError(ValueError):
@@ -95,12 +104,16 @@ def _snapshot(
     cases: tuple[BenchmarkCase, ...],
     access_paths: tuple[AccessPath, ...],
     records: tuple[ProviderRegistryEntry, ...],
+    bindings: ProviderBindings,
+    outcome_rules: OutcomeRules,
 ) -> dict[str, Any]:
     return {
         "suite": suite.model_dump(mode="json"),
         "cases": [case.model_dump(mode="json") for case in cases],
         "access_paths": [path.model_dump(mode="json") for path in access_paths],
         "provider_cohort": [record.model_dump(mode="json") for record in records],
+        "provider_bindings": bindings.model_dump(mode="json"),
+        "outcome_rules": outcome_rules.model_dump(mode="json"),
     }
 
 
@@ -122,15 +135,21 @@ def compile_suite(
             f"{cap.cap_id}@{cap.version}"
         )
     cases = _resolve_cases(suite, load_cases(cases_path))
+    try:
+        bindings = load_provider_bindings(
+            suite_path.with_name("provider-bindings.yaml")
+        )
+        outcome_rules = load_outcome_rules(suite_path.with_name("outcome-rules.yaml"))
+        validate_outcome_rules(outcome_rules, cases)
+    except ValueError as exc:
+        raise SuiteCompilationError(str(exc)) from exc
     records = ProviderRegistryRepository(providers_root).cohort_check()
     access_paths = _resolve_access_paths(suite, records)
-    bindings_path = suite_path.with_name("provider-bindings.yaml")
-    if bindings_path.is_file():
-        try:
-            validate_provider_bindings(bindings_path, access_paths)
-        except ValueError as exc:
-            raise SuiteCompilationError(str(exc)) from exc
-    snapshot = _snapshot(suite, cases, access_paths, records)
+    try:
+        validate_provider_bindings(bindings, access_paths)
+    except ValueError as exc:
+        raise SuiteCompilationError(str(exc)) from exc
+    snapshot = _snapshot(suite, cases, access_paths, records, bindings, outcome_rules)
     fingerprint = suite_fingerprint(snapshot)
     run_plan = expand_run_plan(suite, cases, access_paths, fingerprint)
     return CompiledSuite(

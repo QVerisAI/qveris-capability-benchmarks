@@ -126,9 +126,15 @@ def extract_observation(
                 raise ExtractionError(
                     f"invalid observation timestamp: {field}"
                 ) from exc
+            if timestamp.tzinfo is None:
+                raise ExtractionError(
+                    f"timezone required for observation field: {field}"
+                )
             max_age = constraints.get("max_age_seconds")
-            if isinstance(max_age, int) and timestamp.tzinfo is not None:
+            if isinstance(max_age, int):
                 age = (datetime.now(UTC) - timestamp.astimezone(UTC)).total_seconds()
+                if age < 0:
+                    raise ExtractionError(f"future observation field: {field}")
                 if age > max_age:
                     raise ExtractionError(f"stale observation field: {field}")
     try:

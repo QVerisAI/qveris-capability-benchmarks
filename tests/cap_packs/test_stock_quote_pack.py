@@ -79,6 +79,24 @@ def test_ac5_stock_quote_requires_current_finite_price_or_an_error_fact() -> Non
             "sha256:" + "a" * 64,
             "1.0.0",
         )
+    with pytest.raises(ExtractionError, match="timezone"):
+        extract_observation(
+            PACK / "observation-schema.yaml",
+            {"symbol": "AAPL", "price": 200.0, "timestamp": "2000-01-01T00:00:00"},
+            "sha256:" + "a" * 64,
+            "1.0.0",
+        )
+    with pytest.raises(ExtractionError, match="future"):
+        extract_observation(
+            PACK / "observation-schema.yaml",
+            {
+                "symbol": "AAPL",
+                "price": 200.0,
+                "timestamp": (datetime.now(UTC) + timedelta(minutes=1)).isoformat(),
+            },
+            "sha256:" + "a" * 64,
+            "1.0.0",
+        )
     error = extract_observation(
         PACK / "observation-schema.yaml",
         {"validation_error": "unknown stock"},
