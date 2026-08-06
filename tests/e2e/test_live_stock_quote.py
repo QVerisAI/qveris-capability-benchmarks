@@ -26,11 +26,13 @@ _FINNHUB_DISCOVERY_DIGEST = (
 _EXPECTED_BINDINGS = {
     "finnhub-aapl-quote": {
         "discovery_digest": _FINNHUB_DISCOVERY_DIGEST,
+        "discovery_query": "US stock quote AAPL price timestamp direct provider",
         "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
         "parameters": {"symbol": "AAPL"},
     },
     "finnhub-invalid-stock": {
         "discovery_digest": _FINNHUB_DISCOVERY_DIGEST,
+        "discovery_query": "US stock quote AAPL price timestamp direct provider",
         "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
         "parameters": {"symbol": "NOTASTOCK"},
     },
@@ -43,6 +45,7 @@ def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
         raise AssertionError("live Stock Quote binding is not allowlisted")
     if (
         binding.discovery_digest != expected["discovery_digest"]
+        or binding.discovery_query != expected["discovery_query"]
         or binding.tool_id != expected["tool_id"]
         or binding.parameters != expected["parameters"]
     ):
@@ -123,3 +126,7 @@ def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> No
 
     with pytest.raises(AssertionError, match="frozen contract"):
         _validate_fixed_binding(redirected)
+
+    redirected_query = binding.model_copy(update={"discovery_query": "other query"})
+    with pytest.raises(AssertionError, match="frozen contract"):
+        _validate_fixed_binding(redirected_query)
