@@ -17,6 +17,7 @@ from qveris_bench.models.enums import (
 class RunCell(FrozenModel):
     run_key: str = Field(min_length=1)
     case_id: StableId
+    case_input: dict[str, Any] = Field(default_factory=dict)
     provider_id: StableId
     access_path_id: StableId
     mode: RunMode

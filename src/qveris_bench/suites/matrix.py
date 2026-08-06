@@ -55,6 +55,7 @@ def expand_run_plan(
                         RunCell(
                             run_key=run_key,
                             case_id=case.case_id,
+                            case_input=case.input,
                             provider_id=access_path.provider_id,
                             access_path_id=access_path.access_path_id,
                             mode=mode,

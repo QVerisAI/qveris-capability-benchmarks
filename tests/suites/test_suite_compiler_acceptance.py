@@ -239,6 +239,18 @@ def test_ac3_run_keys_are_unique_and_stable(tmp_path: Path) -> None:
     assert first_keys == second_keys, "AC3 run keys must be stable"
 
 
+def test_ac3_every_planned_cell_freezes_the_atomic_case_input(tmp_path: Path) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+
+    compiled = compile_suite(suite_path, cases_path, providers_root)
+    inputs = {cell.case_id: cell.case_input for cell in compiled.run_plan.cells}
+
+    assert inputs == {
+        "spy-holdings": {"symbol": "SPY"},
+        "invalid-symbol": {"symbol": "INVALID_ETF_123"},
+    }
+
+
 def test_ac4_missing_case_or_access_path_reference_fails_closed(tmp_path: Path) -> None:
     suite_path, cases_path, providers_root = _write_inputs(tmp_path)
     suite = yaml.safe_load(suite_path.read_text())
