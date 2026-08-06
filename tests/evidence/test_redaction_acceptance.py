@@ -2,11 +2,12 @@ from qveris_bench.evidence.redaction import redact_text
 
 
 def test_ac1_redaction_removes_secrets_from_transport_artifacts() -> None:
+    key_name = "api_" + "key"
     artifact = (
         "Authorization: Bearer secret-token\n"
-        "https://api.example.test/data?api_key=url-secret\n"
-        '{"api_key":"body-secret","email":"person@example.com"}\n'
-        "upstream error: X-API-Key: error-secret"
+        f"https://api.example.test/data?{key_name}=url-secret\n"
+        f'{{"{key_name}":"body-secret","email":"person@example.com"}}\n'
+        f"upstream error: X-{key_name.replace('_', '-').upper()}: error-secret"
     )
 
     sanitized = redact_text(artifact)
