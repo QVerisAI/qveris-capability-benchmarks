@@ -25,9 +25,15 @@ def test_ac_stock_quote_smoke_release_rebuilds_from_safe_evidence() -> None:
     )
 
     release_bytes = (RELEASE / "release.json").read_bytes()
+    run_plan_bytes = (RELEASE / "run-plan.json").read_bytes()
+    run_plan = json.loads(run_plan_bytes)
     assert build_release(release, cells, evidence) == release_bytes
     assert release_digest(release_bytes) == _DIGEST
     assert verify_release(RELEASE / "release.json", _DIGEST)
+    assert sha256_digest(run_plan_bytes) == release.run_plan_digest
+    assert {cell["run_key"] for cell in run_plan["cells"]} == {
+        cell.run_key for cell in cells
+    }
     for bundle in evidence:
         matching = [
             path
