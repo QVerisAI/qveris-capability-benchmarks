@@ -4,6 +4,7 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from qveris_bench.evidence.policy import validate_publication
 from qveris_bench.models.evidence import EvidenceBundle
 
 
@@ -19,6 +20,7 @@ class EvidenceIndexEntry:
 
     @classmethod
     def from_bundle(cls, bundle: EvidenceBundle) -> EvidenceIndexEntry:
+        validate_publication(bundle)
         if bundle.public_digest is None:
             raise ValueError("an evidence index entry requires a public digest")
         return cls(

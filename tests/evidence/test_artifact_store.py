@@ -24,3 +24,12 @@ def test_ac2_raw_store_rejects_a_repository_path(tmp_path: Path) -> None:
     repository_root = tmp_path / "repo"
     with pytest.raises(ArtifactStoreError, match="outside the repository"):
         RawArtifactStore(repository_root / "evidence" / "raw", repository_root)
+
+
+def test_ac2_public_store_redacts_before_persistence(tmp_path: Path) -> None:
+    public = PublicArtifactStore(tmp_path / "repo" / "evidence" / "release-1")
+    token = "api_" + "key"
+
+    record = public.persist("cell-1", f"{token}=value-secret".encode())
+
+    assert b"value-secret" not in record.path.read_bytes()

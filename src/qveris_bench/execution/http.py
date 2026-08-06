@@ -32,13 +32,7 @@ class HttpAdapter:
             raise TransportError("timeout", "provider request timed out") from exc
         except httpx.HTTPError as exc:
             raise TransportError("network_error", "provider transport failed") from exc
-        if response.status_code == 429:
-            raise TransportError("rate_limited", "provider rate limit")
-        if response.status_code >= 400:
-            raise TransportError(
-                "http_error", f"provider returned {response.status_code}"
-            )
-        return AdapterResult.from_payload(
+        result = AdapterResult.from_payload(
             request,
             response.status_code,
             dict(response.headers),
@@ -46,6 +40,17 @@ class HttpAdapter:
             self._store,
             artifact_id,
         )
+        if response.status_code == 429:
+            raise TransportError(
+                "rate_limited", "provider rate limit", result.raw_digest
+            )
+        if response.status_code >= 400:
+            raise TransportError(
+                "http_error",
+                f"provider returned {response.status_code}",
+                result.raw_digest,
+            )
+        return result
 
     async def close(self) -> None:
         await self._client.aclose()

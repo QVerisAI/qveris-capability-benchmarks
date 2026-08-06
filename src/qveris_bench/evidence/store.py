@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from qveris_bench.evidence.hashing import sha256_digest
+from qveris_bench.evidence.redaction import redact_text
 
 
 class ArtifactStoreError(ValueError):
@@ -43,4 +44,9 @@ class RawArtifactStore(_ArtifactStore):
 
 
 class PublicArtifactStore(_ArtifactStore):
-    pass
+    def persist(self, artifact_id: str, content: bytes) -> ArtifactRecord:
+        try:
+            decoded = content.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ArtifactStoreError("public evidence must be UTF-8 text") from exc
+        return super().persist(artifact_id, redact_text(decoded).text.encode())

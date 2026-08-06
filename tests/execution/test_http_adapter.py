@@ -56,10 +56,11 @@ def test_ac2_http_adapter_normalizes_failure_statuses(
             ),
             _store(tmp_path),
         )
-        with pytest.raises(TransportError, match=error_code):
+        with pytest.raises(TransportError, match=error_code) as error:
             await adapter.invoke(
                 "cell-1", TransportRequest(method="GET", url="https://provider.test")
             )
+        assert error.value.evidence_digest is not None
         await adapter.close()
 
     asyncio.run(run())
