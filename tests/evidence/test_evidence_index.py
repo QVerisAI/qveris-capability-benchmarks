@@ -11,6 +11,7 @@ from qveris_bench.models.evidence import EvidenceBundle
 def _bundle(**overrides: object) -> EvidenceBundle:
     values: dict[str, object] = {
         "evidence_id": "cell-1",
+        "run_key": "suite:cell:provider:direct:1",
         "raw_digest": "sha256:" + "a" * 64,
         "public_digest": "sha256:" + "b" * 64,
         "redaction_status": RedactionStatus.SANITIZED,
@@ -35,6 +36,7 @@ def test_ac3_evidence_index_is_deterministic_and_retains_provenance(
     assert first == second
     assert '"extractor_version": "1.0.0"' in second.decode()
     assert '"suite_fingerprint": "' in second.decode()
+    assert '"run_key": "suite:cell:provider:direct:1"' in second.decode()
 
 
 @pytest.mark.parametrize(

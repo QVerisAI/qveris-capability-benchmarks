@@ -69,6 +69,11 @@
     "redaction_status": {
       "$ref": "#/$defs/RedactionStatus"
     },
+    "run_key": {
+      "minLength": 1,
+      "title": "Run Key",
+      "type": "string"
+    },
     "suite_fingerprint": {
       "pattern": "^[a-f0-9]{64}$",
       "title": "Suite Fingerprint",
@@ -77,6 +82,7 @@
   },
   "required": [
     "evidence_id",
+    "run_key",
     "raw_digest",
     "redaction_status",
     "disclosure_level",

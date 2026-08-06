@@ -15,6 +15,7 @@ from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
 def _evidence() -> EvidenceBundle:
     return EvidenceBundle(
         evidence_id="cell-1",
+        run_key="cell-1",
         raw_digest="sha256:" + "a" * 64,
         public_digest="sha256:" + "b" * 64,
         redaction_status=RedactionStatus.SANITIZED,
@@ -61,3 +62,11 @@ def test_ac1_release_gate_rejects_open_cells() -> None:
 def test_ac1_release_gate_rejects_missing_evidence() -> None:
     with pytest.raises(ReleaseGateError, match="evidence"):
         validate_release_inputs(_release(), (_cell(),), ())
+
+
+def test_ac1_release_gate_binds_colon_run_keys_without_weakening_evidence_ids() -> None:
+    cell = _cell()
+    cell = cell.model_copy(update={"run_key": "suite:case:provider:direct:1"})
+    evidence = _evidence().model_copy(update={"run_key": cell.run_key})
+
+    validate_release_inputs(_release(), (cell,), (evidence,))
