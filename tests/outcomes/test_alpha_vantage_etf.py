@@ -56,6 +56,29 @@ def test_ac_alpha_vantage_negative_rejects_non_validation_errors(
         )
 
 
+def test_ac_alpha_vantage_negative_top_level_invalid_symbol_message_is_a_fact() -> None:
+    assert extract_alpha_vantage_etf_holdings(
+        {
+            "error_message": "NOTANETF is an invalid ETF symbol",
+            "result": {"data": {}},
+        },
+        "NOTANETF",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+def test_ac_alpha_vantage_negative_top_level_runtime_message_is_rejected() -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
+        extract_alpha_vantage_etf_holdings(
+            {
+                "error_message": "rate limit exceeded",
+                "result": {"data": {}},
+            },
+            "NOTANETF",
+            negative_control=True,
+        )
+
+
 def test_ac_alpha_vantage_negative_empty_data_without_error_is_rejected() -> None:
     with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
         extract_alpha_vantage_etf_holdings(

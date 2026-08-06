@@ -75,9 +75,15 @@ def _has_invalid_symbol_error(document: dict[str, Any]) -> bool:
     error = result.get("error")
     if isinstance(error, dict):
         candidates.append(error.get("code"))
-    return any(
+    if any(
         isinstance(candidate, str)
         and candidate.casefold().replace("-", "_")
         in {"invalid_symbol", "invalid_etf", "unknown_symbol"}
         for candidate in candidates
-    )
+    ):
+        return True
+    message = document.get("error_message")
+    if not isinstance(message, str):
+        return False
+    normalized = message.casefold()
+    return "invalid" in normalized and ("symbol" in normalized or "etf" in normalized)
