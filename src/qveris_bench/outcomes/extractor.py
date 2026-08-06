@@ -94,6 +94,25 @@ def extract_observation(
             raise ExtractionError(f"invalid observation constraints: {field}")
         if constraints.get("non_empty") and not value:
             raise ExtractionError(f"empty observation field: {field}")
+        same_length_as = constraints.get("same_length_as")
+        if isinstance(same_length_as, str) and isinstance(value, list):
+            peer = facts.get(same_length_as)
+            if not isinstance(peer, list) or len(value) != len(peer):
+                raise ExtractionError(f"unaligned observation field: {field}")
+        minimum = constraints.get("minimum")
+        maximum = constraints.get("maximum")
+        if isinstance(value, list) and all(
+            isinstance(item, (int, float)) and not isinstance(item, bool)
+            for item in value
+        ):
+            if isinstance(minimum, (int, float)) and any(
+                item < minimum for item in value
+            ):
+                raise ExtractionError(f"below-minimum observation field: {field}")
+            if isinstance(maximum, (int, float)) and any(
+                item > maximum for item in value
+            ):
+                raise ExtractionError(f"above-maximum observation field: {field}")
         if constraints.get("finite") and isinstance(value, (int, float)):
             if not isfinite(value):
                 raise ExtractionError(f"non-finite observation field: {field}")

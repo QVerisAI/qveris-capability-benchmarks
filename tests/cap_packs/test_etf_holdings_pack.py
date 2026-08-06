@@ -77,6 +77,13 @@ def test_ac5_etf_observation_requires_weighted_holdings_or_an_error_fact() -> No
             "sha256:" + "a" * 64,
             "1.0.0",
         )
+    with pytest.raises(ExtractionError, match="unaligned"):
+        extract_observation(
+            PACK / "observation-schema.yaml",
+            {"symbol": "SPY", "holdings": ["AAPL", "MSFT"], "weights": [0.07]},
+            "sha256:" + "a" * 64,
+            "1.0.0",
+        )
     error = extract_observation(
         PACK / "observation-schema.yaml",
         {"validation_error": "unknown ETF"},
