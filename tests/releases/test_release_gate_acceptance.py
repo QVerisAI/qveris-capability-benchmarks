@@ -82,5 +82,14 @@ def test_ac1_release_gate_rejects_orphan_evidence_run_key() -> None:
 def test_ac1_release_gate_rejects_duplicate_applicable_cell_run_keys() -> None:
     duplicate = _cell().model_copy(update={"case_id": "case-2"})
 
-    with pytest.raises(ReleaseGateError, match="duplicate applicable"):
+    with pytest.raises(ReleaseGateError, match="duplicate cell"):
         validate_release_inputs(_release(), (_cell(), duplicate), (_evidence(),))
+
+
+def test_ac1_release_gate_rejects_mixed_applicability_run_key_collision() -> None:
+    non_applicable = _cell().model_copy(
+        update={"case_id": "case-2", "applicable": False, "state": "not_applicable"}
+    )
+
+    with pytest.raises(ReleaseGateError, match="duplicate cell"):
+        validate_release_inputs(_release(), (_cell(), non_applicable), (_evidence(),))
