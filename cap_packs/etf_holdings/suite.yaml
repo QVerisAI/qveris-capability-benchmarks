@@ -1,0 +1,11 @@
+suite_id: etf-holdings-v1
+version: 1.0.0
+cap_id: etf-holdings
+cap_version: 1.0.0
+case_ids: [spy-holdings, invalid-etf]
+access_path_ids: [alpha-vantage-etf-holdings, fmp-etf-holdings, finnhub-etf-holdings, polygon-etf-holdings, tiingo-etf-holdings]
+modes: [direct]
+rounds: 3
+environment: {}
+agent_protocol: null
+not_applicable: []

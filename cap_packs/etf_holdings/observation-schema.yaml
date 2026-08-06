@@ -1,0 +1,4 @@
+required_fields: [symbol, holdings]
+field_types:
+  symbol: string
+additional_fields: true
