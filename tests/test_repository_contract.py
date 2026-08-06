@@ -305,6 +305,9 @@ def test_ac6_operator_handoff_documents_safe_replay_and_extension_paths() -> Non
     assert "must not invoke provider APIs" in runbook
     assert "credential values remain outside" in runbook
     assert "qveris-bench suite freeze" in runbook
+    assert "qveris-bench suite plan" in runbook
+    assert "/tmp/frozen-suite.json" in runbook
+    assert "/tmp/run-plan.json" in runbook
     assert "qveris-bench release verify" in runbook
     assert "CAP Pack" in adding_cap
     assert "terminal qualification" in adding_provider

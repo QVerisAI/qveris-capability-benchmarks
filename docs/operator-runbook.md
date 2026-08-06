@@ -7,12 +7,14 @@ private raw artifacts or credentials.
 
 1. Check out the exact release commit and run `uv sync --locked --all-groups`.
 2. Run `uv run qveris-bench schema export --check`.
-3. Run `uv run qveris-bench suite freeze CAP_PACK/suite.yaml` and inspect the
-   resulting fingerprint and planned call count.
-4. Run `uv run qveris-bench release verify RELEASE.json --digest DIGEST`.
-5. Rebuild from the published release manifest, terminal cells, and authorized
+3. Run `uv run qveris-bench suite freeze CAP_PACK/suite.yaml --output
+   /tmp/frozen-suite.json` and inspect the resulting fingerprint.
+4. Run `uv run qveris-bench suite plan CAP_PACK/suite.yaml --output
+   /tmp/run-plan.json` to inspect the planned call count.
+5. Run `uv run qveris-bench release verify RELEASE.json --digest DIGEST`.
+6. Rebuild from the published release manifest, terminal cells, and authorized
    public evidence, then compare its digest.
-6. Run the quality commands in `CONTRIBUTING.md`.
+7. Run the quality commands in `CONTRIBUTING.md`.
 
 A replay must not invoke provider APIs, MCP servers, or an Agent backend.
 credential values remain outside this repository and must never be added to a
