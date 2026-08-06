@@ -70,3 +70,17 @@ def test_ac1_release_gate_binds_colon_run_keys_without_weakening_evidence_ids() 
     evidence = _evidence().model_copy(update={"run_key": cell.run_key})
 
     validate_release_inputs(_release(), (cell,), (evidence,))
+
+
+def test_ac1_release_gate_rejects_orphan_evidence_run_key() -> None:
+    evidence = _evidence().model_copy(update={"run_key": "unrelated:run:key"})
+
+    with pytest.raises(ReleaseGateError, match="matching evidence"):
+        validate_release_inputs(_release(), (_cell(),), (evidence,))
+
+
+def test_ac1_release_gate_rejects_duplicate_applicable_cell_run_keys() -> None:
+    duplicate = _cell().model_copy(update={"case_id": "case-2"})
+
+    with pytest.raises(ReleaseGateError, match="duplicate applicable"):
+        validate_release_inputs(_release(), (_cell(), duplicate), (_evidence(),))
