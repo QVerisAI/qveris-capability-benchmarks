@@ -16,6 +16,7 @@ def test_ac3_release_builder_is_reproducible_and_emits_only_facts() -> None:
         version="1.0.0",
         suite_fingerprint="a" * 64,
         run_plan_digest="sha256:" + "b" * 64,
+        evidence_ids=("cell-1",),
     )
     cell = RunCell(
         run_key="cell-1",

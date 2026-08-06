@@ -19,7 +19,8 @@ class FakeResponses:
                     "name": "get-quote",
                     "arguments": '{"symbol":"AAPL"}',
                 }
-            ]
+            ],
+            "usage": {"output_tokens": 1},
         }
 
 
@@ -70,7 +71,8 @@ def test_ac1_agent_trial_rejects_an_unexpected_tool() -> None:
                             "name": "search-tools",
                             "arguments": "{}",
                         }
-                    ]
+                    ],
+                    "usage": {"output_tokens": 1},
                 }
 
         protocol = AgentProtocol(

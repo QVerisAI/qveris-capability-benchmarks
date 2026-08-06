@@ -8,6 +8,7 @@ from qveris_bench.models.enums import (
 )
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.run import RunCell
+from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
 
 
@@ -38,15 +39,25 @@ def _cell(
     )
 
 
+def _release() -> BenchmarkRelease:
+    return BenchmarkRelease(
+        release_id="release-1",
+        version="1.0.0",
+        suite_fingerprint="c" * 64,
+        run_plan_digest="sha256:" + "d" * 64,
+        evidence_ids=("cell-1",),
+    )
+
+
 def test_ac1_release_gate_accepts_terminal_cells_with_safe_evidence() -> None:
-    validate_release_inputs((_cell(),), (_evidence(),))
+    validate_release_inputs(_release(), (_cell(),), (_evidence(),))
 
 
 def test_ac1_release_gate_rejects_open_cells() -> None:
     with pytest.raises(ReleaseGateError, match="open"):
-        validate_release_inputs((_cell(CellState.PLANNED),), (_evidence(),))
+        validate_release_inputs(_release(), (_cell(CellState.PLANNED),), (_evidence(),))
 
 
 def test_ac1_release_gate_rejects_missing_evidence() -> None:
     with pytest.raises(ReleaseGateError, match="evidence"):
-        validate_release_inputs((_cell(),), ())
+        validate_release_inputs(_release(), (_cell(),), ())

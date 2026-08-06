@@ -12,10 +12,16 @@ def build_release(
     cells: tuple[RunCell, ...],
     evidence: tuple[EvidenceBundle, ...],
 ) -> bytes:
-    validate_release_inputs(cells, evidence)
+    validate_release_inputs(release, cells, evidence)
     payload = {
         "release": release.model_dump(mode="json"),
-        "cells": [cell.model_dump(mode="json") for cell in cells],
-        "evidence": [bundle.model_dump(mode="json") for bundle in evidence],
+        "cells": [
+            cell.model_dump(mode="json")
+            for cell in sorted(cells, key=lambda item: item.run_key)
+        ],
+        "evidence": [
+            bundle.model_dump(mode="json")
+            for bundle in sorted(evidence, key=lambda item: item.evidence_id)
+        ],
     }
     return canonical_release_bytes(payload)
