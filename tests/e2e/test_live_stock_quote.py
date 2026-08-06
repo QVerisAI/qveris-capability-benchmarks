@@ -19,6 +19,7 @@ from qveris_bench.outcomes.stock_quote import (
     StockQuoteExtractionError,
     extract_finnhub_stock_quote,
 )
+from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
 _FINNHUB_DISCOVERY_DIGEST = (
@@ -47,6 +48,7 @@ class _TerminalEvidence:
     public_digest: str
     outcome: str
     reason: str | None
+    suite_fingerprint: str
 
 
 def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
@@ -85,7 +87,12 @@ def _safe_observation_failure_reason(error: ExtractionError) -> str | None:
 
 
 def _persist_terminal_evidence(
-    root: Path, *, binding_id: str, raw_digest: str, reason: str | None
+    root: Path,
+    *,
+    binding_id: str,
+    raw_digest: str,
+    reason: str | None,
+    suite_fingerprint: str,
 ) -> _TerminalEvidence:
     outcome = "completed" if reason is None else "provider_negative"
     content = (
@@ -95,6 +102,11 @@ def _persist_terminal_evidence(
                 "outcome": outcome,
                 "raw_digest": raw_digest,
                 "reason": reason,
+                "extractor_version": "1.0.0",
+                "suite_fingerprint": suite_fingerprint,
+                "redaction_status": "sanitized",
+                "disclosure_level": "sanitized_public",
+                "license_status": "cleared",
             },
             sort_keys=True,
         )
@@ -107,6 +119,30 @@ def _persist_terminal_evidence(
         public_digest=artifact.digest,
         outcome=outcome,
         reason=reason,
+        suite_fingerprint=suite_fingerprint,
+    )
+
+
+def _persist_terminal_manifest(
+    root: Path, evidence: tuple[_TerminalEvidence, ...]
+) -> None:
+    payload = {
+        "completed": sum(item.outcome == "completed" for item in evidence),
+        "provider_negative": sum(
+            item.outcome == "provider_negative" for item in evidence
+        ),
+        "records": [
+            {
+                "binding_id": item.binding_id,
+                "outcome": item.outcome,
+                "reason": item.reason,
+            }
+            for item in evidence
+        ],
+    }
+    PublicArtifactStore(root).persist(
+        "stock-quote-terminal-manifest",
+        (json.dumps(payload, sort_keys=True) + "\n").encode(),
     )
 
 
@@ -122,6 +158,11 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
         pytest.skip("QVERIS_API_KEY is required for the live stock quote run")
 
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
+    suite_fingerprint = compile_suite(
+        ROOT / "cap_packs/stock_quote/suite.yaml",
+        ROOT / "cap_packs/stock_quote/cases.yaml",
+        ROOT / "providers",
+    ).fingerprint
 
     async def run() -> tuple[_TerminalEvidence, ...]:
         client = QverisToolClient(
@@ -178,6 +219,7 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
                             binding_id=binding_id,
                             raw_digest=result.result.raw_digest,
                             reason=reason,
+                            suite_fingerprint=suite_fingerprint,
                         )
                     )
                     continue
@@ -193,6 +235,7 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
                             binding_id=binding_id,
                             raw_digest=result.result.raw_digest,
                             reason=observation_reason,
+                            suite_fingerprint=suite_fingerprint,
                         )
                     )
                     continue
@@ -203,11 +246,14 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
                         binding_id=binding_id,
                         raw_digest=result.result.raw_digest,
                         reason=None,
+                        suite_fingerprint=suite_fingerprint,
                     )
                 )
         finally:
             await client.close()
-        return tuple(terminal_evidence)
+        records = tuple(terminal_evidence)
+        _persist_terminal_manifest(public_root, records)
+        return records
 
     terminal_evidence = asyncio.run(run())
     assert tuple(item.binding_id for item in terminal_evidence) == (
@@ -275,8 +321,12 @@ def test_ac_live_stock_quote_terminal_evidence_is_safe(tmp_path: Path) -> None:
         binding_id="finnhub-aapl-quote",
         raw_digest="sha256:" + "a" * 64,
         reason="stale_timestamp",
+        suite_fingerprint="b" * 64,
     )
 
     assert record.outcome == "provider_negative"
     assert record.public_digest != record.raw_digest
-    assert "stale_timestamp" in next(tmp_path.glob("*.json")).read_text()
+    artifact = next(tmp_path.glob("finnhub-aapl-quote-*.json")).read_text()
+    assert "stale_timestamp" in artifact
+    assert '"suite_fingerprint": "' + "b" * 64 + '"' in artifact
+    assert '"disclosure_level": "sanitized_public"' in artifact

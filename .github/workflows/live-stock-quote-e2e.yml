@@ -21,6 +21,10 @@ jobs:
           RUN_LIVE_STOCK_QUOTE: "1"
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
           LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/stock-quote-public-evidence
+      - name: Publish safe terminal summary
+        run: |
+          find "${{ runner.temp }}/stock-quote-public-evidence" -type f -name '*.json' -print -exec cat {} \;
+          cat "${{ runner.temp }}/stock-quote-public-evidence"/*terminal-manifest*.json >> "$GITHUB_STEP_SUMMARY"
       - name: Retain sanitized terminal evidence
         uses: actions/upload-artifact@v4
         with:
