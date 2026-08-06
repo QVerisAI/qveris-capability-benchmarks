@@ -21,14 +21,14 @@ jobs:
     environment: benchmark-e2e
     env:
       QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
-      QVERIS_BENCH_RAW_ARTIFACT_DIR: ${{ runner.temp }}/qveris-raw
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
       - run: uv sync --locked --all-groups
-      - run: >-
-          uv run qveris-bench qveris search
-          --query "${{ inputs.query }}"
-          --limit "${{ inputs.limit }}"
+      - run: |
+          uv run qveris-bench qveris search \
+            --query "${{ inputs.query }}" \
+            --limit "${{ inputs.limit }}" \
+            --raw-artifact-dir "$RUNNER_TEMP/qveris-raw"
