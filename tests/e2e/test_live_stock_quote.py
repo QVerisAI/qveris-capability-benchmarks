@@ -1,12 +1,13 @@
 import asyncio
 import json
 import os
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx
 import pytest
 
-from qveris_bench.evidence.store import RawArtifactStore
+from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import (
     QverisDirectBinding,
@@ -37,6 +38,15 @@ _EXPECTED_BINDINGS = {
         "parameters": {"symbol": "NOTASTOCK"},
     },
 }
+
+
+@dataclass(frozen=True)
+class _TerminalEvidence:
+    binding_id: str
+    raw_digest: str
+    public_digest: str
+    outcome: str
+    reason: str | None
 
 
 def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
@@ -74,19 +84,50 @@ def _safe_observation_failure_reason(error: ExtractionError) -> str | None:
     return None
 
 
+def _persist_terminal_evidence(
+    root: Path, *, binding_id: str, raw_digest: str, reason: str | None
+) -> _TerminalEvidence:
+    outcome = "completed" if reason is None else "provider_negative"
+    content = (
+        json.dumps(
+            {
+                "binding_id": binding_id,
+                "outcome": outcome,
+                "raw_digest": raw_digest,
+                "reason": reason,
+            },
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode()
+    artifact = PublicArtifactStore(root).persist(binding_id, content)
+    return _TerminalEvidence(
+        binding_id=binding_id,
+        raw_digest=raw_digest,
+        public_digest=artifact.digest,
+        outcome=outcome,
+        reason=reason,
+    )
+
+
 @pytest.mark.skipif(
     os.environ.get("RUN_LIVE_STOCK_QUOTE") != "1",
     reason="live stock quote run is disabled",
 )
-def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> None:
+def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
+    tmp_path: Path,
+) -> None:
     api_key = os.environ.get("QVERIS_API_KEY")
     if not api_key:
         pytest.skip("QVERIS_API_KEY is required for the live stock quote run")
 
-    async def run() -> None:
+    public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
+
+    async def run() -> tuple[_TerminalEvidence, ...]:
         client = QverisToolClient(
             httpx.AsyncClient(), RawArtifactStore(tmp_path, ROOT), api_key
         )
+        terminal_evidence: list[_TerminalEvidence] = []
         try:
             for binding_id, negative_control in (
                 ("finnhub-aapl-quote", False),
@@ -128,30 +169,52 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                         negative_control=negative_control,
                     )
                 except StockQuoteExtractionError as exc:
-                    control = "negative" if negative_control else "positive"
                     reason = _safe_response_failure_reason(
                         exc, negative_control=negative_control
                     )
-                    raise AssertionError(
-                        f"live Finnhub {control} response failed "
-                        f"Stock Quote CAP: {reason}"
-                    ) from None
+                    terminal_evidence.append(
+                        _persist_terminal_evidence(
+                            public_root,
+                            binding_id=binding_id,
+                            raw_digest=result.result.raw_digest,
+                            reason=reason,
+                        )
+                    )
+                    continue
                 except ExtractionError as exc:
                     observation_reason = _safe_observation_failure_reason(exc)
                     if observation_reason is None:
                         raise AssertionError(
                             "local Stock Quote observation contract failed"
                         ) from None
-                    control = "negative" if negative_control else "positive"
-                    raise AssertionError(
-                        f"live Finnhub {control} response failed "
-                        f"Stock Quote CAP: {observation_reason}"
-                    ) from None
+                    terminal_evidence.append(
+                        _persist_terminal_evidence(
+                            public_root,
+                            binding_id=binding_id,
+                            raw_digest=result.result.raw_digest,
+                            reason=observation_reason,
+                        )
+                    )
+                    continue
                 assert observation.facts
+                terminal_evidence.append(
+                    _persist_terminal_evidence(
+                        public_root,
+                        binding_id=binding_id,
+                        raw_digest=result.result.raw_digest,
+                        reason=None,
+                    )
+                )
         finally:
             await client.close()
+        return tuple(terminal_evidence)
 
-    asyncio.run(run())
+    terminal_evidence = asyncio.run(run())
+    assert tuple(item.binding_id for item in terminal_evidence) == (
+        "finnhub-aapl-quote",
+        "finnhub-invalid-stock",
+    )
+    assert all(item.public_digest != item.raw_digest for item in terminal_evidence)
 
 
 def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> None:
@@ -204,3 +267,16 @@ def test_ac_live_stock_quote_separates_local_observation_errors(
     error: ExtractionError, expected: str | None
 ) -> None:
     assert _safe_observation_failure_reason(error) == expected
+
+
+def test_ac_live_stock_quote_terminal_evidence_is_safe(tmp_path: Path) -> None:
+    record = _persist_terminal_evidence(
+        tmp_path,
+        binding_id="finnhub-aapl-quote",
+        raw_digest="sha256:" + "a" * 64,
+        reason="stale_timestamp",
+    )
+
+    assert record.outcome == "provider_negative"
+    assert record.public_digest != record.raw_digest
+    assert "stale_timestamp" in next(tmp_path.glob("*.json")).read_text()
