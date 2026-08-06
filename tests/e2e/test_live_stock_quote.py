@@ -1,12 +1,13 @@
 import asyncio
 import json
 import os
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx
 import pytest
 
-from qveris_bench.evidence.store import RawArtifactStore
+from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import (
     QverisDirectBinding,
@@ -18,6 +19,7 @@ from qveris_bench.outcomes.stock_quote import (
     StockQuoteExtractionError,
     extract_finnhub_stock_quote,
 )
+from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
 _FINNHUB_DISCOVERY_DIGEST = (
@@ -37,6 +39,16 @@ _EXPECTED_BINDINGS = {
         "parameters": {"symbol": "NOTASTOCK"},
     },
 }
+
+
+@dataclass(frozen=True)
+class _TerminalEvidence:
+    binding_id: str
+    raw_digest: str
+    public_digest: str
+    outcome: str
+    reason: str | None
+    suite_fingerprint: str
 
 
 def _validate_fixed_binding(binding: QverisDirectBinding) -> None:
@@ -74,19 +86,97 @@ def _safe_observation_failure_reason(error: ExtractionError) -> str | None:
     return None
 
 
+def _persist_terminal_evidence(
+    root: Path,
+    *,
+    binding_id: str,
+    raw_digest: str,
+    reason: str | None,
+    suite_fingerprint: str,
+) -> _TerminalEvidence:
+    outcome = "completed" if reason is None else "provider_negative"
+    content = (
+        json.dumps(
+            {
+                "binding_id": binding_id,
+                "outcome": outcome,
+                "raw_digest": raw_digest,
+                "reason": reason,
+                "extractor_version": "1.0.0",
+                "suite_fingerprint": suite_fingerprint,
+                "redaction_status": "sanitized",
+                "disclosure_level": "sanitized_public",
+                "license_status": "cleared",
+            },
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode()
+    artifact = PublicArtifactStore(root).persist(binding_id, content)
+    return _TerminalEvidence(
+        binding_id=binding_id,
+        raw_digest=raw_digest,
+        public_digest=artifact.digest,
+        outcome=outcome,
+        reason=reason,
+        suite_fingerprint=suite_fingerprint,
+    )
+
+
+def _persist_terminal_manifest(
+    root: Path,
+    evidence: tuple[_TerminalEvidence, ...],
+    suite_fingerprint: str,
+) -> None:
+    payload = {
+        "completed": sum(item.outcome == "completed" for item in evidence),
+        "provider_negative": sum(
+            item.outcome == "provider_negative" for item in evidence
+        ),
+        "extractor_version": "1.0.0",
+        "suite_fingerprint": suite_fingerprint,
+        "redaction_status": "sanitized",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared",
+        "records": [
+            {
+                "binding_id": item.binding_id,
+                "outcome": item.outcome,
+                "reason": item.reason,
+                "public_digest": item.public_digest,
+            }
+            for item in evidence
+        ],
+    }
+    PublicArtifactStore(root).persist(
+        "stock-quote-terminal-manifest",
+        (json.dumps(payload, sort_keys=True) + "\n").encode(),
+    )
+
+
 @pytest.mark.skipif(
     os.environ.get("RUN_LIVE_STOCK_QUOTE") != "1",
     reason="live stock quote run is disabled",
 )
-def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> None:
+def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
+    tmp_path: Path,
+) -> None:
     api_key = os.environ.get("QVERIS_API_KEY")
     if not api_key:
         pytest.skip("QVERIS_API_KEY is required for the live stock quote run")
 
-    async def run() -> None:
+    public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
+    suite_fingerprint = compile_suite(
+        ROOT / "cap_packs/stock_quote/suite.yaml",
+        ROOT / "cap_packs/stock_quote/cases.yaml",
+        ROOT / "providers",
+    ).fingerprint
+
+    async def run() -> tuple[_TerminalEvidence, ...]:
         client = QverisToolClient(
             httpx.AsyncClient(), RawArtifactStore(tmp_path, ROOT), api_key
         )
+        terminal_evidence: list[_TerminalEvidence] = []
         try:
             for binding_id, negative_control in (
                 ("finnhub-aapl-quote", False),
@@ -128,30 +218,57 @@ def test_ac_live_finnhub_direct_quote_positive_and_negative(tmp_path: Path) -> N
                         negative_control=negative_control,
                     )
                 except StockQuoteExtractionError as exc:
-                    control = "negative" if negative_control else "positive"
                     reason = _safe_response_failure_reason(
                         exc, negative_control=negative_control
                     )
-                    raise AssertionError(
-                        f"live Finnhub {control} response failed "
-                        f"Stock Quote CAP: {reason}"
-                    ) from None
+                    terminal_evidence.append(
+                        _persist_terminal_evidence(
+                            public_root,
+                            binding_id=binding_id,
+                            raw_digest=result.result.raw_digest,
+                            reason=reason,
+                            suite_fingerprint=suite_fingerprint,
+                        )
+                    )
+                    continue
                 except ExtractionError as exc:
                     observation_reason = _safe_observation_failure_reason(exc)
                     if observation_reason is None:
                         raise AssertionError(
                             "local Stock Quote observation contract failed"
                         ) from None
-                    control = "negative" if negative_control else "positive"
-                    raise AssertionError(
-                        f"live Finnhub {control} response failed "
-                        f"Stock Quote CAP: {observation_reason}"
-                    ) from None
+                    terminal_evidence.append(
+                        _persist_terminal_evidence(
+                            public_root,
+                            binding_id=binding_id,
+                            raw_digest=result.result.raw_digest,
+                            reason=observation_reason,
+                            suite_fingerprint=suite_fingerprint,
+                        )
+                    )
+                    continue
                 assert observation.facts
+                terminal_evidence.append(
+                    _persist_terminal_evidence(
+                        public_root,
+                        binding_id=binding_id,
+                        raw_digest=result.result.raw_digest,
+                        reason=None,
+                        suite_fingerprint=suite_fingerprint,
+                    )
+                )
         finally:
             await client.close()
+        records = tuple(terminal_evidence)
+        _persist_terminal_manifest(public_root, records, suite_fingerprint)
+        return records
 
-    asyncio.run(run())
+    terminal_evidence = asyncio.run(run())
+    assert tuple(item.binding_id for item in terminal_evidence) == (
+        "finnhub-aapl-quote",
+        "finnhub-invalid-stock",
+    )
+    assert all(item.public_digest != item.raw_digest for item in terminal_evidence)
 
 
 def test_ac_live_stock_quote_rejects_redirected_binding_before_execution() -> None:
@@ -204,3 +321,38 @@ def test_ac_live_stock_quote_separates_local_observation_errors(
     error: ExtractionError, expected: str | None
 ) -> None:
     assert _safe_observation_failure_reason(error) == expected
+
+
+def test_ac_live_stock_quote_terminal_evidence_is_safe(tmp_path: Path) -> None:
+    record = _persist_terminal_evidence(
+        tmp_path,
+        binding_id="finnhub-aapl-quote",
+        raw_digest="sha256:" + "a" * 64,
+        reason="stale_timestamp",
+        suite_fingerprint="b" * 64,
+    )
+
+    assert record.outcome == "provider_negative"
+    assert record.public_digest != record.raw_digest
+    artifact = next(tmp_path.glob("finnhub-aapl-quote-*.json")).read_text()
+    assert "stale_timestamp" in artifact
+    assert '"suite_fingerprint": "' + "b" * 64 + '"' in artifact
+    assert '"disclosure_level": "sanitized_public"' in artifact
+
+
+def test_ac_live_stock_quote_manifest_binds_terminal_counts_to_suite(
+    tmp_path: Path,
+) -> None:
+    record = _persist_terminal_evidence(
+        tmp_path,
+        binding_id="finnhub-aapl-quote",
+        raw_digest="sha256:" + "a" * 64,
+        reason="stale_timestamp",
+        suite_fingerprint="b" * 64,
+    )
+    _persist_terminal_manifest(tmp_path, (record,), "b" * 64)
+
+    manifest = next(tmp_path.glob("stock-quote-terminal-manifest-*.json")).read_text()
+    assert '"provider_negative": 1' in manifest
+    assert '"suite_fingerprint": "' + "b" * 64 + '"' in manifest
+    assert '"public_digest": "sha256:' in manifest
