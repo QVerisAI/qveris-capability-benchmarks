@@ -124,18 +124,26 @@ def _persist_terminal_evidence(
 
 
 def _persist_terminal_manifest(
-    root: Path, evidence: tuple[_TerminalEvidence, ...]
+    root: Path,
+    evidence: tuple[_TerminalEvidence, ...],
+    suite_fingerprint: str,
 ) -> None:
     payload = {
         "completed": sum(item.outcome == "completed" for item in evidence),
         "provider_negative": sum(
             item.outcome == "provider_negative" for item in evidence
         ),
+        "extractor_version": "1.0.0",
+        "suite_fingerprint": suite_fingerprint,
+        "redaction_status": "sanitized",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared",
         "records": [
             {
                 "binding_id": item.binding_id,
                 "outcome": item.outcome,
                 "reason": item.reason,
+                "public_digest": item.public_digest,
             }
             for item in evidence
         ],
@@ -252,7 +260,7 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
         finally:
             await client.close()
         records = tuple(terminal_evidence)
-        _persist_terminal_manifest(public_root, records)
+        _persist_terminal_manifest(public_root, records, suite_fingerprint)
         return records
 
     terminal_evidence = asyncio.run(run())
@@ -330,3 +338,21 @@ def test_ac_live_stock_quote_terminal_evidence_is_safe(tmp_path: Path) -> None:
     assert "stale_timestamp" in artifact
     assert '"suite_fingerprint": "' + "b" * 64 + '"' in artifact
     assert '"disclosure_level": "sanitized_public"' in artifact
+
+
+def test_ac_live_stock_quote_manifest_binds_terminal_counts_to_suite(
+    tmp_path: Path,
+) -> None:
+    record = _persist_terminal_evidence(
+        tmp_path,
+        binding_id="finnhub-aapl-quote",
+        raw_digest="sha256:" + "a" * 64,
+        reason="stale_timestamp",
+        suite_fingerprint="b" * 64,
+    )
+    _persist_terminal_manifest(tmp_path, (record,), "b" * 64)
+
+    manifest = next(tmp_path.glob("stock-quote-terminal-manifest-*.json")).read_text()
+    assert '"provider_negative": 1' in manifest
+    assert '"suite_fingerprint": "' + "b" * 64 + '"' in manifest
+    assert '"public_digest": "sha256:' in manifest
