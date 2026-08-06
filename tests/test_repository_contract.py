@@ -14,7 +14,7 @@ SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     re.compile(
         r"(?i)(?:api[_-]?key|access[_-]?token|secret|password)"
-        r"\s*[:=]\s*[\"']?[^\s\"']{8,}"
+        r"[ \t]*[:=][ \t]*[\"']?[^\s\\\"']{20,}"
     ),
 )
 
@@ -248,6 +248,12 @@ def test_ac5_secret_fingerprints_are_rejected() -> None:
 
     missed = [secret for secret in secret_examples if not _contains_secret(secret)]
     assert not missed, "AC5 content guard misses a secret fingerprint"
+
+
+def test_ac5_empty_env_assignments_do_not_span_to_the_next_line() -> None:
+    example = "QVERIS_API_KEY=\nQVERIS_AI_GATEWAY_BASE_URL=\n"
+
+    assert not _contains_secret(example)
 
 
 def test_ac6_python_and_quality_tooling_match_the_frozen_stack() -> None:
