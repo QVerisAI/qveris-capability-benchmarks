@@ -30,9 +30,11 @@ def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> No
                 }
             ],
         },
+        "sha256:" + "a" * 64,
     )
 
     assert result == {
+        "discovery_raw_digest": "sha256:" + "a" * 64,
         "result_count": 1,
         "tools": [
             {

@@ -123,7 +123,7 @@ def qveris_search(
             )
         finally:
             await client.close()
-        return public_discovery_summary(results, description)
+        return public_discovery_summary(results, description, result.result.raw_digest)
 
     try:
         typer.echo(json.dumps(asyncio.run(search()), ensure_ascii=False, indent=2))
@@ -218,7 +218,7 @@ def qveris_execute(
 
 
 def public_discovery_summary(
-    results: list[object], descriptions: dict[str, object]
+    results: list[object], descriptions: dict[str, object], discovery_raw_digest: str
 ) -> dict[str, object]:
     detailed_results = descriptions.get("results", [])
     if not isinstance(detailed_results, list):
@@ -243,7 +243,11 @@ def public_discovery_summary(
                 "expected_cost": detail.get("expected_cost"),
             }
         )
-    return {"result_count": len(results), "tools": tools}
+    return {
+        "discovery_raw_digest": discovery_raw_digest,
+        "result_count": len(results),
+        "tools": tools,
+    }
 
 
 def _public_parameters(value: object) -> list[dict[str, object]]:
