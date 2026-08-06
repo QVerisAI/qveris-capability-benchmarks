@@ -111,19 +111,7 @@ def qveris_search(
             )
         finally:
             await client.close()
-        return {
-            "result_count": len(results),
-            "tools": [
-                {
-                    key: item.get(key)
-                    for key in ("tool_id", "name", "description", "parameters")
-                    if key in item
-                }
-                for item in results
-                if isinstance(item, dict)
-            ],
-            "descriptions": description,
-        }
+        return public_discovery_summary(results, description)
 
     try:
         typer.echo(json.dumps(asyncio.run(search()), ensure_ascii=False, indent=2))
@@ -135,6 +123,35 @@ def qveris_search(
 def _raw_artifact_dir_from_env() -> Path | None:
     value = os.environ.get("QVERIS_BENCH_RAW_ARTIFACT_DIR")
     return Path(value) if value else None
+
+
+def public_discovery_summary(
+    results: list[object], descriptions: dict[str, object]
+) -> dict[str, object]:
+    detailed_results = descriptions.get("results", [])
+    if not isinstance(detailed_results, list):
+        detailed_results = []
+    by_tool_id = {
+        item["tool_id"]: item
+        for item in detailed_results
+        if isinstance(item, dict) and isinstance(item.get("tool_id"), str)
+    }
+    tools: list[dict[str, object]] = []
+    for item in results:
+        if not isinstance(item, dict) or not isinstance(item.get("tool_id"), str):
+            continue
+        detail = by_tool_id.get(item["tool_id"], {})
+        tools.append(
+            {
+                "tool_id": item["tool_id"],
+                "name": item.get("name"),
+                "provider_id": detail.get("provider_id"),
+                "provider_name": detail.get("provider_name"),
+                "parameters": detail.get("params", []),
+                "expected_cost": detail.get("expected_cost"),
+            }
+        )
+    return {"result_count": len(results), "tools": tools}
 
 
 @cap_app.command("list")
