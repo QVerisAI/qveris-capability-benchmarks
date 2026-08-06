@@ -274,6 +274,23 @@ def test_ac6_python_and_quality_tooling_match_the_frozen_stack() -> None:
         )
 
 
+def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    replay = (ROOT / "docs/release-replay.md").read_text(encoding="utf-8")
+
+    for command in (
+        "uv sync --locked --all-groups",
+        "uv run pytest -q",
+        "uv run ruff check .",
+        "uv run ruff format --check .",
+        "uv run mypy src",
+        "uv run qveris-bench schema export --check",
+    ):
+        assert command in workflow
+    assert "must not invoke\nprovider APIs" in replay
+    assert "credential values remain outside" in replay
+
+
 def test_ac7_cli_help_runs_in_a_real_subprocess() -> None:
     executable = shutil.which("qveris-bench")
     assert executable is not None, "AC7 installed qveris-bench entry point is missing"
