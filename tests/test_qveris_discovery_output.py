@@ -28,9 +28,7 @@ def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> No
                 "name": "Quote",
                 "provider_id": "provider",
                 "provider_name": "Provider",
-                "parameters": [
-                    {"name": "symbol", "type": "string", "required": True}
-                ],
+                "parameters": [{"name": "symbol", "type": "string", "required": True}],
                 "expected_cost": "1",
             }
         ],
