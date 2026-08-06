@@ -147,3 +147,12 @@ def test_ac8_live_stock_quote_workflow_uses_only_fixed_qveris_bindings() -> None
     assert 'RUN_LIVE_STOCK_QUOTE: "1"' in workflow
     assert "inputs:" not in workflow
     assert "FINNHUB_API_KEY" not in workflow
+
+
+def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> None:
+    source = Path("tests/e2e/test_live_stock_quote.py").read_text()
+
+    assert "validate_qveris_direct_binding(" in source
+    assert 'ROOT / "cap_packs/stock_quote/suite.yaml"' in source
+    assert 'assert binding.access_path_id == "finnhub-stock-quote"' in source
+    assert 'assert binding.provider_id == "finnhub"' in source
