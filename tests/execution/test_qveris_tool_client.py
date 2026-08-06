@@ -161,3 +161,15 @@ def test_ac_qveris_response_shape_redacts_dynamic_object_keys() -> None:
         }
     }
     assert "AAPL" not in repr(shape)
+
+
+def test_ac_qveris_response_shape_can_expose_nested_structural_fields() -> None:
+    shape = public_response_shape(
+        {"result": {"data": {"holdings": [{"ticker": "AAPL"}]}}}, depth=4
+    )
+
+    assert shape["fields"]["result"]["fields"]["data"]["fields"]["holdings"] == {
+        "type": "array",
+        "length": 1,
+    }
+    assert "AAPL" not in repr(shape)

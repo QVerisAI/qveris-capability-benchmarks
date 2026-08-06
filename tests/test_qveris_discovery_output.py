@@ -93,3 +93,9 @@ def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
     monkeypatch.chdir(tmp_path)
 
     assert qveris_repository_root() != tmp_path
+
+
+def test_ac6_diagnostic_cli_requests_nested_value_free_shape() -> None:
+    source = Path("src/qveris_bench/cli.py").read_text()
+
+    assert "public_response_shape(document, depth=4)" in source
