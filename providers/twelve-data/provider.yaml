@@ -1,0 +1,19 @@
+provider:
+  provider_id: twelve-data
+  official_name: Twelve Data
+  website: https://twelvedata.com/
+  market_coverage: [US]
+  testing_authorization: No QVeris-controlled execution authorization is recorded.
+  qveris_integration: false
+access_paths:
+  - access_path_id: twelve-data-etf-holdings
+    provider_id: twelve-data
+    path_type: official_api
+    credential_env: [TWELVE_DATA_API_KEY]
+    official_source: https://twelvedata.com/docs
+    canonical_interface: etfs-world
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No QVeris-controlled credential and execution authorization are recorded.
+      evidence_digest: sha256:546024ddd253c0256857261bb8558dd37e45890b55b6b6f8315f47aee7c07823

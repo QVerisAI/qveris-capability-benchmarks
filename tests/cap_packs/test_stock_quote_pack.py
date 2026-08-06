@@ -9,10 +9,17 @@ import yaml
 from qveris_bench.catalog.validation import validate_cap_file
 from qveris_bench.outcomes.evaluator import evaluate_outcome
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
+from qveris_bench.providers.repository import ProviderRegistryRepository
+from qveris_bench.suites.bindings import (
+    load_provider_bindings,
+    validate_provider_bindings,
+)
+from qveris_bench.suites.compiler import SuiteCompilationError, compile_suite
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
 PACK = ROOT / "cap_packs" / "stock_quote"
+PROVIDERS = ROOT / "providers"
 
 
 def test_ac1_stock_quote_pack_reuses_the_versioned_direct_contract() -> None:
@@ -47,6 +54,25 @@ def test_ac3_stock_quote_bindings_are_exactly_two_official_candidates() -> None:
     assert all(
         binding["official_source"].startswith("https://") for binding in bindings
     )
+
+
+def test_ac3_quote_candidates_are_not_runnable_without_authorization() -> None:
+    records = ProviderRegistryRepository(PROVIDERS).cohort_check()
+    paths = {
+        path.access_path_id: path for record in records for path in record.access_paths
+    }
+    suite = load_suite(PACK / "suite.yaml")
+
+    assert all(
+        paths[path_id].qualification.disposition.value == "excluded"
+        for path_id in suite.access_path_ids
+    )
+    validate_provider_bindings(
+        load_provider_bindings(PACK / "provider-bindings.yaml"),
+        tuple(paths[path_id] for path_id in suite.access_path_ids),
+    )
+    with pytest.raises(SuiteCompilationError, match="not included"):
+        compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
 
 
 def test_ac4_stock_quote_outcomes_remain_categorical() -> None:

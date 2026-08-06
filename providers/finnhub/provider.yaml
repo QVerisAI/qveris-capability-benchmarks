@@ -1,0 +1,19 @@
+provider:
+  provider_id: finnhub
+  official_name: Finnhub
+  website: https://finnhub.io/
+  market_coverage: [US]
+  testing_authorization: No QVeris-controlled execution authorization is recorded.
+  qveris_integration: false
+access_paths:
+  - access_path_id: finnhub-etf-holdings
+    provider_id: finnhub
+    path_type: official_api
+    credential_env: [FINNHUB_API_KEY]
+    official_source: https://finnhub.io/docs/api/etf-holdings
+    canonical_interface: etf-holdings
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No QVeris-controlled credential and execution authorization are recorded.
+      evidence_digest: sha256:546024ddd253c0256857261bb8558dd37e45890b55b6b6f8315f47aee7c07823
