@@ -88,13 +88,29 @@ def qveris_search(
         try:
             result = await client.search("qveris-search", query, limit)
             document = json.loads(result.result.raw_path.read_text(encoding="utf-8"))
+            if not isinstance(document, dict):
+                raise ValueError("QVeris search response must be an object")
+            results = document.get("results", [])
+            if not isinstance(results, list):
+                raise ValueError("QVeris search results must be a list")
+            tool_ids = tuple(
+                item["tool_id"]
+                for item in results
+                if isinstance(item, dict) and isinstance(item.get("tool_id"), str)
+            )
+            description = (
+                json.loads(
+                    (
+                        await client.describe_tools(
+                            "qveris-tool-descriptions", tool_ids
+                        )
+                    ).raw_path.read_text(encoding="utf-8")
+                )
+                if tool_ids
+                else {}
+            )
         finally:
             await client.close()
-        if not isinstance(document, dict):
-            raise ValueError("QVeris search response must be an object")
-        results = document.get("results", [])
-        if not isinstance(results, list):
-            raise ValueError("QVeris search results must be a list")
         return {
             "result_count": len(results),
             "tools": [
@@ -106,6 +122,7 @@ def qveris_search(
                 for item in results
                 if isinstance(item, dict)
             ],
+            "descriptions": description,
         }
 
     try:

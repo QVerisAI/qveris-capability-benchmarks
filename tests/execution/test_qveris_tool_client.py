@@ -56,3 +56,27 @@ def test_ac_qveris_tool_execution_uses_the_search_bound_tool_call(
         await client.close()
 
     asyncio.run(run())
+
+
+def test_ac_qveris_tool_description_uses_only_frozen_ids(tmp_path: Path) -> None:
+    async def run() -> None:
+        def handler(request: httpx.Request) -> httpx.Response:
+            assert request.url.path == "/api/v1/tools/by-ids"
+            assert json.loads(request.content) == {
+                "tool_ids": ["frozen-tool", "another-frozen-tool"]
+            }
+            return httpx.Response(200, json={"tools": []})
+
+        client = QverisToolClient(
+            httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            _store(tmp_path),
+            "controlled-key",
+        )
+        result = await client.describe_tools(
+            "describe", ("frozen-tool", "another-frozen-tool")
+        )
+
+        assert result.raw_path.exists()
+        await client.close()
+
+    asyncio.run(run())

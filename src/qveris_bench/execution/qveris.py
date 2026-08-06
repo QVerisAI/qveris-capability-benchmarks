@@ -79,6 +79,21 @@ class QverisToolClient:
             ),
         )
 
+    async def describe_tools(
+        self, artifact_id: str, tool_ids: tuple[str, ...]
+    ) -> AdapterResult:
+        if not tool_ids or any(not tool_id for tool_id in tool_ids):
+            raise QverisProtocolError("at least one tool_id is required")
+        return await self._adapter.invoke(
+            artifact_id,
+            TransportRequest(
+                method="POST",
+                url=f"{self._base_url}/tools/by-ids",
+                bearer_token=self._api_key,
+                json_body={"tool_ids": list(tool_ids)},
+            ),
+        )
+
     async def close(self) -> None:
         await self._adapter.close()
 
