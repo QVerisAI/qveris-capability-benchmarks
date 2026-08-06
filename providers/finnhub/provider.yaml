@@ -3,8 +3,8 @@ provider:
   official_name: Finnhub
   website: https://finnhub.io/
   market_coverage: [US]
-  testing_authorization: No QVeris-controlled execution authorization is recorded.
-  qveris_integration: false
+  testing_authorization: QVeris exposes an attributable Direct Test connector.
+  qveris_integration: true
 access_paths:
   - access_path_id: finnhub-stock-quote
     provider_id: finnhub

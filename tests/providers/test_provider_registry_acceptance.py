@@ -133,6 +133,24 @@ def test_ac4_frozen_cohort_requires_terminal_disposition(tmp_path: Path) -> None
         repository.cohort_check()
 
 
+def test_ac4_included_qveris_connector_requires_integrated_provider(
+    tmp_path: Path,
+) -> None:
+    data = _provider_data()
+    data["provider"]["qveris_integration"] = False
+    data["access_paths"][0].update(
+        {
+            "path_type": "qveris_connector",
+            "credential_env": ["QVERIS_API_KEY"],
+        }
+    )
+    path = tmp_path / "provider.yaml"
+    _write_provider(path, data)
+
+    with pytest.raises(ProviderValidationError, match="qveris_integration"):
+        ProviderRegistryRepository(tmp_path).load(path)
+
+
 @pytest.mark.parametrize("disposition", ["included", "excluded"])
 def test_ac5_terminal_dispositions_retain_reason_and_evidence(
     tmp_path: Path, disposition: str
