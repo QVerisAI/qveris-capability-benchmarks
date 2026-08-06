@@ -35,6 +35,14 @@ class RunOrchestrator:
 
     async def run(self, plan: RunPlan) -> dict[str, CellState]:
         states = self._state_store.read(plan.suite_fingerprint)
+        stale_keys = [
+            key for key, state in states.items() if state is CellState.RUNNING
+        ]
+        for key in stale_keys:
+            states[key] = CellState.INFRA_BLOCKED
+            self._emit("recovered", {"run_key": key, "state": CellState.INFRA_BLOCKED})
+        if stale_keys:
+            self._state_store.write(plan.suite_fingerprint, states)
         for cell in plan.cells:
             current = states.get(cell.run_key, cell.state)
             if current not in {CellState.PLANNED, CellState.INFRA_BLOCKED}:
