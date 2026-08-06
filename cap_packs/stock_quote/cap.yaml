@@ -1,0 +1,12 @@
+cap_id: stock-quote
+version: 1.0.0
+name: Stock Quote
+business_use: Confirm that the shared benchmark Core supports a second market-data capability.
+scope:
+  - US-listed stock quote fields for an explicitly requested symbol.
+exclusions:
+  - Historical bars, trading recommendations, and price forecasts.
+markets: [US]
+asset_types: [EQUITY]
+sources:
+  - source_type: qveris_original

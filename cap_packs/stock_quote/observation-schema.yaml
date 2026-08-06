@@ -1,0 +1,5 @@
+required_fields: [symbol, price]
+field_types:
+  symbol: string
+  price: number
+additional_fields: true
