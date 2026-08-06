@@ -24,6 +24,7 @@ ToolInvoker = Callable[[dict[str, object]], Awaitable[object] | object]
 class AgentTrace:
     calls: int
     elapsed_seconds: float
+    output_tokens: int
     proposed_arguments: dict[str, object]
     tool_result: object
 
@@ -57,6 +58,9 @@ class AgentTrial:
             parallel_tool_calls=False,
         )
         call = _function_call(response)
+        output_tokens = _output_tokens(response)
+        if output_tokens > self._protocol.token_budget:
+            raise AgentTrialError("agent trial exceeded frozen token budget")
         if call["name"] != self._protocol.canonical_tool:
             raise AgentTrialError("response called a non-canonical tool")
         arguments = json.loads(call["arguments"])
@@ -68,7 +72,7 @@ class AgentTrial:
         elapsed = time.monotonic() - started
         if elapsed > self._protocol.timeout_seconds:
             raise AgentTrialError("agent trial exceeded frozen timeout")
-        return AgentTrace(1, elapsed, arguments, result)
+        return AgentTrace(1, elapsed, output_tokens, arguments, result)
 
 
 def _function_call(response: object) -> dict[str, Any]:
@@ -85,3 +89,15 @@ def _function_call(response: object) -> dict[str, Any]:
     if not isinstance(name, str) or not isinstance(arguments, str):
         raise AgentTrialError("function call is malformed")
     return {"name": name, "arguments": arguments}
+
+
+def _output_tokens(response: object) -> int:
+    if not isinstance(response, dict):
+        return 0
+    usage = response.get("usage", {})
+    if not isinstance(usage, dict):
+        return 0
+    tokens = usage.get("output_tokens", 0)
+    if not isinstance(tokens, int) or tokens < 0:
+        raise AgentTrialError("response token usage is malformed")
+    return tokens

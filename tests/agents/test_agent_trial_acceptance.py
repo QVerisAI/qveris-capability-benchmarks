@@ -86,3 +86,33 @@ def test_ac1_agent_trial_rejects_an_unexpected_tool() -> None:
             await trial.run("Quote AAPL")
 
     asyncio.run(run())
+
+
+def test_ac1_agent_trial_rejects_token_budget_overrun() -> None:
+    async def run() -> None:
+        class OverBudget(FakeResponses):
+            async def create(self, **kwargs: object) -> object:
+                return {
+                    "output": [
+                        {
+                            "type": "function_call",
+                            "name": "get-quote",
+                            "arguments": "{}",
+                        }
+                    ],
+                    "usage": {"output_tokens": 101},
+                }
+
+        protocol = AgentProtocol(
+            model="test-model",
+            prompt_version="1.0.0",
+            canonical_tool="get-quote",
+            maximum_calls=1,
+            token_budget=100,
+            timeout_seconds=10,
+        )
+        trial = AgentTrial(OverBudget(), protocol, {"type": "object"}, lambda _: None)
+        with pytest.raises(AgentTrialError, match="token"):
+            await trial.run("Quote AAPL")
+
+    asyncio.run(run())
