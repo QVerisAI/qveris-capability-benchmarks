@@ -163,3 +163,44 @@ def test_ac_agent_trial_accepts_openai_sdk_response_objects() -> None:
         assert (await trial.run("Quote AAPL")).proposed_arguments == {"symbol": "AAPL"}
 
     asyncio.run(run())
+
+
+def test_ac_agent_trial_allows_reasoning_before_one_canonical_call() -> None:
+    class ReasoningClient:
+        async def create(self, **kwargs: object) -> object:
+            return {
+                "output": [
+                    {"type": "reasoning"},
+                    {
+                        "type": "function_call",
+                        "name": "get-quote",
+                        "arguments": '{"symbol":"AAPL"}',
+                    },
+                ],
+                "usage": {"output_tokens": 1},
+            }
+
+    protocol = AgentProtocol(
+        model="test-model",
+        prompt_version="1.0.0",
+        canonical_tool="get-quote",
+        maximum_calls=1,
+        token_budget=100,
+        timeout_seconds=10,
+    )
+
+    async def run() -> None:
+        trace = await AgentTrial(
+            ReasoningClient(),
+            protocol,
+            {
+                "type": "object",
+                "properties": {"symbol": {"type": "string"}},
+                "required": ["symbol"],
+                "additionalProperties": False,
+            },
+            lambda _: {"price": 10},
+        ).run("Quote AAPL")
+        assert trace.calls == 1
+
+    asyncio.run(run())

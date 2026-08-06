@@ -90,11 +90,18 @@ class AgentTrial:
 
 def _function_call(response: object) -> dict[str, Any]:
     output = _response_mapping(response).get("output")
-    if not isinstance(output, list) or len(output) != 1:
+    if not isinstance(output, list):
         raise AgentTrialError("agent trial must produce exactly one function call")
-    call = output[0]
-    if not isinstance(call, dict) or call.get("type") != "function_call":
+    if any(
+        not isinstance(item, dict)
+        or item.get("type") not in {"reasoning", "function_call"}
+        for item in output
+    ):
+        raise AgentTrialError("agent trial produced an unsupported output item")
+    calls = [item for item in output if item.get("type") == "function_call"]
+    if len(calls) != 1:
         raise AgentTrialError("agent trial must produce a function call")
+    call = calls[0]
     name = call.get("name")
     arguments = call.get("arguments")
     if not isinstance(name, str) or not isinstance(arguments, str):
