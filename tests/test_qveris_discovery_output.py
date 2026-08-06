@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 from pytest import MonkeyPatch
 
 from qveris_bench.cli import public_discovery_summary, qveris_repository_root
@@ -92,6 +93,24 @@ def test_ac4_diagnostic_workflow_emits_shapes_for_fixed_bindings_only() -> None:
     assert workflow.count("alpha-vantage-spy-holdings") == 1
     assert workflow.count("fiu-spy-holdings") == 1
     assert "twelve-data-spy-holdings" not in workflow
+
+
+def test_ac4_finnhub_diagnostic_limits_execution_to_quote_bindings() -> None:
+    workflow_path = Path(".github/workflows/finnhub-quote-diagnostic.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow_path.read_text())
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
+    matrix = document["jobs"]["diagnostic"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id"}
+    assert matrix["binding_id"] == [
+        "finnhub-aapl-quote",
+        "finnhub-invalid-stock",
+    ]
+    assert workflow.count("--binding-id") == 1
 
 
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
