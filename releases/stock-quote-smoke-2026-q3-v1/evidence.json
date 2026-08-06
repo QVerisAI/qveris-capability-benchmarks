@@ -1,0 +1,24 @@
+[
+  {
+    "evidence_id": "stock-quote-aapl-direct-1",
+    "run_key": "stock-quote-v1:0fc498e5c65b:aapl-quote:finnhub:finnhub-stock-quote:direct:1",
+    "raw_digest": "sha256:69fd3cab61f9f8d24f192d294a25b2c43906294a1d02574e6be1d594b9acf5bd",
+    "public_digest": "sha256:155afee5647a4faa513c501c6d97cc002c1221de3121bd7929da5f52b5f3ae1f",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "0fc498e5c65badd54c71b82d9ae249d0253bb9d64abd3906970da2712b8406bb"
+  },
+  {
+    "evidence_id": "stock-quote-invalid-direct-1",
+    "run_key": "stock-quote-v1:0fc498e5c65b:invalid-stock:finnhub:finnhub-stock-quote:direct:1",
+    "raw_digest": "sha256:7f382ff01c95b4794c8e3055b196de908b35db74dfbc85c4df639ce816019c1d",
+    "public_digest": "sha256:32d435352f7a92f16805c0ee324d3fe8883c0e7dbde6a6fdd7fc93571c9c709c",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "0fc498e5c65badd54c71b82d9ae249d0253bb9d64abd3906970da2712b8406bb"
+  }
+]
