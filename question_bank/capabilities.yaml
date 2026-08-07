@@ -21,7 +21,7 @@ capabilities:
     business_use: Select a provider for period-specific issuer financial facts.
   - cap_id: sec-filing-evidence
     name: SEC Filing Evidence
-    lifecycle: candidate
+    lifecycle: runnable
     business_use: Select a provider for cited evidence from SEC issuer filings.
   - cap_id: financial-news-evidence
     name: Financial News Evidence

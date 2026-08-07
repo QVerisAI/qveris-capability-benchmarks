@@ -35,6 +35,7 @@ def test_ac1_question_bank_curates_ten_distinct_capabilities() -> None:
     assert {cap.cap_id for cap in bank.capabilities if cap.lifecycle == "runnable"} == {
         "etf-holdings",
         "financial-statement-facts",
+        "sec-filing-evidence",
         "stock-quote",
     }
 
