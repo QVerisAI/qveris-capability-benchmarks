@@ -13,7 +13,7 @@ from qveris_bench.models.base import (
     Sha256,
     StableId,
 )
-from qveris_bench.models.enums import ReleaseFactType
+from qveris_bench.models.enums import DimensionState, ReleaseFactType
 
 
 def _reject_aggregate_keys(value: Any) -> None:
@@ -32,6 +32,7 @@ def _reject_aggregate_keys(value: Any) -> None:
 
 class ReleaseFact(FrozenModel):
     fact_type: ReleaseFactType
+    dimension_state: DimensionState | None = None
     details: dict[str, Any] = Field(
         default_factory=dict,
         json_schema_extra={
@@ -52,6 +53,16 @@ class ReleaseFact(FrozenModel):
     def reject_aggregate_fields(self) -> ReleaseFact:
         _reject_aggregate_keys({"fact_type": self.fact_type})
         _reject_aggregate_keys(self.details)
+        return self
+
+    @model_validator(mode="after")
+    def validate_dimension_state(self) -> ReleaseFact:
+        if self.dimension_state == DimensionState.MEASURED and not self.evidence_refs:
+            raise ValueError("measured dimension facts require evidence references")
+        if self.dimension_state == DimensionState.DECLARED and self.evidence_refs:
+            raise ValueError(
+                "declared dimension facts cannot carry evidence references"
+            )
         return self
 
 

@@ -156,12 +156,14 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 5 — Dimension evidence contract
 
-- [ ] Extend release validation so each scenario-facing dimension declares
-  `measured`, `declared`, or `evidence_insufficient` and measured facts require
-  immutable evidence refs plus disclosed environment/plan.
+- [x] Extend release validation so each scenario-facing dimension declares
+  `measured`, `declared`, or `evidence_insufficient`; measured facts require
+  immutable evidence refs that resolve inside the release; environment and plan
+  disclosure stays release-level.
 - [ ] Keep Agent-interface observations separate: parameter contract, response
   schema, error recovery, pagination/completeness, language mapping, and operational
-  effort.
+  effort (contract documented in the question evaluation model; enforcement lands
+  with the Task 6 profile builder).
 
 ### Task 6 — Task Fit Profile
 

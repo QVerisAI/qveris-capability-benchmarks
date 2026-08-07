@@ -7,12 +7,14 @@ from pydantic import ValidationError
 from qveris_bench.models.cap import CapDefinition, SourceReference
 from qveris_bench.models.enums import (
     AccessPathType,
+    DimensionState,
     FailureAttribution,
     OutcomeStatus,
+    ReleaseFactType,
     SourceType,
 )
 from qveris_bench.models.provider import AccessPath
-from qveris_bench.models.release import BenchmarkRelease
+from qveris_bench.models.release import BenchmarkRelease, ReleaseFact
 from qveris_bench.models.run import TaskOutcome
 from qveris_bench.models.suite import AgentProtocol
 
@@ -134,6 +136,48 @@ def test_ac6_frozen_inputs_fail_closed_on_unknown_fields() -> None:
             evidence_refs=("sha256:" + "a" * 64,),
             score=100,
         )
+
+
+def test_ac9_measured_dimension_fact_requires_evidence_reference() -> None:
+    with pytest.raises(ValidationError, match="evidence references"):
+        ReleaseFact(
+            fact_type=ReleaseFactType.OUTCOME,
+            dimension_state=DimensionState.MEASURED,
+            details={"dimension": "task_completion"},
+        )
+
+    ReleaseFact(
+        fact_type=ReleaseFactType.OUTCOME,
+        dimension_state=DimensionState.MEASURED,
+        details={"dimension": "task_completion"},
+        evidence_refs=("sha256:" + "a" * 64,),
+    )
+
+
+def test_ac9_declared_dimension_fact_cannot_carry_evidence_reference() -> None:
+    with pytest.raises(ValidationError, match="cannot carry evidence"):
+        ReleaseFact(
+            fact_type=ReleaseFactType.LIMITATION,
+            dimension_state=DimensionState.DECLARED,
+            details={"dimension": "coverage"},
+            evidence_refs=("sha256:" + "a" * 64,),
+        )
+
+    ReleaseFact(
+        fact_type=ReleaseFactType.LIMITATION,
+        dimension_state=DimensionState.DECLARED,
+        details={"dimension": "coverage"},
+    )
+
+
+def test_ac9_missing_dimension_state_is_evidence_insufficient() -> None:
+    fact = ReleaseFact(
+        fact_type=ReleaseFactType.OUTCOME,
+        details={"dimension": "task_completion"},
+    )
+
+    assert fact.dimension_state is None
+    assert fact.model_dump()["dimension_state"] is None
 
 
 def test_ac7_agent_protocol_exposes_one_canonical_tool_without_discovery() -> None:
