@@ -140,7 +140,7 @@ def _eodhd_negative_response(document: dict[str, Any]) -> bool:
     )
     is_invalid_parameter = "invalid" in message and "parameter" in message
     is_parameter_validation = (
-        "unable to return valid data" in message
+        "return valid data" in message
         and "verify the request parameters" in message
     )
     if not (

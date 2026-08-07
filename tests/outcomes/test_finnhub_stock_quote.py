@@ -61,7 +61,7 @@ def test_ac_eodhd_live_v2_parameter_validation_becomes_validation_fact() -> None
     assert extract_eodhd_stock_quote(
         {
             "error_message": (
-                "Unable to return valid data. Please verify the request parameters."
+                "Could not return valid data. Please verify the request parameters."
             ),
             "result": {"data": {"data": []}},
         },
