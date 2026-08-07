@@ -1,0 +1,20 @@
+scenarios:
+  - scenario_id: company-research-agent
+    version: 1.0.0
+    name: Company Research Agent
+    developer_decision: Select evidence-backed data paths for a company research Agent.
+    target_users: [financial-agent-developers]
+    markets: [united-states]
+    languages: [english]
+    required_capabilities:
+      - cap_id: stock-quote
+        priority: p0
+        minimum_question_roles: [core_positive, boundary_negative]
+      - cap_id: financial-statement-facts
+        priority: p0
+        minimum_question_roles: [core_positive, boundary_negative]
+      - cap_id: sec-filing-evidence
+        priority: p0
+        minimum_question_roles: [core_positive, boundary_negative]
+    source_ids: [financebench, finsearchcomp-2026, icbcbench]
+    review_status: approved

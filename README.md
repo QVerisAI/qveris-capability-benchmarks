@@ -5,7 +5,8 @@ financial Agent developers. It helps a developer choose the provider and Access 
 that fit a concrete financial product task, then drill down to replayable evidence
 for each atomic capability.
 
-Financial Tasks are the product-facing unit; CAPs are the measurement unit. The
+Financial Tasks are the product-facing unit and are stored as versioned
+`DeveloperScenario` records; CAPs are the measurement unit. The
 target task-fit profile is designed to compare accuracy, precision, latency,
 reliability, cost, country and market coverage, language coverage, and
 Agent-interface fitness without losing attribution. A dimension appears only after

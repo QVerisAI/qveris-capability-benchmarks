@@ -11,8 +11,8 @@ selection evidence, start with `docs/product-strategy.md`.
 1. Start at `cap_packs/<cap>/cap.yaml`. It defines the business capability and
    its provenance. `cases.yaml`, `observation-schema.yaml`, `outcome-rules.yaml`,
    `provider-bindings.yaml`, and `suite.yaml` freeze the benchmark inputs.
-   Candidate capability questions live separately in `question_bank/`; they have no
-   suite, provider bindings, or executable outcome.
+   Candidate capability questions and versioned Developer Scenarios live separately
+   in `question_bank/`; they have no suite, provider bindings, or executable outcome.
 2. Read `src/qveris_bench/suites/`. It validates those inputs, creates the
    fingerprint, and expands a suite into `case × provider × access path × mode ×
    round` cells.
@@ -44,7 +44,7 @@ selection evidence, start with `docs/product-strategy.md`.
 | `src/qveris_bench/outcomes/` | Generic outcome evaluation and attribution | CAP response parsing |
 | `src/qveris_bench/evidence/` | Evidence hashing, redaction, public index | Public ranking logic |
 | `src/qveris_bench/releases/` | Deterministic build, gates, and verification | Live provider execution |
-| `question_bank/` | Reviewed CAP intake questions and public citations | Executable benchmark inputs |
+| `question_bank/` | Developer Scenarios, reviewed CAP question families, and public citations | Executable benchmark inputs |
 
 ## Current CAP locations
 

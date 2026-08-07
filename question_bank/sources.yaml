@@ -39,3 +39,13 @@ sources:
     reference_url: https://fred.stlouisfed.org/docs/api/fred/
     authority_tier: official_api
     reproduction_policy: citation_only
+  - source_id: nasdaq-market-activity
+    name: Nasdaq Market Activity
+    reference_url: https://www.nasdaq.com/market-activity/stocks/aapl
+    authority_tier: official_market_source
+    reproduction_policy: citation_only
+  - source_id: finnhub-quote-api
+    name: Finnhub Quote API
+    reference_url: https://finnhub.io/docs/api/quote
+    authority_tier: official_api
+    reproduction_policy: citation_only
