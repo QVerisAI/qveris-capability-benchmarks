@@ -169,10 +169,13 @@ def test_ac4_agents_rules_encode_platform_guardrails() -> None:
 def test_ac4_architecture_preserves_frozen_cap_bounds() -> None:
     architecture = (ROOT / "docs/architecture/platform.md").read_text(encoding="utf-8")
 
-    assert re.search(r"5–8\s+providers and at least three rounds", architecture), (
-        "AC4 ETF Holdings must retain its provider and round bounds"
+    assert "5–8\nprovider candidate cohort" in architecture, (
+        "AC4 ETF Holdings must retain its candidate cohort bound"
     )
-    assert "Stock Quote smoke CAP with two providers" in architecture, (
+    assert "three Direct rounds for every included path" in architecture, (
+        "AC4 ETF Holdings must run every included path for the frozen rounds"
+    )
+    assert "Stock Quote smoke CAP\nwith two providers" in architecture, (
         "AC4 Stock Quote smoke must retain its provider count"
     )
 
@@ -320,7 +323,9 @@ def test_ac14_operator_handoff_matches_replay_and_fixed_live_boundaries() -> Non
     assert "must never call a provider API, MCP server, or\nAgent backend" in runbook
     assert "WIND_MCP_API_KEY" in runbook
     assert "get_stock_price_indicators" in runbook
-    assert "5–8-provider ETF cohort" in runbook
+    assert (
+        "six\ncandidate providers each have a frozen terminal qualification" in runbook
+    )
     assert "CAP Pack owns capability semantics" in adding_cap
     assert "qveris-bench suite freeze cap_packs/<cap>/suite.yaml" in adding_cap
     assert "terminal qualification" in adding_provider

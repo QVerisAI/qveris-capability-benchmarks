@@ -45,59 +45,25 @@ SEO/content automation, scheduled retesting, or a portal.
 - Task 12 produced and verified the public ETF Holdings release
   `etf-holdings-2026-q3-v1`. Its release digest is
   `sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f`.
-- PR #33 merged the CAP layout clarification: configuration remains at
-  `cap_packs/`, CAP-specific extractors live under
-  `src/qveris_bench/cap_packs/`, and the smoke pack is consistently named
-  `stock_quote_smoke`.
+- Task 13 produced and verified the two-provider, two-round Stock Quote smoke
+  release `stock-quote-2026-q3-v2`.
+- Task 14 completed the operator handoff, clean-checkout replay, fixed Wind native
+  MCP Direct E2E, CI, review, and merges. Wind uses only its single frozen
+  canonical tool and publishes sanitized terminal evidence.
 
 ## Important remaining gaps
 
-### ETF Holdings formal CAP
+### ETF Holdings cohort and execution boundary
 
-The release is structurally valid and has Direct evidence for the two included
-paths, but it does **not** yet meet the design's full 5–8-provider formal CAP
-cohort: six candidates are qualified in the registry, while only Alpha Vantage
-and FIU are currently included/executed. Do not describe this as fully complete
-against the original cohort acceptance criterion.
+The US ETF cohort contains six terminally qualified candidates. Alpha Vantage and
+FIU are included and have completed the frozen three-round Direct matrix. Twelve
+Data, Financial Modeling Prep, Finnhub, and EODHD are explicitly excluded and
+must not be executed without a new authorization and qualification decision.
 
-### Task 13: Stock Quote smoke CAP
+### Scope guard
 
-The repository contains a configuration-only smoke pack under
-`cap_packs/stock_quote_smoke/`, with one Finnhub direct binding and one round. It
-is not the planned completed smoke benchmark. The next implementation must freeze
-an attributable two-provider cohort, include valid market cases as applicable and
-a negative control, run two Direct rounds, preserve raw/sanitized evidence
-separation, and generate a release without adding a score. A prior QVeris search
-only inspected tools; it did not execute a provider and is not benchmark evidence.
-
-### Task 14: native MCP Direct E2E
-
-PR #30 (`feat/wind-native-mcp-e2e`) is still open. Its CI is green, but it is not
-merged and does not yet replace the required fresh-clone, second-operator proof.
-The approved Wind credential exception is narrow: use `WIND_MCP_API_KEY` only in
-the `benchmark-e2e` environment for one fixed native-MCP Direct E2E; never commit,
-expose, route, or reuse it for another provider.
-
-## Current Git state
-
-- `master`: includes PR #33 (layout and reading map).
-- `feat/stock-quote-smoke-completion`: current implementation branch; use it for
-  Task 13 after defining its acceptance criteria.
-- `feat/wind-native-mcp-e2e`: separate worktree/PR #30; do not combine its changes
-  with Task 13.
-
-## Safe next steps
-
-1. Re-read the Task 13 section of the design plan at `95179a8`, then define a
-   measurable AC table before editing files.
-2. Audit the existing Stock Quote pack, provider registry, Direct executor, and
-   release gates before adding any provider binding.
-3. Create/update the Task 13 PR as soon as the smallest reviewable contract change
-   exists; run focused checks locally and let CI carry broad regression coverage.
-4. Run the mandated Direct cells only with authorized environment secrets; record
-   blocked infrastructure as `infra_blocked`, never as provider-negative.
-5. Before any completion claim, verify the release digest and run a real CLI
-   end-to-end compilation/execution path, then perform the required PR review.
+Stages 5 and 6, external BYOK, a database, a leaderboard/SEO system, provider
+totals, and Agent-friendly composite scores remain deliberately unimplemented.
 
 ## Baseline verification
 

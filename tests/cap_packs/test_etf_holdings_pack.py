@@ -66,6 +66,20 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
     }
     suite = load_suite(PACK / "suite.yaml")
 
+    etf_candidates = {
+        record.provider_id
+        for record in records
+        if any("etf-holdings" in path.access_path_id for path in record.access_paths)
+    }
+    assert etf_candidates == {
+        "alpha-vantage",
+        "eodhd",
+        "financial-modeling-prep",
+        "finnhub",
+        "fiu",
+        "twelve-data",
+    }
+
     assert all(
         paths[path_id].qualification is not None for path_id in suite.access_path_ids
     )
