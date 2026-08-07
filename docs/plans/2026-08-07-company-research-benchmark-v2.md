@@ -119,21 +119,26 @@ database, provider aggregate, or duplicate facts table is justified.
 
 ### Task 2 — Stock Quote production question family
 
-- [ ] Add coverage, freshness/precision, boundary, and Agent-contract cases for the
+- [x] Add coverage, freshness/precision, boundary, and Agent-contract cases for the
   Company Research scenario without invalidating prior release artifacts.
-- [ ] Freeze versioned cases, truth/tolerance rules, market/language applicability,
+- [x] Freeze versioned cases, truth/tolerance rules, market/language applicability,
   and a credential-safe provider/path cohort.
-- [ ] Run at least three Direct rounds for every included applicable cell and one
+- [x] Run at least three Direct rounds for every included applicable cell and one
   eligible fixed-tool Agent Trial; build and verify a new immutable release.
+
+The frozen `stock-quote-v3` suite lives in `cap_packs/stock_quote_family/` with a
+separate suite-bound binding registry. The verified release
+`stock-quote-family-2026-q3-v1` records all 30 Direct cells; the fixed-tool Agent
+Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 3 — Financial Statement Facts CAP
 
 - [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md):
   core and boundary roles plus no-data, coverage, shape, and Agent-contract roles
   where the CAP is sensitive; every P0 role must have an executable pass rule.
-- [ ] Qualify authoritative/public and authorized Provider paths; prefer official
+- [x] Qualify authoritative/public and authorized Provider paths; prefer official
   filings as the truth source and record exclusions terminally.
-- [ ] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
+- [x] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
   bindings, suite, and tests on the existing Core.
 - [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.

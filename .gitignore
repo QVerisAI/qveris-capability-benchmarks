@@ -20,3 +20,5 @@ evidence/raw/
 raw_artifacts/
 runs/
 .runs/
+cap_packs/*/run-plan.json
+cap_packs/*/suite.frozen.json

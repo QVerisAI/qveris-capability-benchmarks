@@ -4,8 +4,41 @@ provider:
   website: https://financialmodelingprep.com/
   market_coverage: [US]
   testing_authorization: No QVeris-controlled execution authorization is recorded.
-  qveris_integration: false
+  qveris_integration: true
 access_paths:
+  - access_path_id: fmp-financial-reports-10k
+    provider_id: financial-modeling-prep
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://financialmodelingprep.com/stable/financial-reports
+    canonical_interface: financial-reports-10k
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable 10-K financial report path.
+      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+  - access_path_id: fmp-sec-filings-search
+    provider_id: financial-modeling-prep
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://financialmodelingprep.com/stable/sec-filings
+    canonical_interface: sec-filings-search
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable SEC filings search path.
+      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+  - access_path_id: fmp-income-statement
+    provider_id: financial-modeling-prep
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://financialmodelingprep.com/stable/income-statement
+    canonical_interface: as-reported-income-statement
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable as-reported income statement path.
+      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43
   - access_path_id: fmp-etf-holdings
     provider_id: financial-modeling-prep
     path_type: official_api

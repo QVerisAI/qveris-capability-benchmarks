@@ -1,0 +1,16 @@
+suite_id: stock-quote-v3
+version: 1.0.0
+cap_id: stock-quote
+cap_version: 2.0.0
+case_ids:
+  - aapl-quote
+  - invalid-stock
+  - aapl-freshness-precision
+  - cn-600519-market-coverage
+  - cn-600519-agent-contract
+access_path_ids: [finnhub-stock-quote, eodhd-stock-quote]
+modes: [direct]
+rounds: 3
+environment: {}
+agent_protocol: null
+not_applicable: []

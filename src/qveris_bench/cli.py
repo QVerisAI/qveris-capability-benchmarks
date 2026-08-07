@@ -66,6 +66,9 @@ _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
     "stock-quote-v2": Path("cap_packs/stock_quote_smoke_v2/suite.yaml"),
+    "stock-quote-v3": Path("cap_packs/stock_quote_family/suite.yaml"),
+    "financial-statements-v1": Path("cap_packs/financial_statement_facts/suite.yaml"),
+    "sec-filing-evidence-v1": Path("cap_packs/sec_filing_evidence/suite.yaml"),
 }
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")

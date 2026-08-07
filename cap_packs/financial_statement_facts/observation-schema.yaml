@@ -1,0 +1,21 @@
+required_fields: [symbol, fiscal_year, revenue]
+field_types:
+  symbol: string
+  fiscal_year: string
+  revenue: number
+  currency: string
+  filing_date: string
+field_constraints:
+  symbol: {non_empty: true}
+  fiscal_year: {non_empty: true}
+  revenue: {finite: true, positive: true}
+  currency: {non_empty: true}
+  filing_date: {non_empty: true}
+additional_fields: true
+negative_control:
+  required_fields: [validation_error]
+  field_types:
+    validation_error: string
+  field_constraints:
+    validation_error: {non_empty: true}
+  additional_fields: false

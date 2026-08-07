@@ -1,0 +1,875 @@
+{
+  "cells": [
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-freshness-precision",
+      "case_input": {
+        "max_age_seconds": 900,
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-agent-contract",
+      "case_input": {
+        "fields": [
+          "price",
+          "quote_time"
+        ],
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-market-coverage",
+      "case_input": {
+        "market": "CN",
+        "symbol": "600519.SH"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 3,
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:3",
+      "state": "completed"
+    }
+  ],
+  "evidence": [
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-agent-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:20727ec3aebaa3fa565a70711d04bd13a59f7317abdb5f1268a99779c98bfafc",
+      "raw_digest": "sha256:2b20f206ac498871b2ae663570e944771eff912ea4da393014f5aa425a82ebc4",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-agent-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:b68541a8a157bab74cdd92461dce4a78a85153e99b6616bb6f4bd703ef4dc26f",
+      "raw_digest": "sha256:ee42a10ec637b3bc882dedee0f38ea8f3c6ca839cbcdf5fee5de2b6266afa967",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-agent-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:2a962d23c4e91e4d00f09e32dedb960532f2060fbeded81c34d07c58557ca060",
+      "raw_digest": "sha256:f1b6e66d06754efb31613366e08b71b0e0f12e1d86647d55ca44f67bd259b353",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:eodhd:eodhd-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-coverage-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:12e909609a75a5c4a6bde8cdc935de70ba3e97c31ed547c06f5af1a54535c0c5",
+      "raw_digest": "sha256:853277aceb9293e77ed37a78dd25017420bb9c680fdb70d18fc7ce3b009760ee",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-coverage-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:6deb63e743c355baafd9bc3d5401484ea9df2f775e9334b287b3447b4428a1e8",
+      "raw_digest": "sha256:0f6c27195c92957e122888e74112f4672a40c31d54761f96df6e6c65db444d1f",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-600519-coverage-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:b26f65ef47c00fef352c93e74c86ac0a2ac1ee7840e682dbe5481ea2d953914b",
+      "raw_digest": "sha256:aa3eabd4522714197ddd745dedd6dfb5a6f23893e9f3b13d8d920326d57380d0",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:eodhd:eodhd-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-freshness-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:9a2e5dfa67dc3e835404dae58136216fd863b6244c44a5b545045eb27006d62f",
+      "raw_digest": "sha256:4a29f797e4a7ba501341c72fdbfadf9d64fa9282951187c281831751044b8998",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-freshness-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:4f8ea12669c659dd6f45ead9a97e54a149065fe938b7223e5dad7970c36e5218",
+      "raw_digest": "sha256:427a62eaaec08a31581ca82f860697c1f8820d1609e9973436c0d1bd87911c06",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-freshness-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:fb52ee4639e770e05505fe22151dd7b635817c39a9dbe6bc359710b413e0b196",
+      "raw_digest": "sha256:4bc3914296f96cb44dadc9553a146a5526c9f0fff2a9255a3f050f4fb9881411",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:eodhd:eodhd-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-quote-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:74dfccef497249a6f3fe486eef1a828eded872da4d74cf5d68479320bf8e070d",
+      "raw_digest": "sha256:a104cc8502f15e0e07cb56cabec881cee303029d94180665c805a7a1e02ab125",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-quote-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:0037f931d857855a53f59af6082e0dc9f9f90c59fcd491223e4932a351a947ff",
+      "raw_digest": "sha256:2df12dc056fadecb755d85a648cb6e9d3fafb504169a426e3980a3968cc630ab",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-quote-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:46d4102f5277b22f4a141b2de5cbb1c8c2674b034aac9117f1a519f14cf1878a",
+      "raw_digest": "sha256:b82342be002d05d3358abae0f07ace8a5a9ab0eb65831139c6b299ad8f40fa24",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:eodhd:eodhd-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-stock-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:4a1cda07e45dd87e293ce2af888d98ebb17ebff43fdce6b9c249622c17483f4e",
+      "raw_digest": "sha256:34e4ae32c557a6cfe3feb4473c2c4379779eaddc82965e007e959a840219e48a",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-stock-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:f0027d28ff05638254b5a3ad9b5ffb1cceeaf9fdd1e1f8071f4f994c1cb254e4",
+      "raw_digest": "sha256:ba15d96a970a15bd49dd439dc93d59c8acda7e49beeee3a5b304cf405ede6770",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-stock-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:fb294250e49c8b142fed00c228b2ec674d6be7b79e2e7a856b7a7cf42d3a16cc",
+      "raw_digest": "sha256:d0b16c9ccddaf33317048d56eb52776d743f3d1dbbbd5f0062e1b2182b3bec92",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:eodhd:eodhd-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-agent-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:815e20493b257ea5dee4976d797ab199d052291a0e06364932a1fe6a48671f31",
+      "raw_digest": "sha256:7539a7b2d1071a2aaea09aa2921a109c87baff29377f8a71c572b6300331c25f",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-agent-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:a06d9a50eadd2476863b37b0df0d0a9cfad0c823fd2931c707d97dfe436ee4dd",
+      "raw_digest": "sha256:c286096ffdc4d90254501fd78b8641036e18b4b9d45e23c1e3f89d1f4e6db716",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-agent-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:55fdbe6d2bfbd64bbd4bbd005ae91ff05a167fd16d7cd9f5ede527434ed4dcc0",
+      "raw_digest": "sha256:c61792c3eb1b45b8bbc9b4949bacaa1a79576490d945cae92fd95fb2edbeaa31",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-agent-contract:finnhub:finnhub-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-coverage-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:90a68e4dfcb8068e7c56638b92a26851f8c87e1264eabe603ed67997b966b5fa",
+      "raw_digest": "sha256:be509e7ac461a9b7ea48b4e832bd5cf1a0839a24de0a5c4b9f9f07b16ab463b5",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-coverage-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:f8885f2fd5db413263f0905f93795d8ebe793720c455112711f3f234cc9b1a20",
+      "raw_digest": "sha256:d9e85d57f62a6494d59c52f3509eee2fbbcb08291cfe325d5af1bbc48226a111",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-600519-coverage-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:bf946130ccd22d156c6770143de91f613cc6fe4d02e8bde31e47a2944a330f1f",
+      "raw_digest": "sha256:e8c110c8521c7b0e05637e6f19c6de1911e50041c4da7b014822a1dc4723d3f4",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:cn-600519-market-coverage:finnhub:finnhub-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-freshness-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:3028a861d85ea44176727c7acd2a7f256e756a9b25e407ca1cd82850a07c6861",
+      "raw_digest": "sha256:32bcb0547d28b4648467ac4ff24f70598ba99f0786559d692217b918ff8bb731",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-freshness-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:3ed738411c38ca1a4dbf4554159066b9ceedbb34e638401fc4e5734b0b266dcc",
+      "raw_digest": "sha256:722fa56ad1c86f74aa25e5f38715c647962b87df89448a6a5a5e0b596095e98b",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-freshness-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:fb974003b0b484b907080dded86004e3ba1353e8cc69de7c465c6977df235b40",
+      "raw_digest": "sha256:8468eb52d7db40ea1c8dfc248decc43c5cc314f5a6282df0c5ddc5ba6f161d19",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-freshness-precision:finnhub:finnhub-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-quote-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:dad50b969cdd01e4501736eab6846dcdfffe4a382551927b833cfe16d2f4ec96",
+      "raw_digest": "sha256:0a4791858893bf3e0b5115f2eafef0b91ad31a8a1d94b9428ac2bd60def8bee3",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-quote-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:04809a774bbaeb1f57930ec99828227f3539a3ce9d207bddee4bb08ecb8911f1",
+      "raw_digest": "sha256:22eddc4835eff9550c7631e9035cec61c6f91949b475389c98f187b73c41026b",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-aapl-quote-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:525bfed9057af4119ca02247b2bc19ae78abf383deb16f3f751fe6dbc1b35a40",
+      "raw_digest": "sha256:b5ad2b6c4937bf17647ffad09b147b2b826387008ce2a588854f7922a3a2123a",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:aapl-quote:finnhub:finnhub-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-invalid-stock-family-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:60c8282ae57589d2aa182609df7684c2185e9a5c6d260f4827d7081110153e70",
+      "raw_digest": "sha256:fd636a9c8080ed706d47c7be90c280cb579e978a41be8985850872e96bcde0d2",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:1",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-invalid-stock-family-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:cfec397ee4b58a29e300840e9719e4c4632e805365341a5a8e852397d4b661f0",
+      "raw_digest": "sha256:020b3f9a97f8e108bf8b5e2f13c5c078a80ca6aca36b47f77a252ec345dc1200",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:2",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "finnhub-invalid-stock-family-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:9cd08747bc179ad358d4adfe056cbcf64d21cc10ef6fd4064902df99081179fb",
+      "raw_digest": "sha256:ae52ec36c3e994de08d1bf2953163dd242e55b4f5441d3e5f756fa805091279f",
+      "redaction_status": "sanitized",
+      "run_key": "stock-quote-v3:686670b3a695:invalid-stock:finnhub:finnhub-stock-quote:direct:3",
+      "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d"
+    }
+  ],
+  "release": {
+    "developer_selection_facts": [],
+    "evidence_ids": [
+      "eodhd-aapl-freshness-family-1",
+      "eodhd-aapl-freshness-family-2",
+      "eodhd-aapl-freshness-family-3",
+      "finnhub-aapl-freshness-family-1",
+      "finnhub-aapl-freshness-family-2",
+      "finnhub-aapl-freshness-family-3",
+      "eodhd-aapl-quote-family-1",
+      "eodhd-aapl-quote-family-2",
+      "eodhd-aapl-quote-family-3",
+      "finnhub-aapl-quote-family-1",
+      "finnhub-aapl-quote-family-2",
+      "finnhub-aapl-quote-family-3",
+      "eodhd-600519-agent-family-1",
+      "eodhd-600519-agent-family-2",
+      "eodhd-600519-agent-family-3",
+      "finnhub-600519-agent-family-1",
+      "finnhub-600519-agent-family-2",
+      "finnhub-600519-agent-family-3",
+      "eodhd-600519-coverage-family-1",
+      "eodhd-600519-coverage-family-2",
+      "eodhd-600519-coverage-family-3",
+      "finnhub-600519-coverage-family-1",
+      "finnhub-600519-coverage-family-2",
+      "finnhub-600519-coverage-family-3",
+      "eodhd-invalid-stock-family-1",
+      "eodhd-invalid-stock-family-2",
+      "eodhd-invalid-stock-family-3",
+      "finnhub-invalid-stock-family-1",
+      "finnhub-invalid-stock-family-2",
+      "finnhub-invalid-stock-family-3"
+    ],
+    "limitations": [
+      "All AAPL quote and freshness Direct observations were terminal provider_negative: Finnhub quote timestamps were stale beyond the frozen 15-minute window and EODHD timestamps were invalid at execution time.",
+      "Neither included path (Finnhub or EODHD via QVeris) returned an SSE quote for the canonical security 600519.SH; all CN coverage and canonical agent-contract cells were provider_negative (unavailable_quote).",
+      "This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result."
+    ],
+    "outcome_ids": [
+      "eodhd-aapl-freshness-family-provider-negative-1",
+      "eodhd-aapl-freshness-family-provider-negative-2",
+      "eodhd-aapl-freshness-family-provider-negative-3",
+      "finnhub-aapl-freshness-family-provider-negative-1",
+      "finnhub-aapl-freshness-family-provider-negative-2",
+      "finnhub-aapl-freshness-family-provider-negative-3",
+      "eodhd-aapl-quote-family-provider-negative-1",
+      "eodhd-aapl-quote-family-provider-negative-2",
+      "eodhd-aapl-quote-family-provider-negative-3",
+      "finnhub-aapl-quote-family-provider-negative-1",
+      "finnhub-aapl-quote-family-provider-negative-2",
+      "finnhub-aapl-quote-family-provider-negative-3",
+      "eodhd-600519-agent-family-provider-negative-1",
+      "eodhd-600519-agent-family-provider-negative-2",
+      "eodhd-600519-agent-family-provider-negative-3",
+      "finnhub-600519-agent-family-provider-negative-1",
+      "finnhub-600519-agent-family-provider-negative-2",
+      "finnhub-600519-agent-family-provider-negative-3",
+      "eodhd-600519-coverage-family-provider-negative-1",
+      "eodhd-600519-coverage-family-provider-negative-2",
+      "eodhd-600519-coverage-family-provider-negative-3",
+      "finnhub-600519-coverage-family-provider-negative-1",
+      "finnhub-600519-coverage-family-provider-negative-2",
+      "finnhub-600519-coverage-family-provider-negative-3",
+      "eodhd-invalid-stock-family-completed-1",
+      "eodhd-invalid-stock-family-completed-2",
+      "eodhd-invalid-stock-family-completed-3",
+      "finnhub-invalid-stock-family-completed-1",
+      "finnhub-invalid-stock-family-completed-2",
+      "finnhub-invalid-stock-family-completed-3"
+    ],
+    "provider_feedback_facts": {},
+    "release_id": "stock-quote-family-2026-q3-v1",
+    "run_plan_digest": "sha256:ea26f39444488e6feb3ff0076da85ff928e976428c69e6bcb65d84377650f6c6",
+    "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+cases:
+  - case_id: aapl-revenue-fy2025
+    cap_id: financial-statement-facts
+    question: Return AAPL annual revenue for fiscal year 2025 with the filing identity.
+    input: {symbol: AAPL, fiscal_year: 2025}
+    negative_control: false
+    expected_observations: [symbol, fiscal_year, revenue, filing_date]
+    completion_conditions: [symbol, fiscal_year, revenue]
+    disclosure_limits: []
+    applicable_provider_ids: []
+  - case_id: invalid-period
+    cap_id: financial-statement-facts
+    question: Reject an unsupported fiscal period for an issuer financial-fact request.
+    input: {symbol: AAPL, fiscal_year: 1900}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: []
+    applicable_provider_ids: []

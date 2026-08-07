@@ -6,6 +6,17 @@ provider:
   testing_authorization: QVeris exposes an attributable Direct Test connector.
   qveris_integration: true
 access_paths:
+  - access_path_id: alpha-vantage-income-statement
+    provider_id: alpha-vantage
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://www.alphavantage.co/documentation/#income-statement
+    canonical_interface: income-statement
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable income statement path.
+      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43
   - access_path_id: alpha-vantage-etf-holdings
     provider_id: alpha-vantage
     path_type: qveris_connector

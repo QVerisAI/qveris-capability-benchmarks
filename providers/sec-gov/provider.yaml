@@ -1,0 +1,19 @@
+provider:
+  provider_id: sec-gov
+  official_name: SEC EDGAR via QVeris
+  website: https://www.sec.gov/
+  market_coverage: [US]
+  testing_authorization: QVeris exposes an attributable official SEC company facts Direct path.
+  qveris_integration: true
+access_paths:
+  - access_path_id: sec-gov-company-facts
+    provider_id: sec-gov
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://www.sec.gov/data-research/sec-markets-data
+    canonical_interface: company-facts
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed the official SEC company facts path.
+      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43

@@ -1,0 +1,14 @@
+suite_id: sec-filing-evidence-v1
+version: 1.0.0
+cap_id: sec-filing-evidence
+cap_version: 1.0.0
+case_ids: [aapl-risk-factor, invalid-filing-type]
+access_path_ids:
+  - massive-stocks-risk-factors
+  - fmp-financial-reports-10k
+  - fmp-sec-filings-search
+modes: [direct]
+rounds: 3
+environment: {}
+agent_protocol: null
+not_applicable: []

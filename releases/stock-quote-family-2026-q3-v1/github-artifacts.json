@@ -1,0 +1,156 @@
+{
+  "github_run_id": "31181603165",
+  "github_sha": "b25422caacce681750d5304682a95d9bdc3e8906",
+  "artifacts": [
+    {
+      "id": 8994992281,
+      "name": "stock-quote-family-terminal-eodhd-600519-agent-family-round-1",
+      "digest": "sha256:ab54d42ad6f0fb80e8873f46ee4aaad3eb2f17ce5492101bd925f9aaedeff769"
+    },
+    {
+      "id": 8994989275,
+      "name": "stock-quote-family-terminal-eodhd-600519-agent-family-round-2",
+      "digest": "sha256:eab1f7bdc432d2ee6f0ea5d20c54f03e1a3e93ab1915f83b3c92f02bb565337f"
+    },
+    {
+      "id": 8994998470,
+      "name": "stock-quote-family-terminal-eodhd-600519-agent-family-round-3",
+      "digest": "sha256:b4a9e2b815ca90319458978f2828b137cfc9052ff3b5d2267faab6152b83d584"
+    },
+    {
+      "id": 8994991177,
+      "name": "stock-quote-family-terminal-eodhd-600519-coverage-family-round-1",
+      "digest": "sha256:3a8dfffbb12a4d686b5192a53eb2539be7bb89724a3826d231934789c12778b8"
+    },
+    {
+      "id": 8994991447,
+      "name": "stock-quote-family-terminal-eodhd-600519-coverage-family-round-2",
+      "digest": "sha256:c204004f2eff0be120924f82b93f2632af50613f4f3291d38dc05870968d65cc"
+    },
+    {
+      "id": 8994998353,
+      "name": "stock-quote-family-terminal-eodhd-600519-coverage-family-round-3",
+      "digest": "sha256:591c446c30c22f1dae126f4b19653d4dcd918f3b51a098c63945f863866e1364"
+    },
+    {
+      "id": 8994998770,
+      "name": "stock-quote-family-terminal-eodhd-aapl-freshness-family-round-1",
+      "digest": "sha256:ed61872752aa9baf44797e38fa0473f1c104c47b0b71f9f630bebad040a90eca"
+    },
+    {
+      "id": 8994997404,
+      "name": "stock-quote-family-terminal-eodhd-aapl-freshness-family-round-2",
+      "digest": "sha256:b3e8084ed8b1f69426d9203e276e195980f135b0fa2bba17166a9318660bae28"
+    },
+    {
+      "id": 8994991173,
+      "name": "stock-quote-family-terminal-eodhd-aapl-freshness-family-round-3",
+      "digest": "sha256:4efde7326db2486e49fb785859d9afcde6cf5fd1272d5f98e0e6e38b07904b50"
+    },
+    {
+      "id": 8994998382,
+      "name": "stock-quote-family-terminal-eodhd-aapl-quote-family-round-1",
+      "digest": "sha256:107e30a7db738537e8d8796df32535fc139c3bbe029ad5ea3b13b88518a86cd5"
+    },
+    {
+      "id": 8994991405,
+      "name": "stock-quote-family-terminal-eodhd-aapl-quote-family-round-2",
+      "digest": "sha256:de1de065e9f983ef56f1335f1fc0e0077ec3590c2150c0101181493599a80a6e"
+    },
+    {
+      "id": 8994994502,
+      "name": "stock-quote-family-terminal-eodhd-aapl-quote-family-round-3",
+      "digest": "sha256:6e708211998a192e19f38381a93f02715912eaae1ed2cbdf0e20fe8c060fc3e3"
+    },
+    {
+      "id": 8994991469,
+      "name": "stock-quote-family-terminal-eodhd-invalid-stock-family-round-1",
+      "digest": "sha256:56c0df8fe4580628d41f336d552a7c913e82ab4650c51945e7495f6256ac9946"
+    },
+    {
+      "id": 8994989732,
+      "name": "stock-quote-family-terminal-eodhd-invalid-stock-family-round-2",
+      "digest": "sha256:64b64c3992fb66f0162554bfeab671c5f4007f5b3de27b70a0ef73fff3f6504c"
+    },
+    {
+      "id": 8994993199,
+      "name": "stock-quote-family-terminal-eodhd-invalid-stock-family-round-3",
+      "digest": "sha256:7c85019d584334e9d0167e81b796d8a32c6178746facd2f529231b18d3430b0c"
+    },
+    {
+      "id": 8994990203,
+      "name": "stock-quote-family-terminal-finnhub-600519-agent-family-round-1",
+      "digest": "sha256:0233f6831ff8c7dce043021b167beedcb257a999a56414d504d41bc9c72881d9"
+    },
+    {
+      "id": 8995000853,
+      "name": "stock-quote-family-terminal-finnhub-600519-agent-family-round-2",
+      "digest": "sha256:108217ac3f0ff3e0dd3cdd8ae7f0b79050b0edd862f6afeabf6c034673c5597e"
+    },
+    {
+      "id": 8994990185,
+      "name": "stock-quote-family-terminal-finnhub-600519-agent-family-round-3",
+      "digest": "sha256:8d7e9460570710acada5a10b9c564474058475fa786e4d71578d69ef75c5222b"
+    },
+    {
+      "id": 8994990510,
+      "name": "stock-quote-family-terminal-finnhub-600519-coverage-family-round-1",
+      "digest": "sha256:4ce77f42593581f3dfd1e7c15926ee54d97101365cfc524d829a974be2388226"
+    },
+    {
+      "id": 8994992227,
+      "name": "stock-quote-family-terminal-finnhub-600519-coverage-family-round-2",
+      "digest": "sha256:26c562f39d3ffef52efad40fd8aada8b648686d3021b6a74e13f4cd4dee14ba0"
+    },
+    {
+      "id": 8994999834,
+      "name": "stock-quote-family-terminal-finnhub-600519-coverage-family-round-3",
+      "digest": "sha256:ca04f8e4739f3dd2862b2eb1c3ac248bf88ac3dd99a20c53eea4294dca1c04e1"
+    },
+    {
+      "id": 8994990874,
+      "name": "stock-quote-family-terminal-finnhub-aapl-freshness-family-round-1",
+      "digest": "sha256:9a8948824d15cff15f0d9388c597fb8cfea48768f784683a7a03141b9ca86d4c"
+    },
+    {
+      "id": 8994990435,
+      "name": "stock-quote-family-terminal-finnhub-aapl-freshness-family-round-2",
+      "digest": "sha256:c71c79cc6a88520593cf714e3334b1fdddec6b5fb68b13b5489fb72f6eaf970a"
+    },
+    {
+      "id": 8995000407,
+      "name": "stock-quote-family-terminal-finnhub-aapl-freshness-family-round-3",
+      "digest": "sha256:3b7dd06437d0a6336e6e084242bb3b8cd077361fe39a52d6ffe231c3710ae100"
+    },
+    {
+      "id": 8994989406,
+      "name": "stock-quote-family-terminal-finnhub-aapl-quote-family-round-1",
+      "digest": "sha256:d7139532fb9246be6c7c5de2ea8d1b27d59b5a72df1334bd530f9dcd45dd42ed"
+    },
+    {
+      "id": 8994999304,
+      "name": "stock-quote-family-terminal-finnhub-aapl-quote-family-round-2",
+      "digest": "sha256:d676867d3fcd6fa745531971762258d62553cc1db893c86bcc7bf0830b5029d4"
+    },
+    {
+      "id": 8994998064,
+      "name": "stock-quote-family-terminal-finnhub-aapl-quote-family-round-3",
+      "digest": "sha256:ff6bdda05717284cb6930e5d4bbe4f2fc5116e1d6a9017b1bc9307fe4584d0ef"
+    },
+    {
+      "id": 8994997477,
+      "name": "stock-quote-family-terminal-finnhub-invalid-stock-family-round-1",
+      "digest": "sha256:969a305afe08a720a3e74994cb078af1ee29c808ceb0b4473b17f476195b6f02"
+    },
+    {
+      "id": 8994989067,
+      "name": "stock-quote-family-terminal-finnhub-invalid-stock-family-round-2",
+      "digest": "sha256:5fa276d143c4c86fd56828da1bf107f03b2e698b46702f3bcac60f5ab263ab64"
+    },
+    {
+      "id": 8994990511,
+      "name": "stock-quote-family-terminal-finnhub-invalid-stock-family-round-3",
+      "digest": "sha256:7e542dc949efe8e97885222cae04df002c6807961fe9c4f1689185b8a166f537"
+    }
+  ]
+}
