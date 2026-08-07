@@ -57,3 +57,8 @@ sources:
     reference_url: https://finnhub.io/docs/api/quote
     authority_tier: official_api
     reproduction_policy: citation_only
+  - source_id: sse-official-market-data
+    name: Shanghai Stock Exchange Official Market Data
+    reference_url: https://english.sse.com.cn/markets/dataservice/products/
+    authority_tier: official_market_source
+    reproduction_policy: citation_only

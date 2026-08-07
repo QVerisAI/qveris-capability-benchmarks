@@ -53,12 +53,16 @@ def test_ac2_every_question_has_one_cap_and_a_complete_evaluation_contract() -> 
 def test_ac1_company_research_scenario_composes_three_p0_capabilities() -> None:
     bank = load_question_bank(ROOT / "question_bank")
 
-    assert len(bank.scenarios) == 1
-    scenario = bank.scenarios[0]
+    assert len(bank.scenarios) == 2
+    scenario = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.0.0"
+    )
     assert (scenario.scenario_id, scenario.version) == (
         "company-research-agent",
         "1.0.0",
     )
+    assert scenario.markets == ("united-states",)
+    assert scenario.languages == ("english",)
     assert {requirement.cap_id for requirement in scenario.required_capabilities} == {
         "company-fundamentals",
         "financial-statement-facts",
@@ -76,6 +80,14 @@ def test_ac1_company_research_scenario_composes_three_p0_capabilities() -> None:
     assert scenario.completion_policy.missing_dimension_state == (
         "evidence_insufficient"
     )
+    expanded = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
+    )
+    assert expanded.markets == ("united-states", "mainland-china")
+    assert expanded.languages == ("english", "simplified-chinese")
+    assert {requirement.cap_id for requirement in expanded.required_capabilities} == {
+        requirement.cap_id for requirement in scenario.required_capabilities
+    }
 
 
 def test_ac2_every_capability_has_core_and_boundary_roles() -> None:
@@ -106,7 +118,7 @@ def test_ac2_question_bank_allows_multiple_questions_per_role(
 
     bank = load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
 
-    assert len(bank.questions) == 21
+    assert len(bank.questions) == len(document["questions"])
 
 
 def test_ac2_question_bank_rejects_missing_required_role(tmp_path: Path) -> None:
@@ -150,20 +162,51 @@ def test_ac3_migration_preserves_all_v1_question_ids() -> None:
         "stock-quote-aapl-current",
         "stock-quote-invalid-symbol",
     }
-    assert {str(question.question_id) for question in bank.questions} == expected
+    assert expected.issubset({str(question.question_id) for question in bank.questions})
 
 
-def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
+def test_ac_sq1_stock_quote_question_family_covers_selection_roles() -> None:
     bank = load_question_bank(ROOT / "question_bank")
-    scenario = bank.scenarios[0]
-    p0_cap_ids = {
-        requirement.cap_id
-        for requirement in scenario.required_capabilities
-        if requirement.priority == "p0"
+    questions = [
+        question for question in bank.questions if question.cap_id == "stock-quote"
+    ]
+
+    assert {str(question.question_id) for question in questions} == {
+        "stock-quote-600519-agent-contract",
+        "stock-quote-600519-market-coverage",
+        "stock-quote-aapl-current",
+        "stock-quote-aapl-freshness-precision",
+        "stock-quote-invalid-symbol",
+    }
+    assert {question.role for question in questions} == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+        "freshness_precision",
     }
 
+
+def test_ac_sq2_stock_quote_family_has_scenario_and_evaluation_contracts() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    scenario = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
+    )
+    stock_requirement = next(
+        requirement
+        for requirement in scenario.required_capabilities
+        if requirement.cap_id == "stock-quote"
+    )
+
+    assert set(stock_requirement.minimum_question_roles) == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+        "freshness_precision",
+    }
     for question in bank.questions:
-        if question.cap_id not in p0_cap_ids:
+        if question.cap_id != "stock-quote":
             continue
         assert any(
             reference.scenario_id == scenario.scenario_id
@@ -172,10 +215,122 @@ def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
         )
         assert question.evaluation_contract is not None
         assert question.evaluation_contract.reference_source_ids
-        assert question.evaluation_contract.reference_rule
         assert question.evaluation_contract.tolerance_rule
-        assert question.evaluation_contract.interface_expectations
         assert question.evaluation_contract.selection_implication
+
+
+def test_ac_sq4_agent_contract_question_is_provider_neutral() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    question = next(
+        question
+        for question in bank.questions
+        if question.question_id == "stock-quote-600519-agent-contract"
+    )
+
+    serialized = question.model_dump_json(
+        include={
+            "task",
+            "input",
+            "required_observations",
+            "completion_conditions",
+            "source_ids",
+            "evaluation_contract",
+            "selection_rationale",
+        }
+    ).lower()
+    assert question.input == {
+        "symbol": "600519.SH",
+        "market": "CN",
+        "fields": ["price", "quote_time"],
+    }
+    assert "获取贵州茅台当前价格和报价时间" in question.task
+    assert all(
+        provider not in serialized
+        for provider in ("wind", "finnhub", "eodhd", "qveris")
+    )
+    sources_by_id = {str(source.source_id): source for source in bank.sources}
+    references = {
+        sources_by_id[str(source_id)]
+        for source_id in question.evaluation_contract.reference_source_ids
+    }
+    assert {source.authority_tier for source in references} == {
+        "official_market_source"
+    }
+    assert all(
+        (source.reference_url.host or "").removesuffix(".").endswith("sse.com.cn")
+        for source in references
+    )
+    assert (
+        "cap-owned canonical identity"
+        in question.evaluation_contract.reference_rule.lower()
+    )
+    assert "xshg" in question.evaluation_contract.reference_rule.lower()
+
+
+def test_ac_sq3_market_coverage_is_scoped_to_sse_single_security() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    question = next(
+        question
+        for question in bank.questions
+        if question.question_id == "stock-quote-600519-market-coverage"
+    )
+    sources_by_id = {str(source.source_id): source for source in bank.sources}
+    references = {
+        sources_by_id[str(source_id)]
+        for source_id in question.evaluation_contract.reference_source_ids
+    }
+    assert {source.authority_tier for source in references} == {
+        "official_market_source"
+    }
+    assert (
+        "single-security" in question.evaluation_contract.selection_implication.lower()
+    )
+    assert (
+        "cap-owned canonical identity"
+        in question.evaluation_contract.reference_rule.lower()
+    )
+    assert "xshg" in question.evaluation_contract.reference_rule.lower()
+
+
+def test_ac_sq5_freshness_contract_has_executable_tolerances() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    question = next(
+        question
+        for question in bank.questions
+        if question.question_id == "stock-quote-aapl-freshness-precision"
+    )
+    tolerance = question.evaluation_contract.tolerance_rule.lower()
+    assert "15 minutes" in tolerance
+    assert "latest disclosed close" in tolerance
+    assert (
+        "capture the reference price"
+        in question.evaluation_contract.reference_rule.lower()
+    )
+
+
+def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    for scenario in bank.scenarios:
+        p0_cap_ids = {
+            requirement.cap_id
+            for requirement in scenario.required_capabilities
+            if requirement.priority == "p0"
+        }
+        for question in bank.questions:
+            if question.cap_id not in p0_cap_ids:
+                continue
+            if not any(
+                reference.scenario_id == scenario.scenario_id
+                and reference.version == scenario.version
+                for reference in question.scenario_refs
+            ):
+                continue
+            assert question.evaluation_contract is not None
+            assert question.evaluation_contract.reference_source_ids
+            assert question.evaluation_contract.reference_rule
+            assert question.evaluation_contract.tolerance_rule
+            assert question.evaluation_contract.interface_expectations
+            assert question.evaluation_contract.selection_implication
 
 
 def test_ac1_scenario_rejects_unknown_capability(tmp_path: Path) -> None:
@@ -267,7 +422,7 @@ def test_ac1_scenario_identity_includes_semantic_version(tmp_path: Path) -> None
     scenarios_path = bank_root / "scenarios.yaml"
     scenarios = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
     next_version = dict(scenarios["scenarios"][0])
-    next_version["version"] = "1.1.0"
+    next_version["version"] = "1.2.0"
     scenarios["scenarios"].append(next_version)
     scenarios_path.write_text(yaml.safe_dump(scenarios), encoding="utf-8")
     questions_path = bank_root / "questions.yaml"
@@ -275,7 +430,7 @@ def test_ac1_scenario_identity_includes_semantic_version(tmp_path: Path) -> None
     for question in questions["questions"]:
         if question.get("scenario_refs"):
             question["scenario_refs"].append(
-                {"scenario_id": "company-research-agent", "version": "1.1.0"}
+                {"scenario_id": "company-research-agent", "version": "1.2.0"}
             )
     questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
 
@@ -286,6 +441,7 @@ def test_ac1_scenario_identity_includes_semantic_version(tmp_path: Path) -> None
     } == {
         ("company-research-agent", "1.0.0"),
         ("company-research-agent", "1.1.0"),
+        ("company-research-agent", "1.2.0"),
     }
 
 
@@ -416,8 +572,8 @@ def test_ac5_question_validate_runs_through_the_installed_cli() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "10 capabilities" in result.stdout
-    assert "20 questions" in result.stdout
-    assert result.stdout.endswith("1 scenario.\n")
+    assert "23 questions" in result.stdout
+    assert result.stdout.endswith("2 scenarios.\n")
 
 
 def test_ac6_candidate_cannot_claim_an_executable_cap_pack(tmp_path: Path) -> None:
