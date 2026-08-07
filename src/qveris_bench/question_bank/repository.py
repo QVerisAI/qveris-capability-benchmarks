@@ -4,12 +4,14 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from qveris_bench.catalog.validation import CapValidationError, validate_cap_file
 from qveris_bench.question_bank.models import (
     BankQuestion,
     CandidateCapability,
     QuestionBank,
     QuestionSource,
 )
+from qveris_bench.suites.compiler import compile_suite
 from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
 
@@ -43,19 +45,38 @@ def _require_unique(values: tuple[object, ...], attribute: str, label: str) -> N
         raise QuestionBankValidationError(f"duplicate {label}")
 
 
-def _cap_pack_ids(cap_packs_root: Path) -> set[str]:
-    ids: set[str] = set()
-    for path in cap_packs_root.glob("*/cap.yaml"):
+def _cap_packs_by_id(cap_packs_root: Path) -> dict[str, tuple[Path, ...]]:
+    packs: dict[str, list[Path]] = {}
+    for path in sorted(cap_packs_root.glob("*/cap.yaml")):
+        if path.parent.name.startswith("_"):
+            continue
         try:
-            document = load_yaml_mapping(path)
-        except YamlDocumentError as exc:
+            cap = validate_cap_file(path)
+        except CapValidationError as exc:
             raise QuestionBankValidationError(
-                f"{path}: invalid CAP YAML: {exc}"
+                f"{path}: invalid executable CAP pack: {exc}"
             ) from exc
-        cap_id = document.get("cap_id")
-        if isinstance(cap_id, str):
-            ids.add(cap_id)
-    return ids
+        packs.setdefault(str(cap.cap_id), []).append(path)
+    return {cap_id: tuple(paths) for cap_id, paths in packs.items()}
+
+
+def _require_compilable_cap_pack(
+    cap_id: str, cap_paths: tuple[Path, ...], providers_root: Path
+) -> None:
+    for cap_path in cap_paths:
+        try:
+            compile_suite(
+                suite_path=cap_path.with_name("suite.yaml"),
+                cases_path=cap_path.with_name("cases.yaml"),
+                providers_root=providers_root,
+                cap_path=cap_path,
+            )
+        except (OSError, ValueError):
+            continue
+        return
+    raise QuestionBankValidationError(
+        f"runnable capability {cap_id} has no compilable executable CAP pack"
+    )
 
 
 def _validate_cross_references(
@@ -77,23 +98,30 @@ def _validate_cross_references(
         if not set(map(str, question.source_ids)).issubset(source_ids):
             raise QuestionBankValidationError("question references an unknown source")
     for capability in capabilities:
-        variants = {
-            question.variant
-            for question in questions
-            if question.cap_id == capability.cap_id
-        }
-        if variants != {"positive", "negative"}:
-            raise QuestionBankValidationError(
-                f"capability {capability.cap_id} requires positive and negative "
-                "questions"
+        counts = {
+            variant: sum(
+                question.cap_id == capability.cap_id and question.variant == variant
+                for question in questions
             )
-    cap_pack_ids = _cap_pack_ids(cap_packs_root)
+            for variant in ("positive", "negative")
+        }
+        if counts != {"positive": 1, "negative": 1}:
+            raise QuestionBankValidationError(
+                f"capability {capability.cap_id} requires exactly one positive and "
+                "one negative question"
+            )
+    cap_packs_by_id = _cap_packs_by_id(cap_packs_root)
+    providers_root = cap_packs_root.parent / "providers"
     for capability in capabilities:
-        is_pack = str(capability.cap_id) in cap_pack_ids
+        cap_id = str(capability.cap_id)
+        cap_paths = cap_packs_by_id.get(cap_id, ())
+        is_pack = bool(cap_paths)
         if capability.lifecycle == "runnable" and not is_pack:
             raise QuestionBankValidationError(
                 f"runnable capability {capability.cap_id} has no executable cap pack"
             )
+        if capability.lifecycle == "runnable":
+            _require_compilable_cap_pack(cap_id, cap_paths, providers_root)
         if capability.lifecycle == "candidate" and is_pack:
             raise QuestionBankValidationError(
                 f"candidate capability {capability.cap_id} already has an executable "
