@@ -1,0 +1,68 @@
+[
+  {
+    "evidence_id": "fmp-income-statement-aapl-revenue-1",
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:1",
+    "raw_digest": "sha256:c1634bd15209b5ad57071d2cc8490a5c5a34f3326427f42edacb40f218b5a51a",
+    "public_digest": "sha256:407c0a0d45a0366ce29cc54c1b528d2928028f16b84b7f109a75155820c33ec7",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  },
+  {
+    "evidence_id": "fmp-income-statement-aapl-revenue-2",
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:2",
+    "raw_digest": "sha256:e78aa03bbc8e74c5d453ef42f44d74380a2aeec7d5c5e2d498c187d358b5e629",
+    "public_digest": "sha256:d52f1bfb757e93a55f4cf0bfe0eb5903f6821ee87f329480a54148f62aad1de9",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  },
+  {
+    "evidence_id": "fmp-income-statement-aapl-revenue-3",
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:3",
+    "raw_digest": "sha256:75e7fa3f8fc37e11d04eaad116bf512954de7cc6609038a9a2883f6338328cf3",
+    "public_digest": "sha256:d3f805af67f50e62755a664b02f4a0b66d58f489654ab253237d938703306139",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  },
+  {
+    "evidence_id": "fmp-income-statement-invalid-period-1",
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:1",
+    "raw_digest": "sha256:33de179899a7d279b28e58681219f0b7419f89b0a0ef3c698022f725038382a8",
+    "public_digest": "sha256:8576d7b19b193a32acb06319e79a50d1e8eca2f77b9756a998cd6457789700f5",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  },
+  {
+    "evidence_id": "fmp-income-statement-invalid-period-2",
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:2",
+    "raw_digest": "sha256:e514c79aed469db983da98bfa2b0d3b0c96bcb8e05d4f99d4296106b61d66a51",
+    "public_digest": "sha256:807a19b3ed1984f478b9ee7de292420564a16f9c997deb6c144be2feebf98c4e",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  },
+  {
+    "evidence_id": "fmp-income-statement-invalid-period-3",
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:3",
+    "raw_digest": "sha256:73994dc4114fb923125b321e7660e45570929aef51af8f48f05b555cd42c19c6",
+    "public_digest": "sha256:5dc352225a29de0d9f0d342edbde941ddc42138fac0083adf6689558ed0176e2",
+    "redaction_status": "sanitized",
+    "disclosure_level": "sanitized_public",
+    "license_status": "cleared",
+    "extractor_version": "1.0.0",
+    "suite_fingerprint": "63fd462e8386975892382b00e833fd2832b7209c69026f0b3e7d27a3d79b5b6d"
+  }
+]

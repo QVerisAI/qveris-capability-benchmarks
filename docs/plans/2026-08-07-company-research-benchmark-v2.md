@@ -140,7 +140,7 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
   filings as the truth source and record exclusions terminally.
 - [x] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
   bindings, suite, and tests on the existing Core.
-- [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
+- [x] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.
 
 After direct probes, Alpha Vantage income statement and the official SEC company
@@ -155,7 +155,7 @@ terminally excluded; the included FSF cohort is FMP as-reported income statement
 - [x] Qualify official filing retrieval and authorized Provider paths with explicit
   citation, document-location, completeness, and error contracts.
 - [x] Add the CAP Pack, CAP-owned extraction/rules, cases, bindings, suite, and tests.
-- [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
+- [x] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.
 
 After direct probes, the FMP 10-K JSON and SEC filings search connectors returned
