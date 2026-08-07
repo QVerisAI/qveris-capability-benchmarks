@@ -38,30 +38,25 @@ BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
         "fmp-financial-reports-10k",
         "financial-modeling-prep",
         "aapl-risk-factor",
-        {"symbol": "AAPL", "year": 2025, "period": "FY"},
+        {"symbol": "AAPL", "year": 2025, "period": "annual"},
     ),
     "fmp-10k-invalid-filing-type": (
         "fmp-financial-reports-10k",
         "financial-modeling-prep",
         "invalid-filing-type",
-        {"symbol": "AAPL", "year": 2025, "period": "FY"},
+        {"symbol": "AAPL", "year": 2025, "period": "annual"},
     ),
     "fmp-sec-filings-aapl-risk": (
         "fmp-sec-filings-search",
         "financial-modeling-prep",
         "aapl-risk-factor",
-        {"formType": "10-K", "from": "2025-01-01", "to": "2025-12-31", "limit": 10},
+        {"formType": "10-K", "limit": 10},
     ),
     "fmp-sec-filings-invalid-filing-type": (
         "fmp-sec-filings-search",
         "financial-modeling-prep",
         "invalid-filing-type",
-        {
-            "formType": "NOTAFILING",
-            "from": "2025-01-01",
-            "to": "2025-12-31",
-            "limit": 10,
-        },
+        {"formType": "NOTAFILING", "limit": 10},
     ),
 }
 

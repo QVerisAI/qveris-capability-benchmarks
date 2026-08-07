@@ -78,11 +78,15 @@ def _massive_rows(document: object) -> list[dict[str, Any]]:
     data = _unwrap(document)
     if not isinstance(data, dict):
         raise SecFilingExtractionError("response must be an object")
-    if "data" not in data:
-        raise SecFilingExtractionError("risk factors are missing")
-    rows = data.get("data", [])
+    envelope = data.get("data")
+    if isinstance(envelope, dict):
+        rows = envelope.get("results", [])
+    else:
+        rows = envelope if envelope is not None else []
     if not isinstance(rows, list):
         raise SecFilingExtractionError("risk factors must be an array")
+    if "data" not in data and "error_message" not in data:
+        raise SecFilingExtractionError("risk factors are missing")
     normalized: list[dict[str, Any]] = []
     for row in rows:
         if not isinstance(row, dict):
@@ -132,7 +136,7 @@ def _find_supply_chain_text(value: object) -> str | None:
 
 
 def _fmp_filings(data: dict[str, Any]) -> list[dict[str, Any]]:
-    filings = data.get("filings")
+    filings = data.get("filings", data.get("data"))
     if not isinstance(filings, list):
         return []
     return [item for item in filings if isinstance(item, dict)]

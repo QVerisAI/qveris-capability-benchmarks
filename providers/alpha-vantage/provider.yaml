@@ -14,9 +14,9 @@ access_paths:
     canonical_interface: income-statement
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: QVeris discovery exposed an attributable income statement path.
-      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43
+      disposition: excluded
+      reason: Direct probe returned a message-only response without income statement data.
+      evidence_digest: sha256:88802f149a2a31e4592500c98913ef0bd4177775b088ece789d2c787948961ef
   - access_path_id: alpha-vantage-etf-holdings
     provider_id: alpha-vantage
     path_type: qveris_connector

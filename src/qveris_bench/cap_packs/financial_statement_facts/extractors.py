@@ -11,9 +11,9 @@ def extract_fmp_income_statement(
     document: object, symbol: str, fiscal_year: int, *, negative_control: bool = False
 ) -> dict[str, Any]:
     data = _unwrap(document)
-    if not isinstance(data, dict):
+    if not isinstance(data, (dict, list)):
         raise FinancialStatementExtractionError("response must be an object")
-    reports = _reports(data, ("annualReports", "reports"))
+    reports = _reports(data)
     if negative_control:
         if _report_for_year(reports, fiscal_year) is not None:
             raise FinancialStatementExtractionError(
@@ -84,17 +84,32 @@ def _unwrap(document: object) -> object:
     return document
 
 
-def _reports(data: dict[str, Any], keys: tuple[str, ...]) -> list[dict[str, Any]]:
-    for key in keys:
-        value = data.get(key)
-        if isinstance(value, list):
-            reports: list[dict[str, Any]] = []
-            for item in value:
-                if not isinstance(item, dict):
-                    raise FinancialStatementExtractionError(f"{key} must hold objects")
-                reports.append(item)
-            return reports
-    raise FinancialStatementExtractionError("reported statements are missing")
+def _reports(
+    data: dict[str, Any] | list[dict[str, Any]],
+    keys: tuple[str, ...] = ("annualReports", "reports"),
+) -> list[dict[str, Any]]:
+    reports_value: object
+    if isinstance(data, list):
+        reports_value = data
+    elif isinstance(data, dict):
+        reports_value = None
+        for candidate in keys:
+            candidate_value = data.get(candidate)
+            if isinstance(candidate_value, list):
+                reports_value = candidate_value
+                break
+        if reports_value is None:
+            raise FinancialStatementExtractionError("reported statements are missing")
+    else:
+        raise FinancialStatementExtractionError("response must be an object")
+    if not isinstance(reports_value, list):
+        raise FinancialStatementExtractionError("reported statements are missing")
+    reports: list[dict[str, Any]] = []
+    for item in reports_value:
+        if not isinstance(item, dict):
+            raise FinancialStatementExtractionError("reports must hold objects")
+        reports.append(item)
+    return reports
 
 
 def _report_year(report: dict[str, Any]) -> int | None:

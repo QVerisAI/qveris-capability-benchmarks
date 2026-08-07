@@ -80,6 +80,14 @@ def test_ac5_fmp_extracts_fy2025_revenue() -> None:
     assert observation.facts["revenue"] == 391035000000
 
 
+def test_ac5_fmp_list_envelope_extracts_fy2025_revenue() -> None:
+    document = {"result": {"data": _fmp_document()["annualReports"]}}
+
+    facts = extract_fmp_income_statement(document, "AAPL", 2025)
+
+    assert facts["revenue"] == 391035000000
+
+
 def test_ac5_alpha_vantage_extracts_fy2025_revenue() -> None:
     facts = extract_alpha_vantage_income_statement(
         _alpha_vantage_document(), "AAPL", 2025

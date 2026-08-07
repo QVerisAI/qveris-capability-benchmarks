@@ -31,7 +31,7 @@
       "discovery_query": "FMP financial reports 10-K JSON AAPL direct provider",
       "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
       "tool_id": "financialmodelingprep.stable.financialreportsjson.retrieve.v1.f3e90a6a",
-      "parameters": {"symbol": "AAPL", "year": 2025, "period": "FY"}
+      "parameters": {"symbol": "AAPL", "year": 2025, "period": "annual"}
     },
     {
       "binding_id": "fmp-10k-invalid-filing-type",
@@ -42,7 +42,7 @@
       "discovery_query": "FMP financial reports 10-K JSON AAPL direct provider",
       "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
       "tool_id": "financialmodelingprep.stable.financialreportsjson.retrieve.v1.f3e90a6a",
-      "parameters": {"symbol": "AAPL", "year": 2025, "period": "FY"}
+      "parameters": {"symbol": "AAPL", "year": 2025, "period": "annual"}
     },
     {
       "binding_id": "fmp-sec-filings-aapl-risk",
@@ -53,7 +53,7 @@
       "discovery_query": "FMP SEC filings by form type 10-K direct provider",
       "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
       "tool_id": "financialmodelingprep.stable.secfilingssearch.formtype.retrieve.v1.fe50f57c",
-      "parameters": {"formType": "10-K", "from": "2025-01-01", "to": "2025-12-31", "limit": 10}
+      "parameters": {"formType": "10-K", "limit": 10}
     },
     {
       "binding_id": "fmp-sec-filings-invalid-filing-type",
@@ -64,7 +64,7 @@
       "discovery_query": "FMP SEC filings by form type 10-K direct provider",
       "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
       "tool_id": "financialmodelingprep.stable.secfilingssearch.formtype.retrieve.v1.fe50f57c",
-      "parameters": {"formType": "NOTAFILING", "from": "2025-01-01", "to": "2025-12-31", "limit": 10}
+      "parameters": {"formType": "NOTAFILING", "limit": 10}
     }
   ]
 }
