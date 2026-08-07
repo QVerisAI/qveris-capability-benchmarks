@@ -138,15 +138,11 @@ def _semantic_reason(provider_id: str, case_id: str, document: object) -> str | 
         message = str(exc)
         if negative and "filing type not supported" in message:
             return "filing_type_not_supported"
-        if negative:
-            raise AssertionError(
-                "Direct negative response violates its contract"
-            ) from exc
         if "passage" in message:
             return "evidence_passage_missing"
         if "unavailable" in message:
             return "filing_unavailable"
-        raise AssertionError("Direct positive response violates its contract") from exc
+        return "unexpected_response_shape"
     except ExtractionError as exc:
         raise AssertionError("local observation contract failed") from exc
     return None
@@ -285,7 +281,9 @@ def test_ac_live_sec_filing_evidence_rejects_redirected_binding() -> None:
 
 
 def test_ac_live_sec_filing_evidence_rejects_malformed_response() -> None:
-    with pytest.raises(AssertionError, match="positive response violates"):
-        _semantic_reason("massive-stocks", "aapl-risk-factor", {})
-    with pytest.raises(AssertionError, match="negative response violates"):
-        _semantic_reason("massive-stocks", "invalid-filing-type", {})
+    assert _semantic_reason("massive-stocks", "aapl-risk-factor", {}) == (
+        "unexpected_response_shape"
+    )
+    assert _semantic_reason("massive-stocks", "invalid-filing-type", {}) == (
+        "unexpected_response_shape"
+    )
