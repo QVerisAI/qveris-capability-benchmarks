@@ -168,17 +168,21 @@ excluded; the included SEC evidence cohort is Massive Stocks risk factors.
   `measured`, `declared`, or `evidence_insufficient`; measured facts require
   immutable evidence refs that resolve inside the release; environment and plan
   disclosure stays release-level.
-- [ ] Keep Agent-interface observations separate: parameter contract, response
+- [x] Keep Agent-interface observations separate: parameter contract, response
   schema, error recovery, pagination/completeness, language mapping, and operational
   effort (contract documented in the question evaluation model; enforcement lands
   with the Task 6 profile builder).
 
 ### Task 6 — Task Fit Profile
 
-- [ ] Add a deterministic builder and verifier that consume only pinned, verified
+- [x] Add a deterministic builder and verifier that consume only pinned, verified
   CAP releases and emit versioned JSON plus Markdown.
-- [ ] Show per-CAP Provider/Access Path tradeoffs, evidence states, and limitations;
+- [x] Show per-CAP Provider/Access Path tradeoffs, evidence states, and limitations;
   fail closed on missing refs and forbid all aggregate score/rating fields.
+
+The Company Research Task Fit Profile v1 lives in `profiles/` and references the
+three verified P0 releases (`stock-quote-family-2026-q3-v1`,
+`financial-statements-2026-q3-v1`, `sec-filing-evidence-2026-q3-v1`).
 
 ### Task 7 — Replay and release acceptance
 
