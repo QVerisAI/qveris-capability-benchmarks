@@ -5,10 +5,10 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from qveris_bench.catalog.validation import CapValidationError, validate_cap_file
+from qveris_bench.models.scenario import DeveloperScenario
 from qveris_bench.question_bank.models import (
     BankQuestion,
     CandidateCapability,
-    DeveloperScenario,
     QuestionBank,
     QuestionSource,
 )
@@ -90,10 +90,27 @@ def _validate_cross_references(
     _require_unique(sources, "source_id", "source IDs")
     _require_unique(capabilities, "cap_id", "capability IDs")
     _require_unique(questions, "question_id", "question IDs")
-    _require_unique(scenarios, "scenario_id", "scenario IDs")
     source_ids = {str(source.source_id) for source in sources}
+    sources_by_id = {str(source.source_id): source for source in sources}
     capability_ids = {str(capability.cap_id) for capability in capabilities}
-    scenario_ids = {str(scenario.scenario_id) for scenario in scenarios}
+    scenario_keys = {
+        (str(scenario.scenario_id), str(scenario.version)) for scenario in scenarios
+    }
+    if len(scenario_keys) != len(scenarios):
+        raise QuestionBankValidationError("duplicate scenario ID and version")
+    scenarios_by_key = {
+        (str(scenario.scenario_id), str(scenario.version)): scenario
+        for scenario in scenarios
+    }
+    for scenario in scenarios:
+        if not set(map(str, scenario.source_ids)).issubset(source_ids):
+            raise QuestionBankValidationError("scenario references an unknown source")
+        for requirement in scenario.required_capabilities:
+            cap_id = str(requirement.cap_id)
+            if cap_id not in capability_ids:
+                raise QuestionBankValidationError(
+                    f"scenario references unknown capability: {cap_id}"
+                )
     for question in questions:
         if str(question.cap_id) not in capability_ids:
             raise QuestionBankValidationError(
@@ -101,14 +118,39 @@ def _validate_cross_references(
             )
         if not set(map(str, question.source_ids)).issubset(source_ids):
             raise QuestionBankValidationError("question references an unknown source")
-        if not set(map(str, question.scenario_ids)).issubset(scenario_ids):
-            raise QuestionBankValidationError("question references an unknown scenario")
-        if question.evaluation_contract is not None and not set(
-            map(str, question.evaluation_contract.reference_source_ids)
-        ).issubset(set(map(str, question.source_ids))):
-            raise QuestionBankValidationError(
-                "evaluation contract references a source not cited by the question"
+        for scenario_ref in question.scenario_refs:
+            key = (str(scenario_ref.scenario_id), str(scenario_ref.version))
+            referenced_scenario = scenarios_by_key.get(key)
+            if referenced_scenario is None:
+                raise QuestionBankValidationError(
+                    "question references an unknown scenario version"
+                )
+            scenario_cap_ids = {
+                str(requirement.cap_id)
+                for requirement in referenced_scenario.required_capabilities
+            }
+            if str(question.cap_id) not in scenario_cap_ids:
+                raise QuestionBankValidationError(
+                    f"question capability {question.cap_id} is not required by "
+                    f"scenario {referenced_scenario.scenario_id}@"
+                    f"{referenced_scenario.version}"
+                )
+        if question.evaluation_contract is not None:
+            reference_ids = set(
+                map(str, question.evaluation_contract.reference_source_ids)
             )
+            if not reference_ids.issubset(set(map(str, question.source_ids))):
+                raise QuestionBankValidationError(
+                    "evaluation contract references a source not cited by the question"
+                )
+            if not any(
+                sources_by_id[source_id].authority_tier
+                in {"official_api", "official_market_source"}
+                for source_id in reference_ids
+            ):
+                raise QuestionBankValidationError(
+                    "evaluation contract requires an authoritative source"
+                )
     for capability in capabilities:
         roles = {
             str(question.role)
@@ -121,20 +163,18 @@ def _validate_cross_references(
                 f"capability {capability.cap_id} requires question roles: "
                 + ", ".join(sorted(missing_roles))
             )
-    p0_capability_ids: set[str] = set()
     for scenario in scenarios:
-        if not set(map(str, scenario.source_ids)).issubset(source_ids):
-            raise QuestionBankValidationError("scenario references an unknown source")
         for requirement in scenario.required_capabilities:
             cap_id = str(requirement.cap_id)
-            if cap_id not in capability_ids:
-                raise QuestionBankValidationError(
-                    f"scenario references unknown capability: {cap_id}"
-                )
             roles = {
                 str(question.role)
                 for question in questions
                 if question.cap_id == requirement.cap_id
+                and any(
+                    reference.scenario_id == scenario.scenario_id
+                    and reference.version == scenario.version
+                    for reference in question.scenario_refs
+                )
             }
             missing_roles = set(map(str, requirement.minimum_question_roles)) - roles
             if missing_roles:
@@ -142,19 +182,25 @@ def _validate_cross_references(
                     f"scenario {scenario.scenario_id} lacks question roles for "
                     f"{cap_id}: {', '.join(sorted(missing_roles))}"
                 )
-            if requirement.priority == "p0":
-                p0_capability_ids.add(cap_id)
-    for question in questions:
-        if str(question.cap_id) not in p0_capability_ids:
-            continue
-        if not question.scenario_ids:
-            raise QuestionBankValidationError(
-                "P0 question requires a scenario reference"
-            )
-        if question.evaluation_contract is None:
-            raise QuestionBankValidationError(
-                "P0 question requires an authoritative evaluation contract"
-            )
+            if requirement.priority in scenario.completion_policy.required_priorities:
+                attached_questions = (
+                    question
+                    for question in questions
+                    if question.cap_id == requirement.cap_id
+                    and any(
+                        reference.scenario_id == scenario.scenario_id
+                        and reference.version == scenario.version
+                        for reference in question.scenario_refs
+                    )
+                )
+                if any(
+                    question.evaluation_contract is None
+                    for question in attached_questions
+                ):
+                    raise QuestionBankValidationError(
+                        "required scenario question needs an authoritative "
+                        "evaluation contract"
+                    )
     cap_packs_by_id = _cap_packs_by_id(cap_packs_root)
     providers_root = cap_packs_root.parent / "providers"
     for capability in capabilities:

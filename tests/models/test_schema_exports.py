@@ -11,6 +11,7 @@ EXPECTED_SCHEMAS = {
     "benchmark-release.schema.json",
     "benchmark-suite.schema.json",
     "cap-definition.schema.json",
+    "developer-scenario.schema.json",
     "evidence-bundle.schema.json",
     "provider-profile.schema.json",
     "run-plan.schema.json",

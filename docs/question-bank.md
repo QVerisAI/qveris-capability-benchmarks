@@ -20,6 +20,12 @@ reference; they are not themselves end-to-end financial workflows.
   `external_benchmark`.
 - External benchmarks inform capability discovery and citation only. Their task text
   is not copied. Every bank question declares `text_origin: qveris_curated`.
+- Questions reference an exact `(scenario_id, version)`. A scenario counts only its
+  own attached questions toward required roles, and every attached question must
+  measure a CAP required by that scenario.
+- Repository-backed benchmark sources pin a full commit and source artifact or task
+  identifiers. An external benchmark cannot be the sole authoritative truth source
+  for a P0 evaluation contract.
 
 ## Lifecycle boundary
 

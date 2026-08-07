@@ -1,19 +1,12 @@
 from __future__ import annotations
 
+import ipaddress
 from typing import Literal
 
-from pydantic import Field, HttpUrl, field_validator
+from pydantic import Field, HttpUrl, field_validator, model_validator
 
-from qveris_bench.models.base import FrozenModel, SemanticVersion, StableId
-
-QuestionRole = Literal[
-    "core_positive",
-    "boundary_negative",
-    "coverage",
-    "freshness_precision",
-    "shape_completeness",
-    "agent_contract",
-]
+from qveris_bench.models.base import FrozenModel, StableId
+from qveris_bench.models.scenario import DeveloperScenario, QuestionRole, ScenarioRef
 
 
 class QuestionSource(FrozenModel):
@@ -24,19 +17,47 @@ class QuestionSource(FrozenModel):
         "official_api", "official_market_source", "external_benchmark"
     ]
     reproduction_policy: Literal["citation_only"]
+    repository_commit: str | None = Field(default=None, pattern=r"^[a-f0-9]{40}$")
+    source_task_ids: tuple[str, ...] = ()
 
     @field_validator("reference_url")
     @classmethod
     def require_canonical_public_url(cls, value: HttpUrl) -> HttpUrl:
         if (
             value.scheme != "https"
+            or not value.host
             or value.username
             or value.password
             or value.query
             or value.fragment
         ):
             raise ValueError("source must use a canonical public HTTPS URL")
+        host = (value.host or "").lower()
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            address = None
+        if (
+            address is not None
+            and not address.is_global
+            or host == "localhost"
+            or host.endswith((".localhost", ".local", ".internal"))
+        ):
+            raise ValueError("source must use a public host")
         return value
+
+    @model_validator(mode="after")
+    def require_immutable_repository_provenance(self) -> QuestionSource:
+        host = self.reference_url.host or ""
+        if (
+            self.authority_tier == "external_benchmark"
+            and host.lower() == "github.com"
+            and (not self.repository_commit or not self.source_task_ids)
+        ):
+            raise ValueError(
+                "external benchmark requires immutable repository provenance"
+            )
+        return self
 
 
 class CandidateCapability(FrozenModel):
@@ -66,31 +87,10 @@ class BankQuestion(FrozenModel):
     required_observations: tuple[str, ...] = Field(min_length=1)
     completion_conditions: tuple[str, ...] = Field(min_length=1)
     source_ids: tuple[StableId, ...] = Field(min_length=1)
-    scenario_ids: tuple[StableId, ...] = ()
+    scenario_refs: tuple[ScenarioRef, ...] = ()
     evaluation_contract: QuestionEvaluationContract | None = None
     text_origin: Literal["qveris_curated"]
     selection_rationale: str = Field(min_length=10)
-    review_status: Literal["approved"]
-
-
-class ScenarioCapabilityRequirement(FrozenModel):
-    cap_id: StableId
-    priority: Literal["p0", "p1", "p2"]
-    minimum_question_roles: tuple[QuestionRole, ...] = Field(min_length=1)
-
-
-class DeveloperScenario(FrozenModel):
-    scenario_id: StableId
-    version: SemanticVersion
-    name: str = Field(min_length=1)
-    developer_decision: str = Field(min_length=10)
-    target_users: tuple[str, ...] = Field(min_length=1)
-    markets: tuple[str, ...] = Field(min_length=1)
-    languages: tuple[str, ...] = Field(min_length=1)
-    required_capabilities: tuple[ScenarioCapabilityRequirement, ...] = Field(
-        min_length=1
-    )
-    source_ids: tuple[StableId, ...] = Field(min_length=1)
     review_status: Literal["approved"]
 
 

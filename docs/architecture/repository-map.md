@@ -36,7 +36,7 @@ selection evidence, start with `docs/product-strategy.md`.
 
 | Directory | Owns | Must not own |
 |---|---|---|
-| `src/qveris_bench/models/` | Versioned domain contracts | CAP field vocabulary |
+| `src/qveris_bench/models/` | Versioned domain and Developer Scenario contracts | CAP field vocabulary |
 | `src/qveris_bench/catalog/` | CAP source provenance | Execution behavior |
 | `src/qveris_bench/suites/` | Freeze, fingerprint, and run matrix | Provider conclusions |
 | `src/qveris_bench/execution/` | Transport, retries, state, trace capture | ETF, quote, or other domain semantics |

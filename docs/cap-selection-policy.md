@@ -28,6 +28,11 @@ External repository sources must pin the repository URL, immutable commit, and
 source task identifier. Sanitized customer questions use an internal reference that
 does not expose the customer, contact details, credentials, or proprietary payloads.
 
+Scenario identity is `(scenario_id, version)`. Its completion policy names which
+priority tiers require verified CAP releases and keeps missing dimensions explicitly
+`evidence_insufficient`; it never fills a gap from Provider claims or unrelated
+scenario questions.
+
 ## Definition requirements
 
 Every `cap.yaml` has a stable kebab-case ID, semantic version, plain-language

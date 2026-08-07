@@ -60,13 +60,21 @@ def test_ac1_company_research_scenario_composes_three_p0_capabilities() -> None:
         "1.0.0",
     )
     assert {requirement.cap_id for requirement in scenario.required_capabilities} == {
+        "company-fundamentals",
         "financial-statement-facts",
+        "financial-news-evidence",
+        "historical-price-series",
         "sec-filing-evidence",
         "stock-quote",
     }
-    assert all(
-        requirement.priority == "p0"
+    assert {
+        requirement.cap_id
         for requirement in scenario.required_capabilities
+        if requirement.priority == "p0"
+    } == {"financial-statement-facts", "sec-filing-evidence", "stock-quote"}
+    assert scenario.completion_policy.required_priorities == ("p0",)
+    assert scenario.completion_policy.missing_dimension_state == (
+        "evidence_insufficient"
     )
 
 
@@ -157,7 +165,11 @@ def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
     for question in bank.questions:
         if question.cap_id not in p0_cap_ids:
             continue
-        assert scenario.scenario_id in question.scenario_ids
+        assert any(
+            reference.scenario_id == scenario.scenario_id
+            and reference.version == scenario.version
+            for reference in question.scenario_refs
+        )
         assert question.evaluation_contract is not None
         assert question.evaluation_contract.reference_source_ids
         assert question.evaluation_contract.reference_rule
@@ -178,6 +190,121 @@ def test_ac1_scenario_rejects_unknown_capability(tmp_path: Path) -> None:
         load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
 
 
+def test_ac1_scenario_roles_ignore_questions_linked_to_another_scenario(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    scenarios = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    other = dict(scenarios["scenarios"][0])
+    other["scenario_id"] = "portfolio-monitoring-agent"
+    scenarios["scenarios"].append(other)
+    scenarios_path.write_text(yaml.safe_dump(scenarios), encoding="utf-8")
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    for question in questions["questions"]:
+        if question["question_id"] == "stock-quote-aapl-current":
+            question["scenario_refs"] = [
+                {"scenario_id": "portfolio-monitoring-agent", "version": "1.0.0"}
+            ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="company-research-agent"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_rejects_question_for_unrequired_capability(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    questions["questions"][0]["scenario_refs"] = [
+        {"scenario_id": "company-research-agent", "version": "1.0.0"}
+    ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="not required"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_rejects_duplicate_capability_requirements(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    document = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    duplicate = dict(document["scenarios"][0]["required_capabilities"][0])
+    duplicate["priority"] = "p1"
+    document["scenarios"][0]["required_capabilities"].append(duplicate)
+    scenarios_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="duplicate capability"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_completion_policy_controls_required_evaluation_contracts(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    document = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    document["scenarios"][0]["completion_policy"]["required_priorities"] = [
+        "p0",
+        "p1",
+    ]
+    scenarios_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="required scenario question"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_identity_includes_semantic_version(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    scenarios = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    next_version = dict(scenarios["scenarios"][0])
+    next_version["version"] = "1.1.0"
+    scenarios["scenarios"].append(next_version)
+    scenarios_path.write_text(yaml.safe_dump(scenarios), encoding="utf-8")
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    for question in questions["questions"]:
+        if question.get("scenario_refs"):
+            question["scenario_refs"].append(
+                {"scenario_id": "company-research-agent", "version": "1.1.0"}
+            )
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    bank = load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+    assert {
+        (scenario.scenario_id, scenario.version) for scenario in bank.scenarios
+    } == {
+        ("company-research-agent", "1.0.0"),
+        ("company-research-agent", "1.1.0"),
+    }
+
+
+def test_ac4_p0_contract_rejects_external_benchmark_as_only_reference(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    questions["questions"][2]["evaluation_contract"]["reference_source_ids"] = [
+        "finsearchcomp-2026"
+    ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="authoritative source"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
 def test_ac4_sources_are_citable_and_do_not_copy_external_task_text() -> None:
     bank = load_question_bank(ROOT / "question_bank")
     source_ids = {source.source_id for source in bank.sources}
@@ -193,6 +320,12 @@ def test_ac4_sources_are_citable_and_do_not_copy_external_task_text() -> None:
         set(question.source_ids).issubset(source_ids) for question in bank.questions
     )
     assert all(question.text_origin == "qveris_curated" for question in bank.questions)
+    for source in bank.sources:
+        if source.authority_tier != "external_benchmark":
+            continue
+        if source.reference_url.host == "github.com":
+            assert source.repository_commit
+            assert source.source_task_ids
 
 
 def test_ac4_source_url_rejects_credentials_and_query_parameters() -> None:
@@ -203,6 +336,32 @@ def test_ac4_source_url_rejects_credentials_and_query_parameters() -> None:
                 "name": "Unsafe source",
                 "reference_url": "https://user:secret@example.com/data?token=secret",
                 "authority_tier": "official_api",
+                "reproduction_policy": "citation_only",
+            }
+        )
+
+
+def test_ac4_source_url_rejects_private_network_hosts() -> None:
+    with pytest.raises(ValueError, match="public host"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "private-source",
+                "name": "Private source",
+                "reference_url": "https://127.0.0.1/internal",
+                "authority_tier": "official_api",
+                "reproduction_policy": "citation_only",
+            }
+        )
+
+
+def test_ac4_external_repository_requires_immutable_provenance() -> None:
+    with pytest.raises(ValueError, match="immutable repository provenance"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "mutable-benchmark",
+                "name": "Mutable benchmark",
+                "reference_url": "https://github.com/example/benchmark",
+                "authority_tier": "external_benchmark",
                 "reproduction_policy": "citation_only",
             }
         )

@@ -29,14 +29,14 @@ questions:
     required_observations: [symbol, price, timestamp]
     completion_conditions: [symbol, price, timestamp]
     source_ids: [finsearchcomp-2026, nasdaq-market-activity]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
       as_of: execution-time
       reference_source_ids: [nasdaq-market-activity]
       reference_rule: Confirm the symbol, positive price, currency context, and quote timestamp against the disclosed market reference.
-      tolerance_rule: Freeze numeric and freshness tolerances in the executable CAP Pack before running the case.
+      tolerance_rule: During the regular session, require quote age at most 15 minutes and absolute price difference at most the greater of USD 0.05 or 1 percent; outside the session use the latest disclosed close and timestamp.
       interface_expectations: [typed-symbol, numeric-price, explicit-timestamp, explicit-empty-state]
       selection_implication: Passing supports current-quote integration for the disclosed market and freshness window.
     text_origin: qveris_curated
@@ -50,7 +50,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [finsearchcomp-2026, finnhub-quote-api]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -71,6 +71,7 @@ questions:
     required_observations: [symbol, timestamps, open, high, low, close, volume]
     completion_conditions: [symbol, timestamps, close]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Separates dated market-history retrieval from a current quote.
     review_status: approved
@@ -82,6 +83,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests date-range validation within the same historical series CAP.
     review_status: approved
@@ -93,6 +95,7 @@ questions:
     required_observations: [symbol, market_cap, pe_ratio, currency]
     completion_conditions: [symbol, market_cap, currency]
     source_ids: [finsearchcomp-2026, finresearchbench-ii]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests standardized issuer-level facts used in company research.
     review_status: approved
@@ -104,6 +107,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests whether the fundamentals interface rejects unknown issuers.
     review_status: approved
@@ -115,7 +119,7 @@ questions:
     required_observations: [symbol, fiscal_year, revenue, filing_date]
     completion_conditions: [symbol, fiscal_year, revenue]
     source_ids: [financebench, sec-edgar-api]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -136,7 +140,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [financebench, sec-edgar-api]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -157,7 +161,7 @@ questions:
     required_observations: [symbol, filing_id, evidence, citation]
     completion_conditions: [filing_id, evidence, citation]
     source_ids: [financebench, sec-edgar-api]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -178,7 +182,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [financebench, sec-edgar-api]
-    scenario_ids: [company-research-agent]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -199,6 +203,7 @@ questions:
     required_observations: [symbol, articles, timestamps, citations]
     completion_conditions: [articles, timestamps, citations]
     source_ids: [icbcbench, finresearchbench-ii]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Isolates dated news retrieval with source evidence for financial research.
     review_status: approved
@@ -210,6 +215,7 @@ questions:
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [icbcbench]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests date validation for the same evidence-retrieval operation.
     review_status: approved

@@ -16,5 +16,18 @@ scenarios:
       - cap_id: sec-filing-evidence
         priority: p0
         minimum_question_roles: [core_positive, boundary_negative]
+      - cap_id: historical-price-series
+        priority: p1
+        minimum_question_roles: [core_positive, boundary_negative]
+      - cap_id: company-fundamentals
+        priority: p1
+        minimum_question_roles: [core_positive, boundary_negative]
+      - cap_id: financial-news-evidence
+        priority: p2
+        minimum_question_roles: [core_positive, boundary_negative]
+    completion_policy:
+      required_priorities: [p0]
+      required_release_state: verified
+      missing_dimension_state: evidence_insufficient
     source_ids: [financebench, finsearchcomp-2026, icbcbench]
     review_status: approved
