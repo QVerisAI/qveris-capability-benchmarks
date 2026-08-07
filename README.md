@@ -31,8 +31,9 @@ CAP source -> frozen suite -> run plan -> private raw evidence
            -> sanitized observations -> task outcomes -> release bundle
 ```
 
-Stages 1–4 build and run benchmarks. Later publication and provider-feedback
-systems consume immutable release facts; they are not implemented here.
+Stages 1–4 build and run benchmarks, including immutable release bundles. The
+stage 5 and 6 consumer systems—such as a leaderboard website and provider-feedback
+operations—are not implemented here.
 
 ## Code reading map
 
