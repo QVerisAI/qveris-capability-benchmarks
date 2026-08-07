@@ -153,7 +153,7 @@ def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> Non
     source = Path("tests/e2e/test_live_stock_quote.py").read_text()
 
     assert "validate_qveris_direct_binding(" in source
-    assert 'ROOT / "cap_packs/stock_quote/suite.yaml"' in source
+    assert 'ROOT / "cap_packs/stock_quote_smoke/suite.yaml"' in source
     assert 'assert binding.access_path_id == "finnhub-stock-quote"' in source
     assert 'assert binding.provider_id == "finnhub"' in source
 

@@ -242,9 +242,10 @@ src/qveris_bench/
   execution/    # adapters, orchestration, state, retry, resume
   agents/       # constrained one-tool trial backend
   evidence/     # private/public stores, redaction, and digests
-  outcomes/     # CAP extraction, categorical outcomes, attribution
+  outcomes/     # generic categorical evaluation and attribution
+  cap_packs/    # CAP-owned domain extractors
   releases/     # deterministic release gate and bundle
-cap_packs/      # capability-owned inputs, rules, and extractors
+cap_packs/      # versioned CAP inputs, rules, and provider bindings
 providers/      # provider and access-path configuration
 schemas/        # exported machine-readable contracts
 evidence/       # authorized public evidence only

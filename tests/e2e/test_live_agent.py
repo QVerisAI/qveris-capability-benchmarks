@@ -9,15 +9,15 @@ import pytest
 from qveris_bench.agents.base import AgentTrial
 from qveris_bench.agents.frozen import merge_frozen_parameters
 from qveris_bench.agents.gateway import qveris_responses_client
+from qveris_bench.cap_packs.etf_holdings.extractors import (
+    EtfHoldingsExtractionError,
+    extract_alpha_vantage_etf_holdings,
+)
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.base import AdapterResult
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import load_registered_qveris_direct_binding
 from qveris_bench.models.suite import AgentProtocol
-from qveris_bench.outcomes.etf_holdings import (
-    EtfHoldingsExtractionError,
-    extract_alpha_vantage_etf_holdings,
-)
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 
 ROOT = Path(__file__).resolve().parents[2]
