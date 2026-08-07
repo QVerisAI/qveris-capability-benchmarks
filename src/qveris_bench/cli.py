@@ -31,6 +31,7 @@ from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
+from qveris_bench.profiles.builder import ProfileBuildError, build_profile
 from qveris_bench.providers.repository import (
     ProviderRegistryRepository,
     ProviderValidationError,
@@ -62,6 +63,7 @@ suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
+profile_app = typer.Typer(help="Build deterministic Task Fit Profiles.")
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
@@ -78,6 +80,7 @@ app.add_typer(suite_app, name="suite")
 app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
+app.add_typer(profile_app, name="profile")
 
 
 @app.callback()
@@ -98,6 +101,23 @@ def question_validate() -> None:
         f"Validated question bank: {len(bank.capabilities)} capabilities, "
         f"{len(bank.questions)} questions, {len(bank.scenarios)} {scenario_label}."
     )
+
+
+@profile_app.command("build")
+def profile_build(
+    input: Annotated[Path, typer.Option(help="Profile input YAML path.")],
+    output_dir: Annotated[Path, typer.Option(help="Profile output directory.")],
+) -> None:
+    """Build a deterministic Task Fit Profile from pinned verified releases."""
+    try:
+        built = build_profile(input, _REPOSITORY_ROOT)
+    except ProfileBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "profile.json").write_bytes(built.json_bytes)
+    (output_dir / "profile.md").write_bytes(built.markdown_bytes)
+    typer.echo(f"Built Task Fit Profile -> {output_dir / 'profile.json'}")
 
 
 @qveris_app.command("search")

@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from qveris_bench.models.cap import CapDefinition
 from qveris_bench.models.evidence import EvidenceBundle
+from qveris_bench.models.profile import TaskFitProfile
 from qveris_bench.models.provider import AccessPath, ProviderProfile
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunPlan, TaskOutcome
@@ -21,6 +22,7 @@ SCHEMA_MODELS: dict[str, type[BaseModel]] = {
     "developer-scenario.schema.json": DeveloperScenario,
     "evidence-bundle.schema.json": EvidenceBundle,
     "provider-profile.schema.json": ProviderProfile,
+    "task-fit-profile.schema.json": TaskFitProfile,
     "run-plan.schema.json": RunPlan,
     "task-outcome.schema.json": TaskOutcome,
 }
