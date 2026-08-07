@@ -1,0 +1,14 @@
+suite_id: financial-statements-v1
+version: 1.0.0
+cap_id: financial-statement-facts
+cap_version: 1.0.0
+case_ids: [aapl-revenue-fy2025, invalid-period]
+access_path_ids:
+  - fmp-income-statement
+  - alpha-vantage-income-statement
+  - sec-gov-company-facts
+modes: [direct]
+rounds: 3
+environment: {}
+agent_protocol: null
+not_applicable: []
