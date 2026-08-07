@@ -5,7 +5,7 @@ import pytest
 
 from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.errors import TransportError
-from qveris_bench.execution.mcp import McpAdapter
+from qveris_bench.execution.mcp import McpAdapter, serialize_mcp_result
 
 
 class FakeSession:
@@ -15,6 +15,18 @@ class FakeSession:
     async def call_tool(self, name: str, arguments: dict[str, object]) -> object:
         self.calls.append((name, arguments))
         return {"content": [{"type": "text", "text": "ok"}]}
+
+
+class ModelResult:
+    def model_dump(self, *, mode: str) -> dict[str, object]:
+        assert mode == "json"
+        return {"content": [{"type": "text", "text": "structured"}]}
+
+
+def test_ac3_mcp_serializes_pydantic_results_as_json() -> None:
+    assert serialize_mcp_result(ModelResult()) == (
+        b'{"content": [{"text": "structured", "type": "text"}]}'
+    )
 
 
 def test_ac3_mcp_run_invokes_only_frozen_canonical_tool(tmp_path: Path) -> None:

@@ -39,12 +39,12 @@ class McpAdapter:
                 "mcp_error", "canonical tool invocation failed"
             ) from exc
         if _is_structured_error(result):
-            payload = json.dumps(result, default=str, sort_keys=True).encode()
+            payload = serialize_mcp_result(result)
             record = self._store.persist(artifact_id, payload)
             raise TransportError(
                 "mcp_tool_error", "canonical tool returned an error", record.digest
             )
-        payload = json.dumps(result, default=str, sort_keys=True).encode()
+        payload = serialize_mcp_result(result)
         request = TransportRequest(method="MCP", url=f"mcp://tool/{tool}")
         return AdapterResult.from_payload(
             request, 200, {}, payload, self._store, artifact_id
@@ -60,3 +60,9 @@ def _is_structured_error(result: object) -> bool:
     if isinstance(result, dict):
         return bool(result.get("isError") or result.get("is_error"))
     return bool(getattr(result, "isError", False) or getattr(result, "is_error", False))
+
+
+def serialize_mcp_result(result: object) -> bytes:
+    model_dump = getattr(result, "model_dump", None)
+    normalized = model_dump(mode="json") if callable(model_dump) else result
+    return json.dumps(normalized, default=str, sort_keys=True).encode()
