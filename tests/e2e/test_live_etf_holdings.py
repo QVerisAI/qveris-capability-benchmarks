@@ -41,6 +41,24 @@ EXPECTED = {
         "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
         {"function": "ETF_PROFILE", "symbol": "NOTANETF"},
     ),
+    "alpha-vantage-qqq-holdings": (
+        "alpha-vantage-etf-holdings",
+        "alpha-vantage",
+        "alphavantage.etf.profile.retrieve.v1.467a92c0",
+        False,
+        "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+        "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+        {"function": "ETF_PROFILE", "symbol": "QQQ"},
+    ),
+    "alpha-vantage-iwm-holdings": (
+        "alpha-vantage-etf-holdings",
+        "alpha-vantage",
+        "alphavantage.etf.profile.retrieve.v1.467a92c0",
+        False,
+        "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+        "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+        {"function": "ETF_PROFILE", "symbol": "IWM"},
+    ),
     "fiu-spy-holdings": (
         "fiu-etf-holdings",
         "fiu",
@@ -58,6 +76,24 @@ EXPECTED = {
         "US ETF SPY holdings constituents weights composition direct provider",
         "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
         {"symbol": "NOTANETF.US"},
+    ),
+    "fiu-qqq-holdings": (
+        "fiu-etf-holdings",
+        "fiu",
+        "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+        False,
+        "US ETF SPY holdings constituents weights composition direct provider",
+        "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+        {"symbol": "QQQ.US"},
+    ),
+    "fiu-iwm-holdings": (
+        "fiu-etf-holdings",
+        "fiu",
+        "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+        False,
+        "US ETF SPY holdings constituents weights composition direct provider",
+        "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+        {"symbol": "IWM.US"},
     ),
 }
 
@@ -122,7 +158,13 @@ def selected_run_key(
     compiled: object, binding: object, binding_id: str, round_number: str
 ) -> str:
     expected = EXPECTED[binding_id]
-    case_id = "invalid-etf" if expected[3] else "spy-holdings"
+    case_id = (
+        "invalid-etf"
+        if expected[3]
+        else {"SPY": "spy-holdings", "QQQ": "qqq-holdings", "IWM": "iwm-holdings"}[
+            str(expected[6]["symbol"]).removesuffix(".US")
+        ]
+    )
     matches = [
         cell
         for cell in compiled.run_plan.cells

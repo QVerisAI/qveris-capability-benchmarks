@@ -41,6 +41,8 @@ def test_ac2_etf_holdings_pack_covers_success_and_negative_control() -> None:
     assert cases["spy-holdings"].input == {"symbol": "SPY"}
     assert not cases["spy-holdings"].negative_control
     assert "holdings" in cases["spy-holdings"].completion_conditions
+    assert cases["qqq-holdings"].input == {"symbol": "QQQ"}
+    assert cases["iwm-holdings"].input == {"symbol": "IWM"}
     assert cases["invalid-etf"].negative_control
     assert cases["invalid-etf"].completion_conditions == ("validation_error",)
 
@@ -84,7 +86,7 @@ def test_ac3_cohort_includes_only_qveris_attributable_direct_paths() -> None:
         tuple(paths[path_id] for path_id in suite.access_path_ids),
     )
     compiled = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", PROVIDERS)
-    assert len(compiled.run_plan.cells) == 12
+    assert len(compiled.run_plan.cells) == 24
 
 
 def test_ac3_twelve_data_exclusion_references_direct_diagnostic_evidence() -> None:

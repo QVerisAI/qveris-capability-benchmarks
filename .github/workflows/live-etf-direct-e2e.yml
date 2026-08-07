@@ -19,6 +19,10 @@ jobs:
           - alpha-vantage-invalid-etf
           - fiu-spy-holdings
           - fiu-invalid-etf
+          - fiu-qqq-holdings
+          - fiu-iwm-holdings
+          - alpha-vantage-qqq-holdings
+          - alpha-vantage-iwm-holdings
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

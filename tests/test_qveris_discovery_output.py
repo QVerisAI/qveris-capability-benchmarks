@@ -158,7 +158,7 @@ def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> Non
     assert 'assert binding.provider_id == "finnhub"' in source
 
 
-def test_ac9_live_etf_direct_workflow_has_a_fixed_twelve_call_matrix() -> None:
+def test_ac9_live_etf_direct_workflow_has_a_fixed_twenty_four_call_matrix() -> None:
     workflow_path = Path(".github/workflows/live-etf-direct-e2e.yml")
     workflow = workflow_path.read_text()
     document = yaml.safe_load(workflow)
@@ -174,6 +174,10 @@ def test_ac9_live_etf_direct_workflow_has_a_fixed_twelve_call_matrix() -> None:
         "alpha-vantage-invalid-etf",
         "fiu-spy-holdings",
         "fiu-invalid-etf",
+        "fiu-qqq-holdings",
+        "fiu-iwm-holdings",
+        "alpha-vantage-qqq-holdings",
+        "alpha-vantage-iwm-holdings",
     ]
     assert matrix["round"] == [1, 2, 3]
     assert "pytest tests/e2e/test_live_etf_holdings.py -q" in workflow
