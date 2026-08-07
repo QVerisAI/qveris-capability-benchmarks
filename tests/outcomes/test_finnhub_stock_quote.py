@@ -4,6 +4,7 @@ import pytest
 
 from qveris_bench.cap_packs.stock_quote_smoke.extractors import (
     StockQuoteExtractionError,
+    extract_eodhd_stock_quote,
     extract_finnhub_stock_quote,
 )
 
@@ -18,6 +19,42 @@ def test_ac_finnhub_positive_quote_becomes_current_observation() -> None:
         "price": 201.0,
         "timestamp": datetime.fromtimestamp(1_700_000_000, UTC).isoformat(),
     }
+
+
+def test_ac_eodhd_live_v2_quote_becomes_current_observation() -> None:
+    facts = extract_eodhd_stock_quote(
+        {
+            "result": {
+                "data": {
+                    "data": {
+                        "AAPL.US": {
+                            "symbol": "AAPL.US",
+                            "lastTradePrice": 201.0,
+                            "lastTradeTime": 1_700_000_000_000,
+                        }
+                    }
+                }
+            }
+        },
+        "AAPL",
+    )
+
+    assert facts == {
+        "symbol": "AAPL",
+        "price": 201.0,
+        "timestamp": datetime.fromtimestamp(1_700_000_000, UTC).isoformat(),
+    }
+
+
+def test_ac_eodhd_live_v2_empty_data_with_error_becomes_validation_fact() -> None:
+    assert extract_eodhd_stock_quote(
+        {
+            "error_message": "Unknown symbol",
+            "result": {"data": {"data": []}},
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
 
 
 def test_ac_finnhub_invalid_symbol_quote_becomes_validation_fact() -> None:

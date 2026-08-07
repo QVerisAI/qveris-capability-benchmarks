@@ -24,6 +24,24 @@ def extract_finnhub_stock_quote(
     return {"symbol": symbol, "price": price, "timestamp": timestamp}
 
 
+def extract_eodhd_stock_quote(
+    document: object, symbol: str, *, negative_control: bool = False
+) -> dict[str, Any]:
+    if not isinstance(document, dict):
+        raise StockQuoteExtractionError("response must be an object")
+    if negative_control:
+        if not _eodhd_negative_response(document):
+            raise StockQuoteExtractionError(
+                "negative control lacks an explicit validation response"
+            )
+        return {"validation_error": "provider returned explicit validation response"}
+
+    quote = _eodhd_quote(document, symbol)
+    price = _positive_number(quote.get("lastTradePrice"), "price")
+    timestamp = _timestamp_milliseconds(quote.get("lastTradeTime"))
+    return {"symbol": symbol, "price": price, "timestamp": timestamp}
+
+
 def _quote_data(document: object) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise StockQuoteExtractionError("response must be an object")
@@ -61,6 +79,52 @@ def _timestamp(value: object) -> str:
         return datetime.fromtimestamp(int(timestamp), UTC).isoformat()
     except (OverflowError, OSError, ValueError) as exc:
         raise StockQuoteExtractionError("timestamp is invalid") from exc
+
+
+def _timestamp_milliseconds(value: object) -> str:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise StockQuoteExtractionError("timestamp is invalid")
+    try:
+        milliseconds = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise StockQuoteExtractionError("timestamp is invalid") from exc
+    if not isfinite(milliseconds) or milliseconds <= 0 or not milliseconds.is_integer():
+        raise StockQuoteExtractionError("timestamp is invalid")
+    return _timestamp(int(milliseconds) / 1000)
+
+
+def _eodhd_quote(document: dict[str, Any], symbol: str) -> dict[str, Any]:
+    result = document.get("result")
+    if not isinstance(result, dict):
+        raise StockQuoteExtractionError("result is missing")
+    envelope = result.get("data")
+    if not isinstance(envelope, dict):
+        raise StockQuoteExtractionError("result data is missing")
+    rows = envelope.get("data")
+    if not isinstance(rows, dict):
+        raise StockQuoteExtractionError("quote data is missing")
+    expected_symbols = {symbol, f"{symbol}.US"}
+    matches = [
+        quote
+        for key, quote in rows.items()
+        if key in expected_symbols and isinstance(quote, dict)
+    ]
+    if len(matches) != 1:
+        raise StockQuoteExtractionError("quote is missing")
+    return matches[0]
+
+
+def _eodhd_negative_response(document: dict[str, Any]) -> bool:
+    error_message = document.get("error_message")
+    if not isinstance(error_message, str) or not error_message:
+        return False
+    result = document.get("result")
+    if not isinstance(result, dict):
+        return False
+    envelope = result.get("data")
+    if not isinstance(envelope, dict):
+        return False
+    return envelope.get("data") == []
 
 
 def _is_unavailable_quote(data: dict[str, Any]) -> bool:
