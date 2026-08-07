@@ -176,4 +176,16 @@ def test_ac9_live_etf_direct_workflow_has_a_fixed_twelve_call_matrix() -> None:
         "fiu-invalid-etf",
     ]
     assert matrix["round"] == [1, 2, 3]
-    assert workflow.count("--binding-id") == 1
+    assert "pytest tests/e2e/test_live_etf_holdings.py -q" in workflow
+    assert "ETF_BINDING_ID: ${{ matrix.binding_id }}" in workflow
+    assert "ETF_ROUND: ${{ matrix.round }}" in workflow
+    assert "--binding-id" not in workflow
+
+
+def test_ac9_live_etf_test_executes_only_the_matrix_binding() -> None:
+    source = Path("tests/e2e/test_live_etf_holdings.py").read_text()
+
+    assert 'binding_id = os.environ.get("ETF_BINDING_ID")' in source
+    assert 'round_number = os.environ.get("ETF_ROUND")' in source
+    assert 'f"{binding_id}:direct:{round_number}"' in source
+    assert "for binding_id" not in source
