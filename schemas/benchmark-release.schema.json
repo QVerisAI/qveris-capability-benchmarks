@@ -1,5 +1,14 @@
 {
   "$defs": {
+    "DimensionState": {
+      "enum": [
+        "measured",
+        "declared",
+        "evidence_insufficient"
+      ],
+      "title": "DimensionState",
+      "type": "string"
+    },
     "ReleaseFact": {
       "additionalProperties": false,
       "properties": {
@@ -22,6 +31,17 @@
           },
           "title": "Details",
           "type": "object"
+        },
+        "dimension_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DimensionState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "evidence_refs": {
           "default": [],

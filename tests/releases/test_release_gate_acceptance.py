@@ -2,12 +2,14 @@ import pytest
 
 from qveris_bench.models.enums import (
     CellState,
+    DimensionState,
     DisclosureLevel,
     LicenseStatus,
     RedactionStatus,
+    ReleaseFactType,
 )
 from qveris_bench.models.evidence import EvidenceBundle
-from qveris_bench.models.release import BenchmarkRelease
+from qveris_bench.models.release import BenchmarkRelease, ReleaseFact
 from qveris_bench.models.run import RunCell
 from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
 
@@ -77,6 +79,47 @@ def test_ac1_release_gate_rejects_orphan_evidence_run_key() -> None:
 
     with pytest.raises(ReleaseGateError, match="matching evidence"):
         validate_release_inputs(_release(), (_cell(),), (evidence,))
+
+
+def test_ac9_release_gate_rejects_measured_fact_with_missing_evidence() -> None:
+    release = BenchmarkRelease(
+        release_id="release-1",
+        version="1.0.0",
+        suite_fingerprint="c" * 64,
+        run_plan_digest="sha256:" + "d" * 64,
+        evidence_ids=("cell-1",),
+        developer_selection_facts=(
+            ReleaseFact(
+                fact_type=ReleaseFactType.OUTCOME,
+                dimension_state=DimensionState.MEASURED,
+                details={"dimension": "task_completion"},
+                evidence_refs=("sha256:" + "f" * 64,),
+            ),
+        ),
+    )
+
+    with pytest.raises(ReleaseGateError, match="missing evidence"):
+        validate_release_inputs(release, (_cell(),), (_evidence(),))
+
+
+def test_ac9_release_gate_accepts_measured_fact_with_resolvable_evidence() -> None:
+    release = BenchmarkRelease(
+        release_id="release-1",
+        version="1.0.0",
+        suite_fingerprint="c" * 64,
+        run_plan_digest="sha256:" + "d" * 64,
+        evidence_ids=("cell-1",),
+        developer_selection_facts=(
+            ReleaseFact(
+                fact_type=ReleaseFactType.OUTCOME,
+                dimension_state=DimensionState.MEASURED,
+                details={"dimension": "task_completion"},
+                evidence_refs=("sha256:" + "a" * 64,),
+            ),
+        ),
+    )
+
+    validate_release_inputs(release, (_cell(),), (_evidence(),))
 
 
 def test_ac1_release_gate_rejects_duplicate_applicable_cell_run_keys() -> None:

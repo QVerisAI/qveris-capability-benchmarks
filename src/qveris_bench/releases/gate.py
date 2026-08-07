@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from qveris_bench.evidence.policy import PublicationPolicyError, validate_publication
-from qveris_bench.models.enums import CellState
+from qveris_bench.models.enums import CellState, DimensionState
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell
@@ -51,3 +51,28 @@ def validate_release_inputs(
             validate_publication(bundle)
         except PublicationPolicyError as exc:
             raise ReleaseGateError("unsafe evidence") from exc
+    available_digests = {
+        digest
+        for bundle in evidence
+        for digest in (bundle.raw_digest, bundle.public_digest)
+        if digest is not None
+    }
+    measured_refs = {
+        str(reference)
+        for fact in (
+            release.developer_selection_facts
+            + tuple(
+                reference
+                for feedback in release.provider_feedback_facts.values()
+                for reference in feedback
+            )
+        )
+        if fact.dimension_state == DimensionState.MEASURED
+        for reference in fact.evidence_refs
+    }
+    missing_refs = measured_refs - available_digests
+    if missing_refs:
+        raise ReleaseGateError(
+            "measured dimension facts reference missing evidence: "
+            + ", ".join(sorted(missing_refs))
+        )

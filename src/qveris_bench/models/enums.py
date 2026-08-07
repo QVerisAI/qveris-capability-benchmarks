@@ -33,6 +33,12 @@ class ReleaseFactType(StrEnum):
     PROVIDER_FEEDBACK = "provider_feedback"
 
 
+class DimensionState(StrEnum):
+    MEASURED = "measured"
+    DECLARED = "declared"
+    EVIDENCE_INSUFFICIENT = "evidence_insufficient"
+
+
 class RunMode(StrEnum):
     DIRECT = "direct"
     AGENT_TRIAL = "agent_trial"
