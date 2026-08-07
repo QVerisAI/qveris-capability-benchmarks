@@ -152,9 +152,12 @@ def test_ac3_live_wind_native_mcp_uses_value_free_terminal_categories() -> None:
     assert _safe_terminal_reason({"content": [{"text": "no indicator"}]}) == (
         "requested_indicator_missing"
     )
-    assert _safe_terminal_reason(
-        {"content": [{"text": "Unsupported indexes: 最新成交价"}]}
-    ) == "requested_indicator_missing"
+    assert (
+        _safe_terminal_reason(
+            {"content": [{"text": "Unsupported indexes: 最新成交价"}]}
+        )
+        == "requested_indicator_missing"
+    )
 
 
 def test_ac3_live_wind_native_mcp_terminal_artifacts_are_safe(tmp_path: Path) -> None:
