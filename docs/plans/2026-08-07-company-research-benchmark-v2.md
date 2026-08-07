@@ -123,12 +123,13 @@ database, provider aggregate, or duplicate facts table is justified.
   Company Research scenario without invalidating prior release artifacts.
 - [x] Freeze versioned cases, truth/tolerance rules, market/language applicability,
   and a credential-safe provider/path cohort.
-- [ ] Run at least three Direct rounds for every included applicable cell and one
+- [x] Run at least three Direct rounds for every included applicable cell and one
   eligible fixed-tool Agent Trial; build and verify a new immutable release.
 
 The frozen `stock-quote-v3` suite lives in `cap_packs/stock_quote_family/` with a
-separate suite-bound binding registry; the remaining step is the live Direct
-matrix and release.
+separate suite-bound binding registry. The verified release
+`stock-quote-family-2026-q3-v1` records all 30 Direct cells; the fixed-tool Agent
+Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 3 — Financial Statement Facts CAP
 
