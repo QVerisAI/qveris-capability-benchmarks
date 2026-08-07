@@ -5,7 +5,6 @@ cap_version: 1.0.0
 case_ids: [aapl-revenue-fy2025, invalid-period]
 access_path_ids:
   - fmp-income-statement
-  - sec-gov-company-facts
 modes: [direct]
 rounds: 3
 environment: {}

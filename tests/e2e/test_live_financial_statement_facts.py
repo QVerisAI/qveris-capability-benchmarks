@@ -58,26 +58,6 @@ FAMILY_BINDINGS: dict[
         True,
         "invalid-period",
     ),
-    "sec-gov-company-facts-aapl-revenue": (
-        "sec-gov-company-facts",
-        "sec-gov",
-        "sec.company.facts.v1",
-        {"cik": 320193},
-        "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        "SEC company facts AAPL CIK annual revenue direct provider",
-        False,
-        "aapl-revenue-fy2025",
-    ),
-    "sec-gov-company-facts-invalid-period": (
-        "sec-gov-company-facts",
-        "sec-gov",
-        "sec.company.facts.v1",
-        {"cik": 320193},
-        "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        "SEC company facts AAPL CIK annual revenue direct provider",
-        True,
-        "invalid-period",
-    ),
 }
 
 

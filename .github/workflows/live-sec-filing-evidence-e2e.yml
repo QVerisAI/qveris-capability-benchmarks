@@ -22,10 +22,6 @@ jobs:
         binding_id:
           - massive-stocks-aapl-risk
           - massive-stocks-invalid-filing-type
-          - fmp-10k-aapl-risk
-          - fmp-10k-invalid-filing-type
-          - fmp-sec-filings-aapl-risk
-          - fmp-sec-filings-invalid-filing-type
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

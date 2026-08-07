@@ -3,11 +3,3 @@ access_paths:
     provider_id: massive-stocks
     canonical_interface: risk-factors
     official_source: https://massive.com/docs/rest/stocks/filings/risk-factors
-  - access_path_id: fmp-financial-reports-10k
-    provider_id: financial-modeling-prep
-    canonical_interface: financial-reports-10k
-    official_source: https://financialmodelingprep.com/stable/financial-reports
-  - access_path_id: fmp-sec-filings-search
-    provider_id: financial-modeling-prep
-    canonical_interface: sec-filings-search
-    official_source: https://financialmodelingprep.com/stable/sec-filings

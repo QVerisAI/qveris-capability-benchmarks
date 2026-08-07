@@ -14,9 +14,9 @@ access_paths:
     canonical_interface: financial-reports-10k
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: QVeris discovery exposed an attributable 10-K financial report path.
-      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+      disposition: excluded
+      reason: Direct probes returned message-only error responses for both period forms.
+      evidence_digest: sha256:246f4654d6149e2053dcf36e8653ded7f63d3034fdcc30cfe7f2a6fdc66c8379
   - access_path_id: fmp-sec-filings-search
     provider_id: financial-modeling-prep
     path_type: qveris_connector
@@ -25,9 +25,9 @@ access_paths:
     canonical_interface: sec-filings-search
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: QVeris discovery exposed an attributable SEC filings search path.
-      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+      disposition: excluded
+      reason: Direct probes returned error responses for both parameter forms.
+      evidence_digest: sha256:f9b47b940963cae2c9f929ecc21ab84a19059f1b3886175a82ca9b43a021aed1
   - access_path_id: fmp-income-statement
     provider_id: financial-modeling-prep
     path_type: qveris_connector

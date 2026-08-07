@@ -143,16 +143,24 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 - [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.
 
+After direct probes, Alpha Vantage income statement and the official SEC company
+facts connector returned message-only responses for both CIK forms and were
+terminally excluded; the included FSF cohort is FMP as-reported income statement.
+
 ### Task 4 — SEC Filing Evidence CAP
 
 - [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md),
   including citation, document-location, completeness, pagination, and Agent-contract
   roles with executable rules.
-- [ ] Qualify official filing retrieval and authorized Provider paths with explicit
+- [x] Qualify official filing retrieval and authorized Provider paths with explicit
   citation, document-location, completeness, and error contracts.
-- [ ] Add the CAP Pack, CAP-owned extraction/rules, cases, bindings, suite, and tests.
+- [x] Add the CAP Pack, CAP-owned extraction/rules, cases, bindings, suite, and tests.
 - [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.
+
+After direct probes, the FMP 10-K JSON and SEC filings search connectors returned
+message-only error responses for both parameter forms and were terminally
+excluded; the included SEC evidence cohort is Massive Stocks risk factors.
 
 ### Task 5 — Dimension evidence contract
 

@@ -3,7 +3,3 @@ access_paths:
     provider_id: financial-modeling-prep
     canonical_interface: as-reported-income-statement
     official_source: https://financialmodelingprep.com/stable/income-statement
-  - access_path_id: sec-gov-company-facts
-    provider_id: sec-gov
-    canonical_interface: company-facts
-    official_source: https://www.sec.gov/data-research/sec-markets-data

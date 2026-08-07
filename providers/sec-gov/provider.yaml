@@ -14,6 +14,6 @@ access_paths:
     canonical_interface: company-facts
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: QVeris discovery exposed the official SEC company facts path.
-      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43
+      disposition: excluded
+      reason: Direct probes returned message-only error responses for both CIK forms.
+      evidence_digest: sha256:865d533e1ec026d890fd88fb946e9d8b5bed56d01642f6331b74f4b8dffa10c3
