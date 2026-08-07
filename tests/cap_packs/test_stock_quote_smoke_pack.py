@@ -18,11 +18,11 @@ from qveris_bench.suites.compiler import compile_suite
 from qveris_bench.suites.loader import load_cases, load_suite
 
 ROOT = Path(__file__).resolve().parents[2]
-PACK = ROOT / "cap_packs" / "stock_quote"
+PACK = ROOT / "cap_packs" / "stock_quote_smoke"
 PROVIDERS = ROOT / "providers"
 
 
-def test_ac1_stock_quote_pack_reuses_the_versioned_direct_contract() -> None:
+def test_ac1_stock_quote_smoke_pack_reuses_the_versioned_direct_contract() -> None:
     cap = validate_cap_file(PACK / "cap.yaml")
     suite = load_suite(PACK / "suite.yaml")
     cases = load_cases(PACK / "cases.yaml")
@@ -35,7 +35,7 @@ def test_ac1_stock_quote_pack_reuses_the_versioned_direct_contract() -> None:
     assert {case.case_id for case in cases} == set(suite.case_ids)
 
 
-def test_ac2_stock_quote_pack_has_success_and_negative_control() -> None:
+def test_ac2_stock_quote_smoke_pack_has_success_and_negative_control() -> None:
     cases = {case.case_id: case for case in load_cases(PACK / "cases.yaml")}
 
     assert cases["aapl-quote"].input == {"symbol": "AAPL"}

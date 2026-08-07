@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from qveris_bench.outcomes.stock_quote import (
+from qveris_bench.cap_packs.stock_quote_smoke.extractors import (
     StockQuoteExtractionError,
     extract_finnhub_stock_quote,
 )

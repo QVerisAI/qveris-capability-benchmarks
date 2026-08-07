@@ -6,9 +6,10 @@ practical question: for a specific capability and access path, can a provider's
 official machine interface complete the developer's task under disclosed test
 conditions?
 
-This repository is in early development. The first implementation milestone
-establishes the repository contract and architecture; benchmark execution and
-public releases arrive in later reviewed milestones.
+The v1 Core, CAP contracts, Direct-Test execution path, evidence pipeline, and
+immutable release flow are implemented. The repository currently contains the
+ETF Holdings benchmark release and a deliberately narrow Stock Quote smoke CAP.
+It is not a provider leaderboard and does not publish a composite score.
 
 ## Principles
 
@@ -23,7 +24,7 @@ public releases arrive in later reviewed milestones.
 The platform is greenfield. `qveris-agent-harness` may be cited as provenance for
 source questions, but it is not a code, schema, or runtime dependency.
 
-## Planned workflow
+## Workflow
 
 ```text
 CAP source -> frozen suite -> run plan -> private raw evidence
@@ -32,6 +33,13 @@ CAP source -> frozen suite -> run plan -> private raw evidence
 
 Stages 1–4 build and run benchmarks. Later publication and provider-feedback
 systems consume immutable release facts; they are not implemented here.
+
+## Code reading map
+
+Start with [the repository map](docs/architecture/repository-map.md). It follows
+one benchmark from CAP configuration through suite compilation, execution,
+evidence, outcome evaluation, and release generation. The map also distinguishes
+generic Core code from CAP-owned domain logic.
 
 ## Development
 

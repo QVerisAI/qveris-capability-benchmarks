@@ -1,6 +1,6 @@
 import pytest
 
-from qveris_bench.outcomes.etf_holdings import (
+from qveris_bench.cap_packs.etf_holdings.extractors import (
     EtfHoldingsExtractionError,
     extract_alpha_vantage_etf_holdings,
     extract_fiu_etf_holdings,
