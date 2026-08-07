@@ -1,4 +1,4 @@
-name: QVeris Direct Diagnostic
+name: EODHD Quote Diagnostic
 
 on:
   workflow_dispatch:
@@ -14,12 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         binding_id:
-          - alpha-vantage-spy-holdings
-          - alpha-vantage-invalid-etf
-          - fiu-spy-holdings
-          - fiu-invalid-etf
-          - finnhub-aapl-quote
-          - finnhub-invalid-stock
           - eodhd-aapl-quote
           - eodhd-invalid-stock
     steps:

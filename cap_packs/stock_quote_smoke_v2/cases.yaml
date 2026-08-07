@@ -1,0 +1,19 @@
+cases:
+  - case_id: aapl-quote
+    cap_id: stock-quote
+    question: Return the current quote for AAPL.
+    input: {symbol: AAPL}
+    negative_control: false
+    expected_observations: [symbol, price, timestamp]
+    completion_conditions: [symbol, price, timestamp]
+    disclosure_limits: []
+    applicable_provider_ids: []
+  - case_id: invalid-stock
+    cap_id: stock-quote
+    question: Reject an invalid stock symbol without invented quote values.
+    input: {symbol: NOTASTOCK}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: []
+    applicable_provider_ids: []

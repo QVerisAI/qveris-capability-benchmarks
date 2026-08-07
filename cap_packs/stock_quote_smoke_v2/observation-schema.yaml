@@ -1,0 +1,17 @@
+required_fields: [symbol, price, timestamp]
+field_types:
+  symbol: string
+  price: number
+  timestamp: string
+field_constraints:
+  symbol: {non_empty: true}
+  price: {finite: true, positive: true}
+  timestamp: {iso8601: true, max_age_seconds: 900}
+additional_fields: true
+negative_control:
+  required_fields: [validation_error]
+  field_types:
+    validation_error: string
+  field_constraints:
+    validation_error: {non_empty: true}
+  additional_fields: false

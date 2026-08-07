@@ -60,6 +60,7 @@ qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tool
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
+    "stock-quote-v2": Path("cap_packs/stock_quote_smoke_v2/suite.yaml"),
 }
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")

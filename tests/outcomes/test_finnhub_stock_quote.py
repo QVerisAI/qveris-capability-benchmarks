@@ -4,6 +4,7 @@ import pytest
 
 from qveris_bench.cap_packs.stock_quote_smoke.extractors import (
     StockQuoteExtractionError,
+    extract_eodhd_stock_quote,
     extract_finnhub_stock_quote,
 )
 
@@ -18,6 +19,79 @@ def test_ac_finnhub_positive_quote_becomes_current_observation() -> None:
         "price": 201.0,
         "timestamp": datetime.fromtimestamp(1_700_000_000, UTC).isoformat(),
     }
+
+
+def test_ac_eodhd_live_v2_quote_becomes_current_observation() -> None:
+    facts = extract_eodhd_stock_quote(
+        {
+            "result": {
+                "data": {
+                    "data": {
+                        "AAPL.US": {
+                            "symbol": "AAPL.US",
+                            "lastTradePrice": 201.0,
+                            "lastTradeTime": 1_700_000_000_000,
+                        }
+                    }
+                }
+            }
+        },
+        "AAPL",
+    )
+
+    assert facts == {
+        "symbol": "AAPL",
+        "price": 201.0,
+        "timestamp": datetime.fromtimestamp(1_700_000_000, UTC).isoformat(),
+    }
+
+
+def test_ac_eodhd_live_v2_empty_data_with_error_becomes_validation_fact() -> None:
+    assert extract_eodhd_stock_quote(
+        {
+            "error_message": "Unknown symbol",
+            "result": {"data": {"data": []}},
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+def test_ac_eodhd_live_v2_parameter_validation_becomes_validation_fact() -> None:
+    assert extract_eodhd_stock_quote(
+        {
+            "error_message": (
+                "Could not return valid data. Please verify the request parameters."
+            ),
+            "result": {"data": {"data": []}},
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+def test_ac_eodhd_invalid_parameter_becomes_validation_fact() -> None:
+    assert extract_eodhd_stock_quote(
+        {
+            "error_message": "Invalid parameter value for the requested instrument.",
+            "result": {"data": {"data": []}},
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+@pytest.mark.parametrize("error_message", ["Unauthorized", "Rate limit exceeded"])
+def test_ac_eodhd_negative_rejects_infrastructure_errors(error_message: str) -> None:
+    with pytest.raises(StockQuoteExtractionError, match="validation response"):
+        extract_eodhd_stock_quote(
+            {
+                "error_message": error_message,
+                "result": {"data": {"data": []}},
+            },
+            "NOTASTOCK",
+            negative_control=True,
+        )
 
 
 def test_ac_finnhub_invalid_symbol_quote_becomes_validation_fact() -> None:
