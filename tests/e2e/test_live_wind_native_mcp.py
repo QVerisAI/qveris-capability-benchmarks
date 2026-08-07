@@ -1,6 +1,8 @@
 import asyncio
 import json
+import math
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -38,8 +40,18 @@ def _validate_frozen_contract(
 
 
 def _safe_terminal_reason(payload: object) -> str | None:
-    serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True)
-    return None if "最新成交价" in serialized else "requested_indicator_missing"
+    if not isinstance(payload, dict):
+        return "requested_indicator_missing"
+    content = payload.get("content")
+    if not isinstance(content, list):
+        return "requested_indicator_missing"
+    for item in content:
+        if not isinstance(item, dict) or not isinstance(item.get("text"), str):
+            continue
+        match = re.search(r"最新成交价\s*[:：]\s*(-?\d+(?:\.\d+)?)", item["text"])
+        if match is not None and math.isfinite(float(match.group(1))):
+            return None
+    return "requested_indicator_missing"
 
 
 def _persist_terminal_evidence(
@@ -111,11 +123,7 @@ def test_ac2_live_wind_native_mcp_produces_safe_terminal_evidence(
             try:
                 result = await adapter.invoke("wind-native-mcp-600519", _ARGUMENTS)
             except TransportError as exc:
-                if exc.code == "mcp_tool_error":
-                    return _persist_terminal_evidence(
-                        public_root, exc.evidence_digest or "unavailable", "tool_error"
-                    )
-                raise AssertionError("native MCP transport did not complete") from None
+                raise AssertionError("native MCP transport did not complete") from exc
         payload = json.loads(result.raw_path.read_text(encoding="utf-8"))
         return _persist_terminal_evidence(
             public_root, result.raw_digest, _safe_terminal_reason(payload)
@@ -144,6 +152,9 @@ def test_ac3_live_wind_native_mcp_uses_value_free_terminal_categories() -> None:
     assert _safe_terminal_reason({"content": [{"text": "no indicator"}]}) == (
         "requested_indicator_missing"
     )
+    assert _safe_terminal_reason(
+        {"content": [{"text": "Unsupported indexes: 最新成交价"}]}
+    ) == "requested_indicator_missing"
 
 
 def test_ac3_live_wind_native_mcp_terminal_artifacts_are_safe(tmp_path: Path) -> None:
