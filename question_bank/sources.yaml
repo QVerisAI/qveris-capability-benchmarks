@@ -57,3 +57,8 @@ sources:
     reference_url: https://finnhub.io/docs/api/quote
     authority_tier: official_api
     reproduction_policy: citation_only
+  - source_id: a-share-quote-api
+    name: Wind AI Financial Market API
+    reference_url: https://aifinmarket.wind.com.cn/
+    authority_tier: official_api
+    reproduction_policy: citation_only

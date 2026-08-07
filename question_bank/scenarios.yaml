@@ -4,12 +4,12 @@ scenarios:
     name: Company Research Agent
     developer_decision: Select evidence-backed data paths for a company research Agent.
     target_users: [financial-agent-developers]
-    markets: [united-states]
-    languages: [english]
+    markets: [united-states, mainland-china]
+    languages: [english, simplified-chinese]
     required_capabilities:
       - cap_id: stock-quote
         priority: p0
-        minimum_question_roles: [core_positive, boundary_negative]
+        minimum_question_roles: [core_positive, boundary_negative, coverage, freshness_precision, agent_contract]
       - cap_id: financial-statement-facts
         priority: p0
         minimum_question_roles: [core_positive, boundary_negative]

@@ -63,6 +63,69 @@ questions:
     text_origin: qveris_curated
     selection_rationale: Verifies safe invalid-symbol semantics for the same quote task.
     review_status: approved
+  - question_id: stock-quote-aapl-freshness-precision
+    cap_id: stock-quote
+    role: freshness_precision
+    task: Return an execution-time AAPL quote whose price and timestamp meet the disclosed freshness and precision tolerance.
+    input: {symbol: AAPL, max_age_seconds: 900}
+    required_observations: [symbol, price, currency, timestamp]
+    completion_conditions: [symbol, price, currency, timestamp]
+    source_ids: [nasdaq-market-activity]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [nasdaq-market-activity]
+      reference_rule: Confirm the symbol, currency, positive price, and quote timestamp against the disclosed market reference at execution time.
+      tolerance_rule: During the regular session, require quote age at most 15 minutes and absolute price difference at most the greater of USD 0.05 or 1 percent; outside the session use the latest disclosed close and timestamp.
+      interface_expectations: [typed-symbol, numeric-price, explicit-currency, explicit-timestamp]
+      selection_implication: Passing supports latency-sensitive US quote retrieval within the disclosed freshness and precision window.
+    text_origin: qveris_curated
+    selection_rationale: Makes freshness and numeric precision independently visible to developers selecting a quote path.
+    review_status: approved
+  - question_id: stock-quote-600519-market-coverage
+    cap_id: stock-quote
+    role: coverage
+    task: Return the current quote for 600519.SH with its market identity and quote timestamp.
+    input: {symbol: 600519.SH, market: CN}
+    required_observations: [symbol, market, price, currency, timestamp]
+    completion_conditions: [symbol, market, price, timestamp]
+    source_ids: [a-share-quote-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: cn-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [a-share-quote-api]
+      reference_rule: Confirm the canonical A-share identifier, exchange context, positive price, currency, and quote timestamp against the official market-data interface.
+      tolerance_rule: Require the latest disclosed trading-session value and timestamp; do not substitute a US listing, stale undated value, or different security.
+      interface_expectations: [canonical-market-symbol, numeric-price, explicit-currency, explicit-timestamp]
+      selection_implication: Passing supports mainland-China equity coverage for a Company Research Agent.
+    text_origin: qveris_curated
+    selection_rationale: Exposes whether a quote path expands beyond US equities without conflating market coverage with aggregate quality.
+    review_status: approved
+  - question_id: stock-quote-600519-agent-contract
+    cap_id: stock-quote
+    role: agent_contract
+    task: Resolve the Chinese request to the canonical security and return its current quote and quote timestamp through one fixed tool call.
+    input: {language: zh-CN, request: 获取贵州茅台当前价格和报价时间}
+    required_observations: [symbol, price, timestamp]
+    completion_conditions: [symbol, price, timestamp]
+    source_ids: [a-share-quote-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: cn-equities
+      language: zh-CN
+      as_of: execution-time
+      reference_source_ids: [a-share-quote-api]
+      reference_rule: Require resolution to canonical symbol 600519.SH and a positive current quote with an explicit quote timestamp.
+      tolerance_rule: The first and only tool call must contain a valid canonical symbol and request both price and quote time; no discovery or repair call is permitted.
+      interface_expectations: [single-tool-call, canonical-market-symbol, valid-first-call-arguments, typed-quote-output]
+      selection_implication: Passing supports deterministic one-call Agent integration for a Chinese natural-language quote request.
+    text_origin: qveris_curated
+    selection_rationale: Measures argument validity and one-call completion while keeping the question independent of the evaluated Provider.
+    review_status: approved
   - question_id: historical-price-series-aapl-week
     cap_id: historical-price-series
     role: core_positive
