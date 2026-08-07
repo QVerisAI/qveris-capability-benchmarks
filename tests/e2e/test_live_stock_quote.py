@@ -7,6 +7,10 @@ from pathlib import Path
 import httpx
 import pytest
 
+from qveris_bench.cap_packs.stock_quote_smoke.extractors import (
+    StockQuoteExtractionError,
+    extract_finnhub_stock_quote,
+)
 from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import (
@@ -15,10 +19,6 @@ from qveris_bench.execution.qveris_binding import (
     validate_qveris_direct_binding,
 )
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
-from qveris_bench.outcomes.stock_quote import (
-    StockQuoteExtractionError,
-    extract_finnhub_stock_quote,
-)
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -167,8 +167,8 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
 
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
     suite_fingerprint = compile_suite(
-        ROOT / "cap_packs/stock_quote/suite.yaml",
-        ROOT / "cap_packs/stock_quote/cases.yaml",
+        ROOT / "cap_packs/stock_quote_smoke/suite.yaml",
+        ROOT / "cap_packs/stock_quote_smoke/cases.yaml",
         ROOT / "providers",
     ).fingerprint
 
@@ -187,7 +187,7 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
                 )
                 validate_qveris_direct_binding(
                     binding,
-                    ROOT / "cap_packs/stock_quote/suite.yaml",
+                    ROOT / "cap_packs/stock_quote_smoke/suite.yaml",
                     ROOT / "providers",
                 )
                 assert binding.suite_id == "stock-quote-v1"
@@ -211,7 +211,7 @@ def test_ac_live_finnhub_direct_quote_produces_terminal_evidence(
                         negative_control=negative_control,
                     )
                     observation = extract_observation(
-                        ROOT / "cap_packs/stock_quote/observation-schema.yaml",
+                        ROOT / "cap_packs/stock_quote_smoke/observation-schema.yaml",
                         facts,
                         result.result.raw_digest,
                         "1.0.0",

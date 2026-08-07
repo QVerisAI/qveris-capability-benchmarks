@@ -193,5 +193,14 @@ def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
     if isinstance(value, (int, float)):
         return {"type": "number"}
     if isinstance(value, str):
+        try:
+            decoded = json.loads(value)
+        except json.JSONDecodeError:
+            return {"type": "string"}
+        if isinstance(decoded, (dict, list)):
+            return {
+                "type": "json_string",
+                "value_shape": public_response_shape(decoded, depth),
+            }
         return {"type": "string"}
     return {"type": type(value).__name__}

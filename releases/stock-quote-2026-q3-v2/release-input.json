@@ -1,0 +1,9 @@
+{
+  "release_id": "stock-quote-2026-q3-v2",
+  "version": "2.0.0",
+  "suite_fingerprint": "4750970004a6f5bd38343d2c6416bfc0a460e9df57afead1ddf58ecdf81d8285",
+  "run_plan_digest": "sha256:d0011228d75c05c1ecb3d408449d3d808728273ff3330d83504899352547b53b",
+  "evidence_ids": ["stock-quote-v2-finnhub-aapl-1", "stock-quote-v2-finnhub-aapl-2", "stock-quote-v2-eodhd-aapl-1", "stock-quote-v2-eodhd-aapl-2", "stock-quote-v2-finnhub-invalid-1", "stock-quote-v2-finnhub-invalid-2", "stock-quote-v2-eodhd-invalid-1", "stock-quote-v2-eodhd-invalid-2"],
+  "outcome_ids": ["stock-quote-v2-finnhub-aapl-provider-negative-1", "stock-quote-v2-finnhub-aapl-provider-negative-2", "stock-quote-v2-eodhd-aapl-provider-negative-1", "stock-quote-v2-eodhd-aapl-provider-negative-2", "stock-quote-v2-finnhub-invalid-completed-1", "stock-quote-v2-finnhub-invalid-completed-2", "stock-quote-v2-eodhd-invalid-completed-1", "stock-quote-v2-eodhd-invalid-completed-2"],
+  "limitations": ["All AAPL Direct observations were terminal provider_negative: Finnhub timestamps were stale and EODHD timestamps were invalid at execution time.", "This smoke release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result."]
+}

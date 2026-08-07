@@ -5,6 +5,7 @@ import yaml
 from pytest import MonkeyPatch
 
 from qveris_bench.cli import public_discovery_summary, qveris_repository_root
+from qveris_bench.execution.qveris import public_response_shape
 
 
 def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> None:
@@ -55,6 +56,20 @@ def test_ac1_discovery_output_excludes_account_and_provider_raw_metadata() -> No
 def test_ac1_discovery_output_rejects_invalid_evidence_digest(digest: str) -> None:
     with pytest.raises(ValueError, match="digest"):
         public_discovery_summary([], {}, digest)
+
+
+def test_ac1_response_shape_recurses_into_json_encoded_provider_data() -> None:
+    shape = public_response_shape('{"close": 201.0, "symbol": "AAPL"}', depth=2)
+
+    assert shape == {
+        "type": "json_string",
+        "value_shape": {
+            "type": "object",
+            "keys": ["symbol"],
+            "field_count": 2,
+            "fields": {"symbol": {"type": "string"}},
+        },
+    }
 
 
 def test_ac2_discovery_workflow_does_not_interpolate_manual_inputs_into_shell() -> None:
@@ -113,6 +128,21 @@ def test_ac4_finnhub_diagnostic_limits_execution_to_quote_bindings() -> None:
     assert workflow.count("--binding-id") == 1
 
 
+def test_ac4_eodhd_diagnostic_limits_execution_to_quote_bindings() -> None:
+    workflow_path = Path(".github/workflows/eodhd-quote-diagnostic.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow_path.read_text())
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
+    matrix = document["jobs"]["diagnostic"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id"}
+    assert matrix["binding_id"] == ["eodhd-aapl-quote", "eodhd-invalid-stock"]
+    assert workflow.count("--binding-id") == 1
+
+
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
     tmp_path: Path, monkeypatch: MonkeyPatch
 ) -> None:
@@ -144,7 +174,7 @@ def test_ac8_live_stock_quote_workflow_uses_only_fixed_qveris_bindings() -> None
 
     assert "environment: benchmark-e2e" in workflow
     assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
-    assert 'RUN_LIVE_STOCK_QUOTE: "1"' in workflow
+    assert 'RUN_LIVE_STOCK_QUOTE_V2: "1"' in workflow
     assert "inputs:" not in workflow
     assert "FINNHUB_API_KEY" not in workflow
 
@@ -153,6 +183,62 @@ def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> Non
     source = Path("tests/e2e/test_live_stock_quote.py").read_text()
 
     assert "validate_qveris_direct_binding(" in source
-    assert 'ROOT / "cap_packs/stock_quote/suite.yaml"' in source
+    assert 'ROOT / "cap_packs/stock_quote_smoke/suite.yaml"' in source
     assert 'assert binding.access_path_id == "finnhub-stock-quote"' in source
     assert 'assert binding.provider_id == "finnhub"' in source
+
+
+def test_ac8_live_stock_quote_v2_workflow_has_a_fixed_eight_call_matrix() -> None:
+    workflow_path = Path(".github/workflows/live-stock-quote-e2e.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow)
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    matrix = document["jobs"]["direct"]["strategy"]["matrix"]
+    assert matrix["round"] == [1, 2]
+    assert matrix["binding_id"] == [
+        "finnhub-aapl-quote-v2",
+        "finnhub-invalid-stock-v2",
+        "eodhd-aapl-quote",
+        "eodhd-invalid-stock",
+    ]
+    assert "pytest tests/e2e/test_live_stock_quote_v2.py -q" in workflow
+
+
+def test_ac9_live_etf_direct_workflow_has_a_fixed_twenty_four_call_matrix() -> None:
+    workflow_path = Path(".github/workflows/live-etf-direct-e2e.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow)
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "qveris-finance" not in workflow
+    assert "stock-quote" not in workflow
+    matrix = document["jobs"]["direct"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id", "round"}
+    assert matrix["binding_id"] == [
+        "alpha-vantage-spy-holdings",
+        "alpha-vantage-invalid-etf",
+        "fiu-spy-holdings",
+        "fiu-invalid-etf",
+        "fiu-qqq-holdings",
+        "fiu-iwm-holdings",
+        "alpha-vantage-qqq-holdings",
+        "alpha-vantage-iwm-holdings",
+    ]
+    assert matrix["round"] == [1, 2, 3]
+    assert "pytest tests/e2e/test_live_etf_holdings.py -q" in workflow
+    assert "ETF_BINDING_ID: ${{ matrix.binding_id }}" in workflow
+    assert "ETF_ROUND: ${{ matrix.round }}" in workflow
+    assert "--binding-id" not in workflow
+
+
+def test_ac9_live_etf_test_executes_only_the_matrix_binding() -> None:
+    source = Path("tests/e2e/test_live_etf_holdings.py").read_text()
+
+    assert 'binding_id = os.environ.get("ETF_BINDING_ID")' in source
+    assert 'round_number = os.environ.get("ETF_ROUND")' in source
+    assert "selected_run_key(compiled, binding, binding_id, round_number)" in source
+    assert "for binding_id" not in source

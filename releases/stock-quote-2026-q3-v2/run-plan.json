@@ -1,0 +1,118 @@
+{
+  "cells": [
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v2:4750970004a6:aapl-quote:finnhub:finnhub-stock-quote:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v2:4750970004a6:aapl-quote:finnhub:finnhub-stock-quote:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v2:4750970004a6:aapl-quote:eodhd:eodhd-stock-quote:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-quote",
+      "case_input": {
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v2:4750970004a6:aapl-quote:eodhd:eodhd-stock-quote:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 1,
+      "run_key": "stock-quote-v2:4750970004a6:invalid-stock:finnhub:finnhub-stock-quote:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "finnhub",
+      "round": 2,
+      "run_key": "stock-quote-v2:4750970004a6:invalid-stock:finnhub:finnhub-stock-quote:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "stock-quote-v2:4750970004a6:invalid-stock:eodhd:eodhd-stock-quote:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-stock",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "stock-quote-v2:4750970004a6:invalid-stock:eodhd:eodhd-stock-quote:direct:2",
+      "state": "planned"
+    }
+  ],
+  "suite_fingerprint": "4750970004a6f5bd38343d2c6416bfc0a460e9df57afead1ddf58ecdf81d8285",
+  "suite_id": "stock-quote-v2"
+}

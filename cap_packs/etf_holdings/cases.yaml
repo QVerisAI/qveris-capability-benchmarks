@@ -8,6 +8,24 @@ cases:
     completion_conditions: [symbol, holdings, weights]
     disclosure_limits: []
     applicable_provider_ids: []
+  - case_id: qqq-holdings
+    cap_id: etf-holdings
+    question: Return current constituent holdings for QQQ with weights.
+    input: {symbol: QQQ}
+    negative_control: false
+    expected_observations: [symbol, holdings, weights]
+    completion_conditions: [symbol, holdings, weights]
+    disclosure_limits: []
+    applicable_provider_ids: []
+  - case_id: iwm-holdings
+    cap_id: etf-holdings
+    question: Return current constituent holdings for IWM with weights.
+    input: {symbol: IWM}
+    negative_control: false
+    expected_observations: [symbol, holdings, weights]
+    completion_conditions: [symbol, holdings, weights]
+    disclosure_limits: []
+    applicable_provider_ids: []
   - case_id: invalid-etf
     cap_id: etf-holdings
     question: Reject an invalid ETF symbol without invented holdings.

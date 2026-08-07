@@ -1,8 +1,9 @@
 import pytest
 
-from qveris_bench.outcomes.etf_holdings import (
+from qveris_bench.cap_packs.etf_holdings.extractors import (
     EtfHoldingsExtractionError,
     extract_alpha_vantage_etf_holdings,
+    extract_fiu_etf_holdings,
 )
 
 
@@ -109,3 +110,58 @@ def test_ac_alpha_vantage_rejects_unmarked_percentages() -> None:
 def test_ac_alpha_vantage_rejects_non_object_responses() -> None:
     with pytest.raises(EtfHoldingsExtractionError, match="response must be an object"):
         extract_alpha_vantage_etf_holdings([], "SPY")
+
+
+def test_ac_fiu_positive_response_becomes_weighted_observation() -> None:
+    facts = extract_fiu_etf_holdings(
+        {
+            "result": {
+                "data": {
+                    "data": [
+                        {"code": "AAPL", "holdingRatio": "7.25"},
+                        {"code": "MSFT", "holdingRatio": 6.1},
+                    ]
+                }
+            }
+        },
+        "SPY.US",
+    )
+
+    assert facts == {
+        "symbol": "SPY.US",
+        "holdings": ["AAPL", "MSFT"],
+        "weights": [0.0725, 0.061],
+    }
+
+
+def test_ac_fiu_invalid_symbol_requires_explicit_validation_response() -> None:
+    assert extract_fiu_etf_holdings(
+        {
+            "result": {
+                "data": {
+                    "code": "40001",
+                    "message": "NOTANETF.US is an invalid symbol",
+                    "data": [],
+                }
+            }
+        },
+        "NOTANETF.US",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
+def test_ac_fiu_negative_rejects_runtime_error() -> None:
+    with pytest.raises(EtfHoldingsExtractionError, match="validation error"):
+        extract_fiu_etf_holdings(
+            {
+                "result": {
+                    "data": {
+                        "code": "429",
+                        "message": "rate limit exceeded",
+                        "data": [],
+                    }
+                }
+            },
+            "NOTANETF.US",
+            negative_control=True,
+        )

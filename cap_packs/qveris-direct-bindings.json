@@ -23,6 +23,50 @@
       "parameters": {"symbol": "NOTASTOCK"}
     },
     {
+      "binding_id": "finnhub-aapl-quote-v2",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "finnhub-stock-quote",
+      "provider_id": "finnhub",
+      "discovery_query": "US stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+      "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+      "parameters": {"symbol": "AAPL"}
+    },
+    {
+      "binding_id": "finnhub-invalid-stock-v2",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "finnhub-stock-quote",
+      "provider_id": "finnhub",
+      "discovery_query": "US stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+      "tool_id": "finnhub.quote.retrieve.v1.f72cf5ef",
+      "parameters": {"symbol": "NOTASTOCK"}
+    },
+    {
+      "binding_id": "eodhd-aapl-quote",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "eodhd-stock-quote",
+      "provider_id": "eodhd",
+      "discovery_query": "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+      "tool_id": "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
+      "parameters": {"s": "AAPL.US", "page[limit]": 1}
+    },
+    {
+      "binding_id": "eodhd-invalid-stock",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "eodhd-stock-quote",
+      "provider_id": "eodhd",
+      "discovery_query": "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+      "tool_id": "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
+      "parameters": {"s": "NOTASTOCK.US", "page[limit]": 1}
+    },
+    {
       "binding_id": "fiu-spy-holdings",
       "suite_id": "etf-holdings-v1",
       "version": "1.0.0",
@@ -45,6 +89,28 @@
       "parameters": {"symbol": "NOTANETF.US"}
     },
     {
+      "binding_id": "fiu-qqq-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "fiu-etf-holdings",
+      "provider_id": "fiu",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+      "parameters": {"symbol": "QQQ.US"}
+    },
+    {
+      "binding_id": "fiu-iwm-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "fiu-etf-holdings",
+      "provider_id": "fiu",
+      "discovery_query": "US ETF SPY holdings constituents weights composition direct provider",
+      "discovery_digest": "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+      "tool_id": "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
+      "parameters": {"symbol": "IWM.US"}
+    },
+    {
       "binding_id": "alpha-vantage-spy-holdings",
       "suite_id": "etf-holdings-v1",
       "version": "1.0.0",
@@ -65,6 +131,28 @@
       "discovery_digest": "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
       "tool_id": "alphavantage.etf.profile.retrieve.v1.467a92c0",
       "parameters": {"function": "ETF_PROFILE", "symbol": "NOTANETF"}
+    },
+    {
+      "binding_id": "alpha-vantage-qqq-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "provider_id": "alpha-vantage",
+      "discovery_query": "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+      "discovery_digest": "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+      "tool_id": "alphavantage.etf.profile.retrieve.v1.467a92c0",
+      "parameters": {"function": "ETF_PROFILE", "symbol": "QQQ"}
+    },
+    {
+      "binding_id": "alpha-vantage-iwm-holdings",
+      "suite_id": "etf-holdings-v1",
+      "version": "1.0.0",
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "provider_id": "alpha-vantage",
+      "discovery_query": "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+      "discovery_digest": "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+      "tool_id": "alphavantage.etf.profile.retrieve.v1.467a92c0",
+      "parameters": {"function": "ETF_PROFILE", "symbol": "IWM"}
     }
   ]
 }
