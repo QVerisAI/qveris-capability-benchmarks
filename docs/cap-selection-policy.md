@@ -2,11 +2,11 @@
 
 ## Purpose
 
-A Financial Task captures what a financial Agent developer is building. A CAP is
-one bounded, independently attributable measurement within that task, not a
-long-horizon workflow or an article topic. Selection starts from the developer
-decision, decomposes the task into required CAPs, and ends with versioned, testable
-definitions whose origins can be audited.
+A `DeveloperScenario` is the versioned representation of what a financial Agent
+developer is building. A CAP is one bounded, independently attributable measurement
+within that scenario, not a long-horizon workflow or an article topic. Selection
+starts from the developer decision, decomposes the scenario into required CAPs, and
+ends with versioned, testable definitions whose origins can be audited.
 
 Financial Tasks are the product-facing unit; CAPs are the evaluation unit. Task
 composition never merges CAP outcomes into a provider total score.
@@ -17,14 +17,21 @@ CAP ideas may come from public benchmarks, external task repositories, sanitized
 customer questions, developer queries, provider submissions, search demand, or
 QVeris-authored research. Source type does not determine inclusion priority.
 
-Before a CAP is executable, its atomic positive and negative tasks belong in the
-versioned `question_bank/`. The bank records public citations and QVeris-authored
-task text; it is an intake asset, not a provider result or a substitute for a CAP
-Pack.
+Before a CAP is executable, its atomic question family belongs in the versioned
+`question_bank/`. Every family begins with core-positive and boundary-negative
+roles, then adds only the coverage, precision, completeness, and Agent-contract
+roles required by its scenarios. The bank records public citations and
+QVeris-authored task text; it is an intake asset, not a provider result or a
+substitute for a CAP Pack.
 
 External repository sources must pin the repository URL, immutable commit, and
 source task identifier. Sanitized customer questions use an internal reference that
 does not expose the customer, contact details, credentials, or proprietary payloads.
+
+Scenario identity is `(scenario_id, version)`. Its completion policy names which
+priority tiers require verified CAP releases and keeps missing dimensions explicitly
+`evidence_insufficient`; it never fills a gap from Provider claims or unrelated
+scenario questions.
 
 ## Definition requirements
 

@@ -50,21 +50,51 @@ def test_ac2_every_question_has_one_cap_and_a_complete_evaluation_contract() -> 
         assert question.review_status == "approved"
 
 
-def test_ac3_every_capability_has_a_positive_and_negative_question() -> None:
+def test_ac1_company_research_scenario_composes_three_p0_capabilities() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+
+    assert len(bank.scenarios) == 1
+    scenario = bank.scenarios[0]
+    assert (scenario.scenario_id, scenario.version) == (
+        "company-research-agent",
+        "1.0.0",
+    )
+    assert {requirement.cap_id for requirement in scenario.required_capabilities} == {
+        "company-fundamentals",
+        "financial-statement-facts",
+        "financial-news-evidence",
+        "historical-price-series",
+        "sec-filing-evidence",
+        "stock-quote",
+    }
+    assert {
+        requirement.cap_id
+        for requirement in scenario.required_capabilities
+        if requirement.priority == "p0"
+    } == {"financial-statement-facts", "sec-filing-evidence", "stock-quote"}
+    assert scenario.completion_policy.required_priorities == ("p0",)
+    assert scenario.completion_policy.missing_dimension_state == (
+        "evidence_insufficient"
+    )
+
+
+def test_ac2_every_capability_has_core_and_boundary_roles() -> None:
     bank = load_question_bank(ROOT / "question_bank")
 
     for capability in bank.capabilities:
-        counts = {
-            variant: sum(
-                question.cap_id == capability.cap_id and question.variant == variant
-                for question in bank.questions
-            )
-            for variant in ("positive", "negative")
+        roles = {
+            question.role
+            for question in bank.questions
+            if question.cap_id == capability.cap_id
         }
-        assert counts == {"positive": 1, "negative": 1}
+        assert {"core_positive", "boundary_negative"}.issubset(roles), (
+            f"AC2 {capability.cap_id} must cover core and boundary roles"
+        )
 
 
-def test_ac3_question_bank_rejects_duplicate_variant_coverage(tmp_path: Path) -> None:
+def test_ac2_question_bank_allows_multiple_questions_per_role(
+    tmp_path: Path,
+) -> None:
     bank_root = tmp_path / "question_bank"
     shutil.copytree(ROOT / "question_bank", bank_root)
     questions_path = bank_root / "questions.yaml"
@@ -74,7 +104,204 @@ def test_ac3_question_bank_rejects_duplicate_variant_coverage(tmp_path: Path) ->
     document["questions"].append(duplicate)
     questions_path.write_text(yaml.safe_dump(document), encoding="utf-8")
 
-    with pytest.raises(QuestionBankValidationError, match="exactly one"):
+    bank = load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+    assert len(bank.questions) == 21
+
+
+def test_ac2_question_bank_rejects_missing_required_role(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    questions_path = bank_root / "questions.yaml"
+    document = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    document["questions"] = [
+        question
+        for question in document["questions"]
+        if question["question_id"] != "etf-holdings-invalid-symbol"
+    ]
+    questions_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="boundary_negative"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac3_migration_preserves_all_v1_question_ids() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+
+    expected = {
+        "company-fundamentals-invalid-symbol",
+        "company-fundamentals-msft-summary",
+        "corporate-actions-aapl-split",
+        "corporate-actions-invalid-action",
+        "economic-time-series-invalid-series",
+        "economic-time-series-unemployment",
+        "etf-holdings-invalid-symbol",
+        "etf-holdings-spy-weights",
+        "financial-news-evidence-aapl-window",
+        "financial-news-evidence-invalid-window",
+        "financial-statement-facts-aapl-revenue",
+        "financial-statement-facts-invalid-period",
+        "historical-price-series-aapl-week",
+        "historical-price-series-invalid-range",
+        "index-constituents-invalid-index",
+        "index-constituents-sp500",
+        "sec-filing-evidence-aapl-risk",
+        "sec-filing-evidence-invalid-filing-type",
+        "stock-quote-aapl-current",
+        "stock-quote-invalid-symbol",
+    }
+    assert {str(question.question_id) for question in bank.questions} == expected
+
+
+def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    scenario = bank.scenarios[0]
+    p0_cap_ids = {
+        requirement.cap_id
+        for requirement in scenario.required_capabilities
+        if requirement.priority == "p0"
+    }
+
+    for question in bank.questions:
+        if question.cap_id not in p0_cap_ids:
+            continue
+        assert any(
+            reference.scenario_id == scenario.scenario_id
+            and reference.version == scenario.version
+            for reference in question.scenario_refs
+        )
+        assert question.evaluation_contract is not None
+        assert question.evaluation_contract.reference_source_ids
+        assert question.evaluation_contract.reference_rule
+        assert question.evaluation_contract.tolerance_rule
+        assert question.evaluation_contract.interface_expectations
+        assert question.evaluation_contract.selection_implication
+
+
+def test_ac1_scenario_rejects_unknown_capability(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    document = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    document["scenarios"][0]["required_capabilities"][0]["cap_id"] = "unknown-cap"
+    scenarios_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="unknown capability"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_roles_ignore_questions_linked_to_another_scenario(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    scenarios = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    other = dict(scenarios["scenarios"][0])
+    other["scenario_id"] = "portfolio-monitoring-agent"
+    scenarios["scenarios"].append(other)
+    scenarios_path.write_text(yaml.safe_dump(scenarios), encoding="utf-8")
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    for question in questions["questions"]:
+        if question["question_id"] == "stock-quote-aapl-current":
+            question["scenario_refs"] = [
+                {"scenario_id": "portfolio-monitoring-agent", "version": "1.0.0"}
+            ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="company-research-agent"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_rejects_question_for_unrequired_capability(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    questions["questions"][0]["scenario_refs"] = [
+        {"scenario_id": "company-research-agent", "version": "1.0.0"}
+    ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="not required"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_rejects_duplicate_capability_requirements(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    document = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    duplicate = dict(document["scenarios"][0]["required_capabilities"][0])
+    duplicate["priority"] = "p1"
+    document["scenarios"][0]["required_capabilities"].append(duplicate)
+    scenarios_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="duplicate capability"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_completion_policy_controls_required_evaluation_contracts(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    document = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    document["scenarios"][0]["completion_policy"]["required_priorities"] = [
+        "p0",
+        "p1",
+    ]
+    scenarios_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="required scenario question"):
+        load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+
+def test_ac1_scenario_identity_includes_semantic_version(tmp_path: Path) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    scenarios_path = bank_root / "scenarios.yaml"
+    scenarios = yaml.safe_load(scenarios_path.read_text(encoding="utf-8"))
+    next_version = dict(scenarios["scenarios"][0])
+    next_version["version"] = "1.1.0"
+    scenarios["scenarios"].append(next_version)
+    scenarios_path.write_text(yaml.safe_dump(scenarios), encoding="utf-8")
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    for question in questions["questions"]:
+        if question.get("scenario_refs"):
+            question["scenario_refs"].append(
+                {"scenario_id": "company-research-agent", "version": "1.1.0"}
+            )
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    bank = load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
+
+    assert {
+        (scenario.scenario_id, scenario.version) for scenario in bank.scenarios
+    } == {
+        ("company-research-agent", "1.0.0"),
+        ("company-research-agent", "1.1.0"),
+    }
+
+
+def test_ac4_p0_contract_rejects_external_benchmark_as_only_reference(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    questions_path = bank_root / "questions.yaml"
+    questions = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+    questions["questions"][2]["evaluation_contract"]["reference_source_ids"] = [
+        "finsearchcomp-2026"
+    ]
+    questions_path.write_text(yaml.safe_dump(questions), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="authoritative source"):
         load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")
 
 
@@ -86,12 +313,19 @@ def test_ac4_sources_are_citable_and_do_not_copy_external_task_text() -> None:
     assert all(source.reproduction_policy == "citation_only" for source in bank.sources)
     assert {source.authority_tier for source in bank.sources} == {
         "official_api",
+        "official_market_source",
         "external_benchmark",
     }
     assert all(
         set(question.source_ids).issubset(source_ids) for question in bank.questions
     )
     assert all(question.text_origin == "qveris_curated" for question in bank.questions)
+    for source in bank.sources:
+        if source.authority_tier != "external_benchmark":
+            continue
+        if source.reference_url.host == "github.com":
+            assert source.repository_commit
+            assert source.source_task_ids
 
 
 def test_ac4_source_url_rejects_credentials_and_query_parameters() -> None:
@@ -103,6 +337,67 @@ def test_ac4_source_url_rejects_credentials_and_query_parameters() -> None:
                 "reference_url": "https://user:secret@example.com/data?token=secret",
                 "authority_tier": "official_api",
                 "reproduction_policy": "citation_only",
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://127.0.0.1/internal",
+        "https://[::1]/internal",
+        "https://localhost./internal",
+        "https://source.internal./internal",
+    ],
+)
+def test_ac4_source_url_rejects_private_network_hosts(url: str) -> None:
+    with pytest.raises(ValueError, match="public host"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "private-source",
+                "name": "Private source",
+                "reference_url": url,
+                "authority_tier": "official_api",
+                "reproduction_policy": "citation_only",
+            }
+        )
+
+
+def test_ac4_external_repository_requires_immutable_provenance() -> None:
+    with pytest.raises(ValueError, match="immutable repository provenance"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "mutable-benchmark",
+                "name": "Mutable benchmark",
+                "reference_url": "https://github.com/example/benchmark",
+                "authority_tier": "external_benchmark",
+                "reproduction_policy": "citation_only",
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    ("url", "commit", "task_ids"),
+    [
+        ("https://github.com./example/benchmark", None, ()),
+        ("https://github.com/example/benchmark", "a" * 40, ("",)),
+    ],
+)
+def test_ac4_external_repository_rejects_provenance_bypasses(
+    url: str,
+    commit: str | None,
+    task_ids: tuple[str, ...],
+) -> None:
+    with pytest.raises(ValueError, match="immutable repository provenance"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "mutable-benchmark",
+                "name": "Mutable benchmark",
+                "reference_url": url,
+                "authority_tier": "external_benchmark",
+                "reproduction_policy": "citation_only",
+                "repository_commit": commit,
+                "source_task_ids": task_ids,
             }
         )
 
@@ -122,54 +417,16 @@ def test_ac5_question_validate_runs_through_the_installed_cli() -> None:
     assert result.returncode == 0, result.stderr
     assert "10 capabilities" in result.stdout
     assert "20 questions" in result.stdout
+    assert result.stdout.endswith("1 scenario.\n")
 
 
 def test_ac6_candidate_cannot_claim_an_executable_cap_pack(tmp_path: Path) -> None:
     bank_root = tmp_path / "question_bank"
-    bank_root.mkdir()
-    (bank_root / "sources.yaml").write_text(
-        "sources:\n"
-        "  - source_id: qveris\n"
-        "    name: QVeris curated source\n"
-        "    reference_url: https://example.com/source\n"
-        "    authority_tier: official_api\n"
-        "    reproduction_policy: citation_only\n",
-        encoding="utf-8",
-    )
-    (bank_root / "capabilities.yaml").write_text(
-        "capabilities:\n"
-        "  - cap_id: etf-holdings\n"
-        "    name: ETF Holdings\n"
-        "    lifecycle: candidate\n"
-        "    business_use: Select a provider for ETF holdings data.\n",
-        encoding="utf-8",
-    )
-    (bank_root / "questions.yaml").write_text(
-        "questions:\n"
-        "  - question_id: etf-holdings-positive\n"
-        "    cap_id: etf-holdings\n"
-        "    variant: positive\n"
-        "    task: Return ETF holdings.\n"
-        "    input: {symbol: SPY}\n"
-        "    required_observations: [symbol]\n"
-        "    completion_conditions: [symbol]\n"
-        "    source_ids: [qveris]\n"
-        "    text_origin: qveris_curated\n"
-        "    selection_rationale: Maps directly to the ETF holdings capability.\n"
-        "    review_status: approved\n"
-        "  - question_id: etf-holdings-negative\n"
-        "    cap_id: etf-holdings\n"
-        "    variant: negative\n"
-        "    task: Reject an invalid ETF symbol.\n"
-        "    input: {symbol: NOTANETF}\n"
-        "    required_observations: [validation_error]\n"
-        "    completion_conditions: [validation_error]\n"
-        "    source_ids: [qveris]\n"
-        "    text_origin: qveris_curated\n"
-        "    selection_rationale: Verifies safe rejection for the same capability.\n"
-        "    review_status: approved\n",
-        encoding="utf-8",
-    )
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    capabilities_path = bank_root / "capabilities.yaml"
+    document = yaml.safe_load(capabilities_path.read_text(encoding="utf-8"))
+    document["capabilities"][0]["lifecycle"] = "candidate"
+    capabilities_path.write_text(yaml.safe_dump(document), encoding="utf-8")
 
     with pytest.raises(QuestionBankValidationError, match="candidate capability"):
         load_question_bank(bank_root, cap_packs_root=ROOT / "cap_packs")

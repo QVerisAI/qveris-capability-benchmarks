@@ -90,9 +90,10 @@ def question_validate() -> None:
     except QuestionBankValidationError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
+    scenario_label = "scenario" if len(bank.scenarios) == 1 else "scenarios"
     typer.echo(
         f"Validated question bank: {len(bank.capabilities)} capabilities, "
-        f"{len(bank.questions)} questions."
+        f"{len(bank.questions)} questions, {len(bank.scenarios)} {scenario_label}."
     )
 
 

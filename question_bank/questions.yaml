@@ -1,7 +1,7 @@
 questions:
   - question_id: etf-holdings-spy-weights
     cap_id: etf-holdings
-    variant: positive
+    role: core_positive
     task: Return current SPY constituent holdings with weights.
     input: {symbol: SPY}
     required_observations: [symbol, holdings, weights]
@@ -12,7 +12,7 @@ questions:
     review_status: approved
   - question_id: etf-holdings-invalid-symbol
     cap_id: etf-holdings
-    variant: negative
+    role: boundary_negative
     task: Reject an invalid ETF symbol without inventing holdings.
     input: {symbol: NOTANETF}
     required_observations: [validation_error]
@@ -23,139 +23,205 @@ questions:
     review_status: approved
   - question_id: stock-quote-aapl-current
     cap_id: stock-quote
-    variant: positive
+    role: core_positive
     task: Return the current quote for AAPL with an as-of timestamp.
     input: {symbol: AAPL}
     required_observations: [symbol, price, timestamp]
     completion_conditions: [symbol, price, timestamp]
-    source_ids: [finsearchcomp-2026]
+    source_ids: [finsearchcomp-2026, nasdaq-market-activity]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [nasdaq-market-activity]
+      reference_rule: Confirm the symbol, positive price, currency context, and quote timestamp against the disclosed market reference.
+      tolerance_rule: During the regular session, require quote age at most 15 minutes and absolute price difference at most the greater of USD 0.05 or 1 percent; outside the session use the latest disclosed close and timestamp.
+      interface_expectations: [typed-symbol, numeric-price, explicit-timestamp, explicit-empty-state]
+      selection_implication: Passing supports current-quote integration for the disclosed market and freshness window.
     text_origin: qveris_curated
     selection_rationale: Isolates current price retrieval from research or trading advice.
     review_status: approved
   - question_id: stock-quote-invalid-symbol
     cap_id: stock-quote
-    variant: negative
+    role: boundary_negative
     task: Reject an invalid stock symbol without inventing quote values.
     input: {symbol: NOTASTOCK}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
-    source_ids: [finsearchcomp-2026]
+    source_ids: [finsearchcomp-2026, finnhub-quote-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [finnhub-quote-api]
+      reference_rule: Require an explicit invalid-symbol or no-data result without fabricated quote values.
+      tolerance_rule: No fabricated price or timestamp is permitted.
+      interface_expectations: [machine-readable-negative-state, no-fabricated-quote]
+      selection_implication: Passing supports safe Agent recovery from an invalid equity identifier.
     text_origin: qveris_curated
     selection_rationale: Verifies safe invalid-symbol semantics for the same quote task.
     review_status: approved
   - question_id: historical-price-series-aapl-week
     cap_id: historical-price-series
-    variant: positive
+    role: core_positive
     task: Return daily AAPL OHLCV observations for a fixed five-trading-day interval.
     input: {symbol: AAPL, start_date: 2026-07-20, end_date: 2026-07-24}
     required_observations: [symbol, timestamps, open, high, low, close, volume]
     completion_conditions: [symbol, timestamps, close]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Separates dated market-history retrieval from a current quote.
     review_status: approved
   - question_id: historical-price-series-invalid-range
     cap_id: historical-price-series
-    variant: negative
+    role: boundary_negative
     task: Reject a historical-price request whose start date is after its end date.
     input: {symbol: AAPL, start_date: 2026-07-24, end_date: 2026-07-20}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests date-range validation within the same historical series CAP.
     review_status: approved
   - question_id: company-fundamentals-msft-summary
     cap_id: company-fundamentals
-    variant: positive
+    role: core_positive
     task: Return a comparable fundamentals summary for MSFT.
     input: {symbol: MSFT}
     required_observations: [symbol, market_cap, pe_ratio, currency]
     completion_conditions: [symbol, market_cap, currency]
     source_ids: [finsearchcomp-2026, finresearchbench-ii]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests standardized issuer-level facts used in company research.
     review_status: approved
   - question_id: company-fundamentals-invalid-symbol
     cap_id: company-fundamentals
-    variant: negative
+    role: boundary_negative
     task: Reject an invalid issuer symbol for a fundamentals request.
     input: {symbol: NOTACOMPANY}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [finsearchcomp-2026]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests whether the fundamentals interface rejects unknown issuers.
     review_status: approved
   - question_id: financial-statement-facts-aapl-revenue
     cap_id: financial-statement-facts
-    variant: positive
+    role: core_positive
     task: Return AAPL annual revenue for a specified fiscal year.
     input: {symbol: AAPL, fiscal_year: 2025}
     required_observations: [symbol, fiscal_year, revenue, filing_date]
     completion_conditions: [symbol, fiscal_year, revenue]
     source_ids: [financebench, sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Match the filed annual revenue fact, fiscal period, unit, and filing identity from SEC company facts.
+      tolerance_rule: The normalized value must equal the selected filed fact after explicit unit conversion.
+      interface_expectations: [typed-period, explicit-unit, filing-identity, deterministic-fact-selection]
+      selection_implication: Passing supports period-specific financial fact retrieval for company research.
     text_origin: qveris_curated
     selection_rationale: Requires a period-specific reported fact rather than a derived metric.
     review_status: approved
   - question_id: financial-statement-facts-invalid-period
     cap_id: financial-statement-facts
-    variant: negative
+    role: boundary_negative
     task: Reject an unsupported fiscal period for an issuer financial-fact request.
     input: {symbol: AAPL, fiscal_year: 1900}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [financebench, sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Require an explicit unsupported-period or no-filing result without substituting another fiscal year.
+      tolerance_rule: No value from a different fiscal period is permitted.
+      interface_expectations: [machine-readable-negative-state, no-period-substitution]
+      selection_implication: Passing supports safe Agent handling of unavailable fiscal periods.
     text_origin: qveris_curated
     selection_rationale: Tests period validation without conflating it with issuer lookup.
     review_status: approved
   - question_id: sec-filing-evidence-aapl-risk
     cap_id: sec-filing-evidence
-    variant: positive
+    role: core_positive
     task: Return a cited AAPL annual-filing passage supporting a stated risk factor.
     input: {symbol: AAPL, filing_type: 10-K, topic: supply-chain-risk}
     required_observations: [symbol, filing_id, evidence, citation]
     completion_conditions: [filing_id, evidence, citation]
     source_ids: [financebench, sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: latest-filed-annual-report
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Resolve the cited passage to the identified SEC filing and preserve a retrievable document location.
+      tolerance_rule: Semantic evidence may vary, but the cited text and filing location must directly support the requested topic.
+      interface_expectations: [filing-identity, evidence-text, retrievable-citation, explicit-document-location]
+      selection_implication: Passing supports evidence-backed research claims with auditable filing citations.
     text_origin: qveris_curated
     selection_rationale: Measures retrievable filing evidence and citation rather than free-form opinion.
     review_status: approved
   - question_id: sec-filing-evidence-invalid-filing-type
     cap_id: sec-filing-evidence
-    variant: negative
+    role: boundary_negative
     task: Reject an unsupported filing type for issuer evidence retrieval.
     input: {symbol: AAPL, filing_type: NOTAFILING, topic: supply-chain-risk}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [financebench, sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Require an explicit unsupported-form response before any filing passage is presented.
+      tolerance_rule: No citation or evidence text from a different filing form is permitted.
+      interface_expectations: [machine-readable-negative-state, no-filing-type-substitution]
+      selection_implication: Passing supports safe Agent correction of an invalid filing-form request.
     text_origin: qveris_curated
     selection_rationale: Tests filing-type validation before evidence retrieval starts.
     review_status: approved
   - question_id: financial-news-evidence-aapl-window
     cap_id: financial-news-evidence
-    variant: positive
+    role: core_positive
     task: Return cited AAPL news items in a fixed date window.
     input: {symbol: AAPL, start_date: 2026-07-20, end_date: 2026-07-24}
     required_observations: [symbol, articles, timestamps, citations]
     completion_conditions: [articles, timestamps, citations]
     source_ids: [icbcbench, finresearchbench-ii]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Isolates dated news retrieval with source evidence for financial research.
     review_status: approved
   - question_id: financial-news-evidence-invalid-window
     cap_id: financial-news-evidence
-    variant: negative
+    role: boundary_negative
     task: Reject a news query with an inverted date window.
     input: {symbol: AAPL, start_date: 2026-07-24, end_date: 2026-07-20}
     required_observations: [validation_error]
     completion_conditions: [validation_error]
     source_ids: [icbcbench]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.0.0}]
     text_origin: qveris_curated
     selection_rationale: Tests date validation for the same evidence-retrieval operation.
     review_status: approved
   - question_id: index-constituents-sp500
     cap_id: index-constituents
-    variant: positive
+    role: core_positive
     task: Return current S&P 500 constituent membership with weights when available.
     input: {index: SPX}
     required_observations: [index, constituents, as_of]
@@ -166,7 +232,7 @@ questions:
     review_status: approved
   - question_id: index-constituents-invalid-index
     cap_id: index-constituents
-    variant: negative
+    role: boundary_negative
     task: Reject an unknown index identifier for constituent retrieval.
     input: {index: NOTANINDEX}
     required_observations: [validation_error]
@@ -177,7 +243,7 @@ questions:
     review_status: approved
   - question_id: corporate-actions-aapl-split
     cap_id: corporate-actions
-    variant: positive
+    role: core_positive
     task: Return verified AAPL stock-split events in a fixed historical interval.
     input: {symbol: AAPL, action_type: split, start_date: 2019-01-01, end_date: 2021-01-01}
     required_observations: [symbol, action_type, ex_date, ratio]
@@ -188,7 +254,7 @@ questions:
     review_status: approved
   - question_id: corporate-actions-invalid-action
     cap_id: corporate-actions
-    variant: negative
+    role: boundary_negative
     task: Reject an unsupported corporate-action type.
     input: {symbol: AAPL, action_type: notanaction}
     required_observations: [validation_error]
@@ -199,7 +265,7 @@ questions:
     review_status: approved
   - question_id: economic-time-series-unemployment
     cap_id: economic-time-series
-    variant: positive
+    role: core_positive
     task: Return United States unemployment-rate observations for a fixed monthly interval.
     input: {series_id: UNRATE, start_date: 2026-01-01, end_date: 2026-06-30}
     required_observations: [series_id, observations, timestamps, units]
@@ -210,7 +276,7 @@ questions:
     review_status: approved
   - question_id: economic-time-series-invalid-series
     cap_id: economic-time-series
-    variant: negative
+    role: boundary_negative
     task: Reject an unknown economic series identifier.
     input: {series_id: NOTASERIES, start_date: 2026-01-01, end_date: 2026-06-30}
     required_observations: [validation_error]
