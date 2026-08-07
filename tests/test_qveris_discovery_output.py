@@ -187,5 +187,5 @@ def test_ac9_live_etf_test_executes_only_the_matrix_binding() -> None:
 
     assert 'binding_id = os.environ.get("ETF_BINDING_ID")' in source
     assert 'round_number = os.environ.get("ETF_ROUND")' in source
-    assert 'f"{binding_id}:direct:{round_number}"' in source
+    assert "selected_run_key(compiled, binding, binding_id, round_number)" in source
     assert "for binding_id" not in source

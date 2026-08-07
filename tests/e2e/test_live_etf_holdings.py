@@ -16,8 +16,9 @@ from qveris_bench.execution.qveris_binding import (
 from qveris_bench.outcomes.etf_holdings import (
     EtfHoldingsExtractionError,
     extract_alpha_vantage_etf_holdings,
+    extract_fiu_etf_holdings,
 )
-from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
+from qveris_bench.outcomes.extractor import extract_observation
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,24 +28,36 @@ EXPECTED = {
         "alpha-vantage",
         "alphavantage.etf.profile.retrieve.v1.467a92c0",
         False,
+        "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+        "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+        {"function": "ETF_PROFILE", "symbol": "SPY"},
     ),
     "alpha-vantage-invalid-etf": (
         "alpha-vantage-etf-holdings",
         "alpha-vantage",
         "alphavantage.etf.profile.retrieve.v1.467a92c0",
         True,
+        "US ETF SPY holdings constituents weights Alpha Vantage direct provider",
+        "sha256:9cf9a9ca51e988af220e8b57de820cb14c9f74c70d5b76192ca332560f22edc2",
+        {"function": "ETF_PROFILE", "symbol": "NOTANETF"},
     ),
     "fiu-spy-holdings": (
         "fiu-etf-holdings",
         "fiu",
         "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
         False,
+        "US ETF SPY holdings constituents weights composition direct provider",
+        "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+        {"symbol": "SPY.US"},
     ),
     "fiu-invalid-etf": (
         "fiu-etf-holdings",
         "fiu",
         "fiu_mcp_server.postapiusf10fundconstituent.create.v2.30b6ab72",
         True,
+        "US ETF SPY holdings constituents weights composition direct provider",
+        "sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3",
+        {"symbol": "NOTANETF.US"},
     ),
 }
 
@@ -68,6 +81,9 @@ def validate_fixed_binding(binding_id: str, binding: object) -> tuple[bool, str]
         or binding.access_path_id != expected[0]
         or binding.provider_id != expected[1]
         or binding.tool_id != expected[2]
+        or binding.discovery_query != expected[4]
+        or binding.discovery_digest != expected[5]
+        or binding.parameters != expected[6]
     ):
         raise AssertionError("live ETF binding does not match frozen contract")
     return expected[3], expected[1]
@@ -76,12 +92,13 @@ def validate_fixed_binding(binding_id: str, binding: object) -> tuple[bool, str]
 def semantic_reason(
     provider_id: str, document: object, symbol: str, negative: bool
 ) -> str | None:
-    if provider_id != "alpha-vantage":
-        return "extractor_not_available"
     try:
-        facts = extract_alpha_vantage_etf_holdings(
-            document, symbol, negative_control=negative
+        extractor = (
+            extract_alpha_vantage_etf_holdings
+            if provider_id == "alpha-vantage"
+            else extract_fiu_etf_holdings
         )
+        facts = extractor(document, symbol, negative_control=negative)
         extract_observation(
             ROOT / "cap_packs/etf_holdings/observation-schema.yaml",
             facts,
@@ -98,9 +115,26 @@ def semantic_reason(
         if "holdings" in message:
             return "missing_holdings"
         return "unrecognized_provider_response"
-    except ExtractionError:
-        return "invalid_observation"
     return None
+
+
+def selected_run_key(
+    compiled: object, binding: object, binding_id: str, round_number: str
+) -> str:
+    expected = EXPECTED[binding_id]
+    case_id = "invalid-etf" if expected[3] else "spy-holdings"
+    matches = [
+        cell
+        for cell in compiled.run_plan.cells
+        if cell.case_id == case_id
+        and cell.access_path_id == binding.access_path_id
+        and cell.round == int(round_number)
+    ]
+    if len(matches) != 1:
+        raise AssertionError(
+            "matrix binding must resolve to exactly one frozen RunCell"
+        )
+    return matches[0].run_key
 
 
 def persist_terminal_evidence(
@@ -147,11 +181,11 @@ def test_ac_live_etf_direct_produces_semantic_terminal_evidence(tmp_path: Path) 
     if not api_key or not binding_id or not round_number:
         pytest.skip("QVERIS_API_KEY, ETF_BINDING_ID, and ETF_ROUND are required")
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
-    suite_fingerprint = compile_suite(
+    compiled = compile_suite(
         ROOT / "cap_packs/etf_holdings/suite.yaml",
         ROOT / "cap_packs/etf_holdings/cases.yaml",
         ROOT / "providers",
-    ).fingerprint
+    )
     binding = load_registered_qveris_direct_binding(
         ROOT / "cap_packs/qveris-direct-bindings.json", binding_id
     )
@@ -159,6 +193,7 @@ def test_ac_live_etf_direct_produces_semantic_terminal_evidence(tmp_path: Path) 
         binding, ROOT / "cap_packs/etf_holdings/suite.yaml", ROOT / "providers"
     )
     negative, provider_id = validate_fixed_binding(binding_id, binding)
+    run_key = selected_run_key(compiled, binding, binding_id, round_number)
 
     async def run() -> TerminalEvidence:
         client = QverisToolClient(
@@ -179,10 +214,10 @@ def test_ac_live_etf_direct_produces_semantic_terminal_evidence(tmp_path: Path) 
             return persist_terminal_evidence(
                 public_root,
                 binding_id,
-                f"{binding_id}:direct:{round_number}",
+                run_key,
                 result.result.raw_digest,
                 reason,
-                suite_fingerprint,
+                compiled.fingerprint,
             )
         finally:
             await client.close()
