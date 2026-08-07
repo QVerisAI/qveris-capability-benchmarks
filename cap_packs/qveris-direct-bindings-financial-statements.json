@@ -23,28 +23,6 @@
       "parameters": {"symbol": "AAPL", "limit": 5}
     },
     {
-      "binding_id": "alpha-vantage-income-statement-aapl-revenue",
-      "suite_id": "financial-statements-v1",
-      "version": "1.0.0",
-      "access_path_id": "alpha-vantage-income-statement",
-      "provider_id": "alpha-vantage",
-      "discovery_query": "Alpha Vantage income statement AAPL annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "alphavantage.income_statement.retrieve.v1.7aca3c4a",
-      "parameters": {"function": "INCOME_STATEMENT", "symbol": "AAPL"}
-    },
-    {
-      "binding_id": "alpha-vantage-income-statement-invalid-period",
-      "suite_id": "financial-statements-v1",
-      "version": "1.0.0",
-      "access_path_id": "alpha-vantage-income-statement",
-      "provider_id": "alpha-vantage",
-      "discovery_query": "Alpha Vantage income statement AAPL annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "alphavantage.income_statement.retrieve.v1.7aca3c4a",
-      "parameters": {"function": "INCOME_STATEMENT", "symbol": "AAPL"}
-    },
-    {
       "binding_id": "sec-gov-company-facts-aapl-revenue",
       "suite_id": "financial-statements-v1",
       "version": "1.0.0",
@@ -53,7 +31,7 @@
       "discovery_query": "SEC company facts AAPL CIK annual revenue direct provider",
       "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
       "tool_id": "sec.company.facts.v1",
-      "parameters": {"cik": "0000320193"}
+      "parameters": {"cik": 320193}
     },
     {
       "binding_id": "sec-gov-company-facts-invalid-period",
@@ -64,7 +42,7 @@
       "discovery_query": "SEC company facts AAPL CIK annual revenue direct provider",
       "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
       "tool_id": "sec.company.facts.v1",
-      "parameters": {"cik": "0000320193"}
+      "parameters": {"cik": 320193}
     }
   ]
 }

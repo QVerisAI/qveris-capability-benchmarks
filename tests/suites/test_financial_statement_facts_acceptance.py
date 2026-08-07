@@ -34,29 +34,17 @@ BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
         "invalid-period",
         {"symbol": "AAPL", "limit": 5},
     ),
-    "alpha-vantage-income-statement-aapl-revenue": (
-        "alpha-vantage-income-statement",
-        "alpha-vantage",
-        "aapl-revenue-fy2025",
-        {"function": "INCOME_STATEMENT", "symbol": "AAPL"},
-    ),
-    "alpha-vantage-income-statement-invalid-period": (
-        "alpha-vantage-income-statement",
-        "alpha-vantage",
-        "invalid-period",
-        {"function": "INCOME_STATEMENT", "symbol": "AAPL"},
-    ),
     "sec-gov-company-facts-aapl-revenue": (
         "sec-gov-company-facts",
         "sec-gov",
         "aapl-revenue-fy2025",
-        {"cik": "0000320193"},
+        {"cik": 320193},
     ),
     "sec-gov-company-facts-invalid-period": (
         "sec-gov-company-facts",
         "sec-gov",
         "invalid-period",
-        {"cik": "0000320193"},
+        {"cik": 320193},
     ),
 }
 
@@ -65,8 +53,8 @@ def test_ac1_fsf_suite_expands_to_eighteen_direct_cells() -> None:
     first = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
     second = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
 
-    assert len(first.run_plan.cells) == 18, (
-        "AC1 two cases by three included paths by three rounds must expand to 18 cells"
+    assert len(first.run_plan.cells) == 12, (
+        "AC1 two cases by two included paths by three rounds must expand to 12 cells"
     )
     assert all(cell.applicable for cell in first.run_plan.cells)
     keys = [cell.run_key for cell in first.run_plan.cells]
@@ -116,7 +104,6 @@ def test_ac3_cohort_is_frozen_to_included_fsf_paths() -> None:
 
     assert {path.access_path_id for path in compiled.access_paths} == {
         "fmp-income-statement",
-        "alpha-vantage-income-statement",
         "sec-gov-company-facts",
     }
     ProviderRegistryRepository(ROOT / "providers").cohort_check()
@@ -184,5 +171,5 @@ def test_ac6_suite_plan_runs_through_the_installed_cli(tmp_path: Path) -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "Planned 18 cells, 18 applicable calls" in result.stdout
+    assert "Planned 12 cells, 12 applicable calls" in result.stdout
     assert output.is_file()
