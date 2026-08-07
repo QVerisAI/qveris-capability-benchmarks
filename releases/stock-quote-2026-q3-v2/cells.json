@@ -1,0 +1,10 @@
+[
+  {"run_key":"stock-quote-v2:4750970004a6:aapl-quote:finnhub:finnhub-stock-quote:direct:1","case_id":"aapl-quote","case_input":{"symbol":"AAPL"},"provider_id":"finnhub","access_path_id":"finnhub-stock-quote","mode":"direct","round":1,"state":"provider_negative"},
+  {"run_key":"stock-quote-v2:4750970004a6:aapl-quote:finnhub:finnhub-stock-quote:direct:2","case_id":"aapl-quote","case_input":{"symbol":"AAPL"},"provider_id":"finnhub","access_path_id":"finnhub-stock-quote","mode":"direct","round":2,"state":"provider_negative"},
+  {"run_key":"stock-quote-v2:4750970004a6:aapl-quote:eodhd:eodhd-stock-quote:direct:1","case_id":"aapl-quote","case_input":{"symbol":"AAPL"},"provider_id":"eodhd","access_path_id":"eodhd-stock-quote","mode":"direct","round":1,"state":"provider_negative"},
+  {"run_key":"stock-quote-v2:4750970004a6:aapl-quote:eodhd:eodhd-stock-quote:direct:2","case_id":"aapl-quote","case_input":{"symbol":"AAPL"},"provider_id":"eodhd","access_path_id":"eodhd-stock-quote","mode":"direct","round":2,"state":"provider_negative"},
+  {"run_key":"stock-quote-v2:4750970004a6:invalid-stock:finnhub:finnhub-stock-quote:direct:1","case_id":"invalid-stock","case_input":{"symbol":"NOTASTOCK"},"provider_id":"finnhub","access_path_id":"finnhub-stock-quote","mode":"direct","round":1,"state":"completed"},
+  {"run_key":"stock-quote-v2:4750970004a6:invalid-stock:finnhub:finnhub-stock-quote:direct:2","case_id":"invalid-stock","case_input":{"symbol":"NOTASTOCK"},"provider_id":"finnhub","access_path_id":"finnhub-stock-quote","mode":"direct","round":2,"state":"completed"},
+  {"run_key":"stock-quote-v2:4750970004a6:invalid-stock:eodhd:eodhd-stock-quote:direct:1","case_id":"invalid-stock","case_input":{"symbol":"NOTASTOCK"},"provider_id":"eodhd","access_path_id":"eodhd-stock-quote","mode":"direct","round":1,"state":"completed"},
+  {"run_key":"stock-quote-v2:4750970004a6:invalid-stock:eodhd:eodhd-stock-quote:direct:2","case_id":"invalid-stock","case_input":{"symbol":"NOTASTOCK"},"provider_id":"eodhd","access_path_id":"eodhd-stock-quote","mode":"direct","round":2,"state":"completed"}
+]
