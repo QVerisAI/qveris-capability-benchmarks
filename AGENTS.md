@@ -4,6 +4,15 @@ These rules apply to every change in this repository.
 
 ## Architecture boundaries
 
+- Treat Financial Task as the product-facing unit and CAP as the atomic measurement
+  unit. Task composition may reference released CAP facts but must not merge their
+  execution, attribution, or outcomes.
+- Make Agent-interface fitness visible through separate observations such as
+  parameter clarity, schema stability, error recovery, pagination, language mapping,
+  and single-tool completion. Never collapse them into an Agent-friendly rating.
+- Treat developer selection dimensions as targets until a CAP defines the
+  measurement and a release carries supporting evidence. Missing evidence must stay
+  unavailable or evidence-insufficient, never inferred from provider claims.
 - This is a greenfield platform. Do not import from or add runtime dependencies on
   `qveris-agent-harness` or Harbor. External questions may be cited only through
   explicit source provenance.

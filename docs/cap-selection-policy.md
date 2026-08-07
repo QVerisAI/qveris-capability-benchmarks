@@ -2,9 +2,14 @@
 
 ## Purpose
 
-A CAP is a bounded developer capability, not a long-horizon workflow or an article
-topic. Selection starts from a concrete business task and ends with a versioned,
-testable definition whose origin can be audited.
+A Financial Task captures what a financial Agent developer is building. A CAP is
+one bounded, independently attributable measurement within that task, not a
+long-horizon workflow or an article topic. Selection starts from the developer
+decision, decomposes the task into required CAPs, and ends with versioned, testable
+definitions whose origins can be audited.
+
+Financial Tasks are the product-facing unit; CAPs are the evaluation unit. Task
+composition never merges CAP outcomes into a provider total score.
 
 ## Accepted sources
 

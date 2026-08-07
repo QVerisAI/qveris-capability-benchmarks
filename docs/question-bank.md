@@ -1,7 +1,9 @@
 # CAP Question Bank
 
 `question_bank/` is the reviewed intake layer for future CAPs. It holds atomic,
-QVeris-authored questions before they become executable CAP Packs.
+QVeris-authored questions before they become executable CAP Packs. These questions
+are the measurement candidates that a product-facing Financial Task may later
+reference; they are not themselves end-to-end financial workflows.
 
 ## Selection rules
 
