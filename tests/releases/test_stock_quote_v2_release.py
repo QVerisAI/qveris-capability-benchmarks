@@ -17,6 +17,7 @@ from qveris_bench.releases.verify import verify_release
 ROOT = Path(__file__).resolve().parents[2]
 RELEASE = ROOT / "releases/stock-quote-2026-q3-v2"
 EVIDENCE = ROOT / "evidence/stock-quote-2026-q3-v2"
+ARTIFACT_MANIFEST = RELEASE / "github-artifacts.json"
 _DIGEST = "sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b"
 
 
@@ -89,6 +90,16 @@ def test_ac_stock_quote_v2_release_rebuilds_all_direct_terminal_evidence() -> No
         assert artifact["binding_registry_digest"] == registry_digest
         assert artifact["github_run_id"]
         assert artifact["github_sha"]
+
+
+def test_ac_stock_quote_v2_release_has_complete_actions_artifact_manifest() -> None:
+    manifest = json.loads(ARTIFACT_MANIFEST.read_text())
+
+    assert manifest["github_run_id"] == "31148061682"
+    assert manifest["github_sha"] == "9469074cb89684910657a79b789739581bd1c4bc"
+    assert len(manifest["artifacts"]) == 8
+    assert len({item["id"] for item in manifest["artifacts"]}) == 8
+    assert all(item["digest"].startswith("sha256:") for item in manifest["artifacts"])
 
 
 def _load(name: str) -> list[dict[str, object]]:
