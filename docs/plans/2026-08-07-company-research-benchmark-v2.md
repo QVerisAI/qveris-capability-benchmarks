@@ -133,9 +133,9 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 3 — Financial Statement Facts CAP
 
-- [ ] Qualify authoritative/public and authorized Provider paths; prefer official
+- [x] Qualify authoritative/public and authorized Provider paths; prefer official
   filings as the truth source and record exclusions terminally.
-- [ ] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
+- [x] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
   bindings, suite, and tests on the existing Core.
 - [ ] Run the fixed Direct matrix and eligible one-tool Agent Trial, then build,
   verify, review, and merge the release PR.
