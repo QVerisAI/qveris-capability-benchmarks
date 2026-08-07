@@ -322,7 +322,13 @@ def test_ac14_operator_handoff_matches_replay_and_fixed_live_boundaries() -> Non
     assert "get_stock_price_indicators" in runbook
     assert "5–8-provider ETF cohort" in runbook
     assert "CAP Pack owns capability semantics" in adding_cap
+    assert "qveris-bench suite freeze cap_packs/<cap>/suite.yaml" in adding_cap
     assert "terminal qualification" in adding_provider
+    assert "qveris-bench provider validate providers/<provider>/provider.yaml" in (
+        adding_provider
+    )
+    assert "qveris-bench provider cohort-check --root providers" in adding_provider
+    assert "not a provider-registry\nqualification" in runbook
 
 
 def test_ac7_cli_help_runs_in_a_real_subprocess() -> None:

@@ -8,7 +8,8 @@ connector is a distinct Access Path.
    names only, and testing authorization for every Access Path.
 3. Assign every candidate a terminal qualification, inclusion or exclusion, with
    reason and evidence digest. Qualification is not a score.
-4. Run `qveris-bench provider validate` and `qveris-bench provider cohort-check`.
+4. Run `qveris-bench provider validate providers/<provider>/provider.yaml` and
+   `qveris-bench provider cohort-check --root providers`.
 5. Bind included paths to a CAP suite without merging Native and QVeris evidence.
 
 Never commit credential values, raw responses, personal data, or unlicensed

@@ -28,8 +28,9 @@ Live workflows are manually dispatched, input-free, and use only the protected
 call count, and credential *names*; do not substitute a personal provider key.
 
 `Live Wind Native MCP E2E` is deliberately narrower: it invokes the single fixed
-canonical tool `get_stock_price_indicators` against the registered Wind native
-MCP path. Its `WIND_MCP_API_KEY` is exposed only as the workflow-local
+canonical tool `get_stock_price_indicators` against its frozen Wind native MCP
+endpoint and arguments. It is a fixed E2E contract, not a provider-registry
+qualification. Its `WIND_MCP_API_KEY` is exposed only as the workflow-local
 `WIND_API_KEY`; it must never be printed, committed, reused for routing, or used
 for another provider. Download only the workflow's sanitized terminal-evidence
 artifact, never a raw response.
