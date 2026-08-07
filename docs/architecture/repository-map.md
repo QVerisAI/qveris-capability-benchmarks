@@ -52,6 +52,7 @@ selection evidence, start with `docs/product-strategy.md`.
 |---|---|---|
 | ETF Holdings | `cap_packs/etf_holdings/` | `src/qveris_bench/cap_packs/etf_holdings/` |
 | Stock Quote smoke | `cap_packs/stock_quote_smoke/` | `src/qveris_bench/cap_packs/stock_quote_smoke/` |
+| Stock Quote production family | `cap_packs/stock_quote_family/` | `src/qveris_bench/cap_packs/stock_quote_family/` |
 
 `evidence/` and `releases/` are committed public artifacts only. Private raw
 responses and credentials are intentionally outside this repository.

@@ -119,12 +119,16 @@ database, provider aggregate, or duplicate facts table is justified.
 
 ### Task 2 — Stock Quote production question family
 
-- [ ] Add coverage, freshness/precision, boundary, and Agent-contract cases for the
+- [x] Add coverage, freshness/precision, boundary, and Agent-contract cases for the
   Company Research scenario without invalidating prior release artifacts.
-- [ ] Freeze versioned cases, truth/tolerance rules, market/language applicability,
+- [x] Freeze versioned cases, truth/tolerance rules, market/language applicability,
   and a credential-safe provider/path cohort.
 - [ ] Run at least three Direct rounds for every included applicable cell and one
   eligible fixed-tool Agent Trial; build and verify a new immutable release.
+
+The frozen `stock-quote-v3` suite lives in `cap_packs/stock_quote_family/` with a
+separate suite-bound binding registry; the remaining step is the live Direct
+matrix and release.
 
 ### Task 3 — Financial Statement Facts CAP
 
