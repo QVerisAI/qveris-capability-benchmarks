@@ -21,7 +21,17 @@ def extract_fmp_income_statement(
             )
         return {"validation_error": "fiscal year unavailable"}
     report = _required_report_for_year(reports, fiscal_year)
-    revenue = _number(_row_field(report, "revenue", "totalRevenue"), "revenue")
+    revenue = _number(
+        _row_field(
+            report,
+            "revenue",
+            "Revenue",
+            "totalRevenue",
+            "TotalRevenue",
+            "revenueUSD",
+        ),
+        "revenue",
+    )
     return _facts(symbol, fiscal_year, revenue, report)
 
 
@@ -113,7 +123,9 @@ def _reports(
 
 
 def _report_year(report: dict[str, Any]) -> int | None:
-    date = _row_field(report, "date", "fiscalDateEnding", "calendarYear")
+    date = _row_field(
+        report, "date", "Date", "fiscalDateEnding", "calendarYear", "reportedDate"
+    )
     if not isinstance(date, str) or len(date) < 4:
         return None
     try:
@@ -171,8 +183,9 @@ def _number(value: object, field: str) -> float:
     if isinstance(value, bool):
         raise FinancialStatementExtractionError(f"{field} is invalid")
     if isinstance(value, str):
+        normalized = value.strip().replace(",", "").replace("$", "").replace(" ", "")
         try:
-            value = float(value)
+            value = float(normalized)
         except ValueError as exc:
             raise FinancialStatementExtractionError(f"{field} is invalid") from exc
     if not isinstance(value, (int, float)):
