@@ -113,6 +113,21 @@ def test_ac4_finnhub_diagnostic_limits_execution_to_quote_bindings() -> None:
     assert workflow.count("--binding-id") == 1
 
 
+def test_ac4_eodhd_diagnostic_limits_execution_to_quote_bindings() -> None:
+    workflow_path = Path(".github/workflows/eodhd-quote-diagnostic.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow_path.read_text())
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "--response-shape" in workflow
+    matrix = document["jobs"]["diagnostic"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id"}
+    assert matrix["binding_id"] == ["eodhd-aapl-quote", "eodhd-invalid-stock"]
+    assert workflow.count("--binding-id") == 1
+
+
 def test_ac5_direct_binding_policy_ignores_a_forged_current_directory(
     tmp_path: Path, monkeypatch: MonkeyPatch
 ) -> None:
