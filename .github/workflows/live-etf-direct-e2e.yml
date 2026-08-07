@@ -26,8 +26,16 @@ jobs:
           python-version: "3.12"
       - run: uv sync --locked --all-groups
       - run: |
-          uv run qveris-bench qveris execute \
-            --binding-id ${{ matrix.binding_id }} \
-            --raw-artifact-dir "$RUNNER_TEMP/qveris-raw"
+          uv run pytest tests/e2e/test_live_etf_holdings.py -q
         env:
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          RUN_LIVE_ETF_HOLDINGS: "1"
+          ETF_BINDING_ID: ${{ matrix.binding_id }}
+          ETF_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: etf-terminal-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error
