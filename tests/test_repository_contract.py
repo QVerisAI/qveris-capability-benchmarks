@@ -305,6 +305,26 @@ def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
     assert "credential values remain outside" in replay
 
 
+def test_ac14_operator_handoff_matches_replay_and_fixed_live_boundaries() -> None:
+    runbook = (ROOT / "docs/operator-runbook.md").read_text(encoding="utf-8")
+    adding_cap = (ROOT / "docs/adding-a-cap.md").read_text(encoding="utf-8")
+    adding_provider = (ROOT / "docs/adding-a-provider.md").read_text(encoding="utf-8")
+
+    for command in (
+        "qveris-bench schema export --check",
+        "qveris-bench suite freeze",
+        "qveris-bench suite plan",
+        "qveris-bench release verify",
+    ):
+        assert command in runbook
+    assert "must never call a provider API, MCP server, or\nAgent backend" in runbook
+    assert "WIND_MCP_API_KEY" in runbook
+    assert "get_stock_price_indicators" in runbook
+    assert "5–8-provider ETF cohort" in runbook
+    assert "CAP Pack owns capability semantics" in adding_cap
+    assert "terminal qualification" in adding_provider
+
+
 def test_ac7_cli_help_runs_in_a_real_subprocess() -> None:
     executable = shutil.which("qveris-bench")
     assert executable is not None, "AC7 installed qveris-bench entry point is missing"
