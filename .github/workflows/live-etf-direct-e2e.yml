@@ -1,0 +1,41 @@
+name: Live ETF Direct E2E
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  direct:
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2, 3]
+        binding_id:
+          - alpha-vantage-spy-holdings
+          - alpha-vantage-invalid-etf
+          - fiu-spy-holdings
+          - fiu-invalid-etf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: |
+          uv run pytest tests/e2e/test_live_etf_holdings.py -q
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          RUN_LIVE_ETF_HOLDINGS: "1"
+          ETF_BINDING_ID: ${{ matrix.binding_id }}
+          ETF_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: etf-terminal-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error

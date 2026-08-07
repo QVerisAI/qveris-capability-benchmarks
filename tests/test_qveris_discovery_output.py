@@ -156,3 +156,36 @@ def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> Non
     assert 'ROOT / "cap_packs/stock_quote/suite.yaml"' in source
     assert 'assert binding.access_path_id == "finnhub-stock-quote"' in source
     assert 'assert binding.provider_id == "finnhub"' in source
+
+
+def test_ac9_live_etf_direct_workflow_has_a_fixed_twelve_call_matrix() -> None:
+    workflow_path = Path(".github/workflows/live-etf-direct-e2e.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow)
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    assert "qveris-finance" not in workflow
+    assert "stock-quote" not in workflow
+    matrix = document["jobs"]["direct"]["strategy"]["matrix"]
+    assert set(matrix) == {"binding_id", "round"}
+    assert matrix["binding_id"] == [
+        "alpha-vantage-spy-holdings",
+        "alpha-vantage-invalid-etf",
+        "fiu-spy-holdings",
+        "fiu-invalid-etf",
+    ]
+    assert matrix["round"] == [1, 2, 3]
+    assert "pytest tests/e2e/test_live_etf_holdings.py -q" in workflow
+    assert "ETF_BINDING_ID: ${{ matrix.binding_id }}" in workflow
+    assert "ETF_ROUND: ${{ matrix.round }}" in workflow
+    assert "--binding-id" not in workflow
+
+
+def test_ac9_live_etf_test_executes_only_the_matrix_binding() -> None:
+    source = Path("tests/e2e/test_live_etf_holdings.py").read_text()
+
+    assert 'binding_id = os.environ.get("ETF_BINDING_ID")' in source
+    assert 'round_number = os.environ.get("ETF_ROUND")' in source
+    assert "selected_run_key(compiled, binding, binding_id, round_number)" in source
+    assert "for binding_id" not in source
