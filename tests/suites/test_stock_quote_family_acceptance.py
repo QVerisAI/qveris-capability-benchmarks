@@ -210,9 +210,10 @@ def test_ac6_every_case_has_a_frozen_live_binding() -> None:
         ), f"AC6 {binding_id} must resolve to a frozen RunCell"
 
 
-def test_ac6_suite_plan_runs_through_the_installed_cli() -> None:
+def test_ac6_suite_plan_runs_through_the_installed_cli(tmp_path: Path) -> None:
     executable = shutil.which("qveris-bench")
     assert executable is not None
+    output = tmp_path / "run-plan.json"
 
     result = subprocess.run(
         [
@@ -225,7 +226,7 @@ def test_ac6_suite_plan_runs_through_the_installed_cli() -> None:
             "--providers-root",
             str(ROOT / "providers"),
             "--output",
-            str(PACK / "run-plan.json"),
+            str(output),
         ],
         cwd=ROOT,
         check=False,
@@ -235,3 +236,4 @@ def test_ac6_suite_plan_runs_through_the_installed_cli() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "Planned 30 cells, 30 applicable calls" in result.stdout
+    assert output.is_file()
