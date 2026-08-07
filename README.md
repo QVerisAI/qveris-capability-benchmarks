@@ -42,6 +42,10 @@ one benchmark from CAP configuration through suite compilation, execution,
 evidence, outcome evaluation, and release generation. The map also distinguishes
 generic Core code from CAP-owned domain logic.
 
+Future CAPs enter through the reviewed [CAP question bank](docs/question-bank.md).
+It distinguishes source-backed candidate questions from runnable CAP Packs, so a
+research idea cannot be mistaken for an executable benchmark.
+
 ## Development
 
 Python 3.12 and [uv](https://docs.astral.sh/uv/) are required.

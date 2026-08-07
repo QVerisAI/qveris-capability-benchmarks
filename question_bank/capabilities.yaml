@@ -1,0 +1,41 @@
+capabilities:
+  - cap_id: etf-holdings
+    name: ETF Holdings
+    lifecycle: runnable
+    business_use: Select a provider for constituent-level ETF research.
+  - cap_id: stock-quote
+    name: Stock Quote
+    lifecycle: runnable
+    business_use: Select a provider for a current equity quote request.
+  - cap_id: historical-price-series
+    name: Historical Price Series
+    lifecycle: candidate
+    business_use: Select a provider for dated OHLCV market-history retrieval.
+  - cap_id: company-fundamentals
+    name: Company Fundamentals
+    lifecycle: candidate
+    business_use: Select a provider for comparable company fundamental metrics.
+  - cap_id: financial-statement-facts
+    name: Financial Statement Facts
+    lifecycle: candidate
+    business_use: Select a provider for period-specific issuer financial facts.
+  - cap_id: sec-filing-evidence
+    name: SEC Filing Evidence
+    lifecycle: candidate
+    business_use: Select a provider for cited evidence from SEC issuer filings.
+  - cap_id: financial-news-evidence
+    name: Financial News Evidence
+    lifecycle: candidate
+    business_use: Select a provider for dated and cited company-news evidence.
+  - cap_id: index-constituents
+    name: Index Constituents
+    lifecycle: candidate
+    business_use: Select a provider for index constituent membership and weights.
+  - cap_id: corporate-actions
+    name: Corporate Actions
+    lifecycle: candidate
+    business_use: Select a provider for verified issuer corporate-action events.
+  - cap_id: economic-time-series
+    name: Economic Time Series
+    lifecycle: candidate
+    business_use: Select a provider for dated macroeconomic series observations.
