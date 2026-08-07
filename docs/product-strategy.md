@@ -67,8 +67,9 @@ Agent Trial receives one predetermined canonical tool.
 
 ## Developer selection dimensions
 
-Every task-fit profile should disclose the dimensions that materially change a
-developer's choice:
+The following table is the target selection schema. It defines the dimensions that
+materially change a developer's choice; it does not claim that every dimension is
+implemented or published by v1.
 
 | Dimension | Decision evidence |
 |---|---|
@@ -80,6 +81,16 @@ developer's choice:
 | Language fit | language coverage for requests, content, metadata, and errors |
 | Agent integration | Agent interface observations defined above |
 | Access constraints | authentication, quota, licensing, environment, path type |
+
+v1 currently provides atomic task outcomes, access-path identity, evidence lineage,
+and execution observations such as parameters, errors, retries, tokens, and elapsed
+time when the applicable mode records them. It does not yet standardize cross-CAP
+accuracy references, precision thresholds, latency/reliability distributions, task
+cost, comprehensive geographic coverage, or a language test matrix.
+
+Any dimension without a CAP-owned definition, repeatable measurement, and released
+evidence must remain unavailable or evidence-insufficient. Declared provider metadata
+or marketing claims may be disclosed as such, but cannot become measured facts.
 
 Accuracy and precision require a CAP-owned reference or rule; marketing claims do
 not become measured facts. Latency, reliability, and cost retain their disclosed

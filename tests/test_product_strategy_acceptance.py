@@ -49,6 +49,8 @@ def test_ac3_agent_friendliness_is_observable_and_not_a_score() -> None:
 
 def test_ac4_strategy_covers_developer_selection_dimensions() -> None:
     strategy = (ROOT / "docs/product-strategy.md").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    architecture = (ROOT / "docs/architecture/platform.md").read_text(encoding="utf-8")
 
     dimensions = (
         "accuracy",
@@ -63,6 +65,18 @@ def test_ac4_strategy_covers_developer_selection_dimensions() -> None:
     missing = [dimension for dimension in dimensions if dimension not in strategy]
 
     assert not missing, f"AC4 missing developer selection dimensions: {missing}"
+    assert "target selection schema" in strategy, (
+        "AC4 future dimensions must not be presented as current v1 facts"
+    )
+    assert "must remain unavailable or evidence-insufficient" in strategy, (
+        "AC4 unsupported dimensions must fail closed"
+    )
+    assert "target task-fit profile" in readme, (
+        "AC4 README must distinguish the product target from current evidence"
+    )
+    assert "target selection dimensions" in architecture, (
+        "AC4 architecture must not overclaim current measurement coverage"
+    )
 
 
 def test_ac5_direct_and_agent_evidence_remain_separate() -> None:

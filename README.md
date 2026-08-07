@@ -5,10 +5,12 @@ financial Agent developers. It helps a developer choose the provider and Access 
 that fit a concrete financial product task, then drill down to replayable evidence
 for each atomic capability.
 
-Financial Tasks are the product-facing unit; CAPs are the measurement unit. A task
-such as company research composes several independently tested CAPs, so developers
-can compare accuracy, precision, latency, reliability, cost, country and market
-coverage, language coverage, and Agent-interface fitness without losing attribution.
+Financial Tasks are the product-facing unit; CAPs are the measurement unit. The
+target task-fit profile is designed to compare accuracy, precision, latency,
+reliability, cost, country and market coverage, language coverage, and
+Agent-interface fitness without losing attribution. A dimension appears only after
+its CAP defines the measurement and a release carries supporting evidence; the list
+is a product target, not a claim that v1 already publishes every dimension.
 
 The v1 Core, CAP contracts, Direct-Test execution path, evidence pipeline, and
 immutable release flow are implemented. The repository currently contains the

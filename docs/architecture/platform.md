@@ -13,8 +13,10 @@ bounded questions:
 
 1. Which provider and Access Path fit the CAPs required by a concrete financial
    Agent task under the disclosed conditions?
-2. What accuracy, precision, latency, reliability, cost, country/market coverage,
-   language coverage, and access constraints are observed?
+2. Which target selection dimensions have CAP-defined, released evidence: accuracy,
+   precision, latency, reliability, cost, country/market coverage, language coverage,
+   Agent-interface fitness, and access constraints? Unsupported dimensions remain
+   unavailable or evidence-insufficient rather than inferred.
 3. When an Agent uses one predetermined canonical tool, what parameters, errors,
    recoveries, token use, elapsed time, and final outcome are observed?
 
