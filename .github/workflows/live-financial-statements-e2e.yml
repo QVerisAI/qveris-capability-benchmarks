@@ -2,6 +2,11 @@ name: Live Financial Statement Facts Direct E2E
 
 on:
   workflow_dispatch:
+    inputs:
+      probe:
+        description: Persist value-free response shapes instead of terminal outcomes.
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -34,6 +39,7 @@ jobs:
           FSF_BINDING_ID: ${{ matrix.binding_id }}
           FSF_ROUND: ${{ matrix.round }}
           LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+          FSF_PROBE: ${{ inputs.probe && '1' || '0' }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

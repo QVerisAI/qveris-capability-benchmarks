@@ -17,7 +17,11 @@ from qveris_bench.cap_packs.financial_statement_facts.extractors import (
 )
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
-from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
+from qveris_bench.execution.qveris import (
+    QverisToolClient,
+    execute_discovered_tool,
+    public_response_shape,
+)
 from qveris_bench.execution.qveris_binding import (
     QverisDirectBinding,
     load_registered_qveris_direct_binding,
@@ -29,11 +33,6 @@ from qveris_bench.suites.compiler import compile_suite
 ROOT = Path(__file__).resolve().parents[2]
 PACK = ROOT / "cap_packs/financial_statement_facts"
 BINDINGS_REGISTRY = ROOT / "cap_packs/qveris-direct-bindings-financial-statements.json"
-_DISCOVERY_QUERY = (
-    "SEC company facts annual revenue fiscal year AAPL 10-K financial statements "
-    "income statement direct provider"
-)
-
 # (access_path_id, provider_id, tool_id, parameters, discovery_digest,
 #  discovery_query, negative, case_id)
 FAMILY_BINDINGS: dict[
@@ -45,7 +44,7 @@ FAMILY_BINDINGS: dict[
         "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
         {"symbol": "AAPL", "limit": 5},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "FMP as reported income statement AAPL annual revenue direct provider",
         False,
         "aapl-revenue-fy2025",
     ),
@@ -55,7 +54,7 @@ FAMILY_BINDINGS: dict[
         "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
         {"symbol": "AAPL", "limit": 5},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "FMP as reported income statement AAPL annual revenue direct provider",
         True,
         "invalid-period",
     ),
@@ -65,7 +64,7 @@ FAMILY_BINDINGS: dict[
         "alphavantage.income_statement.retrieve.v1.7aca3c4a",
         {"function": "INCOME_STATEMENT", "symbol": "AAPL"},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "Alpha Vantage income statement AAPL annual revenue direct provider",
         False,
         "aapl-revenue-fy2025",
     ),
@@ -75,7 +74,7 @@ FAMILY_BINDINGS: dict[
         "alphavantage.income_statement.retrieve.v1.7aca3c4a",
         {"function": "INCOME_STATEMENT", "symbol": "AAPL"},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "Alpha Vantage income statement AAPL annual revenue direct provider",
         True,
         "invalid-period",
     ),
@@ -85,7 +84,7 @@ FAMILY_BINDINGS: dict[
         "sec.company.facts.v1",
         {"cik": "0000320193"},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "SEC company facts AAPL CIK annual revenue direct provider",
         False,
         "aapl-revenue-fy2025",
     ),
@@ -95,7 +94,7 @@ FAMILY_BINDINGS: dict[
         "sec.company.facts.v1",
         {"cik": "0000320193"},
         "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        _DISCOVERY_QUERY,
+        "SEC company facts AAPL CIK annual revenue direct provider",
         True,
         "invalid-period",
     ),
@@ -264,6 +263,32 @@ def test_ac_live_financial_statement_facts_direct_produces_terminal_evidence(
                 binding.parameters,
             )
             document = json.loads(result.result.raw_path.read_text(encoding="utf-8"))
+            if os.environ.get("FSF_PROBE") == "1":
+                probe = (
+                    json.dumps(
+                        {
+                            "binding_id": binding_id,
+                            "run_key": run_key,
+                            "tool_id": binding.tool_id,
+                            "parameters": binding.parameters,
+                            "raw_digest": result.result.raw_digest,
+                            "response_shape": public_response_shape(document),
+                        },
+                        sort_keys=True,
+                    )
+                    + "\n"
+                ).encode()
+                probe_artifact = PublicArtifactStore(public_root).persist(
+                    f"{binding_id}-probe", probe
+                )
+                assert probe_artifact.digest.startswith("sha256:")
+                return TerminalEvidence(
+                    binding_id,
+                    run_key,
+                    result.result.raw_digest,
+                    probe_artifact.digest,
+                    "probe",
+                )
             return _persist_terminal_evidence(
                 public_root,
                 binding_id,
