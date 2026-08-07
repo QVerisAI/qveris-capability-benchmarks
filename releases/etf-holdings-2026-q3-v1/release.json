@@ -1,0 +1,669 @@
+{
+  "cells": [
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "completed"
+    }
+  ],
+  "evidence": [
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-invalid-etf-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:2fe33e3bab42a3a88e65d47d3d0a1521f5ec4384685068dc39d770d66d9df04e",
+      "raw_digest": "sha256:517bee834643aed379c82d798032e268c6b43453ea2007624b24113e06491598",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-invalid-etf-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:5b0fd78480bb432b1b5822a2432fe3b979cf9ef9d238acb51fff26b5c43dbae0",
+      "raw_digest": "sha256:f48f9f865841e028b01519158c7d8d102004c1eb6fa8afeaa6ad99822084dc3b",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-invalid-etf-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:43f08d3788aa363593570e89cf89ab3f5d83d57d5fcf62594768a352a41e6be2",
+      "raw_digest": "sha256:370abf599c42bcb88bcee670865c117224b0fc830a6a98c0b206d59d40b7c117",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-iwm-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:00382b3bae34ffd4ab2a18f4c214b8ffbe96a7d5ce5c50089a5102e92eb484eb",
+      "raw_digest": "sha256:d2bd03a1dc298af1bbf10f3ecf752d98239f816f96311d8ccd2afe502cd1d961",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-iwm-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:ee7703e8d2411b5d8af0cbd8266aca72bde601f5fb5d6517b6822b7dd8234318",
+      "raw_digest": "sha256:1cdacccb5c6e86736dd4001af023d32f0c06b021170d3d5c93504a6b193a5d22",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-iwm-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:55c81fffd47a3c6c844ab0a6def75714d71d54d29b69d20513d4eb6b2eda310d",
+      "raw_digest": "sha256:f828a26860cf4d1bd9c826ba50d0bf619aef68e52752e9adb9d95553f1762a5e",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-qqq-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:54268b9b3b02db4b7632008b23b57c08d32c3ae7e3bdc4d1acd40ae81dd7e434",
+      "raw_digest": "sha256:8768ae2ba1c854f974f28c783f98f726b1ad66614bfb760bdc00128499f5271b",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-qqq-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:4cc7d8d3ff5acc4665e1727912621a25564bc7b96b65bbb2d552a0b043d93b32",
+      "raw_digest": "sha256:62ee3dc457416acfa8d9133d5f0b9d04599fa9f7b56bb48e72824b5bfd3c05fc",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-qqq-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:8c130948795f7c41e821131a01e40a5bcf5eb5ff6fa8734614dbc2b42a49569d",
+      "raw_digest": "sha256:fe17ccb0499d0f6eb54f0629a3cad7f1f91a6a3e590373e728b65a3c4ee2d877",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-spy-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:7b54249ec928758a50fa5b6524d50dfa762f0b982408aedde62060c444dbfbca",
+      "raw_digest": "sha256:d9ac727d40d5872ac186a220b4aa49ff12342b347640626f25a185916f96a043",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-spy-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:ba14dd739feb0f4de2fcc1d47aa84ea5192a54d2b4dbc385d26094749d2be306",
+      "raw_digest": "sha256:6e26d14ae9de5c879a266df2e92c89b87e3cf49e0b723c13642f95bda2e999b5",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-alpha-vantage-spy-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:d4f84ee9811b6ceb4eb272922bcba830bcf3d523c4cadbfed594033c3d2db464",
+      "raw_digest": "sha256:b6bedaac885dd848cb32f1f1129a72d58834561f8f89df63bb981d24e8601bf1",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-invalid-etf-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:4e0c009e75eee9cd80164ce7a0272445dc9911d3d0fac1f363f9beeda91228b5",
+      "raw_digest": "sha256:ceeb57e179a5a3d6a8ffd1088d88afc92faeaa9b1b7192b6dff5a1dfc7eb76e8",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-invalid-etf-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:ccbb826e284ea732e5965bda2bff06ca5ab84a4cb789568e90a8fe5f0e38df70",
+      "raw_digest": "sha256:82f774a93ba931f20391c57e21c4764e6cd7b267094e92f80c83af3423133f92",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-invalid-etf-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:bb2d1b85e2a2d88df76303d8740038dd8c98f60c1b1eb40728fae84c86e93f17",
+      "raw_digest": "sha256:69b3db751e62961b5256fb376ca5d68e32df4ecb7ff1f47466c11dac0ede3f2c",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-iwm-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:a027a26ed178f931d3a3219994e982603dc656c723cf1aebe9106086ba751186",
+      "raw_digest": "sha256:a2df84f5023c84578e5721399ef6ea178848aa8c0f7f20af83a68cd903225b83",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-iwm-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:db9e38d7efa7244bf1a9b6bd1a8b1632d5fc1bb3b55c6e5b02496fc8db7a5620",
+      "raw_digest": "sha256:110590edb163719f91ed09c486c6adf5c5b7e831b700516df19542060ed03a79",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-iwm-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:87a54533308d4f7ab261a8ed3556c8597c12e9bec06b376495ca64665ed39c1a",
+      "raw_digest": "sha256:fb9e40d0b9a2d821ad5b7f5ebc8f07cb2c7d42b9359664ff493e9a1324e8c7c9",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-qqq-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:ac02106a0a105660fd6e03c0e5646b81eb97b649a64d7d100ddf9cde486e231c",
+      "raw_digest": "sha256:712e12f9aa8304a65b088fa316b58c34085c548f0b3132238908c23ff1f013f7",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-qqq-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:0365c6b56f72c87ec68cfcbd93217ac7e06f63b6fe6f964caf81c46855c49233",
+      "raw_digest": "sha256:e8f686e7076660514802b8d8ea3fd031983f1fad0a226f0e337094cc9239af34",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-qqq-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:3781d47f1ac742f5db9c6dcf30e42fd3cec0b759ca18a886ef87761e4c152b39",
+      "raw_digest": "sha256:d515c1b944d32718c2c3b4532c90299a03b4ba3fa503869244b042f1c658c500",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-spy-holdings-direct-1",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:37bdf8497d83b73fd20daf81c0fa1a4f7f1091e5b7c772b5cb9b16965c456203",
+      "raw_digest": "sha256:bbd35813edeb20c0065cf6ae05e273b1caace5e43a78b9cf075cb996a1ec5434",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:1",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-spy-holdings-direct-2",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:bcd648bf9ba986d1a893d6b98008441b92c30821bb7429d55f9cc5108c116e03",
+      "raw_digest": "sha256:02733ca6566b6145fc8ad83733aeff764672235797d8af074ae4ac3be8d9ac16",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:2",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "etf-fiu-spy-holdings-direct-3",
+      "extractor_version": "1.0.0",
+      "license_status": "cleared",
+      "public_digest": "sha256:84bb77fa6e735693de5c76514f118f96a21ef67249baedd80fa5caacc0f737f8",
+      "raw_digest": "sha256:09b42e0793f2fdbacc4d04a6f7d4541e9d291dc4e2cf347c727916b4f13832ee",
+      "redaction_status": "sanitized",
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:3",
+      "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2"
+    }
+  ],
+  "release": {
+    "developer_selection_facts": [],
+    "evidence_ids": [
+      "etf-alpha-vantage-spy-holdings-direct-1",
+      "etf-alpha-vantage-spy-holdings-direct-2",
+      "etf-alpha-vantage-spy-holdings-direct-3",
+      "etf-fiu-spy-holdings-direct-1",
+      "etf-fiu-spy-holdings-direct-2",
+      "etf-fiu-spy-holdings-direct-3",
+      "etf-alpha-vantage-qqq-holdings-direct-1",
+      "etf-alpha-vantage-qqq-holdings-direct-2",
+      "etf-alpha-vantage-qqq-holdings-direct-3",
+      "etf-fiu-qqq-holdings-direct-1",
+      "etf-fiu-qqq-holdings-direct-2",
+      "etf-fiu-qqq-holdings-direct-3",
+      "etf-alpha-vantage-iwm-holdings-direct-1",
+      "etf-alpha-vantage-iwm-holdings-direct-2",
+      "etf-alpha-vantage-iwm-holdings-direct-3",
+      "etf-fiu-iwm-holdings-direct-1",
+      "etf-fiu-iwm-holdings-direct-2",
+      "etf-fiu-iwm-holdings-direct-3",
+      "etf-alpha-vantage-invalid-etf-direct-1",
+      "etf-alpha-vantage-invalid-etf-direct-2",
+      "etf-alpha-vantage-invalid-etf-direct-3",
+      "etf-fiu-invalid-etf-direct-1",
+      "etf-fiu-invalid-etf-direct-2",
+      "etf-fiu-invalid-etf-direct-3"
+    ],
+    "limitations": [
+      "Alpha Vantage IWM Direct responses were recorded as provider_negative because they did not satisfy the frozen ETF observation contract."
+    ],
+    "outcome_ids": [
+      "etf-alpha-vantage-spy-holdings-1-completed",
+      "etf-alpha-vantage-spy-holdings-2-completed",
+      "etf-alpha-vantage-spy-holdings-3-completed",
+      "etf-fiu-spy-holdings-1-completed",
+      "etf-fiu-spy-holdings-2-completed",
+      "etf-fiu-spy-holdings-3-completed",
+      "etf-alpha-vantage-qqq-holdings-1-completed",
+      "etf-alpha-vantage-qqq-holdings-2-completed",
+      "etf-alpha-vantage-qqq-holdings-3-completed",
+      "etf-fiu-qqq-holdings-1-completed",
+      "etf-fiu-qqq-holdings-2-completed",
+      "etf-fiu-qqq-holdings-3-completed",
+      "etf-alpha-vantage-iwm-holdings-1-provider-negative",
+      "etf-alpha-vantage-iwm-holdings-2-provider-negative",
+      "etf-alpha-vantage-iwm-holdings-3-provider-negative",
+      "etf-fiu-iwm-holdings-1-completed",
+      "etf-fiu-iwm-holdings-2-completed",
+      "etf-fiu-iwm-holdings-3-completed",
+      "etf-alpha-vantage-invalid-etf-1-provider-negative",
+      "etf-alpha-vantage-invalid-etf-2-provider-negative",
+      "etf-alpha-vantage-invalid-etf-3-provider-negative",
+      "etf-fiu-invalid-etf-1-provider-negative",
+      "etf-fiu-invalid-etf-2-provider-negative",
+      "etf-fiu-invalid-etf-3-provider-negative"
+    ],
+    "provider_feedback_facts": {},
+    "release_id": "etf-holdings-2026-q3-v1",
+    "run_plan_digest": "sha256:93139d280024ebc7a811dabdda108230f75a17ae01debf53b493e0e713939afb",
+    "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2",
+    "version": "1.0.0"
+  }
+}

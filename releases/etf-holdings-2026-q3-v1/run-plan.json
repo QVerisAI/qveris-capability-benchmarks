@@ -1,0 +1,342 @@
+{
+  "cells": [
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "spy-holdings",
+      "case_input": {
+        "symbol": "SPY"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:spy-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "qqq-holdings",
+      "case_input": {
+        "symbol": "QQQ"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:qqq-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "iwm-holdings",
+      "case_input": {
+        "symbol": "IWM"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:iwm-holdings:fiu:fiu-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:alpha-vantage:alpha-vantage-etf-holdings:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 1,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 2,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "fiu-etf-holdings",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-etf",
+      "case_input": {
+        "symbol": "NOTANETF"
+      },
+      "mode": "direct",
+      "provider_id": "fiu",
+      "round": 3,
+      "run_key": "etf-holdings-v1:52fe5fc236b5:invalid-etf:fiu:fiu-etf-holdings:direct:3",
+      "state": "planned"
+    }
+  ],
+  "suite_fingerprint": "52fe5fc236b5af8cc8bfa21fdfb7f8649c796c2bda1b09e8f1aa1cfb74a951d2",
+  "suite_id": "etf-holdings-v1"
+}
