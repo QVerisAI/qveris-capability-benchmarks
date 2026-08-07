@@ -341,13 +341,22 @@ def test_ac4_source_url_rejects_credentials_and_query_parameters() -> None:
         )
 
 
-def test_ac4_source_url_rejects_private_network_hosts() -> None:
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://127.0.0.1/internal",
+        "https://[::1]/internal",
+        "https://localhost./internal",
+        "https://source.internal./internal",
+    ],
+)
+def test_ac4_source_url_rejects_private_network_hosts(url: str) -> None:
     with pytest.raises(ValueError, match="public host"):
         QuestionSource.model_validate(
             {
                 "source_id": "private-source",
                 "name": "Private source",
-                "reference_url": "https://127.0.0.1/internal",
+                "reference_url": url,
                 "authority_tier": "official_api",
                 "reproduction_policy": "citation_only",
             }
@@ -363,6 +372,32 @@ def test_ac4_external_repository_requires_immutable_provenance() -> None:
                 "reference_url": "https://github.com/example/benchmark",
                 "authority_tier": "external_benchmark",
                 "reproduction_policy": "citation_only",
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    ("url", "commit", "task_ids"),
+    [
+        ("https://github.com./example/benchmark", None, ()),
+        ("https://github.com/example/benchmark", "a" * 40, ("",)),
+    ],
+)
+def test_ac4_external_repository_rejects_provenance_bypasses(
+    url: str,
+    commit: str | None,
+    task_ids: tuple[str, ...],
+) -> None:
+    with pytest.raises(ValueError, match="immutable repository provenance"):
+        QuestionSource.model_validate(
+            {
+                "source_id": "mutable-benchmark",
+                "name": "Mutable benchmark",
+                "reference_url": url,
+                "authority_tier": "external_benchmark",
+                "reproduction_policy": "citation_only",
+                "repository_commit": commit,
+                "source_task_ids": task_ids,
             }
         )
 

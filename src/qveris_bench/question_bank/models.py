@@ -9,6 +9,10 @@ from qveris_bench.models.base import FrozenModel, StableId
 from qveris_bench.models.scenario import DeveloperScenario, QuestionRole, ScenarioRef
 
 
+def _normalized_host(value: HttpUrl) -> str:
+    return (value.host or "").lower().rstrip(".").removeprefix("[").removesuffix("]")
+
+
 class QuestionSource(FrozenModel):
     source_id: StableId
     name: str = Field(min_length=1)
@@ -32,7 +36,7 @@ class QuestionSource(FrozenModel):
             or value.fragment
         ):
             raise ValueError("source must use a canonical public HTTPS URL")
-        host = (value.host or "").lower()
+        host = _normalized_host(value)
         try:
             address = ipaddress.ip_address(host)
         except ValueError:
@@ -48,11 +52,15 @@ class QuestionSource(FrozenModel):
 
     @model_validator(mode="after")
     def require_immutable_repository_provenance(self) -> QuestionSource:
-        host = self.reference_url.host or ""
+        host = _normalized_host(self.reference_url)
         if (
             self.authority_tier == "external_benchmark"
-            and host.lower() == "github.com"
-            and (not self.repository_commit or not self.source_task_ids)
+            and host == "github.com"
+            and (
+                not self.repository_commit
+                or not self.source_task_ids
+                or any(not task_id.strip() for task_id in self.source_task_ids)
+            )
         ):
             raise ValueError(
                 "external benchmark requires immutable repository provenance"
