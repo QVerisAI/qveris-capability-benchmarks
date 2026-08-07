@@ -3,6 +3,9 @@
 This map is the shortest path for reviewing a benchmark without confusing
 capability-specific rules with the reusable platform Core.
 
+For the product-facing relationship between Financial Tasks, CAPs, and developer
+selection evidence, start with `docs/product-strategy.md`.
+
 ## Read one benchmark end to end
 
 1. Start at `cap_packs/<cap>/cap.yaml`. It defines the business capability and

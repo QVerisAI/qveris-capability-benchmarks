@@ -6,12 +6,16 @@
 ## 1. Mission
 
 QVeris Capability Benchmark Platform is open provider-selection infrastructure for
-AI Agent developers. It uses real capability scenarios, official provider machine
-interfaces, and replayable evidence to answer two bounded questions:
+financial Agent developers. Financial Tasks organize the product around what the
+developer is building; atomic CAPs provide the attributable, replayable measurement
+substrate. The platform uses official provider machine interfaces to answer three
+bounded questions:
 
-1. For a specific capability, which provider access path can complete the stated
-   developer task under the disclosed conditions?
-2. When an Agent uses one predetermined canonical tool, what parameters, errors,
+1. Which provider and Access Path fit the CAPs required by a concrete financial
+   Agent task under the disclosed conditions?
+2. What accuracy, precision, latency, reliability, cost, country/market coverage,
+   language coverage, and access constraints are observed?
+3. When an Agent uses one predetermined canonical tool, what parameters, errors,
    recoveries, token use, elapsed time, and final outcome are observed?
 
 The platform does not collapse unrelated scenarios into a provider total score and
@@ -21,18 +25,22 @@ access path, environment, evidence, and limitations.
 ## 2. Design principles
 
 1. Developer selection value comes before provider growth.
-2. One generic Core serves every capability; CAP Packs express domain differences.
-3. The platform is greenfield. The Agent Harness is question provenance only and is
+2. Financial Task is the product unit; CAP is the measurement unit.
+3. Agent-interface fitness is a first-class set of observations, not a composite
+   rating. It includes parameter clarity, response structure, error recovery,
+   pagination, language mapping, and single-tool completion behavior.
+4. One generic Core serves every capability; CAP Packs express domain differences.
+5. The platform is greenfield. The Agent Harness is question provenance only and is
    never imported, copied as runtime code, or treated as a schema dependency.
-4. Direct Test is the required source of provider capability facts.
-5. Agent Trial observes one official machine interface through one predetermined
+6. Direct Test is the required source of provider capability facts.
+7. Agent Trial observes one official machine interface through one predetermined
    canonical tool. It does not test discovery, routing, or long-horizon planning.
-6. Agent observations remain factual. The platform records parameters, errors,
+8. Agent observations remain factual. The platform records parameters, errors,
    retries, tokens, time, and categorical task outcomes without a composite rating.
-7. Native and QVeris access paths run and publish separately.
-8. Evidence precedes publication. Later systems consume only a formal release.
-9. Git-backed files are the v1 source of truth; v1 has no database.
-10. Unreliable attribution is reported as `unknown`, never reassigned to a provider.
+9. Native and QVeris access paths run and publish separately.
+10. Evidence precedes publication. Later systems consume only a formal release.
+11. Git-backed files are the v1 source of truth; v1 has no database.
+12. Unreliable attribution is reported as `unknown`, never reassigned to a provider.
 
 ## 3. Six-stage contract
 
@@ -73,6 +81,8 @@ generate articles, operate a leaderboard, send messages, run CRM, or build a por
 ## 4. Data flow and provenance
 
 ```text
+FinancialTask (product composition; consumer layer)
+  -> required CapDefinitions
 TopicSource
   -> CapDefinition
   -> ProviderCandidatePool
@@ -82,8 +92,12 @@ TopicSource
   -> ObservationFacts (sanitized)
   -> TaskOutcome
   -> BenchmarkRelease
-  -> Publication / Provider Feedback consumers
+  -> Task-fit Profile / Provider Feedback consumers
 ```
+
+The Financial Task composition does not merge CAP executions or outcomes. It points
+to independently released CAP facts and presents their tradeoffs in the developer's
+language. It is a product information architecture, not a v1 runtime workflow.
 
 Each layer consumes the formal product of the preceding layer. A release fact must
 trace back to an observation, public evidence digest, raw digest, extractor version,

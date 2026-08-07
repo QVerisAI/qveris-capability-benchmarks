@@ -1,15 +1,24 @@
 # QVeris Capability Benchmarks
 
-QVeris Capability Benchmarks is an open, evidence-first platform for comparing
-provider capabilities in concrete AI Agent tasks. It is designed to answer a
-practical question: for a specific capability and access path, can a provider's
-official machine interface complete the developer's task under disclosed test
-conditions?
+QVeris Capability Benchmarks is open, evidence-first selection infrastructure for
+financial Agent developers. It helps a developer choose the provider and Access Path
+that fit a concrete financial product task, then drill down to replayable evidence
+for each atomic capability.
+
+Financial Tasks are the product-facing unit; CAPs are the measurement unit. A task
+such as company research composes several independently tested CAPs, so developers
+can compare accuracy, precision, latency, reliability, cost, country and market
+coverage, language coverage, and Agent-interface fitness without losing attribution.
 
 The v1 Core, CAP contracts, Direct-Test execution path, evidence pipeline, and
 immutable release flow are implemented. The repository currently contains the
 ETF Holdings benchmark release and a deliberately narrow Stock Quote smoke CAP.
 It is not a provider leaderboard and does not publish a composite score.
+
+The primary differentiation is Agent-interface fitness: whether one predetermined
+canonical tool has a clear parameter contract, stable response schema, recoverable
+errors, safe pagination, sufficient context, and reliable language mapping. These
+remain separate observations rather than an Agent-friendly rating.
 
 ## Principles
 
@@ -27,8 +36,9 @@ source questions, but it is not a code, schema, or runtime dependency.
 ## Workflow
 
 ```text
-CAP source -> frozen suite -> run plan -> private raw evidence
-           -> sanitized observations -> task outcomes -> release bundle
+Financial Task -> required CAPs -> frozen suites -> run plans
+               -> private raw evidence -> sanitized observations
+               -> categorical outcomes -> release facts -> task-fit profile
 ```
 
 Stages 1–4 build and run benchmarks, including immutable release bundles. The
@@ -41,6 +51,10 @@ Start with [the repository map](docs/architecture/repository-map.md). It follows
 one benchmark from CAP configuration through suite compilation, execution,
 evidence, outcome evaluation, and release generation. The map also distinguishes
 generic Core code from CAP-owned domain logic.
+
+Read the [product strategy](docs/product-strategy.md) for the developer decision,
+Financial Task/CAP relationship, Agent-interface criteria, and selection dimensions
+that govern future work.
 
 Future CAPs enter through the reviewed [CAP question bank](docs/question-bank.md).
 It distinguishes source-backed candidate questions from runnable CAP Packs, so a
