@@ -1,0 +1,31 @@
+name: Live Stock Quote Family Agent E2E
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  agent-e2e:
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: uv run pytest tests/e2e/test_live_stock_quote_family_agent.py -q
+        env:
+          RUN_LIVE_STOCK_QUOTE_FAMILY_AGENT: "1"
+          QVERIS_AGENT_MODEL: deepseek-v4-flash
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/stock-quote-family-agent-evidence
+      - name: Retain sanitized agent evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stock-quote-family-agent-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/stock-quote-family-agent-evidence
+          if-no-files-found: error
+          retention-days: 90
