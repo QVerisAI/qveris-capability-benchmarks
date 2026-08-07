@@ -120,7 +120,9 @@ are outside the benchmark.
 
 ### Dimension facts
 
-Released facts carry one of three states:
+Dimension facts must carry one of three states (the release validator enforces
+this state contract in Task 5; until then a missing state is treated as
+`evidence_insufficient`):
 
 - `measured`: a CAP-owned definition, a repeatable measurement, and released
   evidence exist. Examples are task completion, accuracy and precision under a
