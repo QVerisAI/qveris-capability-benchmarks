@@ -21,7 +21,7 @@ def extract_fmp_income_statement(
             )
         return {"validation_error": "fiscal year unavailable"}
     report = _required_report_for_year(reports, fiscal_year)
-    revenue = _number(report.get("revenue"), "revenue")
+    revenue = _number(_row_field(report, "revenue", "totalRevenue"), "revenue")
     return _facts(symbol, fiscal_year, revenue, report)
 
 
@@ -113,7 +113,7 @@ def _reports(
 
 
 def _report_year(report: dict[str, Any]) -> int | None:
-    date = report.get("date") or report.get("fiscalDateEnding")
+    date = _row_field(report, "date", "fiscalDateEnding", "calendarYear")
     if not isinstance(date, str) or len(date) < 4:
         return None
     try:
@@ -192,7 +192,21 @@ def _facts(
         "revenue": revenue,
         "currency": "USD",
     }
-    filing_date = source.get("date") or source.get("end")
+    filing_date = _row_field(source, "date", "end")
     if isinstance(filing_date, str) and filing_date:
         facts["filing_date"] = filing_date
     return facts
+
+
+def _row_field(row: dict[str, Any], *names: str) -> object:
+    for name in names:
+        value = row.get(name)
+        if value is not None:
+            return value
+    nested = row.get("data")
+    if isinstance(nested, dict):
+        for name in names:
+            value = nested.get(name)
+            if value is not None:
+                return value
+    return None

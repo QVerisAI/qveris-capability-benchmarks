@@ -21,28 +21,6 @@
       "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
       "tool_id": "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
       "parameters": {"symbol": "AAPL", "limit": 5}
-    },
-    {
-      "binding_id": "sec-gov-company-facts-aapl-revenue",
-      "suite_id": "financial-statements-v1",
-      "version": "1.0.0",
-      "access_path_id": "sec-gov-company-facts",
-      "provider_id": "sec-gov",
-      "discovery_query": "SEC company facts AAPL CIK annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "sec.company.facts.v1",
-      "parameters": {"cik": 320193}
-    },
-    {
-      "binding_id": "sec-gov-company-facts-invalid-period",
-      "suite_id": "financial-statements-v1",
-      "version": "1.0.0",
-      "access_path_id": "sec-gov-company-facts",
-      "provider_id": "sec-gov",
-      "discovery_query": "SEC company facts AAPL CIK annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "sec.company.facts.v1",
-      "parameters": {"cik": 320193}
     }
   ]
 }

@@ -22,8 +22,6 @@ jobs:
         binding_id:
           - fmp-income-statement-aapl-revenue
           - fmp-income-statement-invalid-period
-          - sec-gov-company-facts-aapl-revenue
-          - sec-gov-company-facts-invalid-period
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
