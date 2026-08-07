@@ -1,0 +1,80 @@
+[
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:1",
+    "case_id": "aapl-revenue-fy2025",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 2025
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 1,
+    "state": "provider_negative"
+  },
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:2",
+    "case_id": "aapl-revenue-fy2025",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 2025
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 2,
+    "state": "provider_negative"
+  },
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:aapl-revenue-fy2025:financial-modeling-prep:fmp-income-statement:direct:3",
+    "case_id": "aapl-revenue-fy2025",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 2025
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 3,
+    "state": "provider_negative"
+  },
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:1",
+    "case_id": "invalid-period",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 1900
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 1,
+    "state": "completed"
+  },
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:2",
+    "case_id": "invalid-period",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 1900
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 2,
+    "state": "completed"
+  },
+  {
+    "run_key": "financial-statements-v1:63fd462e8386:invalid-period:financial-modeling-prep:fmp-income-statement:direct:3",
+    "case_id": "invalid-period",
+    "case_input": {
+      "symbol": "AAPL",
+      "fiscal_year": 1900
+    },
+    "provider_id": "financial-modeling-prep",
+    "access_path_id": "fmp-income-statement",
+    "mode": "direct",
+    "round": 3,
+    "state": "completed"
+  }
+]
