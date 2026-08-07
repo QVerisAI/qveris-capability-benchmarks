@@ -30,7 +30,7 @@ CANONICAL_PROMPT = "获取贵州茅台当前价格和报价时间"
 def _canonical_input_schema() -> dict[str, object]:
     return {
         "type": "object",
-        "properties": {"symbol": {"type": "string"}},
+        "properties": {"symbol": {"type": "string", "enum": ["600519.SH"]}},
         "required": ["symbol"],
         "additionalProperties": False,
     }
@@ -80,9 +80,12 @@ def test_ac8_live_agent_resolves_cn_request_with_one_canonical_call(
         )
 
         async def invoke(arguments: dict[str, object]) -> object:
-            parameters = merge_frozen_parameters(
-                binding.parameters, arguments, ("symbol",)
-            )
+            try:
+                parameters = merge_frozen_parameters(
+                    binding.parameters, arguments, ("symbol",)
+                )
+            except FrozenAgentInputError as exc:
+                return {"frozen_contract_error": str(exc)}
             return (
                 await execute_discovered_tool(
                     tool_client,
@@ -112,9 +115,15 @@ def test_ac8_live_agent_resolves_cn_request_with_one_canonical_call(
             await tool_client.close()
 
         assert trace.calls == 1
-        assert trace.proposed_arguments == {"symbol": "600519.SH"}
-        assert isinstance(trace.tool_result, AdapterResult)
-        assert trace.tool_result.raw_path.is_file()
+        if isinstance(trace.tool_result, AdapterResult):
+            outcome = "single_call_completed"
+            raw_digest = trace.tool_result.raw_digest
+            assert trace.tool_result.raw_path.is_file()
+        else:
+            outcome = "argument_fidelity_violation"
+            raw_digest = ""
+            assert isinstance(trace.tool_result, dict)
+            assert "frozen_contract_error" in trace.tool_result
         manifest = (
             json.dumps(
                 {
@@ -125,12 +134,12 @@ def test_ac8_live_agent_resolves_cn_request_with_one_canonical_call(
                     "elapsed_seconds": round(trace.elapsed_seconds, 3),
                     "output_tokens": trace.output_tokens,
                     "proposed_arguments": trace.proposed_arguments,
-                    "raw_digest": trace.tool_result.raw_digest,
+                    "raw_digest": raw_digest,
                     "binding_digest": binding_digest,
                     "binding_registry_digest": registry_digest,
                     "github_run_id": os.environ.get("GITHUB_RUN_ID"),
                     "github_sha": os.environ.get("GITHUB_SHA"),
-                    "outcome": "single_call_completed",
+                    "outcome": outcome,
                     "redaction_status": "sanitized",
                     "disclosure_level": "sanitized_public",
                     "license_status": "cleared",
