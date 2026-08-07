@@ -27,6 +27,9 @@ def extract_finnhub_stock_quote(
     currency = data.get("currency")
     if isinstance(currency, str) and currency:
         facts["currency"] = currency
+    market = data.get("market")
+    if isinstance(market, str) and market:
+        facts["market"] = market
     return facts
 
 
@@ -50,6 +53,9 @@ def extract_eodhd_stock_quote(
     currency = quote.get("currency")
     if isinstance(currency, str) and currency:
         facts["currency"] = currency
+    market = quote.get("market")
+    if isinstance(market, str) and market:
+        facts["market"] = market
     return facts
 
 

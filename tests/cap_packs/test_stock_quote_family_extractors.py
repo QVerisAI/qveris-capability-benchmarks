@@ -87,6 +87,15 @@ def test_ac5_finnhub_freshness_facts_carry_provider_currency_when_present() -> N
     extract_observation(PACK / "observation-schema.yaml", facts, DIGEST, "1.0.0")
 
 
+def test_ac5_coverage_facts_carry_provider_market_when_present() -> None:
+    document = _finnhub_quote(223.18, int(time.time()))
+    document["result"]["data"]["market"] = "XNAS"
+
+    facts = extract_finnhub_stock_quote(document, "600519.SH")
+
+    assert facts["market"] == "XNAS"
+
+
 def test_ac5_eodhd_positive_extracts_quote_facts() -> None:
     document = {
         "result": {
