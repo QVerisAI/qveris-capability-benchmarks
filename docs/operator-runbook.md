@@ -12,10 +12,23 @@ Agent backend.
    cap_packs/etf_holdings/suite.yaml --output /tmp/frozen-suite.json`.
 4. Compile the same suite with `uv run qveris-bench suite plan
    cap_packs/etf_holdings/suite.yaml --output /tmp/run-plan.json`.
-5. Verify the immutable release with `uv run qveris-bench release verify
-   releases/etf-holdings-2026-q3-v1/release.json --digest
-   sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f`.
-6. Run the local quality commands in `CONTRIBUTING.md` before reporting a result.
+5. Verify every published release with `uv run qveris-bench release verify`:
+
+   - `releases/etf-holdings-2026-q3-v1/release.json` —
+     `sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f`
+   - `releases/stock-quote-2026-q3-v2/release.json` —
+     `sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b`
+   - `releases/stock-quote-family-2026-q3-v1/release.json` —
+     `sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57`
+   - `releases/financial-statements-2026-q3-v1/release.json` —
+     `sha256:a22d3dbcb47d094baac201a0c100e6ad87b6159d6780bdf29ea3c5f0e4a8abaf`
+   - `releases/sec-filing-evidence-2026-q3-v1/release.json` —
+     `sha256:5a159d6e5777b3829e57f861e18182a76540d94dc1f3b8c23ae4410207e5024e`
+6. Rebuild the Company Research Task Fit Profile with
+   `uv run qveris-bench profile build --input profiles/company-research-agent.yaml
+   --output-dir /tmp/profile-out` and confirm both outputs match the committed
+   `profiles/company-research-agent/` files byte-for-byte.
+7. Run the local quality commands in `CONTRIBUTING.md` before reporting a result.
 
 If a digest differs, preserve the inputs and report the mismatch. Do not modify
 a published release, regenerate private evidence, or infer a provider conclusion
