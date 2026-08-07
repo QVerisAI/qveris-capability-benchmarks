@@ -23,6 +23,28 @@
       "parameters": {"symbol": "NOTASTOCK"}
     },
     {
+      "binding_id": "eodhd-aapl-quote",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "eodhd-stock-quote",
+      "provider_id": "eodhd",
+      "discovery_query": "Twelve Data current stock quote AAPL latest price timestamp direct provider",
+      "discovery_digest": "sha256:da1c918217796751f9ace125fe9f8de480cee9c8541e6e35c36b2950d83091c9",
+      "tool_id": "eodhd.real_time.retrieve.v1.3b8a5cf8",
+      "parameters": {"symbol": "AAPL.US"}
+    },
+    {
+      "binding_id": "eodhd-invalid-stock",
+      "suite_id": "stock-quote-v2",
+      "version": "2.0.0",
+      "access_path_id": "eodhd-stock-quote",
+      "provider_id": "eodhd",
+      "discovery_query": "Twelve Data current stock quote AAPL latest price timestamp direct provider",
+      "discovery_digest": "sha256:da1c918217796751f9ace125fe9f8de480cee9c8541e6e35c36b2950d83091c9",
+      "tool_id": "eodhd.real_time.retrieve.v1.3b8a5cf8",
+      "parameters": {"symbol": "NOTASTOCK.US"}
+    },
+    {
       "binding_id": "fiu-spy-holdings",
       "suite_id": "etf-holdings-v1",
       "version": "1.0.0",

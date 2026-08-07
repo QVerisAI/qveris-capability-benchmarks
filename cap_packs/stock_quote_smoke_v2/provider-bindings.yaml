@@ -1,0 +1,9 @@
+access_paths:
+  - access_path_id: finnhub-stock-quote
+    provider_id: finnhub
+    canonical_interface: quote
+    official_source: https://finnhub.io/docs/api/quote
+  - access_path_id: eodhd-stock-quote
+    provider_id: eodhd
+    canonical_interface: real-time
+    official_source: https://eodhd.com/financial-apis/real-time-stock-prices/

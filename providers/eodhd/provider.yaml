@@ -3,9 +3,20 @@ provider:
   official_name: EODHD
   website: https://eodhd.com/
   market_coverage: [US]
-  testing_authorization: No QVeris-controlled execution authorization is recorded.
-  qveris_integration: false
+  testing_authorization: QVeris exposes an attributable Direct Test connector.
+  qveris_integration: true
 access_paths:
+  - access_path_id: eodhd-stock-quote
+    provider_id: eodhd
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://eodhd.com/financial-apis/real-time-stock-prices/
+    canonical_interface: real-time
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable EODHD real-time quote path.
+      evidence_digest: sha256:da1c918217796751f9ace125fe9f8de480cee9c8541e6e35c36b2950d83091c9
   - access_path_id: eodhd-etf-holdings
     provider_id: eodhd
     path_type: official_api
