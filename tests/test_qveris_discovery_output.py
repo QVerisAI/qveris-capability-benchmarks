@@ -199,8 +199,8 @@ def test_ac8_live_stock_quote_v2_workflow_has_a_fixed_eight_call_matrix() -> Non
     matrix = document["jobs"]["direct"]["strategy"]["matrix"]
     assert matrix["round"] == [1, 2]
     assert matrix["binding_id"] == [
-        "finnhub-aapl-quote",
-        "finnhub-invalid-stock",
+        "finnhub-aapl-quote-v2",
+        "finnhub-invalid-stock-v2",
         "eodhd-aapl-quote",
         "eodhd-invalid-stock",
     ]

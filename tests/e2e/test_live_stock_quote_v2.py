@@ -25,7 +25,7 @@ from qveris_bench.suites.compiler import compile_suite
 ROOT = Path(__file__).resolve().parents[2]
 PACK = ROOT / "cap_packs/stock_quote_smoke_v2"
 _EXPECTED = {
-    "finnhub-aapl-quote": (
+    "finnhub-aapl-quote-v2": (
         "finnhub-stock-quote",
         "finnhub",
         "finnhub.quote.retrieve.v1.f72cf5ef",
@@ -33,7 +33,7 @@ _EXPECTED = {
         False,
         "aapl-quote",
     ),
-    "finnhub-invalid-stock": (
+    "finnhub-invalid-stock-v2": (
         "finnhub-stock-quote",
         "finnhub",
         "finnhub.quote.retrieve.v1.f72cf5ef",

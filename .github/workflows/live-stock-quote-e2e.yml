@@ -15,8 +15,8 @@ jobs:
       matrix:
         round: [1, 2]
         binding_id:
-          - finnhub-aapl-quote
-          - finnhub-invalid-stock
+          - finnhub-aapl-quote-v2
+          - finnhub-invalid-stock-v2
           - eodhd-aapl-quote
           - eodhd-invalid-stock
     steps:
