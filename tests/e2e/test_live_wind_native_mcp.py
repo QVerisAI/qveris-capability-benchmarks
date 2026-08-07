@@ -152,7 +152,11 @@ def test_ac3_live_wind_native_mcp_terminal_artifacts_are_safe(tmp_path: Path) ->
     )
     _persist_terminal_manifest(tmp_path, evidence)
 
-    terminal = next(tmp_path.glob("wind-native-mcp-terminal-*.json")).read_text()
+    terminal = next(
+        path
+        for path in tmp_path.glob("wind-native-mcp-terminal-*.json")
+        if "-manifest-" not in path.name
+    ).read_text()
     manifest = next(
         tmp_path.glob("wind-native-mcp-terminal-manifest-*.json")
     ).read_text()
