@@ -17,7 +17,7 @@ from qveris_bench.releases.verify import verify_release
 ROOT = Path(__file__).resolve().parents[2]
 RELEASE = ROOT / "releases/stock-quote-2026-q3-v2"
 EVIDENCE = ROOT / "evidence/stock-quote-2026-q3-v2"
-_DIGEST = "sha256:7e7a6d8eb2efa968fd9e64ca1fbfb97ff92e9f581e134c5cd4ab31ed5e15275e"
+_DIGEST = "sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b"
 
 
 def _binding_digest(binding: QverisDirectBinding) -> str:
