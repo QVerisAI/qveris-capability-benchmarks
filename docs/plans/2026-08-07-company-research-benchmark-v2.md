@@ -193,10 +193,10 @@ three verified P0 releases (`stock-quote-family-2026-q3-v1`,
 
 ### Task 8 — PR and review completion
 
-- [ ] Keep each PR reviewable and PR-first; resolve conflicts before broad testing.
-- [ ] After each PR, run the required two review lanes, classify all findings, fix
+- [x] Keep each PR reviewable and PR-first; resolve conflicts before broad testing.
+- [x] After each PR, run the required two review lanes, classify all findings, fix
   actionable P0/P1 and valid P2 items in one pass, revalidate once, and merge.
-- [ ] Mark the goal complete only after all three P0 CAP releases and the verified
+- [x] Mark the goal complete only after all three P0 CAP releases and the verified
   Company Research Task Fit Profile are merged.
 
 ## Validation plan
