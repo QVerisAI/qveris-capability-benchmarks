@@ -2,9 +2,10 @@ import json
 from pathlib import Path
 
 from qveris_bench.evidence.hashing import sha256_digest
+from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.release import BenchmarkRelease
-from qveris_bench.models.run import RunCell
+from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.releases.builder import build_release
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.verify import verify_release
@@ -29,7 +30,7 @@ def test_ac_etf_holdings_release_rebuilds_from_all_terminal_evidence() -> None:
     )
     release_bytes = (RELEASE / "release.json").read_bytes()
     run_plan_bytes = (RELEASE / "run-plan.json").read_bytes()
-    run_plan = json.loads(run_plan_bytes)
+    run_plan = RunPlan.model_validate_json(run_plan_bytes)
 
     assert len(cells) == 24
     assert len(evidence) == 24
@@ -38,11 +39,10 @@ def test_ac_etf_holdings_release_rebuilds_from_all_terminal_evidence() -> None:
     assert release_digest(release_bytes) == _DIGEST
     assert verify_release(RELEASE / "release.json", _DIGEST)
     assert sha256_digest(run_plan_bytes) == release.run_plan_digest
-    assert {item["run_key"] for item in run_plan["cells"]} == {
-        cell.run_key for cell in cells
-    }
+    assert {cell.run_key for cell in run_plan.cells} == {cell.run_key for cell in cells}
 
     cells_by_run_key = {cell.run_key: cell for cell in cells}
+    planned_by_run_key = {cell.run_key: cell for cell in run_plan.cells}
     expected_binding = {
         ("alpha-vantage", "spy-holdings"): "alpha-vantage-spy-holdings",
         ("alpha-vantage", "qqq-holdings"): "alpha-vantage-qqq-holdings",
@@ -62,10 +62,21 @@ def test_ac_etf_holdings_release_rebuilds_from_all_terminal_evidence() -> None:
         assert len(matching) == 1, bundle.evidence_id
         artifact = json.loads(matching[0].read_text())
         cell = cells_by_run_key[bundle.run_key]
+        planned = planned_by_run_key[bundle.run_key]
+        assert cell.model_copy(update={"state": CellState.PLANNED}) == planned
         assert (
             artifact["binding_id"] == expected_binding[(cell.provider_id, cell.case_id)]
         )
         assert artifact["outcome"] == cell.state.value
+        if cell.state is CellState.COMPLETED:
+            assert artifact["reason"] is None
+        else:
+            assert artifact["reason"] in {
+                "invalid_negative_response",
+                "invalid_weight",
+                "missing_holdings",
+                "unrecognized_provider_response",
+            }
         assert artifact["run_key"] == bundle.run_key
         assert artifact["raw_digest"] == bundle.raw_digest
         assert artifact["suite_fingerprint"] == bundle.suite_fingerprint
