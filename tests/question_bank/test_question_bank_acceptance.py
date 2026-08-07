@@ -150,9 +150,7 @@ def test_ac3_migration_preserves_all_v1_question_ids() -> None:
         "stock-quote-aapl-current",
         "stock-quote-invalid-symbol",
     }
-    assert expected.issubset(
-        {str(question.question_id) for question in bank.questions}
-    )
+    assert expected.issubset({str(question.question_id) for question in bank.questions})
 
 
 def test_ac_sq1_stock_quote_question_family_covers_selection_roles() -> None:
