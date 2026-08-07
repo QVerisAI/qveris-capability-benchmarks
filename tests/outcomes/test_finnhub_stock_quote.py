@@ -70,6 +70,17 @@ def test_ac_eodhd_live_v2_parameter_validation_becomes_validation_fact() -> None
     ) == {"validation_error": "provider returned explicit validation response"}
 
 
+def test_ac_eodhd_invalid_parameter_becomes_validation_fact() -> None:
+    assert extract_eodhd_stock_quote(
+        {
+            "error_message": "Invalid parameter value for the requested instrument.",
+            "result": {"data": {"data": []}},
+        },
+        "NOTASTOCK",
+        negative_control=True,
+    ) == {"validation_error": "provider returned explicit validation response"}
+
+
 @pytest.mark.parametrize("error_message", ["Unauthorized", "Rate limit exceeded"])
 def test_ac_eodhd_negative_rejects_infrastructure_errors(error_message: str) -> None:
     with pytest.raises(StockQuoteExtractionError, match="validation response"):

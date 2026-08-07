@@ -138,11 +138,14 @@ def _eodhd_negative_response(document: dict[str, Any]) -> bool:
         marker in message
         for marker in ("unknown symbol", "invalid symbol", "symbol not found")
     )
+    is_invalid_parameter = "invalid" in message and "parameter" in message
     is_parameter_validation = (
         "unable to return valid data" in message
         and "verify the request parameters" in message
     )
-    if not is_symbol_validation and not is_parameter_validation:
+    if not (
+        is_symbol_validation or is_invalid_parameter or is_parameter_validation
+    ):
         return False
     result = document.get("result")
     if not isinstance(result, dict):
