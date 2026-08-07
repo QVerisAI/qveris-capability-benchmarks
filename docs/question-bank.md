@@ -12,6 +12,10 @@ reference; they are not themselves end-to-end financial workflows.
 - Each CAP has at least one `core_positive` and one `boundary_negative` question.
   Additional role-labelled questions may test coverage, freshness and precision,
   response completeness, or the single-tool Agent contract. A role is not a score.
+- The full question lifecycle and pass rules live in the [question evaluation
+  model](question-evaluation-model.md): origins are citation-only, judgment is per
+  run cell, and released facts are `measured`, `declared`, or
+  `evidence_insufficient`.
 - A P0 scenario question declares market, language, as-of semantics, authoritative
   reference and tolerance rules, interface expectations, and the developer-selection
   implication before it can be promoted to an executable case.

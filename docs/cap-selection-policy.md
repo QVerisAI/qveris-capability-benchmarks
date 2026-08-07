@@ -24,6 +24,12 @@ roles required by its scenarios. The bank records public citations and
 QVeris-authored task text; it is an intake asset, not a provider result or a
 substitute for a CAP Pack.
 
+How a question is judged is defined in the [question evaluation
+model](question-evaluation-model.md): completion conditions and tolerance rules
+decide the run cell, Direct Test is mandatory, an Agent Trial receives one
+canonical tool, and released dimension facts are `measured`, `declared`, or
+`evidence_insufficient` — never an aggregate score.
+
 External repository sources must pin the repository URL, immutable commit, and
 source task identifier. Sanitized customer questions use an internal reference that
 does not expose the customer, contact details, credentials, or proprietary payloads.
