@@ -133,6 +133,9 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 3 — Financial Statement Facts CAP
 
+- [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md):
+  core and boundary roles plus no-data, coverage, shape, and Agent-contract roles
+  where the CAP is sensitive; every P0 role must have an executable pass rule.
 - [x] Qualify authoritative/public and authorized Provider paths; prefer official
   filings as the truth source and record exclusions terminally.
 - [x] Add the CAP Pack, CAP-owned extractors, reference/tolerance rules, cases,
@@ -142,6 +145,9 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 4 — SEC Filing Evidence CAP
 
+- [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md),
+  including citation, document-location, completeness, pagination, and Agent-contract
+  roles with executable rules.
 - [ ] Qualify official filing retrieval and authorized Provider paths with explicit
   citation, document-location, completeness, and error contracts.
 - [ ] Add the CAP Pack, CAP-owned extraction/rules, cases, bindings, suite, and tests.
