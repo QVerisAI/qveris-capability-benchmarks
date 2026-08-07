@@ -186,9 +186,9 @@ three verified P0 releases (`stock-quote-family-2026-q3-v1`,
 
 ### Task 7 — Replay and release acceptance
 
-- [ ] Document the clean-checkout operator flow and exact environment-variable names
+- [x] Document the clean-checkout operator flow and exact environment-variable names
   without values.
-- [ ] Rebuild artifacts twice, verify digests, run all changed-area tests, CLI E2E,
+- [x] Rebuild artifacts twice, verify digests, run all changed-area tests, CLI E2E,
   Ruff, mypy, and CI, and preserve private/public evidence separation.
 
 ### Task 8 — PR and review completion
