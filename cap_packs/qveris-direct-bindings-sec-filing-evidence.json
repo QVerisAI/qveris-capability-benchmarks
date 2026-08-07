@@ -1,0 +1,70 @@
+{
+  "bindings": [
+    {
+      "binding_id": "massive-stocks-aapl-risk",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "massive-stocks-risk-factors",
+      "provider_id": "massive-stocks",
+      "discovery_query": "Massive Stocks SEC risk factors AAPL direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "massive_stocks.stocks.filings.risk_factors.list.vX",
+      "parameters": {"ticker": "AAPL", "limit": 20}
+    },
+    {
+      "binding_id": "massive-stocks-invalid-filing-type",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "massive-stocks-risk-factors",
+      "provider_id": "massive-stocks",
+      "discovery_query": "Massive Stocks SEC risk factors AAPL direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "massive_stocks.stocks.filings.risk_factors.list.vX",
+      "parameters": {"ticker": "AAPL", "limit": 20}
+    },
+    {
+      "binding_id": "fmp-10k-aapl-risk",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-financial-reports-10k",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP financial reports 10-K JSON AAPL direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "financialmodelingprep.stable.financialreportsjson.retrieve.v1.f3e90a6a",
+      "parameters": {"symbol": "AAPL", "year": 2025, "period": "FY"}
+    },
+    {
+      "binding_id": "fmp-10k-invalid-filing-type",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-financial-reports-10k",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP financial reports 10-K JSON AAPL direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "financialmodelingprep.stable.financialreportsjson.retrieve.v1.f3e90a6a",
+      "parameters": {"symbol": "AAPL", "year": 2025, "period": "FY"}
+    },
+    {
+      "binding_id": "fmp-sec-filings-aapl-risk",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-sec-filings-search",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP SEC filings by form type 10-K direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "financialmodelingprep.stable.secfilingssearch.formtype.retrieve.v1.fe50f57c",
+      "parameters": {"formType": "10-K", "from": "2025-01-01", "to": "2025-12-31", "limit": 10}
+    },
+    {
+      "binding_id": "fmp-sec-filings-invalid-filing-type",
+      "suite_id": "sec-filing-evidence-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-sec-filings-search",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP SEC filings by form type 10-K direct provider",
+      "discovery_digest": "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+      "tool_id": "financialmodelingprep.stable.secfilingssearch.formtype.retrieve.v1.fe50f57c",
+      "parameters": {"formType": "NOTAFILING", "from": "2025-01-01", "to": "2025-12-31", "limit": 10}
+    }
+  ]
+}

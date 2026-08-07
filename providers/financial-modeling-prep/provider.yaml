@@ -6,6 +6,28 @@ provider:
   testing_authorization: No QVeris-controlled execution authorization is recorded.
   qveris_integration: true
 access_paths:
+  - access_path_id: fmp-financial-reports-10k
+    provider_id: financial-modeling-prep
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://financialmodelingprep.com/stable/financial-reports
+    canonical_interface: financial-reports-10k
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable 10-K financial report path.
+      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+  - access_path_id: fmp-sec-filings-search
+    provider_id: financial-modeling-prep
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://financialmodelingprep.com/stable/sec-filings
+    canonical_interface: sec-filings-search
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable SEC filings search path.
+      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
   - access_path_id: fmp-income-statement
     provider_id: financial-modeling-prep
     path_type: qveris_connector

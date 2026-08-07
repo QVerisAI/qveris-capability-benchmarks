@@ -1,0 +1,19 @@
+provider:
+  provider_id: massive-stocks
+  official_name: Massive Stocks
+  website: https://massive.com/
+  market_coverage: [US]
+  testing_authorization: QVeris exposes an attributable SEC risk-factor Direct path.
+  qveris_integration: true
+access_paths:
+  - access_path_id: massive-stocks-risk-factors
+    provider_id: massive-stocks
+    path_type: qveris_connector
+    credential_env: [QVERIS_API_KEY]
+    official_source: https://massive.com/docs/rest/stocks/filings/risk-factors
+    canonical_interface: risk-factors
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: QVeris discovery exposed an attributable SEC risk-factor Direct path.
+      evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
