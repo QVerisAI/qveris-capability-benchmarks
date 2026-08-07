@@ -42,15 +42,28 @@ def _validate_frozen_contract(
 def _safe_terminal_reason(payload: object) -> str | None:
     if not isinstance(payload, dict):
         return "requested_indicator_missing"
+    if payload.get("isError") or payload.get("is_error") or payload.get("error"):
+        return "requested_indicator_missing"
+    status = payload.get("status")
+    if status is not None and status not in {"ok", "success"}:
+        return "requested_indicator_missing"
     content = payload.get("content")
     if not isinstance(content, list):
         return "requested_indicator_missing"
     for item in content:
-        if not isinstance(item, dict) or not isinstance(item.get("text"), str):
+        if (
+            not isinstance(item, dict)
+            or item.get("type") != "text"
+            or not isinstance(item.get("text"), str)
+        ):
             continue
-        match = re.search(r"最新成交价\s*[:：]\s*(-?\d+(?:\.\d+)?)", item["text"])
-        if match is not None and math.isfinite(float(match.group(1))):
-            return None
+        match = re.fullmatch(
+            r"\s*最新成交价\s*[:：]\s*(\d+(?:\.\d+)?)\s*", item["text"]
+        )
+        if match is not None:
+            value = float(match.group(1))
+            if math.isfinite(value) and value > 0:
+                return None
     return "requested_indicator_missing"
 
 
@@ -148,13 +161,35 @@ def test_ac2_live_wind_native_mcp_rejects_redirected_contract() -> None:
 
 
 def test_ac3_live_wind_native_mcp_uses_value_free_terminal_categories() -> None:
-    assert _safe_terminal_reason({"content": [{"text": "最新成交价: 1"}]}) is None
+    assert (
+        _safe_terminal_reason({"content": [{"type": "text", "text": "最新成交价: 1"}]})
+        is None
+    )
     assert _safe_terminal_reason({"content": [{"text": "no indicator"}]}) == (
         "requested_indicator_missing"
     )
     assert (
         _safe_terminal_reason(
             {"content": [{"text": "Unsupported indexes: 最新成交价"}]}
+        )
+        == "requested_indicator_missing"
+    )
+    for invalid_text in (
+        "错误：最新成交价: 1",
+        "最新成交价: 0",
+        "最新成交价: -1",
+        "最新成交价: 1\nerror",
+    ):
+        assert (
+            _safe_terminal_reason({"content": [{"type": "text", "text": invalid_text}]})
+            == "requested_indicator_missing"
+        )
+    assert (
+        _safe_terminal_reason(
+            {
+                "isError": True,
+                "content": [{"type": "text", "text": "最新成交价: 1"}],
+            }
         )
         == "requested_indicator_missing"
     )
