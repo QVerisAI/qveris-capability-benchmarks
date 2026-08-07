@@ -28,10 +28,10 @@
       "version": "2.0.0",
       "access_path_id": "eodhd-stock-quote",
       "provider_id": "eodhd",
-      "discovery_query": "Twelve Data current stock quote AAPL latest price timestamp direct provider",
-      "discovery_digest": "sha256:da1c918217796751f9ace125fe9f8de480cee9c8541e6e35c36b2950d83091c9",
-      "tool_id": "eodhd.real_time.retrieve.v1.3b8a5cf8",
-      "parameters": {"symbol": "AAPL.US"}
+      "discovery_query": "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+      "tool_id": "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
+      "parameters": {"s": "AAPL.US", "page[limit]": 1}
     },
     {
       "binding_id": "eodhd-invalid-stock",
@@ -39,10 +39,10 @@
       "version": "2.0.0",
       "access_path_id": "eodhd-stock-quote",
       "provider_id": "eodhd",
-      "discovery_query": "Twelve Data current stock quote AAPL latest price timestamp direct provider",
-      "discovery_digest": "sha256:da1c918217796751f9ace125fe9f8de480cee9c8541e6e35c36b2950d83091c9",
-      "tool_id": "eodhd.real_time.retrieve.v1.3b8a5cf8",
-      "parameters": {"symbol": "NOTASTOCK.US"}
+      "discovery_query": "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
+      "discovery_digest": "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+      "tool_id": "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
+      "parameters": {"s": "NOTASTOCK.US", "page[limit]": 1}
     },
     {
       "binding_id": "fiu-spy-holdings",
