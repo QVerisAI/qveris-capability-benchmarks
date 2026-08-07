@@ -118,6 +118,27 @@ def _eodhd_negative_response(document: dict[str, Any]) -> bool:
     error_message = document.get("error_message")
     if not isinstance(error_message, str) or not error_message:
         return False
+    message = error_message.lower()
+    if any(
+        term in message
+        for term in (
+            "unauthorized",
+            "forbidden",
+            "authentication",
+            "rate limit",
+            "quota",
+            "server error",
+            "internal error",
+            "timeout",
+            "temporarily unavailable",
+        )
+    ):
+        return False
+    if not any(
+        marker in message
+        for marker in ("unknown symbol", "invalid symbol", "symbol not found")
+    ):
+        return False
     result = document.get("result")
     if not isinstance(result, dict):
         return False

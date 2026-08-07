@@ -57,6 +57,19 @@ def test_ac_eodhd_live_v2_empty_data_with_error_becomes_validation_fact() -> Non
     ) == {"validation_error": "provider returned explicit validation response"}
 
 
+@pytest.mark.parametrize("error_message", ["Unauthorized", "Rate limit exceeded"])
+def test_ac_eodhd_negative_rejects_infrastructure_errors(error_message: str) -> None:
+    with pytest.raises(StockQuoteExtractionError, match="validation response"):
+        extract_eodhd_stock_quote(
+            {
+                "error_message": error_message,
+                "result": {"data": {"data": []}},
+            },
+            "NOTASTOCK",
+            negative_control=True,
+        )
+
+
 def test_ac_finnhub_invalid_symbol_quote_becomes_validation_fact() -> None:
     assert extract_finnhub_stock_quote(
         {

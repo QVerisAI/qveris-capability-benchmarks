@@ -12,6 +12,7 @@ from qveris_bench.cap_packs.stock_quote_smoke.extractors import (
     extract_eodhd_stock_quote,
     extract_finnhub_stock_quote,
 )
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.qveris import QverisToolClient, execute_discovered_tool
 from qveris_bench.execution.qveris_binding import (
@@ -30,6 +31,8 @@ _EXPECTED = {
         "finnhub",
         "finnhub.quote.retrieve.v1.f72cf5ef",
         {"symbol": "AAPL"},
+        "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+        "US stock quote AAPL price timestamp direct provider",
         False,
         "aapl-quote",
     ),
@@ -38,6 +41,8 @@ _EXPECTED = {
         "finnhub",
         "finnhub.quote.retrieve.v1.f72cf5ef",
         {"symbol": "NOTASTOCK"},
+        "sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126",
+        "US stock quote AAPL price timestamp direct provider",
         True,
         "invalid-stock",
     ),
@@ -46,6 +51,8 @@ _EXPECTED = {
         "eodhd",
         "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
         {"s": "AAPL.US", "page[limit]": 1},
+        "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+        "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
         False,
         "aapl-quote",
     ),
@@ -54,6 +61,8 @@ _EXPECTED = {
         "eodhd",
         "eodhd.live_v2.us_quote_delayed.retrieve.v1.f0e13d45",
         {"s": "NOTASTOCK.US", "page[limit]": 1},
+        "sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e",
+        "EODHD real-time delayed stock quote AAPL price timestamp direct provider",
         True,
         "invalid-stock",
     ),
@@ -69,6 +78,14 @@ class TerminalEvidence:
     outcome: str
 
 
+def _binding_digest(binding: QverisDirectBinding) -> str:
+    return sha256_digest(
+        json.dumps(
+            binding.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
+        ).encode()
+    )
+
+
 def _validate_fixed_binding(
     binding_id: str, binding: QverisDirectBinding
 ) -> tuple[bool, str, str]:
@@ -81,11 +98,13 @@ def _validate_fixed_binding(
         or binding.provider_id != expected[1]
         or binding.tool_id != expected[2]
         or binding.parameters != expected[3]
+        or binding.discovery_digest != expected[4]
+        or binding.discovery_query != expected[5]
     ):
         raise AssertionError(
             "live Stock Quote v2 binding does not match frozen contract"
         )
-    return expected[4], expected[1], expected[5]
+    return expected[6], expected[1], expected[7]
 
 
 def _selected_run_key(
@@ -124,13 +143,15 @@ def _semantic_reason(provider_id: str, document: object, negative: bool) -> str 
         )
     except StockQuoteExtractionError as exc:
         message = str(exc)
-        if "validation" in message or "unavailable" in message:
-            return "invalid_negative_response"
+        if negative:
+            raise AssertionError(
+                "Direct negative response violates its contract"
+            ) from exc
         if "timestamp" in message:
             return "invalid_timestamp"
         if "price" in message:
             return "invalid_price"
-        return "unrecognized_provider_response"
+        raise AssertionError("Direct positive response violates its contract") from exc
     except ExtractionError as exc:
         if "stale" in str(exc):
             return "stale_timestamp"
@@ -147,6 +168,8 @@ def _persist_terminal_evidence(
     raw_digest: str,
     reason: str | None,
     suite_fingerprint: str,
+    binding: QverisDirectBinding,
+    binding_registry_digest: str,
 ) -> TerminalEvidence:
     outcome = "completed" if reason is None else "provider_negative"
     content = (
@@ -156,6 +179,10 @@ def _persist_terminal_evidence(
                 "run_key": run_key,
                 "outcome": outcome,
                 "raw_digest": raw_digest,
+                "binding_digest": _binding_digest(binding),
+                "binding_registry_digest": binding_registry_digest,
+                "github_run_id": os.environ.get("GITHUB_RUN_ID"),
+                "github_sha": os.environ.get("GITHUB_SHA"),
                 "reason": reason,
                 "extractor_version": "1.0.0",
                 "suite_fingerprint": suite_fingerprint,
@@ -190,6 +217,9 @@ def test_ac_live_stock_quote_v2_direct_produces_terminal_evidence(
     binding = load_registered_qveris_direct_binding(
         ROOT / "cap_packs/qveris-direct-bindings.json", binding_id
     )
+    binding_registry_digest = sha256_digest(
+        (ROOT / "cap_packs/qveris-direct-bindings.json").read_bytes()
+    )
     validate_qveris_direct_binding(binding, PACK / "suite.yaml", ROOT / "providers")
     negative, provider_id, case_id = _validate_fixed_binding(binding_id, binding)
     run_key = _selected_run_key(compiled, binding, case_id, round_number)
@@ -214,6 +244,8 @@ def test_ac_live_stock_quote_v2_direct_produces_terminal_evidence(
                 result.result.raw_digest,
                 _semantic_reason(provider_id, document, negative),
                 compiled.fingerprint,
+                binding,
+                binding_registry_digest,
             )
         finally:
             await client.close()
@@ -231,3 +263,20 @@ def test_ac_live_stock_quote_v2_rejects_redirected_binding_before_execution() ->
             "eodhd-aapl-quote",
             binding.model_copy(update={"tool_id": "other.provider.tool"}),
         )
+    with pytest.raises(AssertionError, match="frozen contract"):
+        _validate_fixed_binding(
+            "eodhd-aapl-quote",
+            binding.model_copy(update={"discovery_query": "other query"}),
+        )
+    with pytest.raises(AssertionError, match="frozen contract"):
+        _validate_fixed_binding(
+            "eodhd-aapl-quote",
+            binding.model_copy(update={"discovery_digest": "sha256:" + "0" * 64}),
+        )
+
+
+def test_ac_live_stock_quote_v2_rejects_malformed_provider_response() -> None:
+    with pytest.raises(AssertionError, match="positive response violates"):
+        _semantic_reason("eodhd", {}, False)
+    with pytest.raises(AssertionError, match="negative response violates"):
+        _semantic_reason("eodhd", {}, True)
