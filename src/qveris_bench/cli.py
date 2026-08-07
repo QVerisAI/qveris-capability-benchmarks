@@ -36,6 +36,10 @@ from qveris_bench.providers.repository import (
     ProviderValidationError,
     qualify_provider_file,
 )
+from qveris_bench.question_bank.repository import (
+    QuestionBankValidationError,
+    load_question_bank,
+)
 from qveris_bench.releases.builder import build_release
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.verify import verify_release
@@ -57,6 +61,7 @@ provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
+question_app = typer.Typer(help="Validate the versioned CAP question bank.")
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
@@ -69,11 +74,26 @@ app.add_typer(provider_app, name="provider")
 app.add_typer(suite_app, name="suite")
 app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
+app.add_typer(question_app, name="question")
 
 
 @app.callback()
 def main() -> None:
     """Run QVeris capability benchmarks."""
+
+
+@question_app.command("validate")
+def question_validate() -> None:
+    """Validate all sources, capabilities, and questions in the bank."""
+    try:
+        bank = load_question_bank(_REPOSITORY_ROOT / "question_bank")
+    except QuestionBankValidationError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(
+        f"Validated question bank: {len(bank.capabilities)} capabilities, "
+        f"{len(bank.questions)} questions."
+    )
 
 
 @qveris_app.command("search")

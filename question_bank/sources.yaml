@@ -1,0 +1,41 @@
+sources:
+  - source_id: finsearchcomp-2026
+    name: FinSearchComp
+    reference_url: https://randomtutu.github.io/FinSearchComp/
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: financebench
+    name: FinanceBench
+    reference_url: https://github.com/patronus-ai/financebench
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: finmcp-bench
+    name: FinMCP-Bench
+    reference_url: https://arxiv.org/abs/2603.24943
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: fintoolbench
+    name: FinToolBench
+    reference_url: https://github.com/Double-wk/FinToolBench
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: icbcbench
+    name: ICBCBench
+    reference_url: https://github.com/DeepFin-Intelligence/ICBCBench
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: finresearchbench-ii
+    name: FinResearchBench II
+    reference_url: https://arxiv.org/abs/2607.12252
+    authority_tier: external_benchmark
+    reproduction_policy: citation_only
+  - source_id: sec-edgar-api
+    name: SEC EDGAR APIs
+    reference_url: https://www.sec.gov/search-filings/edgar-application-programming-interfaces
+    authority_tier: official_api
+    reproduction_policy: citation_only
+  - source_id: fred-api
+    name: FRED API
+    reference_url: https://fred.stlouisfed.org/docs/api/fred/
+    authority_tier: official_api
+    reproduction_policy: citation_only

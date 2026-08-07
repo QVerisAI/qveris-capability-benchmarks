@@ -12,6 +12,11 @@ CAP ideas may come from public benchmarks, external task repositories, sanitized
 customer questions, developer queries, provider submissions, search demand, or
 QVeris-authored research. Source type does not determine inclusion priority.
 
+Before a CAP is executable, its atomic positive and negative tasks belong in the
+versioned `question_bank/`. The bank records public citations and QVeris-authored
+task text; it is an intake asset, not a provider result or a substitute for a CAP
+Pack.
+
 External repository sources must pin the repository URL, immutable commit, and
 source task identifier. Sanitized customer questions use an internal reference that
 does not expose the customer, contact details, credentials, or proprietary payloads.
