@@ -174,7 +174,7 @@ def test_ac8_live_stock_quote_workflow_uses_only_fixed_qveris_bindings() -> None
 
     assert "environment: benchmark-e2e" in workflow
     assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
-    assert 'RUN_LIVE_STOCK_QUOTE: "1"' in workflow
+    assert 'RUN_LIVE_STOCK_QUOTE_V2: "1"' in workflow
     assert "inputs:" not in workflow
     assert "FINNHUB_API_KEY" not in workflow
 
@@ -186,6 +186,25 @@ def test_ac8_live_stock_quote_validates_frozen_binding_before_execution() -> Non
     assert 'ROOT / "cap_packs/stock_quote_smoke/suite.yaml"' in source
     assert 'assert binding.access_path_id == "finnhub-stock-quote"' in source
     assert 'assert binding.provider_id == "finnhub"' in source
+
+
+def test_ac8_live_stock_quote_v2_workflow_has_a_fixed_eight_call_matrix() -> None:
+    workflow_path = Path(".github/workflows/live-stock-quote-e2e.yml")
+    workflow = workflow_path.read_text()
+    document = yaml.safe_load(workflow)
+
+    assert "environment: benchmark-e2e" in workflow
+    assert "inputs:" not in workflow
+    assert "QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}" in workflow
+    matrix = document["jobs"]["direct"]["strategy"]["matrix"]
+    assert matrix["round"] == [1, 2]
+    assert matrix["binding_id"] == [
+        "finnhub-aapl-quote",
+        "finnhub-invalid-stock",
+        "eodhd-aapl-quote",
+        "eodhd-invalid-stock",
+    ]
+    assert "pytest tests/e2e/test_live_stock_quote_v2.py -q" in workflow
 
 
 def test_ac9_live_etf_direct_workflow_has_a_fixed_twenty_four_call_matrix() -> None:
