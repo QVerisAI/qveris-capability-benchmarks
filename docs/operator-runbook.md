@@ -37,6 +37,8 @@ artifact, never a raw response.
 
 ## Release limits
 
-The published ETF release is structurally reproducible but currently records two
-executed Direct access paths. It is not a substitute for the design's formal
-5–8-provider ETF cohort. Keep that limitation in any operator report.
+The published ETF release records the two included Direct access paths. Its six
+candidate providers each have a frozen terminal qualification: Alpha Vantage and
+FIU are included; Twelve Data, Financial Modeling Prep, Finnhub, and EODHD are
+excluded. Run every included path through all frozen rounds, but do not execute an
+excluded path unless its qualification and authorization are changed first.
