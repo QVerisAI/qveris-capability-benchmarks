@@ -67,9 +67,9 @@ def test_ac_stock_quote_v2_release_rebuilds_all_direct_terminal_evidence() -> No
         assert len(matching) == 1, bundle.evidence_id
         artifact = json.loads(matching[0].read_text())
         cell = cells_by_run_key[bundle.run_key]
-        assert artifact["binding_id"] == expected_binding[
-            (cell.provider_id, cell.case_id)
-        ]
+        assert (
+            artifact["binding_id"] == expected_binding[(cell.provider_id, cell.case_id)]
+        )
         assert artifact["outcome"] == cell.state.value
         if cell.state is CellState.COMPLETED:
             assert artifact["reason"] is None
