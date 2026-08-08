@@ -4,8 +4,16 @@
 - profile version: 1.0.0
 
 ## financial-statement-facts
+- case:aapl-agent-contract:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:aapl-canonical-identifier:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:aapl-fiscal-period-shape:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
 - case:aapl-revenue-fy2025:outcome: measured (3 evidence refs)
-  - {"completed": 0, "provider_negative": 3, "rounds": 3}
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:cn-600519-market-coverage:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
 - case:invalid-period:outcome: measured (3 evidence refs)
   - {"completed": 3, "provider_negative": 0, "rounds": 3}
 - latency: evidence_insufficient
@@ -14,10 +22,16 @@
 - agent-interface: evidence_insufficient
 
 ## sec-filing-evidence
+- case:aapl-agent-contract:outcome: measured (3 evidence refs)
+  - {"completed": 1, "provider_negative": 2, "rounds": 3}
 - case:aapl-risk-factor:outcome: measured (3 evidence refs)
   - {"completed": 0, "provider_negative": 3, "rounds": 3}
+- case:aapl-us-market-coverage:outcome: measured (3 evidence refs)
+  - {"completed": 1, "provider_negative": 2, "rounds": 3}
+- case:cik-canonical-identifier:outcome: measured (3 evidence refs)
+  - {"completed": 2, "provider_negative": 1, "rounds": 3}
 - case:invalid-filing-type:outcome: measured (3 evidence refs)
-  - {"completed": 0, "provider_negative": 3, "rounds": 3}
+  - {"completed": 2, "provider_negative": 1, "rounds": 3}
 - latency: evidence_insufficient
 - cost: evidence_insufficient
 - reliability: evidence_insufficient
@@ -40,11 +54,11 @@
 - agent-interface: evidence_insufficient
 
 ## Limitations
-- The included FMP as-reported income statement path completed the invalid-period negative control in all rounds but returned provider-negative (invalid_revenue) for the AAPL FY2025 revenue case; the connector did not expose the FY2025 revenue fact under the frozen contract in this cycle.
-- Alpha Vantage income statement and the official SEC company facts connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.
+- The included FMP income-statement path completed all six Direct cases across three rounds (18 cells): FY2025 AAPL revenue, the invalid-period negative control, the CN 600519 market-coverage case (resolved to the 600519.SS dialect with 10 years of history), canonical-identifier resolution, fiscal-period shape, and the fixed-tool agent contract.
+- The as-reported income-statement connector was re-qualified to the standard income-statement tool after it left QVeris discovery; Alpha Vantage income statement and the official SEC company facts connector paths remain terminally excluded after message-only probe responses.
 - This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result.
-- The included Massive Stocks risk-factor path returned unexpected response shapes in every Direct round; no cell satisfied the SEC evidence contract in this cycle, and the connector path should be re-qualified before reuse.
-- FMP 10-K JSON and SEC filings search connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.
+- The included Massive Stocks risk-factor path completed the cited-passage cases in 6 of 15 Direct cells; 8 cells recorded provider-side filing_unavailable because the connector intermittently returns an explicit error envelope, and the negative control recorded filing_type_not_supported because the endpoint has no filing-type parameter. This is honest provider reliability evidence, not a benchmark-side parse failure.
+- The FMP 10-K JSON and SEC filings search connectors were terminally excluded after message-only error responses for both parameter forms; this release records the single-path cohort.
 - All AAPL quote and freshness Direct observations were terminal provider_negative: Finnhub quote timestamps were stale beyond the frozen 15-minute window and EODHD timestamps were invalid at execution time.
 - Neither included path (Finnhub or EODHD via QVeris) returned an SSE quote for the canonical security 600519.SH; all CN coverage and canonical agent-contract cells were provider_negative (unavailable_quote).
 

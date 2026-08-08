@@ -18,8 +18,11 @@ The Company Research Agent selection loop is complete end to end:
    - `stock-quote-family-2026-q3-v1`
    - `financial-statements-2026-q3-v1`
    - `sec-filing-evidence-2026-q3-v1`
+   - `financial-statements-2026-q3-v2`
+   - `sec-filing-evidence-2026-q3-v2`
 4. Deterministic Company Research Task Fit Profile v1 (`profiles/company-research-agent/`)
-   with per-CAP case outcomes and honest `evidence_insufficient` dimensions.
+   with per-CAP case outcomes and honest `evidence_insufficient` dimensions; the
+   profile now pins the FSF/SEC v2 releases.
 5. Replay runbook covering all five published releases (`docs/operator-runbook.md`).
 
 ## Honest findings recorded in the releases
@@ -28,22 +31,27 @@ The Company Research Agent selection loop is complete end to end:
   completed); all AAPL quote/freshness cells were provider_negative
   (stale/invalid timestamps); no included path returned an SSE quote for
   600519.SH (12/12 unavailable).
-- Financial Statements: FMP completes the invalid-period control; AAPL FY2025
-  revenue was provider_negative (invalid_revenue) in every round.
-- SEC Filing Evidence: the Massive Stocks connector returned unexpected response
-  shapes in every round; no cell satisfied the evidence contract this cycle.
+- Financial Statements v2: after the as-reported connector left QVeris discovery,
+  the cohort was re-qualified to the standard FMP income-statement tool; all 18
+  matrix cells (FY2025 AAPL revenue, invalid-period control, CN 600519 coverage,
+  canonical identifier, fiscal-period shape, fixed-tool agent contract) are
+  completed.
+- SEC Filing Evidence v2: 6 of 15 cells completed; the Massive Stocks connector
+  intermittently returns an explicit error envelope (8 cells recorded as
+  provider-side `filing_unavailable`) and its endpoint has no filing-type
+  parameter (negative control recorded as `filing_type_not_supported`). This is
+  honest provider reliability evidence; no cell is a benchmark-side parse
+  failure.
 
 ## Follow-ups (not blockers for v2)
 
 - Re-qualify the excluded connector paths (sec-gov company facts, FMP 10-K JSON,
   FMP SEC filings search, Alpha Vantage income statement) when they expose
   working contracts; evidence digests are recorded in the provider registry.
-- Investigate the FMP as-reported FY2025 revenue schema for the
-  `invalid_revenue` outcome.
+- Re-probe the Massive risk-factor connector when its reliability improves; the
+  recorded `filing_unavailable` cells should be re-run rather than re-qualified.
 - Add latency / cost / reliability measurement contracts so the profile can move
   those dimensions from `evidence_insufficient` to `measured`.
-- Build the extended question roles (coverage/shape/agent-contract per CAP) from
-  the question evaluation model.
 
 ## Replay
 
