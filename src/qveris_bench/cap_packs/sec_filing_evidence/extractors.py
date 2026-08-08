@@ -84,7 +84,7 @@ def _unwrap(document: object) -> object:
     if not isinstance(document, dict):
         return document
     result = document.get("result")
-    if isinstance(result, dict) and "data" in result:
+    if isinstance(result, dict) and isinstance(result.get("data"), (dict, list)):
         return result.get("data")
     return document
 

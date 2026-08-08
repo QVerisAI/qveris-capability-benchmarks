@@ -129,6 +129,20 @@ def test_ac5_massive_rows_without_supply_chain_passage_fail_closed() -> None:
         extract_massive_stocks_risk_factors(document, "AAPL")
 
 
+def test_ac5_massive_error_envelope_is_provider_side_unavailable() -> None:
+    document = {
+        "error_message": "no risk factors for this request",
+        "result": {"data": "not-a-structured-response"},
+    }
+
+    with pytest.raises(SecFilingExtractionError, match="unavailable"):
+        extract_massive_stocks_risk_factors(document, "AAPL")
+
+    facts = extract_massive_stocks_risk_factors(document, "AAPL", negative_control=True)
+
+    assert facts == {"validation_error": "no risk factors returned"}
+
+
 def test_ac5_fmp_10k_extracts_cited_passage() -> None:
     facts = extract_fmp_10k(_fmp_10k_document(), "AAPL", 2025)
 
