@@ -1,4 +1,4 @@
-# 2026 公司行动数据 API 对比：7 家分红、拆股与除权数据源实测
+# 2026 公司行动数据 API 对比：8 家分红、拆股与除权数据源实测
 
 快速结论：
 
@@ -12,9 +12,9 @@
 
 做美股或全球市场的拆股、分红与要约数据：EODHD 覆盖多市场、单次 2.81 credits；Twelve Data 单次 2.37 credits；Massive（原 Polygon.io）单次 1 credit，成本最低但本快照样本量最小（130+ 次），上线前建议复测。
 
-## 7 家公司行动数据 API 对比（2026 年 8 月实测）
+## 8 家公司行动数据 API 对比（2026 年 8 月实测）
 
-固定短名单，2026-08-08 经 QVeris 生产网关实测：7 家供应商、1 个工作流（公司行动事件检索）、每个适用单元 2 轮。费用为 QVeris 每次调用的 credit 数；延迟为网关执行平均值（仅有样本的供应商列出）；生产用量为快照时点的公开调用量。同一法律实体只占一行（Massive 与 Polygon.io 同源合并，恒生聚源 REST 与 MCP 路径同源合并）。
+固定短名单，2026-08-08 经 QVeris 生产网关实测：8 家供应商、1 个工作流（公司行动事件检索）、每个适用单元 2 轮。费用为 QVeris 每次调用的 credit 数；延迟为网关执行平均值（仅有样本的供应商列出）；生产用量为快照时点的公开调用量。同一法律实体只占一行（Massive 与 Polygon.io 同源合并，恒生聚源 REST 与 MCP 路径同源合并）。
 
 | 供应商 | 单次费用（QVeris credits） | 实测平均延迟 | 生产用量 | 市场侧重 | 测试结论 | 链接 |
 |---|---|---|---|---|---|---|
@@ -23,10 +23,11 @@
 | [Twelve Data](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) | 2.37 | 无样本 | 1,100+ | 全球 | 合格 | 全球 |
 | [Massive（原 Polygon.io）](https://massive.io/) · [在 QVeris 中试用](https://qveris.ai/providers/massive_stocks) | 1 | 无样本 | 130+ | 美股 | 合格 | 美国 |
 | [Financial Modeling Prep](https://financialmodelingprep.com/) · [在 QVeris 中试用](https://qveris.ai/providers/financialmodelingprep) | 24.2 | 无样本 | 80+ | 美股基本面 | 合格 | 美国 |
+| [Alpha Vantage](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) | 2 | 无样本 | 870+ | 美股/全球 | 未完全达标 | 美国/全球 |
 | [同花顺 iFinD](https://quantapi.51ifind.com/) · [在 QVeris 中试用](https://qveris.ai/providers/ths_ifind) | 1 | 0.7s | 1.4万+ | A 股 | 未完全达标 | 中国 |
 | [雅虎财经](https://finance.yahoo.com/) · [在 QVeris 中试用](https://qveris.ai/providers/yahoo_finance) | 1 | 无样本 | 6.6万+ | 美股 | 未完全达标 | 美国 |
 
-综合判断：A 股公司行动数据，恒生聚源是本次测试的最佳适配；全球场景以 EODHD 与 Twelve Data 较为均衡；Massive 成本最低但样本小；FMP 虽然功能完整，但单次 24.2 credits 的成本明显高于同类，适合基本面为主、公司行动为辅的混合工作流。
+综合判断：A 股公司行动数据，恒生聚源是本次测试的最佳适配；全球场景以 EODHD 与 Twelve Data 较为均衡；Massive 成本最低但样本小；FMP 虽然功能完整，但单次 24.2 credits 的成本明显高于同类，适合基本面为主、公司行动为辅的混合工作流。Alpha Vantage 是常用的通用金融数据源，但本快照未完全达到公司行动契约的完整性门槛，适合作为通用数据场景的备选。
 
 除本短名单外，如需继续考察更多候选，可在 [QVeris Provider Hub](https://qveris.ai/discover?view=providers) 浏览全部金融数据供应商。
 
@@ -77,6 +78,10 @@ Financial Modeling Prep 功能完整但公司行动单次调用 24.2 credits，�
 ### Financial Modeling Prep —— 功能完整但成本偏高
 
 官方文档：[FMP 开发者文档](https://financialmodelingprep.com/developer/docs/)。FMP 的公司行动功能完整，但单次 24.2 credits 为短名单最高；它更适合基本面研究为主的工作流，公司行动只作为低频补充。
+
+### Alpha Vantage —— 通用数据源，公司行动未完全达标
+
+官方文档：[Alpha Vantage 文档](https://www.alphavantage.co/documentation/)。Alpha Vantage 是覆盖股票、ETF、外汇、加密与宏观的通用数据源，公司行动单次 2 credits、本快照样本 870+ 次，但未完全达到公司行动完整性门槛。如果你已经在用它的其他接口，公司行动可以作为低频补充；若公司行动是核心需求，优先选达标供应商。
 
 ### 同花顺 iFinD —— A 股快速但未完全达标
 

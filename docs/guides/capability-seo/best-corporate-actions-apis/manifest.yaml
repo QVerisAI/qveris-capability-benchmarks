@@ -11,6 +11,7 @@ comparison_shortlist:
   - Twelve Data
   - Massive
   - Financial Modeling Prep
+  - Alpha Vantage
   - 同花顺 iFinD
   - 雅虎财经
 supplier_entities:
@@ -19,6 +20,7 @@ supplier_entities:
   Twelve Data: twelvedata.com
   Massive: massive.io
   Financial Modeling Prep: financialmodelingprep.com
+  Alpha Vantage: alphavantage.co
   同花顺 iFinD: 51ifind.com
   雅虎财经: yahoo.com
 scenarios:
@@ -45,6 +47,7 @@ seo:
     Twelve Data: https://twelvedata.com/
     Massive: https://massive.io/
     Financial Modeling Prep: https://financialmodelingprep.com/
+    Alpha Vantage: https://www.alphavantage.co/
     同花顺 iFinD: https://quantapi.51ifind.com/
     雅虎财经: https://finance.yahoo.com/
   provider_pages:
@@ -53,6 +56,7 @@ seo:
     Twelve Data: https://qveris.ai/providers/twelvedata
     Massive: https://qveris.ai/providers/massive_stocks
     Financial Modeling Prep: https://qveris.ai/providers/financialmodelingprep
+    Alpha Vantage: https://qveris.ai/providers/alphavantage
     同花顺 iFinD: https://qveris.ai/providers/ths_ifind
     雅虎财经: https://qveris.ai/providers/yahoo_finance
   official_sources:
@@ -60,6 +64,7 @@ seo:
     EODHD 金融 API: https://eodhd.com/financial-apis/
     Twelve Data API: https://twelvedata.com/docs
     FMP 开发者文档: https://financialmodelingprep.com/developer/docs/
+    Alpha Vantage 文档: https://www.alphavantage.co/documentation/
   related_guides:
     Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
     AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
