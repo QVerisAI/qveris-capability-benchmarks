@@ -21,7 +21,7 @@ def _massive_document() -> dict[str, object]:
     return {
         "result": {
             "data": {
-                "data": [
+                "results": [
                     {
                         "ticker": "AAPL",
                         "cik": "0000320193",
@@ -31,7 +31,8 @@ def _massive_document() -> dict[str, object]:
                             "disruptions could harm our business."
                         ),
                     }
-                ]
+                ],
+                "status": "success",
             }
         }
     }
@@ -87,7 +88,7 @@ def test_ac5_fmp_filings_search_provides_citation_but_no_passage() -> None:
 
 
 def test_ac5_missing_passage_is_explicitly_unavailable() -> None:
-    document = {"result": {"data": {"data": []}}}
+    document = {"result": {"data": {"results": [], "status": "success"}}}
     with pytest.raises(SecFilingExtractionError, match="unavailable"):
         extract_massive_stocks_risk_factors(document, "AAPL")
 

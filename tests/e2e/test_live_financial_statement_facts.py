@@ -27,6 +27,7 @@ from qveris_bench.execution.qveris_binding import (
     load_registered_qveris_direct_binding,
     validate_qveris_direct_binding,
 )
+from qveris_bench.outcomes.attribution import classify_provider_negative_reason
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.suites.compiler import compile_suite
 
@@ -41,22 +42,65 @@ FAMILY_BINDINGS: dict[
     "fmp-income-statement-aapl-revenue": (
         "fmp-income-statement",
         "financial-modeling-prep",
-        "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
         {"symbol": "AAPL", "limit": 5},
-        "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        "FMP as reported income statement AAPL annual revenue direct provider",
+        "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+        "FMP income statement AAPL annual revenue direct provider",
         False,
         "aapl-revenue-fy2025",
     ),
     "fmp-income-statement-invalid-period": (
         "fmp-income-statement",
         "financial-modeling-prep",
-        "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
         {"symbol": "AAPL", "limit": 5},
-        "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-        "FMP as reported income statement AAPL annual revenue direct provider",
+        "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+        "FMP income statement AAPL annual revenue direct provider",
         True,
         "invalid-period",
+    ),
+    "fmp-income-statement-cn-600519-market-coverage": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+        {"symbol": "600519.SS", "limit": 5},
+        "sha256:d96609ce27d279b9994a995f9b028836da1c6f4d904f9359b03a25bf454532a0",
+        (
+            "FMP as reported income statement 600519.SS Shanghai stock annual "
+            "revenue direct provider"
+        ),
+        False,
+        "cn-600519-market-coverage",
+    ),
+    "fmp-income-statement-aapl-canonical-identifier": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+        {"symbol": "AAPL", "limit": 5},
+        "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+        "FMP income statement AAPL annual revenue direct provider",
+        False,
+        "aapl-canonical-identifier",
+    ),
+    "fmp-income-statement-aapl-fiscal-period-shape": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+        {"symbol": "AAPL", "limit": 5},
+        "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+        "FMP income statement AAPL annual revenue direct provider",
+        False,
+        "aapl-fiscal-period-shape",
+    ),
+    "fmp-income-statement-aapl-agent-contract": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+        {"symbol": "AAPL", "limit": 5},
+        "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+        "FMP income statement AAPL annual revenue direct provider",
+        False,
+        "aapl-agent-contract",
     ),
 }
 
@@ -118,6 +162,10 @@ def _selected_run_key(
 
 def _semantic_reason(provider_id: str, case_id: str, document: object) -> str | None:
     negative = case_id == "invalid-period"
+    symbol = "600519.SH" if case_id == "cn-600519-market-coverage" else "AAPL"
+    fiscal_year = (
+        1900 if negative else (2020 if case_id == "cn-600519-market-coverage" else 2025)
+    )
     extractors = {
         "financial-modeling-prep": extract_fmp_income_statement,
         "alpha-vantage": extract_alpha_vantage_income_statement,
@@ -125,7 +173,11 @@ def _semantic_reason(provider_id: str, case_id: str, document: object) -> str | 
     }
     try:
         facts = extractors[provider_id](
-            document, "AAPL", 1900 if negative else 2025, negative_control=negative
+            document,
+            symbol,
+            fiscal_year,
+            negative_control=negative,
+            case_id=case_id,
         )
         extract_observation(
             PACK / "observation-schema.yaml",
@@ -161,6 +213,13 @@ def _persist_terminal_evidence(
     binding_registry_digest: str,
 ) -> TerminalEvidence:
     outcome = "completed" if reason is None else "provider_negative"
+    attribution = (
+        classify_provider_negative_reason(reason) if reason is not None else None
+    )
+    if reason is not None and attribution is None:
+        raise AssertionError(
+            f"benchmark-side failure cannot be published as provider_negative: {reason}"
+        )
     content = (
         json.dumps(
             {
@@ -173,6 +232,7 @@ def _persist_terminal_evidence(
                 "github_run_id": os.environ.get("GITHUB_RUN_ID"),
                 "github_sha": os.environ.get("GITHUB_SHA"),
                 "reason": reason,
+                "failure_attribution": attribution.value if attribution else None,
                 "extractor_version": "1.0.0",
                 "suite_fingerprint": suite_fingerprint,
                 "redaction_status": "sanitized",

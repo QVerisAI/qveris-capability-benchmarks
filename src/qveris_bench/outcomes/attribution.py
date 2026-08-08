@@ -33,6 +33,27 @@ def ensure_provider_side_attribution(
     return attribution
 
 
+_REASON_ATTRIBUTIONS = {
+    "unavailable_quote": FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+    "fiscal_year_unavailable": FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+    "filing_unavailable": FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+    "evidence_passage_missing": FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+    "filing_type_not_supported": FailureAttribution.PROVIDER_VALIDATION_ERROR,
+    "invalid_parameters": FailureAttribution.INVALID_PARAMETERS,
+    "provider_validation_error": FailureAttribution.PROVIDER_VALIDATION_ERROR,
+    "provider_runtime_error": FailureAttribution.PROVIDER_RUNTIME_ERROR,
+    "auth_or_entitlement": FailureAttribution.AUTH_OR_ENTITLEMENT,
+    "rate_limited": FailureAttribution.RATE_LIMITED,
+    "network_or_timeout": FailureAttribution.NETWORK_OR_TIMEOUT,
+    "truncated_or_unpaged": FailureAttribution.TRUNCATED_OR_UNPAGED,
+}
+
+
+def classify_provider_negative_reason(reason: str) -> FailureAttribution | None:
+    """只承认供应商侧 reason；基准侧解析失败返回 None，禁止发布为 provider_negative."""
+    return _REASON_ATTRIBUTIONS.get(reason)
+
+
 def classify_failure(value: str) -> FailureAttribution:
     if value == "wrong_tool_selected":
         raise AttributionError(

@@ -33,12 +33,12 @@ access_paths:
     path_type: qveris_connector
     credential_env: [QVERIS_API_KEY]
     official_source: https://financialmodelingprep.com/stable/income-statement
-    canonical_interface: as-reported-income-statement
+    canonical_interface: income-statement
     agent_trial_eligible: false
     qualification:
       disposition: included
-      reason: QVeris discovery exposed an attributable as-reported income statement path.
-      evidence_digest: sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43
+      reason: QVeris discovery exposed the FMP income statement path after the as-reported tool left the catalog.
+      evidence_digest: sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4
   - access_path_id: fmp-etf-holdings
     provider_id: financial-modeling-prep
     path_type: official_api

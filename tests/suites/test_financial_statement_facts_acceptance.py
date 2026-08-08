@@ -38,6 +38,30 @@ BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
         "invalid-period",
         {"symbol": "AAPL", "limit": 5},
     ),
+    "fmp-income-statement-cn-600519-market-coverage": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "cn-600519-market-coverage",
+        {"symbol": "600519.SS", "limit": 5},
+    ),
+    "fmp-income-statement-aapl-canonical-identifier": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "aapl-canonical-identifier",
+        {"symbol": "AAPL", "limit": 5},
+    ),
+    "fmp-income-statement-aapl-fiscal-period-shape": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "aapl-fiscal-period-shape",
+        {"symbol": "AAPL", "limit": 5},
+    ),
+    "fmp-income-statement-aapl-agent-contract": (
+        "fmp-income-statement",
+        "financial-modeling-prep",
+        "aapl-agent-contract",
+        {"symbol": "AAPL", "limit": 5},
+    ),
 }
 
 

@@ -8,7 +8,11 @@ class SecFilingExtractionError(ValueError):
 
 
 def extract_massive_stocks_risk_factors(
-    document: object, symbol: str, *, negative_control: bool = False
+    document: object,
+    symbol: str,
+    *,
+    negative_control: bool = False,
+    case_id: str | None = None,
 ) -> dict[str, Any]:
     rows = _massive_rows(document)
     if negative_control:
@@ -21,12 +25,15 @@ def extract_massive_stocks_risk_factors(
         text = row.get("text")
         if isinstance(text, str) and _mentions_supply_chain(text):
             filing_id = _massive_filing_id(row)
-            return {
+            facts: dict[str, Any] = {
                 "symbol": symbol,
                 "filing_id": filing_id,
                 "evidence": text,
                 "citation": _massive_citation(row),
             }
+            if case_id == "cik-canonical-identifier":
+                facts["resolved_identifier"] = symbol
+            return facts
     raise SecFilingExtractionError("evidence passage missing")
 
 
@@ -78,15 +85,14 @@ def _massive_rows(document: object) -> list[dict[str, Any]]:
     data = _unwrap(document)
     if not isinstance(data, dict):
         raise SecFilingExtractionError("response must be an object")
-    envelope = data.get("data")
-    if isinstance(envelope, dict):
-        rows = envelope.get("results", [])
-    else:
-        rows = envelope if envelope is not None else []
+    rows_value = data.get("results")
+    if rows_value is None and isinstance(data.get("data"), dict):
+        rows_value = data.get("data", {}).get("results")
+    if rows_value is None and "error_message" not in data:
+        raise SecFilingExtractionError("risk factors are missing")
+    rows = rows_value if rows_value is not None else []
     if not isinstance(rows, list):
         raise SecFilingExtractionError("risk factors must be an array")
-    if "data" not in data and "error_message" not in data:
-        raise SecFilingExtractionError("risk factors are missing")
     normalized: list[dict[str, Any]] = []
     for row in rows:
         if not isinstance(row, dict):

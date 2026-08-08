@@ -37,6 +37,24 @@ BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
         "invalid-filing-type",
         {"ticker": "AAPL", "limit": 20},
     ),
+    "massive-stocks-aapl-us-market-coverage": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "aapl-us-market-coverage",
+        {"ticker": "AAPL", "limit": 20},
+    ),
+    "massive-stocks-cik-canonical-identifier": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "cik-canonical-identifier",
+        {"ticker": "AAPL", "limit": 20},
+    ),
+    "massive-stocks-aapl-agent-contract": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "aapl-agent-contract",
+        {"ticker": "AAPL", "limit": 20},
+    ),
 }
 
 
