@@ -13,6 +13,24 @@
       "title": "CellState",
       "type": "string"
     },
+    "FailureAttribution": {
+      "enum": [
+        "invalid_parameters",
+        "provider_validation_error",
+        "provider_runtime_error",
+        "auth_or_entitlement",
+        "rate_limited",
+        "network_or_timeout",
+        "empty_or_partial_data",
+        "truncated_or_unpaged",
+        "response_interpretation_error",
+        "agent_output_error",
+        "benchmark_system_error",
+        "unknown"
+      ],
+      "title": "FailureAttribution",
+      "type": "string"
+    },
     "RunCell": {
       "additionalProperties": false,
       "properties": {
@@ -51,6 +69,17 @@
           "additionalProperties": true,
           "title": "Case Input",
           "type": "object"
+        },
+        "failure_attribution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FailureAttribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "mode": {
           "$ref": "#/$defs/RunMode"

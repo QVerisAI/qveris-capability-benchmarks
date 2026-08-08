@@ -5,6 +5,10 @@ from qveris_bench.models.enums import CellState, DimensionState
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell
+from qveris_bench.outcomes.attribution import (
+    AttributionError,
+    ensure_provider_side_attribution,
+)
 
 
 class ReleaseGateError(ValueError):
@@ -23,6 +27,8 @@ def validate_release_inputs(
     release: BenchmarkRelease,
     cells: tuple[RunCell, ...],
     evidence: tuple[EvidenceBundle, ...],
+    *,
+    require_attribution: bool = True,
 ) -> None:
     open_cells = [cell.run_key for cell in cells if cell.state not in _TERMINAL]
     if open_cells:
@@ -75,4 +81,24 @@ def validate_release_inputs(
         raise ReleaseGateError(
             "measured dimension facts reference missing evidence: "
             + ", ".join(sorted(missing_refs))
+        )
+    if require_attribution:
+        _validate_provider_negative_attribution(cells)
+
+
+def _validate_provider_negative_attribution(
+    cells: tuple[RunCell, ...],
+) -> None:
+    invalid = []
+    for cell in cells:
+        if cell.state is not CellState.PROVIDER_NEGATIVE:
+            continue
+        try:
+            ensure_provider_side_attribution(cell.failure_attribution)
+        except AttributionError:
+            invalid.append(cell.run_key)
+    if invalid:
+        raise ReleaseGateError(
+            "provider_negative cells require a provider-side failure attribution: "
+            + ", ".join(invalid)
         )

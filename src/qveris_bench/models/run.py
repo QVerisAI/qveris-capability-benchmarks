@@ -25,6 +25,7 @@ class RunCell(FrozenModel):
     applicable: bool = True
     applicability_reason: str | None = None
     state: CellState = CellState.PLANNED
+    failure_attribution: FailureAttribution | None = None
 
 
 class RunPlan(FrozenModel):

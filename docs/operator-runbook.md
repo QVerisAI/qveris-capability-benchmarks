@@ -34,6 +34,18 @@ If a digest differs, preserve the inputs and report the mismatch. Do not modify
 a published release, regenerate private evidence, or infer a provider conclusion
 from a transport status.
 
+## Release attribution gate
+
+New releases require every `provider_negative` cell to carry a provider-side
+`failure_attribution` (`invalid_parameters`, `provider_validation_error`,
+`provider_runtime_error`, `auth_or_entitlement`, `rate_limited`,
+`network_or_timeout`, `empty_or_partial_data`, or `truncated_or_unpaged`).
+Benchmark-side causes such as `response_interpretation_error`,
+`benchmark_system_error`, `agent_output_error`, or `unknown` are not publishable
+as `provider_negative`; re-qualify or exclude those paths instead. Historical
+releases predate this gate and remain digest-verifiable via the replay steps
+above.
+
 ## Fixed live workflows
 
 Live workflows are manually dispatched, input-free, and use only the protected

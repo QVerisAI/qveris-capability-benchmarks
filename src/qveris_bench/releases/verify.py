@@ -19,7 +19,8 @@ def verify_release(path: Path, expected_digest: str) -> bool:
         evidence = tuple(
             EvidenceBundle.model_validate(bundle) for bundle in payload["evidence"]
         )
-        validate_release_inputs(release, cells, evidence)
+        # replay 只证明不可变与结构完整；发布归因门禁由 build 阶段执行
+        validate_release_inputs(release, cells, evidence, require_attribution=False)
     except (KeyError, TypeError, ValueError, ReleaseGateError):
         return False
     return release_digest(canonical_release_bytes(payload)) == expected_digest
