@@ -38,21 +38,28 @@ def test_ac3_profile_build_is_deterministic_and_evidence_bound() -> None:
     _assert_no_aggregate_keys(json.loads(first.json_bytes))
 
 
-def test_ac4_profile_keeps_missing_dimensions_insufficient() -> None:
+def test_ac4_gateway_metrics_measured_others_insufficient() -> None:
     profile = build_profile(INPUT, ROOT).profile
 
     dimensions = {(d.cap_id, d.dimension): d for d in profile.cap_dimensions}
     for cap_id in {"stock-quote", "financial-statement-facts", "sec-filing-evidence"}:
-        assert (cap_id, "latency") in dimensions
+        assert (cap_id, "reliability") in dimensions
         assert (
-            dimensions[(cap_id, "latency")].dimension_state.value
+            dimensions[(cap_id, "reliability")].dimension_state.value
             == "evidence_insufficient"
         )
-        assert (cap_id, "cost") in dimensions
+        assert (cap_id, "agent-interface") in dimensions
         assert (
-            dimensions[(cap_id, "cost")].dimension_state.value
+            dimensions[(cap_id, "agent-interface")].dimension_state.value
             == "evidence_insufficient"
         )
+    for cap_id in {"financial-statement-facts", "sec-filing-evidence"}:
+        assert dimensions[(cap_id, "latency")].dimension_state.value == "measured"
+        assert (
+            dimensions[(cap_id, "latency")].details["measurement_boundary"]
+            == "qveris_gateway"
+        )
+        assert dimensions[(cap_id, "cost")].dimension_state.value == "measured"
 
 
 def test_ac7_profile_marks_gateway_latency_and_cost_measured(tmp_path: Path) -> None:

@@ -150,7 +150,8 @@ The as-reported connector later left QVeris discovery, so the cohort was
 re-qualified to the standard FMP income-statement tool; the v2 release
 `financial-statements-2026-q3-v2` records all 18 matrix cells completed, including
 the CN 600519 coverage case (resolved to the 600519.SS dialect with 10 years of
-history).
+history). The v3 release `financial-statements-2026-q3-v3` adds QVeris
+gateway-side latency and cost observations for every cell.
 
 ### Task 4 — SEC Filing Evidence CAP
 
@@ -170,6 +171,8 @@ The v2 release `sec-filing-evidence-2026-q3-v2` records 6 completed and 9
 provider_negative cells: the Massive connector intermittently returns an explicit
 error envelope (recorded as provider-side filing_unavailable) and the endpoint has
 no filing-type parameter (negative control recorded as filing_type_not_supported).
+The v3 release `sec-filing-evidence-2026-q3-v3` adds QVeris gateway-side latency
+observations for all cells and cost observations for the completed cells.
 
 ### Task 5 — Dimension evidence contract
 
