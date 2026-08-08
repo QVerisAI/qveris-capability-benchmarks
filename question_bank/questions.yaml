@@ -232,6 +232,86 @@ questions:
     text_origin: qveris_curated
     selection_rationale: Tests period validation without conflating it with issuer lookup.
     review_status: approved
+  - question_id: financial-statement-facts-600519-cn-market-coverage
+    cap_id: financial-statement-facts
+    role: coverage
+    task: Return FY2020 annual revenue for 600519.SH with its exchange identity, currency, and filing period.
+    input: {symbol: 600519.SH, market: CN, fiscal_year: 2020, statement: income}
+    required_observations: [symbol, market, revenue, currency, fiscal_year]
+    completion_conditions: [symbol, market, revenue, currency]
+    source_ids: [sse-official-market-data]
+    evaluation_contract:
+      market: cn-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sse-official-market-data]
+      reference_rule: Use the CAP-owned canonical identity 600519.SH -> 贵州茅台 (XSHG Main Board A-share); match the FY2020 revenue disclosed in the SSE annual report with explicit currency and period.
+      tolerance_rule: Require the disclosed fiscal-year value after unit normalization; do not substitute another fiscal year, issuer, or currency.
+      interface_expectations: [canonical-market-symbol, typed-fiscal-period, explicit-currency, numeric-revenue]
+      selection_implication: Passing supports an SSE Main Board single-issuer financial-statement sample in the disclosed scope; it does not generalize to other mainland-China exchanges or issuers.
+    text_origin: qveris_curated
+    selection_rationale: Measures whether a statement-facts path expands beyond US issuers without conflating coverage with aggregate quality.
+    review_status: approved
+  - question_id: financial-statement-facts-aapl-canonical-identifier
+    cap_id: financial-statement-facts
+    role: coverage
+    task: Resolve canonical AAPL identifiers to the provider's accepted identifier and return FY2025 annual revenue.
+    input: {ticker: AAPL, cik: 0000320193, fiscal_year: 2025}
+    required_observations: [resolved_identifier, fiscal_year, revenue, currency]
+    completion_conditions: [fiscal_year, revenue, currency]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Confirm that the provider accepted the canonical identifier namespace (ticker or CIK) and returned the filed FY2025 revenue from SEC company facts.
+      tolerance_rule: No different issuer, period, or currency substitution is permitted; an unresolvable identifier must produce a machine-readable not-supported state.
+      interface_expectations: [canonical-identifier-resolution, no-issuer-substitution, machine-readable-negative-state]
+      selection_implication: Passing supports identifier-dialect integration for US statement facts.
+    text_origin: qveris_curated
+    selection_rationale: Separates identifier resolution from fact accuracy, mirroring the identifier-verifier coverage face.
+    review_status: approved
+  - question_id: financial-statement-facts-aapl-fiscal-period-shape
+    cap_id: financial-statement-facts
+    role: shape_completeness
+    task: Return FY2025 AAPL annual revenue with an explicit period, currency, unit, and empty-state contract.
+    input: {symbol: AAPL, fiscal_year: 2025, statement: income}
+    required_observations: [symbol, fiscal_year, revenue, currency, unit, period_label]
+    completion_conditions: [symbol, fiscal_year, revenue, currency]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Require a typed fiscal period, explicit currency and unit, and a machine-readable empty state when the period has no filed value.
+      tolerance_rule: The period, currency, and unit must match the filed fact; a missing period value must be reported as no-data, never replaced by another period.
+      interface_expectations: [typed-fiscal-period, explicit-currency, explicit-unit, explicit-empty-state, no-period-substitution]
+      selection_implication: Passing supports schema-stable Agent integration for period-specific facts.
+    text_origin: qveris_curated
+    selection_rationale: Measures response-shape completeness and empty-state semantics rather than fact correctness alone.
+    review_status: approved
+  - question_id: financial-statement-facts-aapl-agent-contract
+    cap_id: financial-statement-facts
+    role: agent_contract
+    task: For the request "Apple's FY2025 annual revenue", resolve the issuer and fiscal period and return revenue through exactly one fixed tool call.
+    input: {symbol: AAPL, fiscal_year: 2025, statement: income}
+    required_observations: [symbol, fiscal_year, revenue, currency]
+    completion_conditions: [symbol, fiscal_year, revenue]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: fixed-fiscal-year
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: The first and only tool call must contain the canonical symbol, the requested fiscal year, and the statement selector; the returned revenue matches the SEC filed fact.
+      tolerance_rule: No discovery, repair, or follow-up call is permitted; a different period or issuer fails the question.
+      interface_expectations: [single-tool-call, valid-first-call-arguments, typed-fiscal-period, numeric-revenue]
+      selection_implication: Passing supports deterministic one-call Agent integration for a natural-language statement-facts request.
+    text_origin: qveris_curated
+    selection_rationale: Measures argument validity and one-call completion independently of the evaluated Provider.
+    review_status: approved
   - question_id: sec-filing-evidence-aapl-risk
     cap_id: sec-filing-evidence
     role: core_positive
@@ -277,6 +357,106 @@ questions:
       selection_implication: Passing supports safe Agent correction of an invalid filing-form request.
     text_origin: qveris_curated
     selection_rationale: Tests filing-type validation before evidence retrieval starts.
+    review_status: approved
+  - question_id: sec-filing-evidence-aapl-us-market-coverage
+    cap_id: sec-filing-evidence
+    role: coverage
+    task: Return the latest AAPL 10-K filing identity and a cited supply-chain risk passage with a retrievable location.
+    input: {symbol: AAPL, filing_type: 10-K, market: US, topic: supply-chain-risk}
+    required_observations: [symbol, filing_id, evidence, citation]
+    completion_conditions: [filing_id, evidence, citation]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: latest-filed-annual-report
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Resolve the cited passage to the latest AAPL 10-K filing on SEC EDGAR with a retrievable document location.
+      tolerance_rule: The filing must be an AAPL 10-K; no other issuer or form may substitute, and the citation must resolve.
+      interface_expectations: [filing-identity, evidence-text, retrievable-citation, explicit-document-location]
+      selection_implication: Passing supports US issuer filing-evidence retrieval; it does not generalize to non-SEC jurisdictions or other forms.
+    text_origin: qveris_curated
+    selection_rationale: Demonstrates US-market filing coverage with an explicit scope boundary.
+    review_status: approved
+  - question_id: sec-filing-evidence-cik-canonical-identifier
+    cap_id: sec-filing-evidence
+    role: coverage
+    task: Resolve canonical CIK 0000320193 to the provider's accepted filing identifier and return the latest 10-K identity and a cited supply-chain risk passage.
+    input: {cik: 0000320193, filing_type: 10-K, topic: supply-chain-risk}
+    required_observations: [resolved_identifier, filing_id, evidence, citation]
+    completion_conditions: [filing_id, evidence, citation]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: latest-filed-annual-report
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Confirm the provider accepted the canonical CIK namespace and returned the AAPL 10-K filing identity from SEC EDGAR.
+      tolerance_rule: No issuer substitution is permitted; an unresolvable identifier must produce a machine-readable not-supported state.
+      interface_expectations: [canonical-identifier-resolution, filing-identity, no-issuer-substitution, machine-readable-negative-state]
+      selection_implication: Passing supports CIK-based filing-evidence integration for SEC research Agents.
+    text_origin: qveris_curated
+    selection_rationale: Isolates identifier-namespace resolution from citation accuracy.
+    review_status: approved
+  - question_id: sec-filing-evidence-aapl-filing-list-completeness
+    cap_id: sec-filing-evidence
+    role: shape_completeness
+    task: Return the three newest AAPL 10-K filings with explicit completeness, without silent truncation.
+    input: {symbol: AAPL, filing_type: 10-K, limit: 3}
+    required_observations: [filings, completeness_marker]
+    completion_conditions: [filings, completeness_marker]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: The returned filing identities must match the newest AAPL 10-K filings on SEC EDGAR and disclose whether the list is complete or truncated.
+      tolerance_rule: A truncated list without a completeness or pagination marker fails the question; filing identities must resolve.
+      interface_expectations: [pagination-or-completeness-marker, filing-identity, no-silent-truncation]
+      selection_implication: Passing supports list-ordered filing retrieval without silent partial answers.
+    text_origin: qveris_curated
+    selection_rationale: Tests pagination and completeness semantics, a known Agent silent-failure mode.
+    review_status: approved
+  - question_id: sec-filing-evidence-aapl-no-disclosure
+    cap_id: sec-filing-evidence
+    role: shape_completeness
+    task: Return a machine-readable no-data state for an AAPL filing type the issuer does not file.
+    input: {symbol: AAPL, filing_type: 20-F, topic: supply-chain-risk}
+    required_observations: [no_data_state]
+    completion_conditions: [no_data_state]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: execution-time
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: Require an explicit no-data state for an issuer-form combination with no filings; no other form or issuer may substitute.
+      tolerance_rule: A citation or evidence text from a different form fails the question.
+      interface_expectations: [machine-readable-negative-state, no-filing-type-substitution, explicit-empty-state]
+      selection_implication: Passing supports safe Agent handling of issuer-form combinations without disclosure.
+    text_origin: qveris_curated
+    selection_rationale: Distinguishes no-disclosure from invalid input or lookup failure.
+    review_status: approved
+  - question_id: sec-filing-evidence-aapl-agent-contract
+    cap_id: sec-filing-evidence
+    role: agent_contract
+    task: For the request "AAPL 10-K supply chain risk", resolve the issuer and filing form and return a cited passage through exactly one fixed tool call.
+    input: {symbol: AAPL, filing_type: 10-K, topic: supply-chain-risk}
+    required_observations: [symbol, filing_id, evidence, citation]
+    completion_conditions: [filing_id, evidence, citation]
+    source_ids: [sec-edgar-api]
+    evaluation_contract:
+      market: us-equities
+      language: en
+      as_of: latest-filed-annual-report
+      reference_source_ids: [sec-edgar-api]
+      reference_rule: The first and only tool call must contain the canonical symbol, the filing form, and the topic; the returned passage resolves to the latest AAPL 10-K on SEC EDGAR.
+      tolerance_rule: No discovery, repair, or follow-up call is permitted; a citation from another form or issuer fails the question.
+      interface_expectations: [single-tool-call, valid-first-call-arguments, filing-identity, retrievable-citation]
+      selection_implication: Passing supports deterministic one-call Agent integration for a natural-language filing-evidence request.
+    text_origin: qveris_curated
+    selection_rationale: Measures argument validity and one-call completion independently of the evaluated Provider.
     review_status: approved
   - question_id: financial-news-evidence-aapl-window
     cap_id: financial-news-evidence

@@ -310,6 +310,118 @@ def test_ac_sq5_freshness_contract_has_executable_tolerances() -> None:
     )
 
 
+def test_ac_fsf_question_family_covers_selection_roles() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    questions = [
+        question
+        for question in bank.questions
+        if question.cap_id == "financial-statement-facts"
+    ]
+
+    assert {question.role for question in questions} == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+        "shape_completeness",
+    }
+    for question in questions:
+        assert question.evaluation_contract is not None
+        assert question.evaluation_contract.reference_source_ids
+        assert question.evaluation_contract.selection_implication
+    assert len(questions) == 6
+
+
+def test_ac_sec_question_family_covers_selection_roles() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    questions = [
+        question
+        for question in bank.questions
+        if question.cap_id == "sec-filing-evidence"
+    ]
+
+    assert {question.role for question in questions} == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+        "shape_completeness",
+    }
+    for question in questions:
+        assert question.evaluation_contract is not None
+        assert question.evaluation_contract.reference_source_ids
+        assert question.evaluation_contract.selection_implication
+    assert len(questions) == 7
+
+
+def test_ac_expanded_families_stay_candidate_until_cases_exist() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    scenario = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
+    )
+
+    for cap_id in ("financial-statement-facts", "sec-filing-evidence"):
+        requirement = next(
+            requirement
+            for requirement in scenario.required_capabilities
+            if requirement.cap_id == cap_id
+        )
+        assert set(requirement.minimum_question_roles) == {
+            "core_positive",
+            "boundary_negative",
+        }
+    new_ids = {
+        "financial-statement-facts-600519-cn-market-coverage",
+        "financial-statement-facts-aapl-canonical-identifier",
+        "financial-statement-facts-aapl-fiscal-period-shape",
+        "financial-statement-facts-aapl-agent-contract",
+        "sec-filing-evidence-aapl-us-market-coverage",
+        "sec-filing-evidence-cik-canonical-identifier",
+        "sec-filing-evidence-aapl-filing-list-completeness",
+        "sec-filing-evidence-aapl-no-disclosure",
+        "sec-filing-evidence-aapl-agent-contract",
+    }
+    bank = load_question_bank(ROOT / "question_bank")
+    for question in bank.questions:
+        if question.question_id in new_ids:
+            assert question.scenario_refs == ()
+
+
+def test_ac_new_p0_questions_are_provider_neutral() -> None:
+    bank = load_question_bank(ROOT / "question_bank")
+    new_ids = {
+        "financial-statement-facts-600519-cn-market-coverage",
+        "financial-statement-facts-aapl-canonical-identifier",
+        "financial-statement-facts-aapl-fiscal-period-shape",
+        "financial-statement-facts-aapl-agent-contract",
+        "sec-filing-evidence-aapl-us-market-coverage",
+        "sec-filing-evidence-cik-canonical-identifier",
+        "sec-filing-evidence-aapl-filing-list-completeness",
+        "sec-filing-evidence-aapl-no-disclosure",
+        "sec-filing-evidence-aapl-agent-contract",
+    }
+    for question in bank.questions:
+        if question.question_id not in new_ids:
+            continue
+        serialized = question.model_dump_json(
+            include={
+                "task",
+                "input",
+                "required_observations",
+                "completion_conditions",
+                "source_ids",
+                "evaluation_contract",
+                "selection_rationale",
+            }
+        ).lower()
+        assert all(
+            provider not in serialized
+            for provider in ("fmp", "finnhub", "eodhd", "wind", "qveris")
+        )
+        assert question.evaluation_contract is not None
+        assert question.evaluation_contract.reference_source_ids
+
+
 def test_ac4_p0_questions_have_authoritative_evaluation_contracts() -> None:
     bank = load_question_bank(ROOT / "question_bank")
     for scenario in bank.scenarios:
@@ -574,7 +686,7 @@ def test_ac5_question_validate_runs_through_the_installed_cli() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "10 capabilities" in result.stdout
-    assert "23 questions" in result.stdout
+    assert "32 questions" in result.stdout
     assert result.stdout.endswith("2 scenarios.\n")
 
 
