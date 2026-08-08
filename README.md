@@ -78,6 +78,26 @@ uv run qveris-bench --help
 See [the platform architecture](docs/architecture/platform.md),
 [contribution guide](CONTRIBUTING.md), and [data license](DATA_LICENSE.md).
 
+## Harbor catalog export
+
+`scripts/export_harbor_catalog.py` downloads the public Harbor explore v2
+catalog plus every CAP contract into a private, gitignored output directory
+(`.harbor-snapshots/`). The data is operator input for question-bank and release
+planning; it is not committed and only the SHA-256 digest is printed.
+
+The Harbor explore key is injected through the `QVERIS_HARBOR_EXPLORE_KEY`
+environment variable. It is stored as a GitHub Actions secret (Settings →
+Secrets and variables → Actions) and is never written into repository files.
+Local runs read it from a private env file (e.g. `~/.qveris/benchmark-explore.env`):
+
+```bash
+set -a; . ~/.qveris/benchmark-explore.env; set +a
+uv run python scripts/export_harbor_catalog.py
+```
+
+The workflow `.github/workflows/harbor-catalog-export.yml` runs the same export
+on demand (or weekly) and uploads the result as a build artifact.
+
 ## Licenses
 
 Platform code is licensed under Apache-2.0. QVeris-authored benchmark cases and

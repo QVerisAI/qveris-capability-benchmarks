@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Offline export of Harbor explore v2 catalog and per-CAP contracts."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from collections.abc import Callable
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, cast
+
+_DEFAULT_BASE_URL = "https://harbor.qveris.cloud"
+_KEY_ENV = "QVERIS_HARBOR_EXPLORE_KEY"
+_BASE_URL_ENV = "QVERIS_HARBOR_EXPLORE_BASE_URL"
+_TIMEOUT_SECONDS = 30
+
+
+def build_contract_url(base_url: str, capability_id: str) -> str:
+    quoted = urllib.parse.quote(capability_id, safe=".-")
+    return f"{base_url}/api/v2/explore/capabilities/{quoted}/contract"
+
+
+def fetch_json(url: str, key: str) -> dict[str, Any]:
+    request = urllib.request.Request(
+        url,
+        headers={"X-API-Key": key, "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=_TIMEOUT_SECONDS) as response:
+            return cast(dict[str, Any], json.loads(response.read().decode("utf-8")))
+    except urllib.error.HTTPError as exc:
+        raise RuntimeError(f"GET {url} -> HTTP {exc.code}") from exc
+
+
+def export_catalog(
+    base_url: str,
+    key: str,
+    out_dir: Path,
+    fetch: Callable[[str, str], dict[str, Any]] = fetch_json,
+) -> dict[str, Any]:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    catalog = fetch(f"{base_url}/api/v2/explore/catalog", key)
+    items = catalog.get("items", [])
+    contracts: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    for item in items:
+        capability_id = item["capability_id"]
+        url = build_contract_url(base_url, capability_id)
+        try:
+            contracts.append(
+                {"capability_id": capability_id, "contract": fetch(url, key)}
+            )
+        except RuntimeError as exc:
+            errors.append({"capability_id": capability_id, "error": str(exc)})
+
+    counts = {
+        "catalog": len(items),
+        "contracts": len(contracts),
+        "errors": len(errors),
+    }
+    exported_at = datetime.now(UTC).isoformat()
+    (out_dir / "catalog.json").write_text(
+        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    (out_dir / "contracts.json").write_text(
+        json.dumps(contracts, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    (out_dir / "meta.json").write_text(
+        json.dumps(
+            {"exported_at": exported_at, "counts": counts},
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    digest = hashlib.sha256((out_dir / "contracts.json").read_bytes()).hexdigest()
+    return {"counts": counts, "digest": digest, "output_dir": str(out_dir)}
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path(".harbor-snapshots/catalog"),
+        help="Private output directory (must stay gitignored)",
+    )
+    parser.add_argument(
+        "--base-url",
+        default=os.getenv(_BASE_URL_ENV, _DEFAULT_BASE_URL),
+        help=f"Harbor explore base URL (default: {_DEFAULT_BASE_URL})",
+    )
+    args = parser.parse_args(argv)
+
+    key = os.getenv(_KEY_ENV)
+    if not key:
+        print(
+            f"{_KEY_ENV} is required; set it via a local env file or GitHub secret.",
+            file=sys.stderr,
+        )
+        return 2
+
+    result = export_catalog(args.base_url.rstrip("/"), key, args.output)
+    print(
+        f"exported catalog={result['counts']['catalog']} "
+        f"contracts={result['counts']['contracts']} "
+        f"errors={result['counts']['errors']} digest={result['digest']}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
