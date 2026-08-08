@@ -1,1 +1,264 @@
-[{"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-risk-factor", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 1, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:1", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-risk-factor", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 2, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:2", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-risk-factor", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 3, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:3", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "invalid-filing-type", "case_input": {"filing_type": "NOTAFILING", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 1, "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:1", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "invalid-filing-type", "case_input": {"filing_type": "NOTAFILING", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 2, "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:2", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "invalid-filing-type", "case_input": {"filing_type": "NOTAFILING", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 3, "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:3", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-us-market-coverage", "case_input": {"filing_type": "10-K", "market": "US", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 1, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:1", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-us-market-coverage", "case_input": {"filing_type": "10-K", "market": "US", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 2, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:2", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-us-market-coverage", "case_input": {"filing_type": "10-K", "market": "US", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 3, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:3", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "cik-canonical-identifier", "case_input": {"cik": "0000320193", "filing_type": "10-K", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 1, "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:1", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "cik-canonical-identifier", "case_input": {"cik": "0000320193", "filing_type": "10-K", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 2, "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:2", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "cik-canonical-identifier", "case_input": {"cik": "0000320193", "filing_type": "10-K", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 3, "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:3", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-agent-contract", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 1, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:1", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-agent-contract", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 2, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:2", "state": "planned"}, {"access_path_id": "massive-stocks-risk-factors", "applicability_reason": null, "applicable": true, "case_id": "aapl-agent-contract", "case_input": {"filing_type": "10-K", "symbol": "AAPL", "topic": "supply-chain-risk"}, "failure_attribution": null, "mode": "direct", "provider_id": "massive-stocks", "round": 3, "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:3", "state": "planned"}]
+{
+  "cells": [
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-risk-factor",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-risk-factor",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-risk-factor",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-filing-type",
+      "case_input": {
+        "filing_type": "NOTAFILING",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-filing-type",
+      "case_input": {
+        "filing_type": "NOTAFILING",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-filing-type",
+      "case_input": {
+        "filing_type": "NOTAFILING",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-us-market-coverage",
+      "case_input": {
+        "filing_type": "10-K",
+        "market": "US",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-us-market-coverage",
+      "case_input": {
+        "filing_type": "10-K",
+        "market": "US",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-us-market-coverage",
+      "case_input": {
+        "filing_type": "10-K",
+        "market": "US",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cik-canonical-identifier",
+      "case_input": {
+        "cik": "0000320193",
+        "filing_type": "10-K",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cik-canonical-identifier",
+      "case_input": {
+        "cik": "0000320193",
+        "filing_type": "10-K",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cik-canonical-identifier",
+      "case_input": {
+        "cik": "0000320193",
+        "filing_type": "10-K",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:3",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-agent-contract",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-agent-contract",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-risk-factors",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-agent-contract",
+      "case_input": {
+        "filing_type": "10-K",
+        "symbol": "AAPL",
+        "topic": "supply-chain-risk"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:3",
+      "state": "planned"
+    }
+  ],
+  "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283",
+  "suite_id": "sec-filing-evidence-v1"
+}

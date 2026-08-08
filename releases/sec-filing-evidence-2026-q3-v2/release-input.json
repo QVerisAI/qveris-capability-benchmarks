@@ -39,7 +39,7 @@
     "massive-stocks-invalid-filing-type-completed-3"
   ],
   "release_id": "sec-filing-evidence-2026-q3-v2",
-  "run_plan_digest": "sha256:8085527db56763d910cd2745bb38790b88a10b337427078ab1eacfe3eb459f12",
+  "run_plan_digest": "sha256:a2bf5585965fbb49aab2035963fa121aa919c2543a790fad3f0ca2d60d6eb5ed",
   "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283",
   "version": "1.0.0"
 }

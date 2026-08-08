@@ -9,7 +9,7 @@ cap_releases:
     digest: sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57
   financial-statement-facts:
     release: releases/financial-statements-2026-q3-v2/release.json
-    digest: sha256:979f6d213e55e74f9b2b3a237e8d5eb70270700e11626d7e9b3becc39c7e3ef5
+    digest: sha256:9e797df8592ff139b9f09bcf69d88c5b7dc7664384210388f84e33329f0017b8
   sec-filing-evidence:
     release: releases/sec-filing-evidence-2026-q3-v2/release.json
-    digest: sha256:dc2c346e86e8bc041cea9f7a9826d01f8a93b8954a46586fa512a4942623f55f
+    digest: sha256:865ed24c2b3d3be72e8cd665421ad33f9fcceab1644b90e0868ff0c82a32d858
