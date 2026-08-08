@@ -63,7 +63,7 @@ FAMILY_BINDINGS: dict[
         "fmp-income-statement",
         "financial-modeling-prep",
         "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
-        {"symbol": "600519.SS", "limit": 5},
+        {"symbol": "600519.SS", "limit": 10},
         "sha256:d96609ce27d279b9994a995f9b028836da1c6f4d904f9359b03a25bf454532a0",
         (
             "FMP as reported income statement 600519.SS Shanghai stock annual "

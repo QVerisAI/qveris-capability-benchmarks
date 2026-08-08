@@ -42,7 +42,7 @@ BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
         "fmp-income-statement",
         "financial-modeling-prep",
         "cn-600519-market-coverage",
-        {"symbol": "600519.SS", "limit": 5},
+        {"symbol": "600519.SS", "limit": 10},
     ),
     "fmp-income-statement-aapl-canonical-identifier": (
         "fmp-income-statement",
