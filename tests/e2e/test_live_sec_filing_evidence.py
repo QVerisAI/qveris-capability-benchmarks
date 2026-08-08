@@ -27,6 +27,7 @@ from qveris_bench.execution.qveris_binding import (
     load_registered_qveris_direct_binding,
     validate_qveris_direct_binding,
 )
+from qveris_bench.outcomes.attribution import classify_provider_negative_reason
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
 from qveris_bench.suites.compiler import compile_suite
 
@@ -57,6 +58,36 @@ LIVE_BINDINGS: dict[
         "Massive Stocks SEC risk factors AAPL direct provider",
         True,
         "invalid-filing-type",
+    ),
+    "massive-stocks-aapl-us-market-coverage": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "massive_stocks.stocks.filings.risk_factors.list.vX",
+        {"ticker": "AAPL", "limit": 20},
+        "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+        "Massive Stocks SEC risk factors AAPL direct provider",
+        False,
+        "aapl-us-market-coverage",
+    ),
+    "massive-stocks-cik-canonical-identifier": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "massive_stocks.stocks.filings.risk_factors.list.vX",
+        {"ticker": "AAPL", "limit": 20},
+        "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+        "Massive Stocks SEC risk factors AAPL direct provider",
+        False,
+        "cik-canonical-identifier",
+    ),
+    "massive-stocks-aapl-agent-contract": (
+        "massive-stocks-risk-factors",
+        "massive-stocks",
+        "massive_stocks.stocks.filings.risk_factors.list.vX",
+        {"ticker": "AAPL", "limit": 20},
+        "sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87",
+        "Massive Stocks SEC risk factors AAPL direct provider",
+        False,
+        "aapl-agent-contract",
     ),
 }
 
@@ -121,7 +152,7 @@ def _semantic_reason(provider_id: str, case_id: str, document: object) -> str | 
     try:
         if provider_id == "massive-stocks":
             facts = extract_massive_stocks_risk_factors(
-                document, "AAPL", negative_control=negative
+                document, "AAPL", negative_control=negative, case_id=case_id
             )
         elif case_id == "aapl-risk-factor" and provider_id == "financial-modeling-prep":
             facts = extract_fmp_10k(document, "AAPL", 2025, negative_control=False)
@@ -159,6 +190,13 @@ def _persist_terminal_evidence(
     binding_registry_digest: str,
 ) -> TerminalEvidence:
     outcome = "completed" if reason is None else "provider_negative"
+    attribution = (
+        classify_provider_negative_reason(reason) if reason is not None else None
+    )
+    if reason is not None and attribution is None:
+        raise AssertionError(
+            f"benchmark-side failure cannot be published as provider_negative: {reason}"
+        )
     content = (
         json.dumps(
             {
@@ -171,6 +209,7 @@ def _persist_terminal_evidence(
                 "github_run_id": os.environ.get("GITHUB_RUN_ID"),
                 "github_sha": os.environ.get("GITHUB_SHA"),
                 "reason": reason,
+                "failure_attribution": attribution.value if attribution else None,
                 "extractor_version": "1.0.0",
                 "suite_fingerprint": suite_fingerprint,
                 "redaction_status": "sanitized",

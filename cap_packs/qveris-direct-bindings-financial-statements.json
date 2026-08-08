@@ -6,9 +6,9 @@
       "version": "1.0.0",
       "access_path_id": "fmp-income-statement",
       "provider_id": "financial-modeling-prep",
-      "discovery_query": "FMP as reported income statement AAPL annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
+      "discovery_query": "FMP income statement AAPL annual revenue direct provider",
+      "discovery_digest": "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
       "parameters": {"symbol": "AAPL", "limit": 5}
     },
     {
@@ -17,9 +17,53 @@
       "version": "1.0.0",
       "access_path_id": "fmp-income-statement",
       "provider_id": "financial-modeling-prep",
-      "discovery_query": "FMP as reported income statement AAPL annual revenue direct provider",
-      "discovery_digest": "sha256:1cb29d6cf931dbc1265b6d92574b03791291588d3d983667db80a13811412c43",
-      "tool_id": "financialmodelingprep.stable.incomestatementasreported.retrieve.v1.a9a4ed47",
+      "discovery_query": "FMP income statement AAPL annual revenue direct provider",
+      "discovery_digest": "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+      "parameters": {"symbol": "AAPL", "limit": 5}
+    },
+    {
+      "binding_id": "fmp-income-statement-cn-600519-market-coverage",
+      "suite_id": "financial-statements-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-income-statement",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP as reported income statement 600519.SS Shanghai stock annual revenue direct provider",
+      "discovery_digest": "sha256:d96609ce27d279b9994a995f9b028836da1c6f4d904f9359b03a25bf454532a0",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+      "parameters": {"symbol": "600519.SS", "limit": 5}
+    },
+    {
+      "binding_id": "fmp-income-statement-aapl-canonical-identifier",
+      "suite_id": "financial-statements-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-income-statement",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP income statement AAPL annual revenue direct provider",
+      "discovery_digest": "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+      "parameters": {"symbol": "AAPL", "limit": 5}
+    },
+    {
+      "binding_id": "fmp-income-statement-aapl-fiscal-period-shape",
+      "suite_id": "financial-statements-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-income-statement",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP income statement AAPL annual revenue direct provider",
+      "discovery_digest": "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
+      "parameters": {"symbol": "AAPL", "limit": 5}
+    },
+    {
+      "binding_id": "fmp-income-statement-aapl-agent-contract",
+      "suite_id": "financial-statements-v1",
+      "version": "1.0.0",
+      "access_path_id": "fmp-income-statement",
+      "provider_id": "financial-modeling-prep",
+      "discovery_query": "FMP income statement AAPL annual revenue direct provider",
+      "discovery_digest": "sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4",
+      "tool_id": "financialmodelingprep.stable.incomestatement.retrieve.v1.dd6d583f",
       "parameters": {"symbol": "AAPL", "limit": 5}
     }
   ]

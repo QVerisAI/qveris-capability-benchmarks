@@ -8,7 +8,12 @@ class FinancialStatementExtractionError(ValueError):
 
 
 def extract_fmp_income_statement(
-    document: object, symbol: str, fiscal_year: int, *, negative_control: bool = False
+    document: object,
+    symbol: str,
+    fiscal_year: int,
+    *,
+    negative_control: bool = False,
+    case_id: str | None = None,
 ) -> dict[str, Any]:
     data = _unwrap(document)
     if not isinstance(data, (dict, list)):
@@ -32,11 +37,16 @@ def extract_fmp_income_statement(
         ),
         "revenue",
     )
-    return _facts(symbol, fiscal_year, revenue, report)
+    return _facts(symbol, fiscal_year, revenue, report, case_id=case_id)
 
 
 def extract_alpha_vantage_income_statement(
-    document: object, symbol: str, fiscal_year: int, *, negative_control: bool = False
+    document: object,
+    symbol: str,
+    fiscal_year: int,
+    *,
+    negative_control: bool = False,
+    case_id: str | None = None,
 ) -> dict[str, Any]:
     data = _unwrap(document)
     if not isinstance(data, dict):
@@ -50,11 +60,16 @@ def extract_alpha_vantage_income_statement(
         return {"validation_error": "fiscal year unavailable"}
     report = _required_report_for_year(reports, fiscal_year)
     revenue = _number(report.get("totalRevenue"), "revenue")
-    return _facts(symbol, fiscal_year, revenue, report)
+    return _facts(symbol, fiscal_year, revenue, report, case_id=case_id)
 
 
 def extract_sec_company_facts(
-    document: object, symbol: str, fiscal_year: int, *, negative_control: bool = False
+    document: object,
+    symbol: str,
+    fiscal_year: int,
+    *,
+    negative_control: bool = False,
+    case_id: str | None = None,
 ) -> dict[str, Any]:
     data = _unwrap(document)
     if not isinstance(data, dict):
@@ -82,7 +97,7 @@ def extract_sec_company_facts(
         return {"validation_error": "fiscal year unavailable"}
     row = _required_sec_row_for_year(rows, fiscal_year)
     revenue = _number(row.get("val"), "revenue")
-    return _facts(symbol, fiscal_year, revenue, row)
+    return _facts(symbol, fiscal_year, revenue, row, case_id=case_id)
 
 
 def _unwrap(document: object) -> object:
@@ -197,14 +212,31 @@ def _number(value: object, field: str) -> float:
 
 
 def _facts(
-    symbol: str, fiscal_year: int, revenue: float, source: dict[str, Any]
+    symbol: str,
+    fiscal_year: int,
+    revenue: float,
+    source: dict[str, Any],
+    *,
+    case_id: str | None = None,
 ) -> dict[str, Any]:
     facts: dict[str, Any] = {
         "symbol": symbol,
         "fiscal_year": str(fiscal_year),
         "revenue": revenue,
-        "currency": "USD",
     }
+    reported_currency = _row_field(source, "reportedCurrency", "currency")
+    facts["currency"] = (
+        reported_currency
+        if isinstance(reported_currency, str) and reported_currency
+        else "USD"
+    )
+    if case_id == "cn-600519-market-coverage":
+        facts["market"] = "CN"
+    elif case_id == "aapl-canonical-identifier":
+        facts["resolved_identifier"] = symbol
+    elif case_id == "aapl-fiscal-period-shape":
+        facts["unit"] = facts["currency"]
+        facts["period_label"] = f"FY{fiscal_year}"
     filing_date = _row_field(source, "date", "end")
     if isinstance(filing_date, str) and filing_date:
         facts["filing_date"] = filing_date

@@ -28,6 +28,10 @@ RELEASES = {
         "sha": "8b7fe9fa610a5a5a6e358e0968fb6fdecd9d54b8",
         "reasons": {"invalid_revenue"},
         "states": {"completed", "provider_negative"},
+        "legacy_binding_rotated": True,
+        "legacy_registry_digest": (
+            "sha256:548186dff15e2492ba9ed4f24f3e3967e2cb393f93db5fd82a1a4b1317fb4156"
+        ),
     },
     "sec-filing-evidence-2026-q3-v1": {
         "registry": ROOT / "cap_packs/qveris-direct-bindings-sec-filing-evidence.json",
@@ -36,6 +40,10 @@ RELEASES = {
         "sha": "f3bbbed47eb0b4fa4b841ffc1b64a859e5dd5297",
         "reasons": {"unexpected_response_shape"},
         "states": {"provider_negative"},
+        "legacy_binding_rotated": False,
+        "legacy_registry_digest": (
+            "sha256:0ab55f6103ef3ec40d2dad4d19de43e7cb1e1b90811cd179d3a620d1f9000b54"
+        ),
     },
 }
 
@@ -82,6 +90,7 @@ def test_ac_fsf_sec_releases_rebuild_all_direct_terminal_evidence() -> None:
 
         cells_by_run_key = {cell.run_key: cell for cell in cells}
         registry_digest = sha256_digest(meta["registry"].read_bytes())
+        assert registry_digest != meta["legacy_registry_digest"]
         for bundle in evidence:
             matching = [
                 path
@@ -102,8 +111,12 @@ def test_ac_fsf_sec_releases_rebuild_all_direct_terminal_evidence() -> None:
             binding = load_registered_qveris_direct_binding(
                 meta["registry"], artifact["binding_id"]
             )
-            assert artifact["binding_digest"] == _binding_digest(binding)
-            assert artifact["binding_registry_digest"] == registry_digest
+            assert artifact["binding_registry_digest"] == meta["legacy_registry_digest"]
+            if meta["legacy_binding_rotated"]:
+                # 工具重限定后该 binding 契约轮换，历史证据绑定旧契约
+                assert artifact["binding_digest"] != _binding_digest(binding)
+            else:
+                assert artifact["binding_digest"] == _binding_digest(binding)
             assert artifact["github_run_id"] == meta["run"]
             assert artifact["github_sha"] == meta["sha"]
 
