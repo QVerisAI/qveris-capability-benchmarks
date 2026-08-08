@@ -62,3 +62,8 @@ sources:
     reference_url: https://english.sse.com.cn/markets/dataservice/products/
     authority_tier: official_market_source
     reproduction_policy: citation_only
+  - source_id: harbor-capability-catalog
+    name: Harbor Capability Catalog
+    reference_url: https://harbor.qveris.cloud
+    authority_tier: official_api
+    reproduction_policy: citation_only
