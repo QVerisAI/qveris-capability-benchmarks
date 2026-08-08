@@ -6,7 +6,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from qveris_bench.models.enums import CellState, DimensionState, RunMode
+from qveris_bench.models.evidence import EvidenceBundle
+from qveris_bench.models.release import BenchmarkRelease
+from qveris_bench.models.run import RunCell
 from qveris_bench.profiles.builder import build_profile
+from qveris_bench.releases.builder import build_release
 
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / "profiles/company-research-agent.yaml"
@@ -48,6 +53,47 @@ def test_ac4_profile_keeps_missing_dimensions_insufficient() -> None:
             dimensions[(cap_id, "cost")].dimension_state.value
             == "evidence_insufficient"
         )
+
+
+def test_ac7_profile_marks_gateway_latency_and_cost_measured(tmp_path: Path) -> None:
+    release_path = _release_with_gateway_metrics(tmp_path)
+    profile_input = tmp_path / "profile.yaml"
+    profile_input.write_text(
+        "\n".join(
+            [
+                "profile_id: gateway-metrics-profile",
+                "version: 1.0.0",
+                "scenario_ref:",
+                "  scenario_id: company-research-agent",
+                "  version: 1.1.0",
+                "cap_releases:",
+                "  financial-statement-facts:",
+                f"    release: {release_path.name}",
+                f"    digest: sha256:{_sha256(release_path.read_bytes())}",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    profile = build_profile(profile_input, tmp_path).profile
+
+    dimensions = {d.dimension: d for d in profile.cap_dimensions}
+    latency = dimensions["latency"]
+    cost = dimensions["cost"]
+    assert latency.dimension_state is DimensionState.MEASURED
+    assert cost.dimension_state is DimensionState.MEASURED
+    assert latency.details["measurement_boundary"] == "qveris_gateway"
+    assert cost.details["measurement_boundary"] == "qveris_gateway"
+    assert latency.details["unit"] == "ms"
+    assert cost.details["unit"] == "credits"
+    assert latency.evidence_refs and cost.evidence_refs
+    assert (latency.details["min_ms"], latency.details["max_ms"]) == (110.0, 310.0)
+    assert cost.details["total_credits"] == 3.42
+    assert all(
+        dimension.dimension_state is DimensionState.EVIDENCE_INSUFFICIENT
+        for dimension in (dimensions["reliability"], dimensions["agent-interface"])
+    )
 
 
 def test_ac5_profile_emits_markdown_with_per_cap_tradeoffs() -> None:
@@ -99,3 +145,59 @@ def _assert_no_aggregate_keys(value: object) -> None:
     elif isinstance(value, list):
         for item in value:
             _assert_no_aggregate_keys(item)
+
+
+def _sha256(content: bytes) -> str:
+    import hashlib
+
+    return hashlib.sha256(content).hexdigest()
+
+
+def _release_with_gateway_metrics(tmp_path: Path) -> Path:
+    suite_fingerprint = "9" * 64
+    cells: list[RunCell] = []
+    evidence: list[EvidenceBundle] = []
+    for round_number, (latency_ms, cost_credits) in enumerate(
+        ((110.0, 0.32), (310.0, 1.1), (210.0, 2.0)), start=1
+    ):
+        run_key = (
+            f"financial-statements-v1:{suite_fingerprint}:"
+            "aapl-revenue-fy2025:financial-modeling-prep:"
+            f"fmp-income-statement:direct:{round_number}"
+        )
+        cells.append(
+            RunCell(
+                run_key=run_key,
+                case_id="aapl-revenue-fy2025",
+                provider_id="financial-modeling-prep",
+                access_path_id="fmp-income-statement",
+                mode=RunMode.DIRECT,
+                round=round_number,
+                state=CellState.COMPLETED,
+            )
+        )
+        evidence.append(
+            EvidenceBundle(
+                evidence_id=f"fmp-income-statement-aapl-revenue-{round_number}",
+                run_key=run_key,
+                raw_digest="sha256:" + hex(round_number)[2:] * 64,
+                public_digest="sha256:" + hex(round_number + 10)[2:] * 64,
+                redaction_status="sanitized",
+                disclosure_level="sanitized_public",
+                license_status="cleared",
+                extractor_version="1.0.0",
+                suite_fingerprint=suite_fingerprint,
+                latency_ms=latency_ms,
+                cost_credits=cost_credits,
+            )
+        )
+    release = BenchmarkRelease(
+        release_id="gateway-metrics-release",
+        version="1.0.0",
+        suite_fingerprint=suite_fingerprint,
+        run_plan_digest="sha256:" + "0" * 64,
+        evidence_ids=tuple(bundle.evidence_id for bundle in evidence),
+    )
+    path = tmp_path / "release.json"
+    path.write_bytes(build_release(release, tuple(cells), tuple(evidence)))
+    return path

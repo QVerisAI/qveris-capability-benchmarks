@@ -30,7 +30,7 @@ def build_release(
             for cell in sorted(cells, key=lambda item: item.run_key)
         ],
         "evidence": [
-            bundle.model_dump(mode="json")
+            bundle.model_dump(mode="json", exclude_none=True)
             for bundle in sorted(evidence, key=lambda item: item.evidence_id)
         ],
     }

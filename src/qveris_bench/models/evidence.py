@@ -22,3 +22,6 @@ class EvidenceBundle(FrozenModel):
     license_status: LicenseStatus
     extractor_version: SemanticVersion
     suite_fingerprint: Sha256
+    # QVeris 网关侧观测；不代表供应商原生 API 延迟或定价
+    latency_ms: float | None = None
+    cost_credits: float | None = None

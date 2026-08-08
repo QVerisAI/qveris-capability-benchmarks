@@ -70,6 +70,7 @@ def build_profile(input_path: Path, root: Path) -> ProfileBuild:
             for item in document_release.get("release", {}).get("limitations", [])
         )
         dimensions.extend(_case_dimensions(cap_id, cells, evidence))
+        dimensions.extend(_gateway_dimensions(cap_id, evidence))
         dimensions.extend(_cap_level_insufficient(cap_id))
 
     profile = TaskFitProfile(
@@ -134,8 +135,74 @@ def _cap_level_insufficient(cap_id: str) -> tuple[ProfileDimension, ...]:
             dimension_state=DimensionState.EVIDENCE_INSUFFICIENT,
             details={},
         )
-        for name in ("latency", "cost", "reliability", "agent-interface")
+        for name in ("reliability", "agent-interface")
     )
+
+
+def _gateway_dimensions(
+    cap_id: str, evidence: list[dict[str, Any]]
+) -> tuple[ProfileDimension, ...]:
+    bundles = [
+        bundle
+        for bundle in evidence
+        if isinstance(bundle, dict)
+        and isinstance(bundle.get("latency_ms"), (int, float))
+        and isinstance(bundle.get("cost_credits"), (int, float))
+        and bundle.get("public_digest")
+    ]
+    if not bundles:
+        return _gateway_insufficient(cap_id)
+    latency_values = sorted(float(bundle["latency_ms"]) for bundle in bundles)
+    cost_values = sorted(float(bundle["cost_credits"]) for bundle in bundles)
+    refs = tuple(sorted(str(bundle["public_digest"]) for bundle in bundles))
+    return (
+        ProfileDimension(
+            cap_id=cap_id,
+            dimension="latency",
+            dimension_state=DimensionState.MEASURED,
+            details={
+                "unit": "ms",
+                "measurement_boundary": "qveris_gateway",
+                "cells": len(bundles),
+                "min_ms": latency_values[0],
+                "median_ms": _median(latency_values),
+                "max_ms": latency_values[-1],
+            },
+            evidence_refs=refs,
+        ),
+        ProfileDimension(
+            cap_id=cap_id,
+            dimension="cost",
+            dimension_state=DimensionState.MEASURED,
+            details={
+                "unit": "credits",
+                "measurement_boundary": "qveris_gateway",
+                "cells": len(bundles),
+                "median_credits": round(_median(cost_values), 6),
+                "total_credits": round(sum(cost_values), 6),
+            },
+            evidence_refs=refs,
+        ),
+    )
+
+
+def _gateway_insufficient(cap_id: str) -> tuple[ProfileDimension, ...]:
+    return tuple(
+        ProfileDimension(
+            cap_id=cap_id,
+            dimension=name,
+            dimension_state=DimensionState.EVIDENCE_INSUFFICIENT,
+            details={},
+        )
+        for name in ("latency", "cost")
+    )
+
+
+def _median(values: list[float]) -> float:
+    if len(values) % 2:
+        return values[len(values) // 2]
+    midpoint = len(values) // 2
+    return (values[midpoint - 1] + values[midpoint]) / 2
 
 
 def _markdown(profile: TaskFitProfile) -> str:
