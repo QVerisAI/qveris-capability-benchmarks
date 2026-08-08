@@ -1,0 +1,114 @@
+{
+  "artifacts": [
+    {
+      "digest": "sha256:2df3400c5730c0fd51f2378862c68c21eb4993547992e024f3c230dfae525677",
+      "evidence_id": "fmp-income-statement-aapl-agent-contract-31240234266-1",
+      "id": 9016772431,
+      "name": "fsf-terminal-fmp-income-statement-aapl-agent-contract-round-1"
+    },
+    {
+      "digest": "sha256:2112fb7ab9cbffcd34df9c2d9df9acef6330c8d4508754712863f18dbb73cac0",
+      "evidence_id": "fmp-income-statement-aapl-agent-contract-31240234266-2",
+      "id": 9016771528,
+      "name": "fsf-terminal-fmp-income-statement-aapl-agent-contract-round-2"
+    },
+    {
+      "digest": "sha256:c7ff910440c6bf9d2155161484bba595316200ed7badb5f80136e234af1fe102",
+      "evidence_id": "fmp-income-statement-aapl-agent-contract-31240234266-3",
+      "id": 9016772441,
+      "name": "fsf-terminal-fmp-income-statement-aapl-agent-contract-round-3"
+    },
+    {
+      "digest": "sha256:b66a6982260084f07fcaee8fe751e9480d88494c59d8cc62d401cdfc05c2ed79",
+      "evidence_id": "fmp-income-statement-aapl-canonical-identifier-31240234266-1",
+      "id": 9016771049,
+      "name": "fsf-terminal-fmp-income-statement-aapl-canonical-identifier-round-1"
+    },
+    {
+      "digest": "sha256:abe29fdb665b68d23d5a121fb29720f0d3bd279582a5879d39989b38bf9edd9d",
+      "evidence_id": "fmp-income-statement-aapl-canonical-identifier-31240234266-2",
+      "id": 9016772434,
+      "name": "fsf-terminal-fmp-income-statement-aapl-canonical-identifier-round-2"
+    },
+    {
+      "digest": "sha256:d5964087cb20674cd807cf8c962e0166652786573271ab94a07d4eeb277f4be9",
+      "evidence_id": "fmp-income-statement-aapl-canonical-identifier-31240234266-3",
+      "id": 9016771087,
+      "name": "fsf-terminal-fmp-income-statement-aapl-canonical-identifier-round-3"
+    },
+    {
+      "digest": "sha256:996559a97f801c375f9ff349e94edcb4a6cf4891aafcf51cc479ed55189f873e",
+      "evidence_id": "fmp-income-statement-aapl-fiscal-period-shape-31240234266-1",
+      "id": 9016772636,
+      "name": "fsf-terminal-fmp-income-statement-aapl-fiscal-period-shape-round-1"
+    },
+    {
+      "digest": "sha256:61e5d6355e8fd0a161f7c82f83720e9e99866daf3abf4fa4c38014af355bea50",
+      "evidence_id": "fmp-income-statement-aapl-fiscal-period-shape-31240234266-2",
+      "id": 9016772420,
+      "name": "fsf-terminal-fmp-income-statement-aapl-fiscal-period-shape-round-2"
+    },
+    {
+      "digest": "sha256:b27ad6af57312e15a3a41c0c5f8566fa637f7ba2e80e6f19fa1574e4128069e0",
+      "evidence_id": "fmp-income-statement-aapl-fiscal-period-shape-31240234266-3",
+      "id": 9016772597,
+      "name": "fsf-terminal-fmp-income-statement-aapl-fiscal-period-shape-round-3"
+    },
+    {
+      "digest": "sha256:ebb9df1943e0ff94d586cbc406db2b67c072b1368eaba71cc9ebdf64679315c5",
+      "evidence_id": "fmp-income-statement-aapl-revenue-31240234266-1",
+      "id": 9016773173,
+      "name": "fsf-terminal-fmp-income-statement-aapl-revenue-round-1"
+    },
+    {
+      "digest": "sha256:391bd98fa45a6f3232d613da1139ab47ea1fb52b8243c40d1c2de764dd618cbe",
+      "evidence_id": "fmp-income-statement-aapl-revenue-31240234266-2",
+      "id": 9016772403,
+      "name": "fsf-terminal-fmp-income-statement-aapl-revenue-round-2"
+    },
+    {
+      "digest": "sha256:51707d588efb3ad41747cd2f6b7d1bc8616dbb70c8ad7a0f01851306c3faedec",
+      "evidence_id": "fmp-income-statement-aapl-revenue-31240234266-3",
+      "id": 9016771640,
+      "name": "fsf-terminal-fmp-income-statement-aapl-revenue-round-3"
+    },
+    {
+      "digest": "sha256:6a7c507f1c3389c8681b07b6fc6b84004dc31a1207cd1f9063164e908d24d306",
+      "evidence_id": "fmp-income-statement-cn-600519-market-coverage-31240234266-1",
+      "id": 9016771222,
+      "name": "fsf-terminal-fmp-income-statement-cn-600519-market-coverage-round-1"
+    },
+    {
+      "digest": "sha256:6e9caa8626bdb4eff967a7a07949d1e009ca6c724342b3c467f3d30ad83505e3",
+      "evidence_id": "fmp-income-statement-cn-600519-market-coverage-31240234266-2",
+      "id": 9016772720,
+      "name": "fsf-terminal-fmp-income-statement-cn-600519-market-coverage-round-2"
+    },
+    {
+      "digest": "sha256:48ee852f2cc38953d1ce586d26ffc64d697019494c17946061575c2a8c9d449c",
+      "evidence_id": "fmp-income-statement-cn-600519-market-coverage-31240234266-3",
+      "id": 9016770924,
+      "name": "fsf-terminal-fmp-income-statement-cn-600519-market-coverage-round-3"
+    },
+    {
+      "digest": "sha256:9a70b2d8bfee971fc4dfb46dcd971edd651f2659b78cd0cae44c26a8252e3191",
+      "evidence_id": "fmp-income-statement-invalid-period-31240234266-1",
+      "id": 9016772108,
+      "name": "fsf-terminal-fmp-income-statement-invalid-period-round-1"
+    },
+    {
+      "digest": "sha256:a92359844526f26a1b4e4e4023b933d0f40231a35743f43bae5296701cbf2dc5",
+      "evidence_id": "fmp-income-statement-invalid-period-31240234266-2",
+      "id": 9016772560,
+      "name": "fsf-terminal-fmp-income-statement-invalid-period-round-2"
+    },
+    {
+      "digest": "sha256:f89030c08b1b58e6c245749ab80492f574d1cbb2131f6b6908c3ac401361bfef",
+      "evidence_id": "fmp-income-statement-invalid-period-31240234266-3",
+      "id": 9016772096,
+      "name": "fsf-terminal-fmp-income-statement-invalid-period-round-3"
+    }
+  ],
+  "github_run_id": "31240234266",
+  "github_sha": "52582c88c708b8abe75b21a30276833818b67c6b"
+}

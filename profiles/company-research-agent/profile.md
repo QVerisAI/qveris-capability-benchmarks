@@ -4,7 +4,15 @@
 - profile version: 1.0.0
 
 ## financial-statement-facts
+- case:aapl-agent-contract:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:aapl-canonical-identifier:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:aapl-fiscal-period-shape:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
 - case:aapl-revenue-fy2025:outcome: measured (3 evidence refs)
+  - {"completed": 3, "provider_negative": 0, "rounds": 3}
+- case:cn-600519-market-coverage:outcome: measured (3 evidence refs)
   - {"completed": 0, "provider_negative": 3, "rounds": 3}
 - case:invalid-period:outcome: measured (3 evidence refs)
   - {"completed": 3, "provider_negative": 0, "rounds": 3}
@@ -40,8 +48,8 @@
 - agent-interface: evidence_insufficient
 
 ## Limitations
-- The included FMP as-reported income statement path completed the invalid-period negative control in all rounds but returned provider-negative (invalid_revenue) for the AAPL FY2025 revenue case; the connector did not expose the FY2025 revenue fact under the frozen contract in this cycle.
-- Alpha Vantage income statement and the official SEC company facts connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.
+- FMP income statement completed 15 of 18 Direct cells including the AAPL FY2025 revenue, invalid-period negative control, canonical-identifier, fiscal-period-shape, and agent-contract cases.
+- The CN market-coverage case (600519.SH FY2020 revenue) returned provider_negative (fiscal_year_unavailable / empty_or_partial_data) in all three rounds; FMP did not expose the fact for the canonical SSE security under the frozen contract.
 - This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result.
 - The included Massive Stocks risk-factor path returned unexpected response shapes in every Direct round; no cell satisfied the SEC evidence contract in this cycle, and the connector path should be re-qualified before reuse.
 - FMP 10-K JSON and SEC filings search connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.
