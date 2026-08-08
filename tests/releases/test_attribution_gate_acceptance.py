@@ -124,9 +124,7 @@ def test_ac5_non_provider_negative_cells_do_not_require_attribution(
 
 def test_ac6_build_release_enforces_attribution_by_default() -> None:
     with pytest.raises(ReleaseGateError, match="attribution"):
-        build_release(
-            _release(), (_cell(CellState.PROVIDER_NEGATIVE),), (_evidence(),)
-        )
+        build_release(_release(), (_cell(CellState.PROVIDER_NEGATIVE),), (_evidence(),))
 
 
 def test_ac7_legacy_published_release_still_verifies_by_digest() -> None:
