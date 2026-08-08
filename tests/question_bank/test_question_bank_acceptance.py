@@ -325,11 +325,31 @@ def test_ac_fsf_question_family_covers_selection_roles() -> None:
         "coverage",
         "shape_completeness",
     }
+    assert len(questions) == 6
+    scenario = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
+    )
+    requirement = next(
+        requirement
+        for requirement in scenario.required_capabilities
+        if requirement.cap_id == "financial-statement-facts"
+    )
+    assert set(requirement.minimum_question_roles) == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+        "shape_completeness",
+    }
     for question in questions:
         assert question.evaluation_contract is not None
         assert question.evaluation_contract.reference_source_ids
         assert question.evaluation_contract.selection_implication
-    assert len(questions) == 6
+        assert any(
+            reference.scenario_id == scenario.scenario_id
+            and reference.version == scenario.version
+            for reference in question.scenario_refs
+        )
 
 
 def test_ac_sec_question_family_covers_selection_roles() -> None:
@@ -347,29 +367,45 @@ def test_ac_sec_question_family_covers_selection_roles() -> None:
         "coverage",
         "shape_completeness",
     }
+    assert len(questions) == 7
+    scenario = next(
+        scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
+    )
+    requirement = next(
+        requirement
+        for requirement in scenario.required_capabilities
+        if requirement.cap_id == "sec-filing-evidence"
+    )
+    assert set(requirement.minimum_question_roles) == {
+        "agent_contract",
+        "boundary_negative",
+        "core_positive",
+        "coverage",
+    }
+    candidate_ids = {
+        "sec-filing-evidence-aapl-filing-list-completeness",
+        "sec-filing-evidence-aapl-no-disclosure",
+    }
     for question in questions:
         assert question.evaluation_contract is not None
         assert question.evaluation_contract.reference_source_ids
         assert question.evaluation_contract.selection_implication
-    assert len(questions) == 7
+        if question.question_id in candidate_ids:
+            assert question.scenario_refs == ()
+        else:
+            assert any(
+                reference.scenario_id == scenario.scenario_id
+                and reference.version == scenario.version
+                for reference in question.scenario_refs
+            )
 
 
-def test_ac_expanded_families_stay_candidate_until_cases_exist() -> None:
+def test_ac_expanded_families_attach_only_when_cases_exist() -> None:
     bank = load_question_bank(ROOT / "question_bank")
     scenario = next(
         scenario for scenario in bank.scenarios if str(scenario.version) == "1.1.0"
     )
 
-    for cap_id in ("financial-statement-facts", "sec-filing-evidence"):
-        requirement = next(
-            requirement
-            for requirement in scenario.required_capabilities
-            if requirement.cap_id == cap_id
-        )
-        assert set(requirement.minimum_question_roles) == {
-            "core_positive",
-            "boundary_negative",
-        }
     new_ids = {
         "financial-statement-facts-600519-cn-market-coverage",
         "financial-statement-facts-aapl-canonical-identifier",
@@ -377,13 +413,20 @@ def test_ac_expanded_families_stay_candidate_until_cases_exist() -> None:
         "financial-statement-facts-aapl-agent-contract",
         "sec-filing-evidence-aapl-us-market-coverage",
         "sec-filing-evidence-cik-canonical-identifier",
-        "sec-filing-evidence-aapl-filing-list-completeness",
-        "sec-filing-evidence-aapl-no-disclosure",
         "sec-filing-evidence-aapl-agent-contract",
     }
-    bank = load_question_bank(ROOT / "question_bank")
     for question in bank.questions:
         if question.question_id in new_ids:
+            assert any(
+                reference.scenario_id == scenario.scenario_id
+                and reference.version == scenario.version
+                for reference in question.scenario_refs
+            )
+    for question in bank.questions:
+        if question.question_id in {
+            "sec-filing-evidence-aapl-filing-list-completeness",
+            "sec-filing-evidence-aapl-no-disclosure",
+        }:
             assert question.scenario_refs == ()
 
 

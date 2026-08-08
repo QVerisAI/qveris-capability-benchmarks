@@ -19,6 +19,10 @@ BINDINGS_REGISTRY = ROOT / "cap_packs/qveris-direct-bindings-financial-statement
 CASE_TO_QUESTION = {
     "aapl-revenue-fy2025": "financial-statement-facts-aapl-revenue",
     "invalid-period": "financial-statement-facts-invalid-period",
+    "cn-600519-market-coverage": "financial-statement-facts-600519-cn-market-coverage",
+    "aapl-canonical-identifier": "financial-statement-facts-aapl-canonical-identifier",
+    "aapl-fiscal-period-shape": "financial-statement-facts-aapl-fiscal-period-shape",
+    "aapl-agent-contract": "financial-statement-facts-aapl-agent-contract",
 }
 
 BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
@@ -41,8 +45,8 @@ def test_ac1_fsf_suite_expands_to_eighteen_direct_cells() -> None:
     first = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
     second = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
 
-    assert len(first.run_plan.cells) == 6, (
-        "AC1 two cases by one included path by three rounds must expand to 6 cells"
+    assert len(first.run_plan.cells) == 18, (
+        "AC1 six cases by one included path by three rounds must expand to 18 cells"
     )
     assert all(cell.applicable for cell in first.run_plan.cells)
     keys = [cell.run_key for cell in first.run_plan.cells]
@@ -158,5 +162,5 @@ def test_ac6_suite_plan_runs_through_the_installed_cli(tmp_path: Path) -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "Planned 6 cells, 6 applicable calls" in result.stdout
+    assert "Planned 18 cells, 18 applicable calls" in result.stdout
     assert output.is_file()

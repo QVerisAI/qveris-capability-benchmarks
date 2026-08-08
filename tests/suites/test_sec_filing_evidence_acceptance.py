@@ -19,6 +19,9 @@ BINDINGS_REGISTRY = ROOT / "cap_packs/qveris-direct-bindings-sec-filing-evidence
 CASE_TO_QUESTION = {
     "aapl-risk-factor": "sec-filing-evidence-aapl-risk",
     "invalid-filing-type": "sec-filing-evidence-invalid-filing-type",
+    "aapl-us-market-coverage": "sec-filing-evidence-aapl-us-market-coverage",
+    "cik-canonical-identifier": "sec-filing-evidence-cik-canonical-identifier",
+    "aapl-agent-contract": "sec-filing-evidence-aapl-agent-contract",
 }
 
 BINDING_CASES: dict[str, tuple[str, str, str, dict[str, object]]] = {
@@ -41,7 +44,7 @@ def test_ac1_sec_suite_expands_to_eighteen_direct_cells() -> None:
     first = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
     second = compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
 
-    assert len(first.run_plan.cells) == 6
+    assert len(first.run_plan.cells) == 15
     assert all(cell.applicable for cell in first.run_plan.cells)
     keys = [cell.run_key for cell in first.run_plan.cells]
     assert len(keys) == len(set(keys))
@@ -155,5 +158,5 @@ def test_ac6_suite_plan_runs_through_the_installed_cli(tmp_path: Path) -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "Planned 6 cells, 6 applicable calls" in result.stdout
+    assert "Planned 15 cells, 15 applicable calls" in result.stdout
     assert output.is_file()

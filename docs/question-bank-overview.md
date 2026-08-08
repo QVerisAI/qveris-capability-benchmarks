@@ -54,22 +54,22 @@
 
 | Question | Role | Scenario | Task | Referee |
 |---|---|---|---|---|
-| `financial-statement-facts-aapl-agent-contract` | agent contract | — | For the request "Apple's FY2025 annual revenue", resolve the issuer and fiscal period and return revenue through exactly one fixed tool call. | SEC EDGAR APIs |
+| `financial-statement-facts-aapl-agent-contract` | agent contract | 1.1.0 | For the request "Apple's FY2025 annual revenue", resolve the issuer and fiscal period and return revenue through exactly one fixed tool call. | SEC EDGAR APIs |
 | `financial-statement-facts-invalid-period` | boundary negative | 1.0.0+1.1.0 | Reject an unsupported fiscal period for an issuer financial-fact request. | SEC EDGAR APIs |
 | `financial-statement-facts-aapl-revenue` | core positive | 1.0.0+1.1.0 | Return AAPL annual revenue for a specified fiscal year. | SEC EDGAR APIs |
-| `financial-statement-facts-600519-cn-market-coverage` | coverage | — | Return FY2020 annual revenue for 600519.SH with its exchange identity, currency, and filing period. | Shanghai Stock Exchange Official Market Data |
-| `financial-statement-facts-aapl-canonical-identifier` | coverage | — | Resolve canonical AAPL identifiers to the provider's accepted identifier and return FY2025 annual revenue. | SEC EDGAR APIs |
-| `financial-statement-facts-aapl-fiscal-period-shape` | shape/no-data | — | Return FY2025 AAPL annual revenue with an explicit period, currency, unit, and empty-state contract. | SEC EDGAR APIs |
+| `financial-statement-facts-600519-cn-market-coverage` | coverage | 1.1.0 | Return FY2020 annual revenue for 600519.SH with its exchange identity, currency, and filing period. | Shanghai Stock Exchange Official Market Data |
+| `financial-statement-facts-aapl-canonical-identifier` | coverage | 1.1.0 | Resolve canonical AAPL identifiers to the provider's accepted identifier and return FY2025 annual revenue. | SEC EDGAR APIs |
+| `financial-statement-facts-aapl-fiscal-period-shape` | shape/no-data | 1.1.0 | Return FY2025 AAPL annual revenue with an explicit period, currency, unit, and empty-state contract. | SEC EDGAR APIs |
 
 ### SEC Filing Evidence (`sec-filing-evidence`)
 
 | Question | Role | Scenario | Task | Referee |
 |---|---|---|---|---|
-| `sec-filing-evidence-aapl-agent-contract` | agent contract | — | For the request "AAPL 10-K supply chain risk", resolve the issuer and filing form and return a cited passage through exactly one fixed tool call. | SEC EDGAR APIs |
+| `sec-filing-evidence-aapl-agent-contract` | agent contract | 1.1.0 | For the request "AAPL 10-K supply chain risk", resolve the issuer and filing form and return a cited passage through exactly one fixed tool call. | SEC EDGAR APIs |
 | `sec-filing-evidence-invalid-filing-type` | boundary negative | 1.0.0+1.1.0 | Reject an unsupported filing type for issuer evidence retrieval. | SEC EDGAR APIs |
 | `sec-filing-evidence-aapl-risk` | core positive | 1.0.0+1.1.0 | Return a cited AAPL annual-filing passage supporting a stated risk factor. | SEC EDGAR APIs |
-| `sec-filing-evidence-aapl-us-market-coverage` | coverage | — | Return the latest AAPL 10-K filing identity and a cited supply-chain risk passage with a retrievable location. | SEC EDGAR APIs |
-| `sec-filing-evidence-cik-canonical-identifier` | coverage | — | Resolve canonical CIK 0000320193 to the provider's accepted filing identifier and return the latest 10-K identity and a cited supply-chain risk passage. | SEC EDGAR APIs |
+| `sec-filing-evidence-aapl-us-market-coverage` | coverage | 1.1.0 | Return the latest AAPL 10-K filing identity and a cited supply-chain risk passage with a retrievable location. | SEC EDGAR APIs |
+| `sec-filing-evidence-cik-canonical-identifier` | coverage | 1.1.0 | Resolve canonical CIK 0000320193 to the provider's accepted filing identifier and return the latest 10-K identity and a cited supply-chain risk passage. | SEC EDGAR APIs |
 | `sec-filing-evidence-aapl-filing-list-completeness` | shape/no-data | — | Return the three newest AAPL 10-K filings with explicit completeness, without silent truncation. | SEC EDGAR APIs |
 | `sec-filing-evidence-aapl-no-disclosure` | shape/no-data | — | Return a machine-readable no-data state for an AAPL filing type the issuer does not file. | SEC EDGAR APIs |
 
@@ -120,7 +120,7 @@
 |---|---|---|
 | `company-fundamentals` | p1 | core positive, boundary negative |
 | `financial-news-evidence` | p2 | core positive, boundary negative |
-| `financial-statement-facts` | p0 | core positive, boundary negative |
+| `financial-statement-facts` | p0 | core positive, boundary negative, coverage, shape/no-data, agent contract |
 | `historical-price-series` | p1 | core positive, boundary negative |
-| `sec-filing-evidence` | p0 | core positive, boundary negative |
+| `sec-filing-evidence` | p0 | core positive, boundary negative, coverage, agent contract |
 | `stock-quote` | p0 | core positive, boundary negative, coverage, freshness/precision, agent contract |
