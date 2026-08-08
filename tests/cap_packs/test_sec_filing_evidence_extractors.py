@@ -38,6 +38,34 @@ def _massive_document() -> dict[str, object]:
     }
 
 
+def _massive_flat_document() -> dict[str, object]:
+    return {
+        "status": "OK",
+        "request_id": "probe-1",
+        "results": [
+            {
+                "cik": "0000320193",
+                "ticker": "AAPL",
+                "secondary_category": "supply_chain_and_procurement",
+                "filing_date": "2024-11-01",
+                "supporting_text": (
+                    "Restrictions on international trade can materially adversely "
+                    "affect the Company's business and supply chain."
+                ),
+            },
+            {
+                "cik": "0000320193",
+                "ticker": "AAPL",
+                "secondary_category": "dividend_policy_and_capital_allocation",
+                "filing_date": "2024-11-01",
+                "supporting_text": (
+                    "Future dividends are subject to declaration by the Board."
+                ),
+            },
+        ],
+    }
+
+
 def _fmp_10k_document() -> dict[str, object]:
     return {
         "symbol": "AAPL",
@@ -72,6 +100,33 @@ def test_ac5_massive_stocks_extracts_cited_risk_factor() -> None:
     assert "supply chain" in facts["evidence"].lower()
     assert facts["citation"] == "10-K filed 2025-10-30 (CIK 0000320193)"
     extract_observation(PACK / "observation-schema.yaml", facts, DIGEST, "1.0.0")
+
+
+def test_ac5_massive_flat_envelope_extracts_live_supporting_text() -> None:
+    facts = extract_massive_stocks_risk_factors(_massive_flat_document(), "AAPL")
+
+    assert facts["symbol"] == "AAPL"
+    assert facts["filing_id"] == "0000320193-2024-11-01"
+    assert "supply chain" in facts["evidence"].lower()
+    assert facts["citation"] == "10-K filed 2024-11-01 (CIK 0000320193)"
+    extract_observation(PACK / "observation-schema.yaml", facts, DIGEST, "1.0.0")
+
+
+def test_ac5_massive_rows_without_supply_chain_passage_fail_closed() -> None:
+    document = {
+        "status": "OK",
+        "results": [
+            {
+                "cik": "0000320193",
+                "ticker": "AAPL",
+                "filing_date": "2024-11-01",
+                "supporting_text": "Future dividends are subject to Board approval.",
+            }
+        ],
+    }
+
+    with pytest.raises(SecFilingExtractionError, match="passage"):
+        extract_massive_stocks_risk_factors(document, "AAPL")
 
 
 def test_ac5_fmp_10k_extracts_cited_passage() -> None:

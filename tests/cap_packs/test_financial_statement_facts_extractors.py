@@ -88,6 +88,19 @@ def test_ac5_fmp_list_envelope_extracts_fy2025_revenue() -> None:
     assert facts["revenue"] == 391035000000
 
 
+def test_ac5_fmp_flat_array_extracts_live_fy2025_revenue() -> None:
+    document = [
+        {"date": "2025-09-27", "revenue": 416161000000, "reportedCurrency": "USD"},
+        {"date": "2024-09-28", "revenue": 391035000000, "reportedCurrency": "USD"},
+    ]
+
+    facts = extract_fmp_income_statement(document, "AAPL", 2025)
+
+    assert facts["revenue"] == 416161000000
+    assert facts["fiscal_year"] == "2025"
+    assert facts["currency"] == "USD"
+
+
 def test_ac5_alpha_vantage_extracts_fy2025_revenue() -> None:
     facts = extract_alpha_vantage_income_statement(
         _alpha_vantage_document(), "AAPL", 2025
