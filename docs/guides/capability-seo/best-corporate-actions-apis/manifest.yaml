@@ -72,3 +72,4 @@ seo:
 artifacts:
   article: docs/guides/best-corporate-actions-apis.md
   evidence_snapshot: harbor-explore-coverage-2026-08-08
+  agent_param_fill_snapshot: evidence/private/agent-param-fill.jsonl
