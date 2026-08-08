@@ -22,6 +22,8 @@ Agent backend.
      `sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57`
    - `releases/financial-statements-2026-q3-v1/release.json` —
      `sha256:a22d3dbcb47d094baac201a0c100e6ad87b6159d6780bdf29ea3c5f0e4a8abaf`
+   - `releases/financial-statements-2026-q3-v2/release.json` —
+     `sha256:405f4ab44c2a0d70cb9bc06baab12706e863c3da9fc241f1d779e53a3faab471`
    - `releases/sec-filing-evidence-2026-q3-v1/release.json` —
      `sha256:5a159d6e5777b3829e57f861e18182a76540d94dc1f3b8c23ae4410207e5024e`
 6. Rebuild the Company Research Task Fit Profile with

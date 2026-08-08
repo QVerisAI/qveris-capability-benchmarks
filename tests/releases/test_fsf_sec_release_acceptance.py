@@ -28,9 +28,25 @@ RELEASES = {
         "sha": "8b7fe9fa610a5a5a6e358e0968fb6fdecd9d54b8",
         "reasons": {"invalid_revenue"},
         "states": {"completed", "provider_negative"},
+        "cell_count": 6,
         "legacy_binding_rotated": True,
         "legacy_registry_digest": (
             "sha256:548186dff15e2492ba9ed4f24f3e3967e2cb393f93db5fd82a1a4b1317fb4156"
+        ),
+    },
+    "financial-statements-2026-q3-v2": {
+        "registry": ROOT / "cap_packs/qveris-direct-bindings-financial-statements.json",
+        "digest": (
+            "sha256:405f4ab44c2a0d70cb9bc06baab12706e863c3da9fc241f1d779e53a3faab471"
+        ),
+        "run": "31240234266",
+        "sha": "52582c88c708b8abe75b21a30276833818b67c6b",
+        "reasons": {"fiscal_year_unavailable"},
+        "states": {"completed", "provider_negative"},
+        "cell_count": 18,
+        "legacy_binding_rotated": False,
+        "legacy_registry_digest": (
+            "sha256:b1cbe082e61472b72cac4972100172bd66a48aa84be30f3ca4600c9c832d86f6"
         ),
     },
     "sec-filing-evidence-2026-q3-v1": {
@@ -40,6 +56,7 @@ RELEASES = {
         "sha": "f3bbbed47eb0b4fa4b841ffc1b64a859e5dd5297",
         "reasons": {"unexpected_response_shape"},
         "states": {"provider_negative"},
+        "cell_count": 6,
         "legacy_binding_rotated": False,
         "legacy_registry_digest": (
             "sha256:0ab55f6103ef3ec40d2dad4d19de43e7cb1e1b90811cd179d3a620d1f9000b54"
@@ -73,9 +90,9 @@ def test_ac_fsf_sec_releases_rebuild_all_direct_terminal_evidence() -> None:
         release_bytes = (release_dir / "release.json").read_bytes()
         run_plan_bytes = (release_dir / "run-plan.json").read_bytes()
 
-        assert len(cells) == 6, release_id
+        assert len(cells) == meta["cell_count"], release_id
         assert {cell.state.value for cell in cells} == meta["states"]
-        assert len(evidence) == 6
+        assert len(evidence) == meta["cell_count"]
         # 历史 release 早于归因门禁，replay 重建跳过发布期归因校验
         assert (
             build_release(release, cells, evidence, require_attribution=False)
@@ -90,7 +107,8 @@ def test_ac_fsf_sec_releases_rebuild_all_direct_terminal_evidence() -> None:
 
         cells_by_run_key = {cell.run_key: cell for cell in cells}
         registry_digest = sha256_digest(meta["registry"].read_bytes())
-        assert registry_digest != meta["legacy_registry_digest"]
+        if meta["legacy_binding_rotated"]:
+            assert registry_digest != meta["legacy_registry_digest"]
         for bundle in evidence:
             matching = [
                 path
@@ -129,8 +147,8 @@ def test_ac_fsf_sec_releases_have_complete_actions_artifact_manifests() -> None:
 
         assert manifest["github_run_id"] == meta["run"]
         assert manifest["github_sha"] == meta["sha"]
-        assert len(manifest["artifacts"]) == 6
-        assert len({item["id"] for item in manifest["artifacts"]}) == 6
+        assert len(manifest["artifacts"]) == meta["cell_count"]
+        assert len({item["id"] for item in manifest["artifacts"]}) == meta["cell_count"]
         assert all(
             item["digest"].startswith("sha256:") for item in manifest["artifacts"]
         )

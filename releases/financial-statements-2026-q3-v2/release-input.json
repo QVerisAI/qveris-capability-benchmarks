@@ -1,0 +1,51 @@
+{
+  "evidence_ids": [
+    "fmp-income-statement-aapl-agent-contract-31240234266-1",
+    "fmp-income-statement-aapl-agent-contract-31240234266-2",
+    "fmp-income-statement-aapl-agent-contract-31240234266-3",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-1",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-2",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-3",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-1",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-2",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-3",
+    "fmp-income-statement-aapl-revenue-31240234266-1",
+    "fmp-income-statement-aapl-revenue-31240234266-2",
+    "fmp-income-statement-aapl-revenue-31240234266-3",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-1",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-2",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-3",
+    "fmp-income-statement-invalid-period-31240234266-1",
+    "fmp-income-statement-invalid-period-31240234266-2",
+    "fmp-income-statement-invalid-period-31240234266-3"
+  ],
+  "limitations": [
+    "FMP income statement completed 15 of 18 Direct cells including the AAPL FY2025 revenue, invalid-period negative control, canonical-identifier, fiscal-period-shape, and agent-contract cases.",
+    "The CN market-coverage case (600519.SH FY2020 revenue) returned provider_negative (fiscal_year_unavailable / empty_or_partial_data) in all three rounds; FMP did not expose the fact for the canonical SSE security under the frozen contract.",
+    "This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result."
+  ],
+  "outcome_ids": [
+    "fmp-income-statement-aapl-agent-contract-31240234266-1-completed",
+    "fmp-income-statement-aapl-agent-contract-31240234266-2-completed",
+    "fmp-income-statement-aapl-agent-contract-31240234266-3-completed",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-1-completed",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-2-completed",
+    "fmp-income-statement-aapl-canonical-identifier-31240234266-3-completed",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-1-completed",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-2-completed",
+    "fmp-income-statement-aapl-fiscal-period-shape-31240234266-3-completed",
+    "fmp-income-statement-aapl-revenue-31240234266-1-completed",
+    "fmp-income-statement-aapl-revenue-31240234266-2-completed",
+    "fmp-income-statement-aapl-revenue-31240234266-3-completed",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-1-provider-negative",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-2-provider-negative",
+    "fmp-income-statement-cn-600519-market-coverage-31240234266-3-provider-negative",
+    "fmp-income-statement-invalid-period-31240234266-1-completed",
+    "fmp-income-statement-invalid-period-31240234266-2-completed",
+    "fmp-income-statement-invalid-period-31240234266-3-completed"
+  ],
+  "release_id": "financial-statements-2026-q3-v2",
+  "run_plan_digest": "sha256:cb893a72f33b4aecdfb4324cac90efe908e897c8ed2a1d1f955e615e6e8e6eea",
+  "suite_fingerprint": "59a1a69a6fd2bd79920734510746ce70d60f6512ba43ad119ce7740fcc9c74c3",
+  "version": "2.0.0"
+}
