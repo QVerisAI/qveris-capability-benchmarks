@@ -10,6 +10,8 @@ from typing import Any
 
 
 def _normalize(value: Any) -> str:
+    if isinstance(value, list):
+        return "|".join(str(item).strip().upper() for item in value)
     return str(value).strip().upper() if value is not None else ""
 
 

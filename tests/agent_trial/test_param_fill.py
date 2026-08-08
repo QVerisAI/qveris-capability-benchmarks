@@ -99,3 +99,27 @@ def test_ac7_run_probe_records_rounds_and_model() -> None:
     assert all(result.model == "test-model" for result in results)
     assert {result.round for result in results} == {1, 2}
     assert all(result.passed for result in results)
+
+
+def test_ac8_array_param_semantics_normalized() -> None:
+    contract = ToolContract(
+        tool_id="hangseng.stock.dividend.query.v1",
+        name="Stock Dividend Query",
+        description="Query dividend records.",
+        params=(ParamSpec(name="stockObject", type="array", required=True),),
+    )
+    question = AgentQuestion(
+        question_id="corp-actions-600519-dividends",
+        task="获取贵州茅台过去一年的分红记录。",
+        expected_params={"stockObject": "600519.SH"},
+    )
+    result = evaluate_tool_call(
+        contract,
+        question,
+        _tool_call(
+            '{"stockObject": ["600519.SH"]}',
+            tool_id="hangseng.stock.dividend.query.v1",
+        ),
+    )
+    assert result.checks.value_valid and result.checks.semantics_match
+    assert result.passed

@@ -31,33 +31,37 @@ _DEFAULT_BASE_URL = "https://aigateway.qveris.ai/v1"
 _DEFAULT_MODEL = "deepseek-v4-flash"
 
 
-def load_fixture(path: Path) -> tuple[ToolContract, tuple[AgentQuestion, ...]]:
+def load_fixture(
+    path: Path,
+) -> tuple[tuple[ToolContract, tuple[AgentQuestion, ...]], ...]:
     document = yaml.safe_load(path.read_text(encoding="utf-8"))
-    tool_doc = document["tool"]
-    contract = ToolContract(
-        tool_id=tool_doc["tool_id"],
-        name=tool_doc["name"],
-        description=tool_doc["description"],
-        params=tuple(
-            ParamSpec(
-                name=param["name"],
-                type=param["type"],
-                required=param.get("required", False),
-                description=param.get("description", ""),
-            )
-            for param in tool_doc["params"]
-        ),
-    )
-    questions = tuple(
-        AgentQuestion(
-            question_id=question["question_id"],
-            task=question["task"],
-            expected_params=dict(question.get("expected_params", {})),
-            forbidden_params=tuple(question.get("forbidden_params", ())),
+    probes: list[tuple[ToolContract, tuple[AgentQuestion, ...]]] = []
+    for tool_doc in document["tools"]:
+        contract = ToolContract(
+            tool_id=tool_doc["tool_id"],
+            name=tool_doc["name"],
+            description=tool_doc["description"],
+            params=tuple(
+                ParamSpec(
+                    name=param["name"],
+                    type=param["type"],
+                    required=param.get("required", False),
+                    description=param.get("description", ""),
+                )
+                for param in tool_doc["params"]
+            ),
         )
-        for question in document["questions"]
-    )
-    return contract, questions
+        questions = tuple(
+            AgentQuestion(
+                question_id=question["question_id"],
+                task=question["task"],
+                expected_params=dict(question.get("expected_params", {})),
+                forbidden_params=tuple(question.get("forbidden_params", ())),
+            )
+            for question in tool_doc["questions"]
+        )
+        probes.append((contract, questions))
+    return tuple(probes)
 
 
 def build_llm_fn(
@@ -102,6 +106,9 @@ def build_llm_fn(
 
 def _result_record(result: ParamFillResult, at: str) -> dict[str, Any]:
     return {
+        "tool_id": result.tool_call.get("function", {}).get("name", "")
+        if result.tool_call
+        else "",
         "question_id": result.question_id,
         "round": result.round,
         "model": result.model,
@@ -144,15 +151,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{_API_KEY_ENV} is required.", file=sys.stderr)
         return 2
 
-    contract, questions = load_fixture(args.fixture)
     llm_fn = build_llm_fn(args.base_url.rstrip("/"), api_key, args.model)
-    results = run_probe(
-        contract,
-        questions,
-        llm_fn,
-        rounds=args.rounds,
-        model=args.model,
-    )
+    results: list[ParamFillResult] = []
+    for contract, questions in load_fixture(args.fixture):
+        results.extend(
+            run_probe(
+                contract,
+                questions,
+                llm_fn,
+                rounds=args.rounds,
+                model=args.model,
+            )
+        )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     recorded_at = datetime.now(UTC).isoformat()

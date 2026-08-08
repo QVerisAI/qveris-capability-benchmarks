@@ -1,13 +1,13 @@
-tool:
-  tool_id: finnhub.quote.retrieve.v1.f72cf5ef
-  name: Quote
-  description: Get real-time quote data for US stocks.
-  params:
-    - {name: symbol, type: string, required: true, description: Symbol}
-questions:
-  - question_id: stock-quote-aapl-current
-    task: Return the current quote for AAPL.
-    expected_params: {symbol: AAPL}
-  - question_id: stock-quote-msft-current
-    task: Return the current quote for Microsoft.
-    expected_params: {symbol: MSFT}
+tools:
+  - tool_id: finnhub.quote.retrieve.v1.f72cf5ef
+    name: Quote
+    description: Get real-time quote data for US stocks.
+    params:
+      - {name: symbol, type: string, required: true, description: Symbol}
+    questions:
+      - question_id: stock-quote-aapl-current
+        task: Return the current quote for AAPL.
+        expected_params: {symbol: AAPL}
+      - question_id: stock-quote-msft-current
+        task: Return the current quote for Microsoft.
+        expected_params: {symbol: MSFT}
