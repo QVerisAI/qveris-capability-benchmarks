@@ -44,10 +44,10 @@ scenarios:
         minimum_question_roles: [core_positive, boundary_negative, coverage, freshness_precision, agent_contract]
       - cap_id: financial-statement-facts
         priority: p0
-        minimum_question_roles: [core_positive, boundary_negative]
+        minimum_question_roles: [core_positive, boundary_negative, coverage, shape_completeness, agent_contract]
       - cap_id: sec-filing-evidence
         priority: p0
-        minimum_question_roles: [core_positive, boundary_negative]
+        minimum_question_roles: [core_positive, boundary_negative, coverage, agent_contract]
       - cap_id: historical-price-series
         priority: p1
         minimum_question_roles: [core_positive, boundary_negative]

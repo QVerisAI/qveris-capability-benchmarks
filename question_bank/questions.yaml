@@ -240,6 +240,7 @@ questions:
     required_observations: [symbol, market, revenue, currency, fiscal_year]
     completion_conditions: [symbol, market, revenue, currency]
     source_ids: [sse-official-market-data]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: cn-equities
       language: en
@@ -260,6 +261,7 @@ questions:
     required_observations: [resolved_identifier, fiscal_year, revenue, currency]
     completion_conditions: [fiscal_year, revenue, currency]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -280,6 +282,7 @@ questions:
     required_observations: [symbol, fiscal_year, revenue, currency, unit, period_label]
     completion_conditions: [symbol, fiscal_year, revenue, currency]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -300,6 +303,7 @@ questions:
     required_observations: [symbol, fiscal_year, revenue, currency]
     completion_conditions: [symbol, fiscal_year, revenue]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -366,6 +370,7 @@ questions:
     required_observations: [symbol, filing_id, evidence, citation]
     completion_conditions: [filing_id, evidence, citation]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -386,6 +391,7 @@ questions:
     required_observations: [resolved_identifier, filing_id, evidence, citation]
     completion_conditions: [filing_id, evidence, citation]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
@@ -446,6 +452,7 @@ questions:
     required_observations: [symbol, filing_id, evidence, citation]
     completion_conditions: [filing_id, evidence, citation]
     source_ids: [sec-edgar-api]
+    scenario_refs: [{scenario_id: company-research-agent, version: 1.1.0}]
     evaluation_contract:
       market: us-equities
       language: en
