@@ -3,16 +3,76 @@
     {
       "cap_id": "financial-statement-facts",
       "details": {
-        "completed": 0,
-        "provider_negative": 3,
+        "completed": 3,
+        "provider_negative": 0,
+        "rounds": 3
+      },
+      "dimension": "case:aapl-agent-contract:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:3fbb6f4514450236fbe29d414d2fdebc87f4c1cc5d3f6af98e0c71b8d9a160fd",
+        "sha256:72b81bfb5aba2c6edd066aae1f64048e9a361ede992559d4f195c5a360b88aac",
+        "sha256:aac9495028b0d812c86e57ff3047594681e563d46aa79c21c531bce6a4d276a1"
+      ]
+    },
+    {
+      "cap_id": "financial-statement-facts",
+      "details": {
+        "completed": 3,
+        "provider_negative": 0,
+        "rounds": 3
+      },
+      "dimension": "case:aapl-canonical-identifier:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:52d531901bc6af298fe86cfa4e7a55546cd51e5fb706cba5abccbabc946a402d",
+        "sha256:cd8757737c2e3fcf9520f2e1196b069d3eff4b1e1f72b4139b6cfe8dd32fcf2f",
+        "sha256:d01c7682caf6127098e5109535dba43898bb40f113d341610ace6ada92c507ce"
+      ]
+    },
+    {
+      "cap_id": "financial-statement-facts",
+      "details": {
+        "completed": 3,
+        "provider_negative": 0,
+        "rounds": 3
+      },
+      "dimension": "case:aapl-fiscal-period-shape:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:2893f066434009f50822c0ed2be440f697235241e94b61523aa781d237a6792e",
+        "sha256:42bb12695333217866d03c3d0ce1f0dca932d48a3c27b8b2f52e20a3268f4a9a",
+        "sha256:ddc1e6e54c7a6ff6e687e05193800fea3b4bd6ce039fae812c4366bcdfc77283"
+      ]
+    },
+    {
+      "cap_id": "financial-statement-facts",
+      "details": {
+        "completed": 3,
+        "provider_negative": 0,
         "rounds": 3
       },
       "dimension": "case:aapl-revenue-fy2025:outcome",
       "dimension_state": "measured",
       "evidence_refs": [
-        "sha256:407c0a0d45a0366ce29cc54c1b528d2928028f16b84b7f109a75155820c33ec7",
-        "sha256:d3f805af67f50e62755a664b02f4a0b66d58f489654ab253237d938703306139",
-        "sha256:d52f1bfb757e93a55f4cf0bfe0eb5903f6821ee87f329480a54148f62aad1de9"
+        "sha256:6263dea61563cfbfa3392ae8de0da901892ce9b5f1fe8280aab0e4da2d28b1c8",
+        "sha256:9019c7f63a3062eac6ffe510377a819898c0b55afcbceba6e1fdf69285c4404f",
+        "sha256:a17ac6e545bdc94fe033618fc2e3dd814131bc941b9e29056576f1ed403863c5"
+      ]
+    },
+    {
+      "cap_id": "financial-statement-facts",
+      "details": {
+        "completed": 3,
+        "provider_negative": 0,
+        "rounds": 3
+      },
+      "dimension": "case:cn-600519-market-coverage:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:74eec89635979b983cf3336ab0a767763d34e9073309e95ba37bdd61b4db663e",
+        "sha256:836d1432ccb0e5bb968229f4486c237c0e0e391b672f8b719ee451e21e07bdd6",
+        "sha256:b260989e116b69ccda593c8811ea16ae5e94ad6b98576b4f76813da39a8ed6fb"
       ]
     },
     {
@@ -25,9 +85,9 @@
       "dimension": "case:invalid-period:outcome",
       "dimension_state": "measured",
       "evidence_refs": [
-        "sha256:5dc352225a29de0d9f0d342edbde941ddc42138fac0083adf6689558ed0176e2",
-        "sha256:807a19b3ed1984f478b9ee7de292420564a16f9c997deb6c144be2feebf98c4e",
-        "sha256:8576d7b19b193a32acb06319e79a50d1e8eca2f77b9756a998cd6457789700f5"
+        "sha256:7e5ca778e2b33d6cd6a620cc43077b632ba65fc4e799cd8e0a6e6430d0047495",
+        "sha256:f4ded4dd91012c5519a17227dacf7322a406844e87aa4a9dc25718de3be230a9",
+        "sha256:fd43d4a5771c1737a18c82a58da2cbdb22791ae878460cc1576e918bc0194b31"
       ]
     },
     {
@@ -61,16 +121,16 @@
     {
       "cap_id": "sec-filing-evidence",
       "details": {
-        "completed": 0,
-        "provider_negative": 3,
+        "completed": 1,
+        "provider_negative": 2,
         "rounds": 3
       },
-      "dimension": "case:aapl-risk-factor:outcome",
+      "dimension": "case:aapl-agent-contract:outcome",
       "dimension_state": "measured",
       "evidence_refs": [
-        "sha256:514254be370e69977c671a6ddb855950994bb57cb585d0099da20e13fe7fb26b",
-        "sha256:681ebc17e15784b992fc8603fc27cd0350a6e37d007ee6239d226cc3bbd5f8ea",
-        "sha256:75a9e07074c0ffd7319aa6ea5b6fa8406f5ae8f0a5d0c42d6075acdf0338e1ce"
+        "sha256:35f8fa13eaaacf56bfd2b71ad3ff0306b2b2bb8543b30b4ed6b8e5d2576cd5f7",
+        "sha256:88a1cecd3b341e61b461ea7857f00254f2e7424a7646d53f9968e239714fb35f",
+        "sha256:adbbe7cf82c6ede615729c32030507ea2b19b010225b1d4db6f4c8627131db54"
       ]
     },
     {
@@ -80,12 +140,57 @@
         "provider_negative": 3,
         "rounds": 3
       },
+      "dimension": "case:aapl-risk-factor:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:28875d5c0795929827d19dd4e5343f1071227afd626dc45b9946154875569170",
+        "sha256:448b4c3fe8ceb67a1dd588ac879af157004bbbb247a8b494f6598ab98b964a0c",
+        "sha256:b04e43011578b89c7412a86aea761b7e4ad28e9ae9d07e8331424cd066bb15f1"
+      ]
+    },
+    {
+      "cap_id": "sec-filing-evidence",
+      "details": {
+        "completed": 1,
+        "provider_negative": 2,
+        "rounds": 3
+      },
+      "dimension": "case:aapl-us-market-coverage:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:08920c3953141bc28b3fa425941e58959494c064bd048114c52ae6892767eaac",
+        "sha256:6626592717c7b24a3459211b59b14313dd6615ea4d96803571061bd7c0ec9812",
+        "sha256:a9778b72863dd6a4d61b4fd4941b92c7d8e8f33549864a6a96ee4e6f43c10ee3"
+      ]
+    },
+    {
+      "cap_id": "sec-filing-evidence",
+      "details": {
+        "completed": 2,
+        "provider_negative": 1,
+        "rounds": 3
+      },
+      "dimension": "case:cik-canonical-identifier:outcome",
+      "dimension_state": "measured",
+      "evidence_refs": [
+        "sha256:4c51a258d33893b27ff54682739545f8dbf7cc86993c7ac3f9ef0bc993328140",
+        "sha256:e9fd8b41d3b11c66e0f3252cc9f2674d67a86336b3e05369748cea8a7c5fbd19",
+        "sha256:fb0d3e82fa34db7d314ada44b1011468e725744b1fcaf89ae00e898915150207"
+      ]
+    },
+    {
+      "cap_id": "sec-filing-evidence",
+      "details": {
+        "completed": 2,
+        "provider_negative": 1,
+        "rounds": 3
+      },
       "dimension": "case:invalid-filing-type:outcome",
       "dimension_state": "measured",
       "evidence_refs": [
-        "sha256:073201aa76fe7584145977697fabd2526851f8a7b90e9a1e5fb954b942631f00",
-        "sha256:d7bc0b3bf0bc6cf46e7bd460b852bf09baad8015e64fa925cee27cff23f24f32",
-        "sha256:f70fabcd41c81480058411c76afecfe5f76aea628bc95de468e816240314b5ee"
+        "sha256:7e1d813c49fb748ee829d132872dce62da9081831f15a96f2309323e8d01c1c3",
+        "sha256:a2602b07b31dab29b5d1b5dee489f4255b47f810b007bb3cb1d9e3a72e81cedf",
+        "sha256:c212511191a121ef60a51742bf757d96870d07710cf68e95d651497751e3a2a5"
       ]
     },
     {
@@ -236,11 +341,11 @@
     }
   ],
   "limitations": [
-    "The included FMP as-reported income statement path completed the invalid-period negative control in all rounds but returned provider-negative (invalid_revenue) for the AAPL FY2025 revenue case; the connector did not expose the FY2025 revenue fact under the frozen contract in this cycle.",
-    "Alpha Vantage income statement and the official SEC company facts connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.",
+    "The included FMP income-statement path completed all six Direct cases across three rounds (18 cells): FY2025 AAPL revenue, the invalid-period negative control, the CN 600519 market-coverage case (resolved to the 600519.SS dialect with 10 years of history), canonical-identifier resolution, fiscal-period shape, and the fixed-tool agent contract.",
+    "The as-reported income-statement connector was re-qualified to the standard income-statement tool after it left QVeris discovery; Alpha Vantage income statement and the official SEC company facts connector paths remain terminally excluded after message-only probe responses.",
     "This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result.",
-    "The included Massive Stocks risk-factor path returned unexpected response shapes in every Direct round; no cell satisfied the SEC evidence contract in this cycle, and the connector path should be re-qualified before reuse.",
-    "FMP 10-K JSON and SEC filings search connector paths were terminally excluded after message-only probe responses; this release records the single-path cohort.",
+    "The included Massive Stocks risk-factor path completed the cited-passage cases in 6 of 15 Direct cells; 8 cells recorded provider-side filing_unavailable because the connector intermittently returns an explicit error envelope, and the negative control recorded filing_type_not_supported because the endpoint has no filing-type parameter. This is honest provider reliability evidence, not a benchmark-side parse failure.",
+    "The FMP 10-K JSON and SEC filings search connectors were terminally excluded after message-only error responses for both parameter forms; this release records the single-path cohort.",
     "All AAPL quote and freshness Direct observations were terminal provider_negative: Finnhub quote timestamps were stale beyond the frozen 15-minute window and EODHD timestamps were invalid at execution time.",
     "Neither included path (Finnhub or EODHD via QVeris) returned an SSE quote for the canonical security 600519.SH; all CN coverage and canonical agent-contract cells were provider_negative (unavailable_quote)."
   ],

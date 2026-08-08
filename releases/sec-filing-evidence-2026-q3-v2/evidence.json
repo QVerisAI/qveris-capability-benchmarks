@@ -1,0 +1,167 @@
+[
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-agent-contract-1",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:35f8fa13eaaacf56bfd2b71ad3ff0306b2b2bb8543b30b4ed6b8e5d2576cd5f7",
+    "raw_digest": "sha256:aebea7ee6f53752ce09136b3f2f2873b9d55aa8cfb0f49d103d9f7c7cd0d18f5",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:1",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-agent-contract-2",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:adbbe7cf82c6ede615729c32030507ea2b19b010225b1d4db6f4c8627131db54",
+    "raw_digest": "sha256:12253163a70e16c75a6d231bb2ddd0b10d20c92eec8a9ac22f866b7cfc4c95d0",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:2",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-agent-contract-3",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:88a1cecd3b341e61b461ea7857f00254f2e7424a7646d53f9968e239714fb35f",
+    "raw_digest": "sha256:9bb98746cd5b7ca93b2544397e80ac2c752377c597951a2c0696b1f335a4e110",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-agent-contract:massive-stocks:massive-stocks-risk-factors:direct:3",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-risk-1",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:448b4c3fe8ceb67a1dd588ac879af157004bbbb247a8b494f6598ab98b964a0c",
+    "raw_digest": "sha256:f0d07556a0a44dcc1d9b0b8f65e3a1669fbf6e08bbae8809f437218e74391dab",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:1",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-risk-2",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:b04e43011578b89c7412a86aea761b7e4ad28e9ae9d07e8331424cd066bb15f1",
+    "raw_digest": "sha256:493b2f449882da5c6db3133ace93841451fa5cbc6fc21abf1b0e23742359262a",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:2",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-risk-3",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:28875d5c0795929827d19dd4e5343f1071227afd626dc45b9946154875569170",
+    "raw_digest": "sha256:af8c58603c58227e1e023d335dbf0271a9216433940468b497588da536223a5a",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-risk-factor:massive-stocks:massive-stocks-risk-factors:direct:3",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-us-market-coverage-1",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:a9778b72863dd6a4d61b4fd4941b92c7d8e8f33549864a6a96ee4e6f43c10ee3",
+    "raw_digest": "sha256:6d336e1c31842776891d37bce39e7931e4843ac5ebf3680bee8611e5b71bcd98",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:1",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-us-market-coverage-2",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:6626592717c7b24a3459211b59b14313dd6615ea4d96803571061bd7c0ec9812",
+    "raw_digest": "sha256:d764e83b45fe0e09e7861b19e9ef9bb74689a7da0cfae199152de6a7714bc076",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:2",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-aapl-us-market-coverage-3",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:08920c3953141bc28b3fa425941e58959494c064bd048114c52ae6892767eaac",
+    "raw_digest": "sha256:52675c0787e3367d45022b591fc738e905585b437626520ce1dd303e3310ee8b",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:aapl-us-market-coverage:massive-stocks:massive-stocks-risk-factors:direct:3",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-cik-canonical-identifier-1",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:e9fd8b41d3b11c66e0f3252cc9f2674d67a86336b3e05369748cea8a7c5fbd19",
+    "raw_digest": "sha256:92c8896d28278172c9f1552841828a427da3bf7e0320ddb0f55a8da051987765",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:1",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-cik-canonical-identifier-2",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:4c51a258d33893b27ff54682739545f8dbf7cc86993c7ac3f9ef0bc993328140",
+    "raw_digest": "sha256:1340afa1e5304d9810884f445d0a007213e8b15acb4d8a7d4cadea1d8baa3af1",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:2",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-cik-canonical-identifier-3",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:fb0d3e82fa34db7d314ada44b1011468e725744b1fcaf89ae00e898915150207",
+    "raw_digest": "sha256:32a5affdcd4c815ab27991026a2e595421e246793b82d4d7d800abb021f4ec35",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:cik-canonical-identifier:massive-stocks:massive-stocks-risk-factors:direct:3",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-invalid-filing-type-1",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:a2602b07b31dab29b5d1b5dee489f4255b47f810b007bb3cb1d9e3a72e81cedf",
+    "raw_digest": "sha256:81350c270a778330ab54c3469427758c2ce648b9a186578f52b1f285ba48dcf7",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:1",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-invalid-filing-type-2",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:7e1d813c49fb748ee829d132872dce62da9081831f15a96f2309323e8d01c1c3",
+    "raw_digest": "sha256:4344ca5cab730d21028603a001bd9aeee2c2f9eec7f5d2f04a1d511eaa1cd2e4",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:2",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  },
+  {
+    "disclosure_level": "sanitized_public",
+    "evidence_id": "massive-stocks-invalid-filing-type-3",
+    "extractor_version": "1.0.0",
+    "license_status": "cleared",
+    "public_digest": "sha256:c212511191a121ef60a51742bf757d96870d07710cf68e95d651497751e3a2a5",
+    "raw_digest": "sha256:8c633df9751dbfb03a3bfc3212da904e173637a2a6a2c97abd32e03713c7d696",
+    "redaction_status": "sanitized",
+    "run_key": "sec-filing-evidence-v1:6bcc270c5375:invalid-filing-type:massive-stocks:massive-stocks-risk-factors:direct:3",
+    "suite_fingerprint": "6bcc270c53753400d9a8d838759018eccf71c6263f1c4a40235e1aaae6427283"
+  }
+]

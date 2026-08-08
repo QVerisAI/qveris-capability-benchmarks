@@ -133,7 +133,7 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 
 ### Task 3 — Financial Statement Facts CAP
 
-- [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md):
+- [x] Build the question family per the [question evaluation model](../question-evaluation-model.md):
   core and boundary roles plus no-data, coverage, shape, and Agent-contract roles
   where the CAP is sensitive; every P0 role must have an executable pass rule.
 - [x] Qualify authoritative/public and authorized Provider paths; prefer official
@@ -146,10 +146,15 @@ Trial for the canonical 600519.SH contract runs through its own live workflow.
 After direct probes, Alpha Vantage income statement and the official SEC company
 facts connector returned message-only responses for both CIK forms and were
 terminally excluded; the included FSF cohort is FMP as-reported income statement.
+The as-reported connector later left QVeris discovery, so the cohort was
+re-qualified to the standard FMP income-statement tool; the v2 release
+`financial-statements-2026-q3-v2` records all 18 matrix cells completed, including
+the CN 600519 coverage case (resolved to the 600519.SS dialect with 10 years of
+history).
 
 ### Task 4 — SEC Filing Evidence CAP
 
-- [ ] Build the question family per the [question evaluation model](../question-evaluation-model.md),
+- [x] Build the question family per the [question evaluation model](../question-evaluation-model.md),
   including citation, document-location, completeness, pagination, and Agent-contract
   roles with executable rules.
 - [x] Qualify official filing retrieval and authorized Provider paths with explicit
@@ -161,6 +166,10 @@ terminally excluded; the included FSF cohort is FMP as-reported income statement
 After direct probes, the FMP 10-K JSON and SEC filings search connectors returned
 message-only error responses for both parameter forms and were terminally
 excluded; the included SEC evidence cohort is Massive Stocks risk factors.
+The v2 release `sec-filing-evidence-2026-q3-v2` records 6 completed and 9
+provider_negative cells: the Massive connector intermittently returns an explicit
+error envelope (recorded as provider-side filing_unavailable) and the endpoint has
+no filing-type parameter (negative control recorded as filing_type_not_supported).
 
 ### Task 5 — Dimension evidence contract
 
