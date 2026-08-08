@@ -559,3 +559,135 @@ questions:
     text_origin: qveris_curated
     selection_rationale: Tests safe series identifier validation for macro data retrieval.
     review_status: approved
+  - question_id: realtime-financial-news-aapl-headlines
+    cap_id: realtime-financial-news
+    role: core_positive
+    task: Return real-time financial news items mentioning AAPL with headline, publisher, publication timestamp, and summary from the recent window.
+    input: {symbol: AAPL, limit: 5}
+    required_observations: [title, source, published_at, summary, symbols]
+    completion_conditions: [title, source, published_at, summary]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract NEWS.FIN.REALTIME requires symbol or query and returns title, source, published_at, and summary; this isolates the real-time news contract.
+    review_status: approved
+  - question_id: realtime-financial-news-no-key
+    cap_id: realtime-financial-news
+    role: boundary_negative
+    task: Reject a real-time news query that supplies neither a ticker nor a keyword query.
+    input: {category: markets}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Tests the one-of symbol-or-query constraint in the NEWS.FIN.REALTIME contract.
+    review_status: approved
+  - question_id: dividend-events-ko-window
+    cap_id: dividend-events
+    role: core_positive
+    task: Return dividend events for KO within a fixed 12-month window with ex-date, per-share amount, and currency.
+    input: {symbol: KO, start_date: 2025-08-01, end_date: 2026-07-31}
+    required_observations: [symbol, effective_date, amount, currency]
+    completion_conditions: [symbol, effective_date, amount]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract MKT.DIVIDENDS requires symbol and effective_date with per-share amount; this tests dated event retrieval.
+    review_status: approved
+  - question_id: dividend-events-invalid-symbol
+    cap_id: dividend-events
+    role: boundary_negative
+    task: Reject an invalid dividend-event symbol without inventing events.
+    input: {symbol: NOTASTOCK}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Verifies the same dividend interface rejects unsafe symbol input.
+    review_status: approved
+  - question_id: crypto-spot-quote-btcusdt
+    cap_id: crypto-spot-quote
+    role: core_positive
+    task: Return the current BTCUSDT spot quote with latest price, session open/high/low, timestamp, and quote currency.
+    input: {symbol: BTCUSDT, quote_currency: USDT}
+    required_observations: [symbol, price, open, high, low, timestamp, currency]
+    completion_conditions: [symbol, price, timestamp, currency]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract CRYPTO.SPOT.RT requires symbol and price with OHLC fields; this isolates the crypto quote contract.
+    review_status: approved
+  - question_id: crypto-spot-quote-invalid-pair
+    cap_id: crypto-spot-quote
+    role: boundary_negative
+    task: Reject an unknown crypto pair without inventing a price.
+    input: {symbol: NOTAPAIRXYZ}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Verifies safe unknown-pair semantics for the crypto quote contract.
+    review_status: approved
+  - question_id: financial-ratios-msft
+    cap_id: financial-ratios
+    role: core_positive
+    task: Return current valuation ratios for MSFT including TTM price-to-earnings, market capitalization, and return on equity with an as-of date.
+    input: {symbol: MSFT}
+    required_observations: [symbol, pe_ttm, market_cap, roe_ttm, as_of_date]
+    completion_conditions: [symbol, pe_ttm, market_cap, as_of_date]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract FUNDAMENTALS.DERIVED_RATIOS requires symbol, pe_ttm, market_cap, and as_of_date; this isolates ratio retrieval.
+    review_status: approved
+  - question_id: financial-ratios-invalid-symbol
+    cap_id: financial-ratios
+    role: boundary_negative
+    task: Reject an invalid issuer symbol for a financial-ratios request.
+    input: {symbol: NOTASTOCK}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Verifies safe symbol validation before ratio lookup.
+    review_status: approved
+  - question_id: fx-spot-rate-eurusd
+    cap_id: fx-spot-rate
+    role: core_positive
+    task: Return the current EUR/USD spot rate with latest price, bid/ask, and timestamp.
+    input: {symbol: EUR/USD}
+    required_observations: [symbol, price, timestamp, bid, ask]
+    completion_conditions: [symbol, price, timestamp]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract FX.SPOT requires a pair symbol and spot price; this isolates the FX quote contract.
+    review_status: approved
+  - question_id: fx-spot-rate-invalid-pair
+    cap_id: fx-spot-rate
+    role: boundary_negative
+    task: Reject an invalid foreign-exchange pair without inventing a rate.
+    input: {symbol: EURXYZ}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Verifies safe pair validation for the FX spot contract.
+    review_status: approved
+  - question_id: govt-bond-yield-us10y
+    cap_id: govt-bond-yield
+    role: core_positive
+    task: Return the latest US 10-year treasury yield with date, closing yield, and unit.
+    input: {country: US, tenor: 10Y, frequency: daily}
+    required_observations: [symbol, date, close, unit]
+    completion_conditions: [symbol, date, close]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Harbor contract RATES.GOVT_BENCHMARK requires country or symbol with dated close; this isolates the benchmark yield contract.
+    review_status: approved
+  - question_id: govt-bond-yield-unsupported-market
+    cap_id: govt-bond-yield
+    role: boundary_negative
+    task: Reject an unsupported benchmark market without inventing a yield.
+    input: {country: ZZ, tenor: 10Y}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Verifies the benchmark yield interface rejects unsupported markets.
+    review_status: approved

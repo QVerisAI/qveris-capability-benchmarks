@@ -16,19 +16,25 @@ from qveris_bench.question_bank.repository import (
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_ac1_question_bank_curates_ten_distinct_capabilities() -> None:
+def test_ac1_question_bank_curates_sixteen_distinct_capabilities() -> None:
     bank = load_question_bank(ROOT / "question_bank")
 
-    assert len(bank.capabilities) == 10
+    assert len(bank.capabilities) == 16
     assert {cap.cap_id for cap in bank.capabilities} == {
         "company-fundamentals",
         "corporate-actions",
+        "crypto-spot-quote",
+        "dividend-events",
         "economic-time-series",
         "etf-holdings",
         "financial-news-evidence",
+        "financial-ratios",
         "financial-statement-facts",
+        "fx-spot-rate",
+        "govt-bond-yield",
         "historical-price-series",
         "index-constituents",
+        "realtime-financial-news",
         "sec-filing-evidence",
         "stock-quote",
     }
@@ -728,8 +734,8 @@ def test_ac5_question_validate_runs_through_the_installed_cli() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "10 capabilities" in result.stdout
-    assert "32 questions" in result.stdout
+    assert "16 capabilities" in result.stdout
+    assert "44 questions" in result.stdout
     assert result.stdout.endswith("2 scenarios.\n")
 
 
