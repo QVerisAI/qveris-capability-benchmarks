@@ -107,7 +107,9 @@ A cell ends in one of: `completed`, `provider_negative`, `infra_blocked`,
 Direct Test is mandatory for every included applicable cell and repeats at least
 three rounds. Rounds support latency, reliability, and stability observations.
 The reference value is captured once per round so tolerance comparison has its own
-immutable evidence digest.
+immutable evidence digest. Latency and cost are recorded as QVeris gateway-side
+observations (see "Dimension facts"); they are never attributed to a provider's
+native API without a separately declared measurement.
 
 ### Agent Trial
 
@@ -146,6 +148,15 @@ Question roles map to developer selection dimensions as follows:
 Latency, reliability, cost, and access constraints are run-level observations and
 release facts, not question-level attributes. A question defines what correct
 means; the run records how fast, how stable, and how expensive.
+
+Latency and cost are measured at the QVeris gateway: they are read from the QVeris
+API response (`elapsed_time_ms` and `cost` in credits), so they include gateway
+routing, request forwarding, and QVeris billing. They are not the provider's
+native API latency or provider pricing. Any user-facing rendering (profile,
+article, or report) must label these dimensions as "QVeris gateway measured" and
+state the measurement boundary in the same place it shows the value. Provider
+native latency or pricing may appear only as `declared` facts with their own
+documented source, never as `measured` gateway observations.
 
 ### Scoring integrity rules
 
