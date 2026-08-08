@@ -30,6 +30,18 @@
   },
   "additionalProperties": false,
   "properties": {
+    "cost_credits": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Credits"
+    },
     "disclosure_level": {
       "$ref": "#/$defs/DisclosureLevel"
     },
@@ -44,6 +56,18 @@
       "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
       "title": "Extractor Version",
       "type": "string"
+    },
+    "latency_ms": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency Ms"
     },
     "license_status": {
       "$ref": "#/$defs/LicenseStatus"

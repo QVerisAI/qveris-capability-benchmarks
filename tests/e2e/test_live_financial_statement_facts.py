@@ -20,6 +20,7 @@ from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
+    gateway_metrics,
     public_response_shape,
 )
 from qveris_bench.execution.qveris_binding import (
@@ -211,6 +212,8 @@ def _persist_terminal_evidence(
     suite_fingerprint: str,
     binding: QverisDirectBinding,
     binding_registry_digest: str,
+    latency_ms: float | None,
+    cost_credits: float | None,
 ) -> TerminalEvidence:
     outcome = "completed" if reason is None else "provider_negative"
     attribution = (
@@ -238,6 +241,8 @@ def _persist_terminal_evidence(
                 "redaction_status": "sanitized",
                 "disclosure_level": "sanitized_public",
                 "license_status": "cleared",
+                "latency_ms": latency_ms,
+                "cost_credits": cost_credits,
             },
             sort_keys=True,
         )
@@ -283,6 +288,7 @@ def test_ac_live_financial_statement_facts_direct_produces_terminal_evidence(
                 binding.parameters,
             )
             document = json.loads(result.result.raw_path.read_text(encoding="utf-8"))
+            latency_ms, cost_credits = gateway_metrics(document)
             if os.environ.get("FSF_PROBE") == "1":
                 probe = (
                     json.dumps(
@@ -318,6 +324,8 @@ def test_ac_live_financial_statement_facts_direct_produces_terminal_evidence(
                 compiled.fingerprint,
                 binding,
                 binding_registry_digest,
+                latency_ms,
+                cost_credits,
             )
         finally:
             await client.close()

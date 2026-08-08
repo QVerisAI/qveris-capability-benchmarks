@@ -12,6 +12,7 @@ from qveris_bench.execution.qveris import (
     QverisProtocolError,
     QverisToolClient,
     execute_discovered_tool,
+    gateway_metrics,
     public_response_shape,
 )
 
@@ -62,6 +63,26 @@ def test_ac_qveris_tool_execution_uses_the_search_bound_tool_call(
         await client.close()
 
     asyncio.run(run())
+
+
+def test_ac_gateway_metrics_extract_latency_and_cost() -> None:
+    document = {
+        "elapsed_time_ms": 1245,
+        "cost": 2.42,
+        "remaining_credits": 601776.39,
+        "result": {"data": []},
+    }
+
+    latency_ms, cost_credits = gateway_metrics(document)
+
+    assert latency_ms == 1245.0
+    assert cost_credits == 2.42
+
+
+def test_ac_gateway_metrics_reject_non_finite_or_missing_values() -> None:
+    assert gateway_metrics({}) == (None, None)
+    assert gateway_metrics({"elapsed_time_ms": 0, "cost": -1}) == (None, None)
+    assert gateway_metrics({"elapsed_time_ms": "fast", "cost": True}) == (None, None)
 
 
 def test_ac_qveris_tool_description_uses_only_frozen_ids(tmp_path: Path) -> None:

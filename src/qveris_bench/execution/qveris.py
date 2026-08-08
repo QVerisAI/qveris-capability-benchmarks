@@ -164,6 +164,24 @@ def _document(result: AdapterResult) -> dict[str, Any]:
     return document
 
 
+def gateway_metrics(document: dict[str, Any]) -> tuple[float | None, float | None]:
+    """从 QVeris API 响应提取网关侧延迟与费用观测。"""
+    latency_ms = _finite_float(document.get("elapsed_time_ms"))
+    cost_credits = _finite_float(document.get("cost"))
+    return latency_ms, cost_credits
+
+
+def _finite_float(value: object) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if not isinstance(value, (int, float)):
+        return None
+    numeric = float(value)
+    if numeric <= 0:
+        return None
+    return numeric
+
+
 def public_response_shape(value: object, depth: int = 2) -> dict[str, object]:
     if isinstance(value, dict):
         keys = sorted(
