@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qveris.ai/schemas/harbor-symbol-registry.schema.json",
+  "title": "Harbor Symbol Registry Snapshot",
+  "description": "Private operator snapshot of Harbor symbol and coverage reference data, normalized into a benchmark-owned schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provenance",
+    "markets",
+    "provider_symbol_samples",
+    "market_anchors"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "harbor_commit",
+        "exported_at",
+        "export_script",
+        "inputs",
+        "license_note"
+      ],
+      "properties": {
+        "source": {
+          "const": "quaestio-harbor"
+        },
+        "harbor_commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "exported_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "export_script": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "license_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "market",
+          "representative_ticker"
+        ],
+        "properties": {
+          "market": {
+            "type": "string",
+            "minLength": 1
+          },
+          "representative_ticker": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "provider_symbol_samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider_id",
+          "market",
+          "symbol"
+        ],
+        "properties": {
+          "provider_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "market": {
+            "type": "string",
+            "minLength": 1
+          },
+          "symbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "market_anchors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "market",
+          "company_key",
+          "display_name",
+          "candidate_tickers"
+        ],
+        "properties": {
+          "market": {
+            "type": "string",
+            "minLength": 1
+          },
+          "company_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "candidate_tickers": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "identifier_samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "market",
+          "company_key",
+          "identifiers"
+        ],
+        "properties": {
+          "market": {
+            "type": "string",
+            "minLength": 1
+          },
+          "company_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identifiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

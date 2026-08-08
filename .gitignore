@@ -22,3 +22,4 @@ runs/
 .runs/
 cap_packs/*/run-plan.json
 cap_packs/*/suite.frozen.json
+.harbor-snapshots/
