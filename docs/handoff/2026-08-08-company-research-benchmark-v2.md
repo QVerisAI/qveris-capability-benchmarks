@@ -20,9 +20,12 @@ The Company Research Agent selection loop is complete end to end:
    - `sec-filing-evidence-2026-q3-v1`
    - `financial-statements-2026-q3-v2`
    - `sec-filing-evidence-2026-q3-v2`
+   - `financial-statements-2026-q3-v3`
+   - `sec-filing-evidence-2026-q3-v3`
 4. Deterministic Company Research Task Fit Profile v1 (`profiles/company-research-agent/`)
    with per-CAP case outcomes and honest `evidence_insufficient` dimensions; the
-   profile now pins the FSF/SEC v2 releases.
+   profile now pins the FSF/SEC v3 releases and reports QVeris gateway-side
+   latency/cost as `measured` dimensions.
 5. Replay runbook covering all five published releases (`docs/operator-runbook.md`).
 
 ## Honest findings recorded in the releases
@@ -42,6 +45,12 @@ The Company Research Agent selection loop is complete end to end:
   parameter (negative control recorded as `filing_type_not_supported`). This is
   honest provider reliability evidence; no cell is a benchmark-side parse
   failure.
+- Latency and cost are now measured per Direct cell at the QVeris gateway
+  (`elapsed_time_ms` and `cost` credits from the API response). FSF v3: median
+  1570 ms and 2.42 credits per call across 18 cells. SEC v3: median 881 ms
+  across 15 cells; only the 5 completed cells carry cost (0.1 credits each)
+  because the gateway does not bill error-envelope responses. These are gateway
+  observations, not provider native latency or pricing.
 
 ## Follow-ups (not blockers for v2)
 
@@ -50,8 +59,8 @@ The Company Research Agent selection loop is complete end to end:
   working contracts; evidence digests are recorded in the provider registry.
 - Re-probe the Massive risk-factor connector when its reliability improves; the
   recorded `filing_unavailable` cells should be re-run rather than re-qualified.
-- Add latency / cost / reliability measurement contracts so the profile can move
-  those dimensions from `evidence_insufficient` to `measured`.
+- Reliability and Agent-interface measurement contracts remain open so those
+  profile dimensions can move from `evidence_insufficient` to `measured`.
 
 ## Replay
 

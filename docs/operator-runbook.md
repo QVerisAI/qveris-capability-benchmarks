@@ -28,6 +28,10 @@ Agent backend.
      `sha256:9e797df8592ff139b9f09bcf69d88c5b7dc7664384210388f84e33329f0017b8`
    - `releases/sec-filing-evidence-2026-q3-v2/release.json` —
      `sha256:865ed24c2b3d3be72e8cd665421ad33f9fcceab1644b90e0868ff0c82a32d858`
+   - `releases/financial-statements-2026-q3-v3/release.json` —
+     `sha256:d191640f23fd1205874d8667f6f9d23ca5c8cfacd4c6aa97d4d73319df32297e`
+   - `releases/sec-filing-evidence-2026-q3-v3/release.json` —
+     `sha256:6faffeb8bf4fca0b8fa58bd9c2ba5d106fac47f99e730b6a99fb8138f59ee4cd`
 6. Rebuild the Company Research Task Fit Profile with
    `uv run qveris-bench profile build --input profiles/company-research-agent.yaml
    --output-dir /tmp/profile-out` and confirm both outputs match the committed

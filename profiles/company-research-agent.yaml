@@ -8,8 +8,8 @@ cap_releases:
     release: releases/stock-quote-family-2026-q3-v1/release.json
     digest: sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57
   financial-statement-facts:
-    release: releases/financial-statements-2026-q3-v2/release.json
-    digest: sha256:9e797df8592ff139b9f09bcf69d88c5b7dc7664384210388f84e33329f0017b8
+    release: releases/financial-statements-2026-q3-v3/release.json
+    digest: sha256:d191640f23fd1205874d8667f6f9d23ca5c8cfacd4c6aa97d4d73319df32297e
   sec-filing-evidence:
-    release: releases/sec-filing-evidence-2026-q3-v2/release.json
-    digest: sha256:865ed24c2b3d3be72e8cd665421ad33f9fcceab1644b90e0868ff0c82a32d858
+    release: releases/sec-filing-evidence-2026-q3-v3/release.json
+    digest: sha256:6faffeb8bf4fca0b8fa58bd9c2ba5d106fac47f99e730b6a99fb8138f59ee4cd
