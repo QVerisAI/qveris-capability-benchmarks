@@ -147,8 +147,37 @@ def _selected_run_key(
     return matches[0].run_key
 
 
+def _document_error(document: object) -> str | None:
+    if not isinstance(document, dict):
+        return None
+    for key in ("error_message", "error", "message"):
+        value = document.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def _classify_provider_error(message: str) -> str:
+    normalized = message.casefold()
+    if any(term in normalized for term in ("rate limit", "quota", "429")):
+        return "rate_limited"
+    if any(
+        term in normalized for term in ("timeout", "timed out", "502", "503", "504")
+    ):
+        return "network_or_timeout"
+    if any(
+        term in normalized
+        for term in ("invalid", "unsupported", "not found", "400", "404")
+    ):
+        return "provider_validation_error"
+    return "provider_runtime_error"
+
+
 def _semantic_reason(provider_id: str, case_id: str, document: object) -> str | None:
     negative = case_id == "invalid-filing-type"
+    error_message = _document_error(document)
+    if error_message is not None:
+        return _classify_provider_error(error_message)
     try:
         if provider_id == "massive-stocks":
             facts = extract_massive_stocks_risk_factors(
@@ -312,6 +341,66 @@ def test_ac_live_sec_filing_evidence_rejects_redirected_binding() -> None:
             "massive-stocks-aapl-risk",
             binding.model_copy(update={"tool_id": "other.provider.tool"}),
         )
+
+
+@pytest.mark.parametrize(
+    ("message", "expected"),
+    [
+        ("Rate limit exceeded for this API key", "rate_limited"),
+        ("Request timed out after 30 seconds", "network_or_timeout"),
+        ("Invalid ticker symbol NOTATICKER", "provider_validation_error"),
+        ("Internal server error", "provider_runtime_error"),
+    ],
+)
+def test_ac_provider_error_message_classifies_provider_side_reason(
+    message: str, expected: str
+) -> None:
+    reason = _classify_provider_error(message)
+    assert reason == expected
+    assert classify_provider_negative_reason(reason) is not None
+
+
+def test_ac_semantic_reason_returns_provider_side_reason_for_explicit_error() -> None:
+    document = {
+        "error_message": "Internal server error",
+        "result": {"data": "temporary failure"},
+    }
+
+    reason = _semantic_reason("massive-stocks", "aapl-risk-factor", document)
+
+    assert reason == "provider_runtime_error"
+    assert classify_provider_negative_reason(reason) is not None
+
+
+def test_ac_semantic_reason_ignores_missing_error_message() -> None:
+    document = {
+        "result": {
+            "data": {
+                "status": "OK",
+                "results": [
+                    {
+                        "ticker": "AAPL",
+                        "cik": "0000320193",
+                        "filing_date": "2024-11-01",
+                        "supporting_text": (
+                            "Restrictions on international trade can materially "
+                            "adversely affect the Company's supply chain."
+                        ),
+                    }
+                ],
+            }
+        }
+    }
+
+    reason = _semantic_reason("massive-stocks", "aapl-risk-factor", document)
+
+    assert reason is None
+
+
+def test_ac_live_sec_filing_evidence_rejects_rotated_binding() -> None:
+    binding = load_registered_qveris_direct_binding(
+        BINDINGS_REGISTRY, "massive-stocks-aapl-risk"
+    )
     with pytest.raises(AssertionError, match="frozen contract"):
         _validate_fixed_binding(
             "massive-stocks-aapl-risk",
