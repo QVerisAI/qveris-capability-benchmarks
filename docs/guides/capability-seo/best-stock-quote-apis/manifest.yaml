@@ -1,0 +1,74 @@
+schema_version: 1
+benchmark_id: realtime-stock-quote-2026-08
+article_slug: best-stock-quote-apis
+edition: "2026-08-08"
+search_intent: Compare real-time stock quote APIs for AI agents by measured latency and cost
+primary_capability_ids: [MKT.L1.RT]
+related_capability_ids: []
+comparison_shortlist:
+  - Finnhub
+  - THS iFinD
+  - Alpha Vantage
+  - EODHD
+  - Twelve Data
+  - Financial Modeling Prep
+  - Yahoo Finance
+  - Massive
+supplier_entities:
+  Finnhub: finnhub.io
+  THS iFinD: 51ifind.com
+  Alpha Vantage: alphavantage.co
+  EODHD: eodhd.com
+  Twelve Data: twelvedata.com
+  Financial Modeling Prep: financialmodelingprep.com
+  Yahoo Finance: yahoo.com
+  Massive: massive.io
+scenarios:
+  - {id: current_us_quote, article_label: Current US quote, minimum_rounds: 2}
+  - {id: current_cn_quote, article_label: Current China quote, minimum_rounds: 2}
+  - {id: invalid_symbol_control, article_label: Invalid symbol control, minimum_rounds: 2}
+publication_policy:
+  one_tool_per_supplier_per_scenario: true
+  freeze_shortlist_after_baseline: true
+  states: [qualified, not_qualified, not_applicable]
+seo:
+  title: "Best Real-Time Stock Quote APIs for AI Agents (2026)"
+  meta_description: "Measured August 2026: compare 8 real-time stock quote APIs by latency, cost per call, and market coverage for AI agents through the QVeris production gateway."
+  primary_keyword: real-time stock quote API for AI agents
+  secondary_keywords: [stock quote API, real-time stock data API, stock price API]
+  publication_action: new_page
+  inventory_checked_at: "2026-08-08"
+  target_slug: best-stock-quote-apis
+  provider_inventory_checked_at: "2026-08-08"
+  competing_urls: []
+  supplier_sites:
+    Finnhub: https://finnhub.io/
+    THS iFinD: https://quantapi.51ifind.com/
+    Alpha Vantage: https://www.alphavantage.co/
+    EODHD: https://eodhd.com/
+    Twelve Data: https://twelvedata.com/
+    Financial Modeling Prep: https://financialmodelingprep.com/
+    Yahoo Finance: https://finance.yahoo.com/
+    Massive: https://massive.io/
+  provider_pages:
+    Finnhub: https://qveris.ai/providers/finnhub
+    THS iFinD: https://qveris.ai/providers/ths_ifind
+    Alpha Vantage: https://qveris.ai/providers/alphavantage
+    EODHD: https://qveris.ai/providers/eodhd
+    Twelve Data: https://qveris.ai/providers/twelvedata
+    Financial Modeling Prep: https://qveris.ai/providers/financialmodelingprep
+    Yahoo Finance: https://qveris.ai/providers/yahoo_finance
+    Massive: https://qveris.ai/providers/massive_stocks
+  official_sources:
+    Finnhub Quote API: https://finnhub.io/docs/api/quote
+    Twelve Data API: https://twelvedata.com/docs
+    Alpha Vantage documentation: https://www.alphavantage.co/documentation/
+    FMP developer docs: https://financialmodelingprep.com/developer/docs/
+    EODHD real-time quotes: https://eodhd.com/financial-apis/real-time-stock-quotes
+  related_guides:
+    Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
+    AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
+    Financial news API for AI agents: https://qveris.ai/guides/financial-news-api-for-ai-agents/
+artifacts:
+  article: docs/guides/best-stock-quote-apis.md
+  evidence_snapshot: harbor-explore-coverage-2026-08-08
