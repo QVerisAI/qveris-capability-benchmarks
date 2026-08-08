@@ -11,12 +11,22 @@ def build_release(
     release: BenchmarkRelease,
     cells: tuple[RunCell, ...],
     evidence: tuple[EvidenceBundle, ...],
+    *,
+    require_attribution: bool = True,
 ) -> bytes:
-    validate_release_inputs(release, cells, evidence)
+    validate_release_inputs(
+        release, cells, evidence, require_attribution=require_attribution
+    )
     payload = {
         "release": release.model_dump(mode="json"),
         "cells": [
-            cell.model_dump(mode="json")
+            # 归因仅在已记录时序列化，保证历史 release 字节级可重建
+            cell.model_dump(
+                mode="json",
+                exclude={"failure_attribution"}
+                if cell.failure_attribution is None
+                else set(),
+            )
             for cell in sorted(cells, key=lambda item: item.run_key)
         ],
         "evidence": [

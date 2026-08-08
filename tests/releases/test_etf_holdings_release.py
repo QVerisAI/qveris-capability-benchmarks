@@ -35,7 +35,11 @@ def test_ac_etf_holdings_release_rebuilds_from_all_terminal_evidence() -> None:
     assert len(cells) == 24
     assert len(evidence) == 24
     assert {cell.state.value for cell in cells} == {"completed", "provider_negative"}
-    assert build_release(release, cells, evidence) == release_bytes
+    # 历史 release 早于归因门禁，replay 重建跳过发布期归因校验
+    assert (
+        build_release(release, cells, evidence, require_attribution=False)
+        == release_bytes
+    )
     assert release_digest(release_bytes) == _DIGEST
     assert verify_release(RELEASE / "release.json", _DIGEST)
     assert sha256_digest(run_plan_bytes) == release.run_plan_digest

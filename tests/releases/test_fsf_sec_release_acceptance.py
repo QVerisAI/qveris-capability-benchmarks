@@ -68,7 +68,11 @@ def test_ac_fsf_sec_releases_rebuild_all_direct_terminal_evidence() -> None:
         assert len(cells) == 6, release_id
         assert {cell.state.value for cell in cells} == meta["states"]
         assert len(evidence) == 6
-        assert build_release(release, cells, evidence) == release_bytes
+        # 历史 release 早于归因门禁，replay 重建跳过发布期归因校验
+        assert (
+            build_release(release, cells, evidence, require_attribution=False)
+            == release_bytes
+        )
         assert release_digest(release_bytes) == meta["digest"]
         assert verify_release(release_dir / "release.json", meta["digest"])
         assert sha256_digest(run_plan_bytes) == release.run_plan_digest
