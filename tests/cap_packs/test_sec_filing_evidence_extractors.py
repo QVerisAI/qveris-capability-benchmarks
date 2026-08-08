@@ -138,9 +138,7 @@ def test_ac5_massive_error_envelope_is_provider_side_unavailable() -> None:
     with pytest.raises(SecFilingExtractionError, match="unavailable"):
         extract_massive_stocks_risk_factors(document, "AAPL")
 
-    facts = extract_massive_stocks_risk_factors(
-        document, "AAPL", negative_control=True
-    )
+    facts = extract_massive_stocks_risk_factors(document, "AAPL", negative_control=True)
 
     assert facts == {"validation_error": "no risk factors returned"}
 
