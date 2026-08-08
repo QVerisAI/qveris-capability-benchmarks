@@ -22,18 +22,26 @@ def extract_massive_stocks_risk_factors(
     if not rows:
         raise SecFilingExtractionError("filing unavailable")
     for row in rows:
-        text = row.get("text")
-        if isinstance(text, str) and _mentions_supply_chain(text):
-            filing_id = _massive_filing_id(row)
-            facts: dict[str, Any] = {
-                "symbol": symbol,
-                "filing_id": filing_id,
-                "evidence": text,
-                "citation": _massive_citation(row),
-            }
-            if case_id == "cik-canonical-identifier":
-                facts["resolved_identifier"] = symbol
-            return facts
+        passage = row.get("supporting_text")
+        if not isinstance(passage, str) or not passage:
+            passage = row.get("text")
+        if not isinstance(passage, str) or not passage:
+            continue
+        if not (
+            _mentions_supply_chain(passage)
+            or row.get("secondary_category") == "Supply Chain"
+        ):
+            continue
+        filing_id = _massive_filing_id(row)
+        facts: dict[str, Any] = {
+            "symbol": symbol,
+            "filing_id": filing_id,
+            "evidence": passage,
+            "citation": _massive_citation(row),
+        }
+        if case_id == "cik-canonical-identifier":
+            facts["resolved_identifier"] = symbol
+        return facts
     raise SecFilingExtractionError("evidence passage missing")
 
 
