@@ -2,22 +2,22 @@
 
 快速结论：
 
-- 直接回答：本次测试中，恒生聚源是唯一在"公司行动"数据上达到完整合格线的供应商，A 股分红、拆股与除权数据以 0.9 秒实测延迟、每次调用 1 credit 返回；通用全球场景下，EODHD、Twelve Data 与 Massive（原 Polygon.io）通过合格线，适合作为海外市场的公司行动数据源。
+- 直接回答：本平台 Direct Test 实测（2026-08-09，固定用例 2 轮）中，EODHD、Twelve Data、Alpha Vantage、Massive（原 Polygon.io）与恒生聚源 5 家全部通过公司行动核心用例，达到合格线；A 股场景恒生聚源延迟与成本最优，海外场景 EODHD 与 Twelve Data 较为均衡。Financial Modeling Prep、同花顺 iFinD、雅虎财经本轮无 QVeris canonical 公司行动工具，未纳入实测。
 - 选型原则：不要只看"有没有分红/拆股接口"，要看你需要的动作类型（现金分红、送转、配股、拆并股、赎回、要约收购）是否被覆盖、字段是否完整（除权除息日、派息日、金额、比例、币种），以及单次调用成本。
 - AI 友好度（新增实测）：我们还让 AI 直接填写各家的工具参数——四家海外工具（EODHD、Massive、Twelve Data、Alpha Vantage）AI 均 2/2 轮填对；恒生聚源的 A 股分红工具 0/2 轮，模型把贵州茅台填成 `600519` 而漏掉 `.SH` 交易所后缀，说明 A 股代码方言是 AI 落参的短板。
 - 重要说明：本文延迟、费用与合格结论为 2026-08-08 经 QVeris 生产网关的评估快照，不代表供应商直连指标；公司行动属于低频专业数据，多数供应商本快照样本量偏小，结论以复测为准。
 
 ## 哪个公司行动数据 API 最适合你的场景？
 
-做 A 股分红与除权数据：恒生聚源实测延迟 0.9 秒、每次调用 1 credit，是本测试中唯一完整达标的供应商，且生产调用量（含 MCP 路径 8,600+ 次）领先国内同行。
+做 A 股分红与除权数据：恒生聚源实测延迟 0.9 秒、每次调用 1 credit，通过本平台 Direct Test 核心用例，且生产调用量（含 MCP 路径 8,600+ 次）领先国内同行。
 
-做美股或全球市场的拆股、分红与要约数据：EODHD 覆盖多市场、单次 2.81 credits；Twelve Data 单次 2.37 credits；Massive（原 Polygon.io）单次 1 credit，成本最低但本快照样本量最小（130+ 次），上线前建议复测。
+做美股或全球市场的拆股、分红与要约数据：EODHD 覆盖多市场、单次 2.81 credits；Twelve Data 单次 2.37 credits；Alpha Vantage 单次 2 credits；Massive（原 Polygon.io）单次 1 credit，成本最低但本快照样本量最小（130+ 次），上线前建议复测。
 
 如果你的 Agent 需要自动调用这些接口，请把"AI 能否填对参数"纳入决策：四家海外工具的 AI 落参实测全过，恒生聚源则因为 A 股代码方言（`600519.SH`）漏后缀而失败，详见下文"AI 友好度"一节。
 
 ## 8 家公司行动数据 API 对比（2026 年 8 月实测）
 
-固定短名单，2026-08-08 经 QVeris 生产网关实测：8 家供应商、1 个工作流（公司行动事件检索）、每个适用单元 2 轮。费用为 QVeris 每次调用的 credit 数；延迟为网关执行平均值（仅有样本的供应商列出）；生产用量为快照时点的公开调用量。同一法律实体只占一行（Massive 与 Polygon.io 同源合并，恒生聚源 REST 与 MCP 路径同源合并）。
+固定短名单来自 Harbor 覆盖快照（仅作候选参考，不作结论依据）。结论为本平台 Direct Test 实测（2026-08-09）：固定用例（AAPL 拆股检索、无效代码负向控制）经 QVeris 真实执行，每个适用单元 2 轮。费用为 QVeris 每次调用的 credit 数；延迟为网关执行平均值（仅有样本的供应商列出）；生产用量为快照时点的公开调用量。同一法律实体只占一行（Massive 与 Polygon.io 同源合并，恒生聚源 REST 与 MCP 路径同源合并）。
 
 | 供应商 | 单次费用（QVeris credits） | 实测平均延迟 | 生产用量 | 市场侧重 | 测试结论 | 链接 |
 |---|---|---|---|---|---|---|
@@ -25,18 +25,18 @@
 | [EODHD](https://eodhd.com/) · [在 QVeris 中试用](https://qveris.ai/providers/eodhd) | 2.81 | 无样本 | 880+ | 全球 | 合格 | 全球 |
 | [Twelve Data](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) | 2.37 | 无样本 | 1,100+ | 全球 | 合格 | 全球 |
 | [Massive（原 Polygon.io）](https://massive.io/) · [在 QVeris 中试用](https://qveris.ai/providers/massive_stocks) | 1 | 无样本 | 130+ | 美股 | 合格 | 美国 |
-| [Financial Modeling Prep](https://financialmodelingprep.com/) · [在 QVeris 中试用](https://qveris.ai/providers/financialmodelingprep) | 24.2 | 无样本 | 80+ | 美股基本面 | 合格 | 美国 |
-| [Alpha Vantage](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) | 2 | 无样本 | 870+ | 美股/全球 | 未完全达标 | 美国/全球 |
-| [同花顺 iFinD](https://quantapi.51ifind.com/) · [在 QVeris 中试用](https://qveris.ai/providers/ths_ifind) | 1 | 0.7s | 1.4万+ | A 股 | 未完全达标 | 中国 |
-| [雅虎财经](https://finance.yahoo.com/) · [在 QVeris 中试用](https://qveris.ai/providers/yahoo_finance) | 1 | 无样本 | 6.6万+ | 美股 | 未完全达标 | 美国 |
+| [Financial Modeling Prep](https://financialmodelingprep.com/) · [在 QVeris 中试用](https://qveris.ai/providers/financialmodelingprep) | 24.2 | 无样本 | 80+ | 美股基本面 | 未测 | 美国 |
+| [Alpha Vantage](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) | 2 | 无样本 | 870+ | 美股/全球 | 合格 | 美国/全球 |
+| [同花顺 iFinD](https://quantapi.51ifind.com/) · [在 QVeris 中试用](https://qveris.ai/providers/ths_ifind) | 1 | 0.7s | 1.4万+ | A 股 | 未测 | 中国 |
+| [雅虎财经](https://finance.yahoo.com/) · [在 QVeris 中试用](https://qveris.ai/providers/yahoo_finance) | 1 | 无样本 | 6.6万+ | 美股 | 未测 | 美国 |
 
-综合判断：A 股公司行动数据，恒生聚源是本次测试的最佳适配；全球场景以 EODHD 与 Twelve Data 较为均衡；Massive 成本最低但样本小；FMP 虽然功能完整，但单次 24.2 credits 的成本明显高于同类，适合基本面为主、公司行动为辅的混合工作流。Alpha Vantage 是常用的通用金融数据源，但本快照未完全达到公司行动契约的完整性门槛，适合作为通用数据场景的备选。
+综合判断：A 股公司行动数据，恒生聚源是本轮测试的最佳适配；全球场景以 EODHD 与 Twelve Data 较为均衡；Massive 成本最低但样本小；Alpha Vantage 通过本轮 Direct Test 核心用例，适合作为通用数据场景的备选。FMP 功能完整但单次 24.2 credits 明显偏高，且本轮未测，适合基本面为主、公司行动为辅的混合工作流。注意：Alpha Vantage 在本平台实测合格，但第三方评估快照曾将其标为未完全达标——本平台结论以自身 Direct Test 为准，第三方结果仅作参考。
 
 除本短名单外，如需继续考察更多候选，可在 [QVeris Provider Hub](https://qveris.ai/discover?view=providers) 浏览全部金融数据供应商。
 
 ## 测试方法与证据分级
 
-- 数据完整度（合格/未完全达标）：依据 2026-08-08 生产评估快照，按固定用例（AAPL 拆股/分红检索、无效代码负向控制）和公司行动契约必填字段判定，每个适用单元 2 轮。
+- 数据完整度（合格/未完全达标）：本平台 Direct Test 实测（2026-08-09）。固定用例（AAPL 拆股检索、无效代码负向控制）经 QVeris 真实执行，每个适用单元 2 轮，按公司行动契约必填字段判定。供应商候选来自 Harbor 覆盖快照，但 Harbor 评估只作参考，不作结论依据。
 - AI 友好度（AI 落参）：2026-08-08 用 DeepSeek Flash 对每家的 canonical 工具做固定提问，每个工具 2 轮，检查模型是否只调用该工具、填齐必填参数、参数值类型合法、不幻觉多余参数、语义正确。
 - 官方来源：各供应商深度解析中链接的官方文档与产品页。
 - 编辑解读：基于实测结果与供应商公开契约得出的买方建议，仅限本快照时点。
@@ -49,7 +49,7 @@
 - 未完全达标：上述任一条件未满足，例如必填字段缺失、负向输入被编造成结果、或两轮结果不一致。
 - N/A：供应商在该市场无执行授权或契约不适用，不计分。
 
-本快照中，恒生聚源、EODHD、Twelve Data、Massive、FMP 达到合格线；Alpha Vantage、同花顺 iFinD、雅虎财经未完全达标（多为必填字段或负向语义不满足）。
+本轮 Direct Test 中，EODHD、Twelve Data、Alpha Vantage、Massive、恒生聚源 5 家达到合格线（4/4 单元通过）；Financial Modeling Prep、同花顺 iFinD、雅虎财经无 QVeris canonical 公司行动工具，标注"未测"而非打分。本平台结论可能与第三方评估快照不同——例如 Alpha Vantage 在本轮实测合格，而第三方快照曾标注其未完全达标，差异以本平台可复现的 Direct Test 为准。
 
 ## AI 友好度：AI 能否正确填写工具参数（2026-08-08 实测）
 
@@ -71,7 +71,7 @@
 
 ### A 股分红与除权数据
 
-恒生聚源是本次测试中唯一完整达标的供应商：实测延迟 0.9 秒、每次调用 1 credit、A 股生产调用量最大。但注意它的 AI 落参实测未通过（A 股代码方言漏后缀），如果你的 Agent 要自动调用，需要额外做代码规范化的兜底，或改用同花顺 iFinD（延迟更低、成本相同，但数据完整度未完全达标）。
+恒生聚源通过本轮 Direct Test 核心用例：实测延迟 0.9 秒、每次调用 1 credit、A 股生产调用量最大。但注意它的 AI 落参实测未通过（A 股代码方言漏后缀），如果你的 Agent 要自动调用，需要额外做代码规范化的兜底。
 
 ### 美股拆股与分红历史
 
@@ -122,6 +122,7 @@ Financial Modeling Prep 功能完整但公司行动单次调用 24.2 credits，�
 ## 局限与时效
 
 - 本次测试测量的是 2026-08-08 的 QVeris 网关路径与固定输入，不代表供应商直连 API、流式推送或 p95 表现。
+- 本版 Direct Test 为 2 个固定用例 × 2 轮的核心字段冒烟（拆股检索 + 无效代码负向控制），不是公司行动全量场景认证；FMP、同花顺 iFinD、雅虎财经本轮未测。
 - AI 落参结果仅基于 DeepSeek Flash 单模型、单轮固定提问，不同模型与提示词可能有差异；三家供应商本轮未测。
 - 公司行动属于低频专业数据，短名单中多数供应商本快照样本量偏小；延迟与费用会随套餐、路由策略与市场状况变化，正式采购前请核对官方页面并复测。
 - 完整性门槛覆盖的是典型 Agent 工作流所需的公司行动字段，并非对供应商全部接口的认证。
