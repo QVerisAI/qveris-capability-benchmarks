@@ -66,8 +66,10 @@ artifacts:
   direct_test_evidence: evidence/private/cap-direct-test.jsonl
   agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
   agent_error_recovery_evidence: evidence/private/agent-error-recovery.jsonl
+  agent_response_self_description_evidence: evidence/private/agent-response-self-description.jsonl
   agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
   dialect_tolerance_fixture: scripts/fixtures/fx-dialect-tolerance.yaml
+  response_self_description_fixture: scripts/fixtures/fx-response-self-description.yaml
   charts:
     - docs/guides/capability-seo/best-forex-api-apis/charts/chart-latency-cost.png
     - docs/guides/capability-seo/best-forex-api-apis/charts/chart-ai-difficulty.png
