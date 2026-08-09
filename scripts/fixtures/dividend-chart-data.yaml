@@ -1,0 +1,8 @@
+suppliers:
+  - {name: 恒生聚源, region: CN, markets: [CN], direct_supplier: 恒生聚源, param_question: dividend-600519-history}
+  - {name: 同花顺 iFinD, region: CN, markets: [CN], direct_supplier: 同花顺 iFinD, param_question: dividend-600519-annual}
+  - {name: Twelve Data, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE], direct_supplier: Twelve Data, param_question: dividend-aapl-history}
+  - {name: Alpha Vantage, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE], direct_supplier: Alpha Vantage, param_question: dividend-aapl-history}
+  - {name: EODHD, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, NO, BR, CA, TW], direct_supplier: EODHD, param_question: dividend-aapl-history}
+  - {name: Massive, region: US, markets: [US], direct_supplier: Massive, param_question: dividend-aapl-history}
+market_universe: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, NO, BR, CA, TW]

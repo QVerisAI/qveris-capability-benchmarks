@@ -1,0 +1,13 @@
+{
+ "charts": {
+  "chart-latency-cost.png": "817211e1379d3af5",
+  "chart-ai-friendliness.png": "ff68fe6bdc2b06e8",
+  "chart-market-coverage.png": "da6513a41b96c5cc"
+ },
+ "input_digests": {
+  "cap-direct-test": "cd4207583ae03131",
+  "agent-param-fill": "aff1d1a62726d247",
+  "agent-response-interpretation": "1801538306159a2f"
+ },
+ "rendered_at": "2026-08-09"
+}
