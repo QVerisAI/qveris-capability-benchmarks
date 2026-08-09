@@ -45,7 +45,7 @@ def load_fixture(path: Path) -> tuple[tuple[InterpretationQuestion, str], ...]:
 
 
 def build_llm_fn(
-    base_url: str, api_key: str, model: str
+    base_url: str, key: str, model: str
 ) -> Callable[[InterpretationQuestion, str], str]:
     def llm_fn(question: InterpretationQuestion, response_text: str) -> str:
         payload = {
@@ -70,7 +70,7 @@ def build_llm_fn(
             f"{base_url}/chat/completions",
             data=json.dumps(payload).encode("utf-8"),
             headers={
-                "Authorization": f"Bearer {api_key}",
+                "Authorization": f"Bearer {key}",
                 "Content-Type": "application/json",
             },
             method="POST",
@@ -105,15 +105,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    api_key = os.getenv(_API_KEY_ENV)
-    if not api_key:
+    key = os.getenv(_API_KEY_ENV)
+    if not key:
         print(f"{_API_KEY_ENV} is required.", file=sys.stderr)
         return 2
 
     cases = load_fixture(args.fixture)
     questions = tuple(question for question, _ in cases)
     response_texts = {question.question_id: response for question, response in cases}
-    llm_fn = build_llm_fn(args.base_url.rstrip("/"), api_key, args.model)
+    llm_fn = build_llm_fn(args.base_url.rstrip("/"), key, args.model)
     results = run_interpretation_probe(
         questions,
         response_texts,
