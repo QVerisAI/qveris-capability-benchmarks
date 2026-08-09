@@ -26,14 +26,14 @@ Questions are contract-derived, not hand-written from scratch:
 
 - `standard_query.required` → question input.
 - `field_spec.required` → required observations.
-- Tool SV results (Harbor `scope_probes`: `claimed_markets` + per-market
-  probe outcomes) → market coverage question. Tool-registry market tags are
-  only claimed-markets metadata; Harbor's `scope.market_hint` is no longer
-  populated/used and must not be treated as coverage evidence. Where SV has
-  not run for a CAP (e.g. MKT.DIVIDENDS), record coverage as pending or run
-  our own per-market probes; do not present claimed markets as verified.
-  `history_scope` → freshness question; `row_key`/`output_cardinality` →
-  shape/no-data question.
+- Tool namespace coverage (`claimed_namespaces` minus SV-probed
+  `unsupported_namespaces`, resolved through the SNS registry) → market
+  coverage question. Harbor's `scope.market_hint` and `claimed_markets` are
+  both deprecated; registry market tags are only a legacy projection and must
+  not be presented as verified coverage. Where namespace SV has not run for a
+  CAP (e.g. MKT.DIVIDENDS), record coverage as pending or run our own
+  per-namespace probes. `history_scope` → freshness question;
+  `row_key`/`output_cardinality` → shape/no-data question.
 - Every CAP needs `core_positive` + `boundary_negative`; other roles are added
   only when the contract supports them.
 - Boundary questions exercise the contract's explicit negative states
@@ -69,7 +69,7 @@ Dimensions are generic operators instantiated by each CAP contract:
 | `field_type_validity` | accuracy | `field_spec` types/enums |
 | `row_key_completeness` | shape | `output_cardinality` + `row_key` |
 | `timestamp_freshness` | freshness | time-semantic fields |
-| `market_routing` | market coverage | tool SV results (`scope_probes`: claimed_markets + probe outcomes); registry tags = claimed metadata; own per-market probes when SV pending |
+| `market_routing` | market coverage | tool namespace coverage (`claimed_namespaces` − SV `unsupported_namespaces`, SNS registry); own per-namespace probes when SV pending |
 | `language_mapping` | language coverage | language fields (only when meaningful) |
 | `latency` / `reliability` / `cost` | gateway behavior | execution traces + billing |
 | `agent_param_fill` | AI 入参落参 | `standard_query.required` + question |
