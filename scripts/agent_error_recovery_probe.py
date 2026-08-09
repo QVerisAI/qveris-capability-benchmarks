@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the agent parameter-fill probe against an OpenAI-compatible model gateway."""
+"""Run the agent error-recovery probe: read a failed response and retry."""
 
 from __future__ import annotations
 
@@ -16,13 +16,12 @@ from typing import Any
 
 import yaml
 
-from qveris_bench.agent_trial.param_fill import (
-    AgentQuestion,
-    ParamFillResult,
-    ParamSpec,
-    ToolContract,
-    run_probe,
+from qveris_bench.agent_trial.error_recovery import (
+    RecoveryQuestion,
+    RecoveryResult,
+    run_recovery_probe,
 )
+from qveris_bench.agent_trial.param_fill import ParamSpec, ToolContract
 
 _BASE_URL_ENV = "QVERIS_MODEL_BASE_URL"
 _API_KEY_ENV = "QVERIS_MODEL_API_KEY"
@@ -33,9 +32,9 @@ _DEFAULT_MODEL = "deepseek-v4-flash"
 
 def load_fixture(
     path: Path,
-) -> tuple[tuple[ToolContract, tuple[AgentQuestion, ...]], ...]:
+) -> tuple[tuple[ToolContract, tuple[RecoveryQuestion, ...]], ...]:
     document = yaml.safe_load(path.read_text(encoding="utf-8"))
-    probes: list[tuple[ToolContract, tuple[AgentQuestion, ...]]] = []
+    probes: list[tuple[ToolContract, tuple[RecoveryQuestion, ...]]] = []
     for tool_doc in document["tools"]:
         contract = ToolContract(
             tool_id=tool_doc["tool_id"],
@@ -52,14 +51,15 @@ def load_fixture(
             ),
         )
         questions = tuple(
-            AgentQuestion(
-                question_id=question["question_id"],
-                task=question["task"],
-                expected_params=dict(question.get("expected_params", {})),
-                forbidden_params=tuple(question.get("forbidden_params", ())),
-                difficulty=question.get("difficulty", "L1"),
+            RecoveryQuestion(
+                question_id=case["question_id"],
+                task=case["task"],
+                failure_response=case["failure_response"],
+                expected_retry_params=dict(case.get("expected_retry_params", {})),
+                forbidden_params=tuple(case.get("forbidden_params", ())),
+                difficulty=case.get("difficulty", "L2"),
             )
-            for question in tool_doc["questions"]
+            for case in tool_doc["cases"]
         )
         probes.append((contract, questions))
     return tuple(probes)
@@ -67,8 +67,8 @@ def load_fixture(
 
 def build_llm_fn(
     base_url: str, key: str, model: str
-) -> Callable[[AgentQuestion, ToolContract], dict[str, Any]]:
-    def llm_fn(question: AgentQuestion, contract: ToolContract) -> dict[str, Any]:
+) -> Callable[[RecoveryQuestion, ToolContract], dict[str, Any]]:
+    def llm_fn(question: RecoveryQuestion, contract: ToolContract) -> dict[str, Any]:
         payload = {
             "model": model,
             "temperature": 0,
@@ -77,12 +77,19 @@ def build_llm_fn(
                 {
                     "role": "system",
                     "content": (
-                        "You call exactly one tool with the parameters needed to "
-                        "answer the user request. Do not invent parameters that the "
-                        "tool schema does not declare."
+                        "A tool call failed and returned the response below. "
+                        "Briefly explain why it failed in one sentence, then retry "
+                        "the SAME tool with corrected parameters. Do not invent "
+                        "parameters that the tool schema does not declare."
                     ),
                 },
-                {"role": "user", "content": question.task},
+                {
+                    "role": "user",
+                    "content": (
+                        f"{question.task}\n\n"
+                        f"Failed tool response:\n{question.failure_response}"
+                    ),
+                },
             ],
         }
         request = urllib.request.Request(
@@ -105,25 +112,21 @@ def build_llm_fn(
     return llm_fn
 
 
-def _result_record(result: ParamFillResult, at: str) -> dict[str, Any]:
+def _result_record(result: RecoveryResult, at: str) -> dict[str, Any]:
     return {
-        "tool_id": result.tool_call.get("function", {}).get("name", "")
-        if result.tool_call
-        else "",
         "question_id": result.question_id,
         "round": result.round,
         "model": result.model,
         "passed": result.passed,
         "checks": {
             "single_tool": result.checks.single_tool,
-            "required_present": result.checks.required_present,
-            "value_valid": result.checks.value_valid,
+            "error_identified": result.checks.error_identified,
+            "retry_params_correct": result.checks.retry_params_correct,
             "no_forbidden": result.checks.no_forbidden,
-            "semantics_match": result.checks.semantics_match,
         },
         "notes": result.notes,
-        "failure_mode": result.failure_mode,
         "difficulty": result.difficulty,
+        "content": result.content,
         "tool_call": result.tool_call,
         "recorded_at": at,
     }
@@ -134,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--fixture",
         type=Path,
-        default=Path("scripts/fixtures/agent-param-fill-finnhub-quote.yaml"),
+        default=Path("scripts/fixtures/agent-error-recovery-fx.yaml"),
     )
     parser.add_argument("--rounds", type=int, default=2)
     parser.add_argument("--model", default=os.getenv(_MODEL_ENV, _DEFAULT_MODEL))
@@ -145,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("evidence/private/agent-param-fill.jsonl"),
+        default=Path("evidence/private/agent-error-recovery.jsonl"),
     )
     args = parser.parse_args(argv)
 
@@ -155,10 +158,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     llm_fn = build_llm_fn(args.base_url.rstrip("/"), key, args.model)
-    results: list[ParamFillResult] = []
+    results: list[RecoveryResult] = []
     for contract, questions in load_fixture(args.fixture):
         results.extend(
-            run_probe(
+            run_recovery_probe(
                 contract,
                 questions,
                 llm_fn,
@@ -180,8 +183,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"passed {passed}/{len(results)}")
     for result in results:
         print(
-            f"  {result.question_id} round={result.round} "
-            f"passed={result.passed} checks={result.checks}"
+            f"  {result.question_id} round={result.round} passed={result.passed} "
+            f"checks={result.checks}"
         )
     return 0 if passed == len(results) else 1
 

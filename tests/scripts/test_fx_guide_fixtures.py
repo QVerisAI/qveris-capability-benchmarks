@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scripts.agent_error_recovery_probe import load_fixture as load_recovery_fixture
 from scripts.agent_param_fill_probe import load_fixture as load_param_fixture
 from scripts.agent_response_interpretation_probe import (
     load_fixture as load_interpret_fixture,
@@ -45,6 +46,18 @@ def test_ac4_fx_interpretation_fixture_has_positive_and_negative() -> None:
     )
     assert len(cases) == 2
     assert sum(question.negative_control for question, _ in cases) == 1
+
+
+def test_ac4b_fx_error_recovery_fixture_loads() -> None:
+    probes = load_recovery_fixture(
+        ROOT / "scripts/fixtures/agent-error-recovery-fx.yaml"
+    )
+    assert len(probes) == 2
+    for contract, questions in probes:
+        assert len(questions) == 1
+        assert questions[0].failure_response
+        assert questions[0].expected_retry_params
+        assert contract.params
 
 
 def test_ac5_article_manifest_and_charts_exist() -> None:

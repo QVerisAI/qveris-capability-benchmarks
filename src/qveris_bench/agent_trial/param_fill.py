@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from enum import StrEnum
 from typing import Any
 
 
-def _normalize(value: Any) -> str:
+def normalize_value(value: Any) -> str:
     if isinstance(value, list):
         return "|".join(str(item).strip().upper() for item in value)
     return str(value).strip().upper() if value is not None else ""
@@ -18,6 +19,20 @@ def _normalize(value: Any) -> str:
 def sanitize_tool_name(tool_id: str) -> str:
     """LLM gateways restrict function names to [a-zA-Z0-9_-]."""
     return re.sub(r"[^a-zA-Z0-9_-]", "_", tool_id)
+
+
+class FailureMode(StrEnum):
+    """Why a parameter-fill call did not pass; PASS when it did."""
+
+    PASS = "pass"
+    NO_TOOL_CALL = "no_tool_call"
+    MULTIPLE_TOOLS = "multiple_tools"
+    WRONG_TOOL = "wrong_tool"
+    MALFORMED_ARGUMENTS = "malformed_arguments"
+    MISSING_REQUIRED = "missing_required"
+    TYPE_INVALID = "type_invalid"
+    FORBIDDEN_PARAM = "forbidden_param"
+    SEMANTICS_MISMATCH = "semantics_mismatch"
 
 
 @dataclass(frozen=True)
@@ -68,6 +83,7 @@ class AgentQuestion:
     task: str
     expected_params: dict[str, str] = field(default_factory=dict)
     forbidden_params: tuple[str, ...] = ()
+    difficulty: str = "L1"
 
 
 @dataclass(frozen=True)
@@ -99,6 +115,8 @@ class ParamFillResult:
     checks: ParamFillChecks
     passed: bool
     notes: str = ""
+    failure_mode: str = FailureMode.PASS.value
+    difficulty: str = "L1"
 
 
 def _type_valid(param: ParamSpec, value: Any) -> bool:
@@ -117,7 +135,7 @@ def _type_valid(param: ParamSpec, value: Any) -> bool:
     return True
 
 
-def _extract_tool_call(message: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
+def extract_tool_call(message: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
     tool_calls = message.get("tool_calls") or []
     if not tool_calls:
         return None, "no tool call"
@@ -126,13 +144,40 @@ def _extract_tool_call(message: dict[str, Any]) -> tuple[dict[str, Any] | None, 
     return tool_calls[0], ""
 
 
+def classify_failure(result: ParamFillResult) -> str:
+    """Map a failed call to one actionable failure mode."""
+    if result.passed:
+        return FailureMode.PASS.value
+    if not result.checks.single_tool:
+        if result.notes == "no tool call":
+            return FailureMode.NO_TOOL_CALL.value
+        if result.notes == "multiple tool calls":
+            return FailureMode.MULTIPLE_TOOLS.value
+        return FailureMode.WRONG_TOOL.value
+    if result.notes in ("malformed arguments", "arguments not an object"):
+        return FailureMode.MALFORMED_ARGUMENTS.value
+    if not result.checks.required_present:
+        return FailureMode.MISSING_REQUIRED.value
+    if not result.checks.value_valid:
+        return FailureMode.TYPE_INVALID.value
+    if not result.checks.no_forbidden:
+        return FailureMode.FORBIDDEN_PARAM.value
+    if not result.checks.semantics_match:
+        return FailureMode.SEMANTICS_MISMATCH.value
+    return FailureMode.PASS.value
+
+
+def _finalize(result: ParamFillResult) -> ParamFillResult:
+    return replace(result, failure_mode=classify_failure(result))
+
+
 def evaluate_tool_call(
     contract: ToolContract,
     question: AgentQuestion,
     message: dict[str, Any],
 ) -> ParamFillResult:
     """Return per-check results for one model message against the tool contract."""
-    tool_call, note = _extract_tool_call(message)
+    tool_call, note = extract_tool_call(message)
     checks = ParamFillChecks(
         single_tool=False,
         required_present=False,
@@ -141,14 +186,16 @@ def evaluate_tool_call(
         semantics_match=False,
     )
     if tool_call is None:
-        return ParamFillResult(
-            question_id=question.question_id,
-            round=0,
-            model="",
-            tool_call=None,
-            checks=checks,
-            passed=False,
-            notes=note,
+        return _finalize(
+            ParamFillResult(
+                question_id=question.question_id,
+                round=0,
+                model="",
+                tool_call=None,
+                checks=checks,
+                passed=False,
+                notes=note,
+            )
         )
 
     function = tool_call.get("function") or {}
@@ -156,14 +203,16 @@ def evaluate_tool_call(
         contract.tool_id,
         sanitize_tool_name(contract.tool_id),
     }:
-        return ParamFillResult(
-            question_id=question.question_id,
-            round=0,
-            model="",
-            tool_call=tool_call,
-            checks=checks,
-            passed=False,
-            notes=f"wrong tool: {function.get('name')}",
+        return _finalize(
+            ParamFillResult(
+                question_id=question.question_id,
+                round=0,
+                model="",
+                tool_call=tool_call,
+                checks=checks,
+                passed=False,
+                notes=f"wrong tool: {function.get('name')}",
+            )
         )
     checks = ParamFillChecks(
         single_tool=True,
@@ -175,24 +224,28 @@ def evaluate_tool_call(
     try:
         arguments = json.loads(function.get("arguments") or "{}")
     except json.JSONDecodeError:
-        return ParamFillResult(
-            question_id=question.question_id,
-            round=0,
-            model="",
-            tool_call=tool_call,
-            checks=checks,
-            passed=False,
-            notes="malformed arguments",
+        return _finalize(
+            ParamFillResult(
+                question_id=question.question_id,
+                round=0,
+                model="",
+                tool_call=tool_call,
+                checks=checks,
+                passed=False,
+                notes="malformed arguments",
+            )
         )
     if not isinstance(arguments, dict):
-        return ParamFillResult(
-            question_id=question.question_id,
-            round=0,
-            model="",
-            tool_call=tool_call,
-            checks=checks,
-            passed=False,
-            notes="arguments not an object",
+        return _finalize(
+            ParamFillResult(
+                question_id=question.question_id,
+                round=0,
+                model="",
+                tool_call=tool_call,
+                checks=checks,
+                passed=False,
+                notes="arguments not an object",
+            )
         )
 
     required_present = all(
@@ -211,7 +264,8 @@ def evaluate_tool_call(
         if param.name in arguments
     )
     semantics_match = all(
-        name in arguments and _normalize(arguments[name]) == _normalize(expected)
+        name in arguments
+        and normalize_value(arguments[name]) == normalize_value(expected)
         for name, expected in question.expected_params.items()
     )
     checks = ParamFillChecks(
@@ -221,14 +275,16 @@ def evaluate_tool_call(
         no_forbidden=no_forbidden,
         semantics_match=semantics_match,
     )
-    return ParamFillResult(
-        question_id=question.question_id,
-        round=0,
-        model="",
-        tool_call=tool_call,
-        checks=checks,
-        passed=checks.passed(),
-        notes=note,
+    return _finalize(
+        ParamFillResult(
+            question_id=question.question_id,
+            round=0,
+            model="",
+            tool_call=tool_call,
+            checks=checks,
+            passed=checks.passed(),
+            notes=note,
+        )
     )
 
 
@@ -255,6 +311,8 @@ def run_probe(
                     checks=result.checks,
                     passed=result.passed,
                     notes=result.notes,
+                    failure_mode=classify_failure(result),
+                    difficulty=question.difficulty,
                 )
             )
     return results

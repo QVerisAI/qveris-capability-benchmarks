@@ -90,6 +90,21 @@ def test_ac6_negative_control_reports_no_data_passes() -> None:
     assert checks.negative_state and checks.passed(), checks
 
 
+def test_ac10_negative_control_na_reported_as_zero_fails() -> None:
+    response = '{"code": "ZZZUSD.FOREX", "close": "NA", "timestamp": "NA"}'
+    answer = "ZZZUSD 的收盘汇率为 0。"
+    checks = evaluate_interpretation(
+        _question(
+            question_id="fx-na-placeholder",
+            expected_values={},
+            negative_control=True,
+        ),
+        response,
+        answer,
+    )
+    assert not checks.negative_state
+
+
 def test_ac7_run_probe_records_rounds() -> None:
     def llm_fn(question, response_text):
         return "AAPL 每股 0.27 美元，除息日 2026-05-11。"

@@ -10,6 +10,7 @@ tools:
       - question_id: fx-eur-usd-spot
         task: EUR/USD 当前汇率是多少？
         expected_params: {function: CURRENCY_EXCHANGE_RATE, from_currency: EUR, to_currency: USD}
+        difficulty: L2
   - tool_id: twelvedata.exchangerate.retrieve.v1.9eeb3b0d
     name: Exchange rate
     description: The exchange rate endpoint provides real-time exchange rates for specified currency pairs, including both forex and cryptocurrency.
@@ -21,6 +22,7 @@ tools:
       - question_id: fx-eur-usd-spot
         task: EUR/USD 当前汇率是多少？
         expected_params: {symbol: "EUR/USD"}
+        difficulty: L1
   - tool_id: eodhd.live_data.real_time.retrieve.v1.b60a4285
     name: Retrieve Live (Delayed) OHLCV Stock and Currency Data
     description: Retrieve live or delayed OHLCV data for stocks and currencies. FX symbols use EODHD format, e.g. EURUSD.FOREX.
@@ -31,6 +33,7 @@ tools:
       - question_id: fx-eur-usd-spot
         task: EUR/USD 当前汇率是多少？
         expected_params: {symbol: "EURUSD.FOREX"}
+        difficulty: L3
   - tool_id: nbp_pl.exchangerates.rates.last.list.v1
     name: List last exchange rates for a specific currency
     description: List the latest official NBP exchange rates for a specific currency against PLN.
@@ -42,6 +45,7 @@ tools:
       - question_id: fx-usd-pln-official
         task: 美元兑波兰兹罗提的最新官方汇率是多少？
         expected_params: {table: A, code: USD, topCount: 1}
+        difficulty: L2
   - tool_id: cn_financial_pro.fx_rates.v1
     name: Foreign Exchange Rates
     description: Query FX pair rates, e.g. USDCNY.FX, from the data source.
@@ -52,6 +56,7 @@ tools:
       - question_id: fx-usd-cny-spot
         task: 美元兑人民币当前汇率是多少？
         expected_params: {codes: "USDCNY.FX"}
+        difficulty: L3
   - tool_id: fiu_mcp_server.postapihkf10referencecurrency.create.v2.af51218b
     name: HK F10 Reference Currency
     description: Query HK reference currency rates by ISO currency code and date range.
@@ -63,3 +68,4 @@ tools:
       - question_id: fx-hkd-usd-reference
         task: 港币兑美元最近一周的参考汇率是多少？
         expected_params: {currency: HKD}
+        difficulty: L1
