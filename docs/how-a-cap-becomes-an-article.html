@@ -219,7 +219,7 @@
     <tr><th>契约字段</th><th>对应题目</th></tr>
     <tr><td><code>standard_query.required</code></td><td>题目输入（如 symbol、日期窗口）</td></tr>
     <tr><td><code>field_spec.required</code></td><td>期望观察字段（如 amount、ex_date、currency）</td></tr>
-    <tr><td><code>scope.market_hint</code></td><td>市场覆盖题</td></tr>
+    <tr><td>工具注册表 market 标签（per-tool）</td><td>市场覆盖题（Harbor 的 scope.market_hint 已不再使用）</td></tr>
     <tr><td>契约负向约束</td><td>boundary_negative：无效代码 / 缺必填组合 / 不支持枚举</td></tr>
   </table>
   <p>题目角色直接映射维度族：core_positive → 准确度/完整度；boundary_negative → 错误恢复；coverage → 市场覆盖；agent contract → AI 落参与解读。</p>
@@ -243,7 +243,7 @@
   <tr><td><code>field_type_validity</code></td><td>准确度</td><td>field_spec 类型/enum</td></tr>
   <tr><td><code>row_key_completeness</code></td><td>数据形态</td><td>output_cardinality + row_key</td></tr>
   <tr><td><code>timestamp_freshness</code></td><td>时效</td><td>时间语义字段</td></tr>
-  <tr><td><code>market_routing</code></td><td>市场覆盖</td><td>scope + 输入市场（复用 Harbor SV 作输入）</td></tr>
+  <tr><td><code>market_routing</code></td><td>市场覆盖</td><td>工具注册表 market 标签 + 官方声明（复用 Harbor SV 作交叉核对）</td></tr>
   <tr><td><code>language_mapping</code></td><td>语言覆盖</td><td>语言字段（有意义才测）</td></tr>
   <tr><td><code>latency / reliability / cost</code></td><td>网关表现</td><td>执行 trace + billing</td></tr>
   <tr><td><code>agent_param_fill</code></td><td>AI 入参落参</td><td>standard_query.required + 题目</td></tr>
