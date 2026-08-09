@@ -42,6 +42,8 @@ class CellResult:
     state: str
     missing: tuple[str, ...] = ()
     notes: str = ""
+    latency_ms: float | None = None
+    cost_credits: float | None = None
 
 
 def _observation_present(data: Any, observation: str) -> bool:
@@ -142,7 +144,13 @@ def build_executor(
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"execute HTTP {exc.code}") from exc
         result = body.get("result") or {}
-        return {"status_code": result.get("status_code"), "data": result.get("data")}
+        billing = body.get("billing") or {}
+        return {
+            "status_code": result.get("status_code"),
+            "data": result.get("data"),
+            "latency_ms": body.get("elapsed_time_ms"),
+            "cost_credits": billing.get("list_amount_credits"),
+        }
 
     return execute
 
@@ -151,7 +159,15 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
     data = outcome.get("data")
     status_code = outcome.get("status_code")
     if status_code is None:
-        return CellResult("", case.case_id, 0, "n_a", notes="no execution result")
+        return CellResult(
+            "",
+            case.case_id,
+            0,
+            "n_a",
+            notes="no execution result",
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
+        )
     if case.negative_control:
         passed = _negative_ok(data, status_code)
         return CellResult(
@@ -160,6 +176,8 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             0,
             "passed" if passed else "failed",
             notes=("" if passed else "negative control returned data"),
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
         )
     missing = tuple(
         observation
@@ -167,7 +185,15 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
         if not _observation_present(data, observation)
     )
     state = "passed" if not missing else "failed"
-    return CellResult("", case.case_id, 0, state, missing=missing)
+    return CellResult(
+        "",
+        case.case_id,
+        0,
+        state,
+        missing=missing,
+        latency_ms=outcome.get("latency_ms"),
+        cost_credits=outcome.get("cost_credits"),
+    )
 
 
 def run_probe(
@@ -199,6 +225,8 @@ def run_probe(
                         result.state,
                         missing=result.missing,
                         notes=result.notes,
+                        latency_ms=result.latency_ms,
+                        cost_credits=result.cost_credits,
                     )
                 )
     return results
@@ -242,6 +270,8 @@ def main(argv: list[str] | None = None) -> int:
                         "state": result.state,
                         "missing": list(result.missing),
                         "notes": result.notes,
+                        "latency_ms": result.latency_ms,
+                        "cost_credits": result.cost_credits,
                         "recorded_at": recorded_at,
                     },
                     ensure_ascii=False,
@@ -254,7 +284,22 @@ def main(argv: list[str] | None = None) -> int:
         failed = [result for result in cells if result.state == "failed"]
         n_a = [result for result in cells if result.state == "n_a"]
         state = "n_a" if n_a and not cells else ("未完全达标" if failed else "合格")
-        print(f"{probe.supplier}: {state} ({len(cells)} cells, failed={len(failed)})")
+        latencies = [
+            result.latency_ms for result in cells if result.latency_ms is not None
+        ]
+        costs = [
+            result.cost_credits for result in cells if result.cost_credits is not None
+        ]
+        avg_latency = (
+            f"{sum(latencies) / len(latencies):.0f}ms" if latencies else "无样本"
+        )
+        avg_cost = (
+            f"{sum(costs) / len(costs):.2f} credits" if costs else "无样本"
+        )
+        print(
+            f"{probe.supplier}: {state} ({len(cells)} cells, failed={len(failed)}, "
+            f"latency={avg_latency}, cost={avg_cost})"
+        )
     return 0
 
 
