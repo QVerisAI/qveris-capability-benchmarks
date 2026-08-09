@@ -31,28 +31,29 @@ def test_ac2_fx_direct_test_fixture_loads_all_suppliers() -> None:
         assert probe.tool_id
 
 
-def test_ac3_fx_param_fill_fixture_one_question_per_tool() -> None:
+def test_ac3_fx_param_fill_fixture_two_questions_per_tool() -> None:
     probes = load_param_fixture(ROOT / "scripts/fixtures/agent-param-fill-fx.yaml")
     assert len(probes) == 6
     for contract, questions in probes:
-        assert len(questions) == 1
+        assert len(questions) == 2
         assert contract.params
         assert any(param.required for param in contract.params)
+        assert all(question.difficulty for question in questions)
 
 
 def test_ac4_fx_interpretation_fixture_has_positive_and_negative() -> None:
     cases = load_interpret_fixture(
         ROOT / "scripts/fixtures/agent-response-interpretation-fx.yaml"
     )
-    assert len(cases) == 2
-    assert sum(question.negative_control for question, _ in cases) == 1
+    assert len(cases) == 3
+    assert sum(question.negative_control for question, _ in cases) == 2
 
 
 def test_ac4b_fx_error_recovery_fixture_loads() -> None:
     probes = load_recovery_fixture(
         ROOT / "scripts/fixtures/agent-error-recovery-fx.yaml"
     )
-    assert len(probes) == 2
+    assert len(probes) == 5
     for contract, questions in probes:
         assert len(questions) == 1
         assert questions[0].failure_response
@@ -68,10 +69,31 @@ def test_ac5_article_manifest_and_charts_exist() -> None:
     assert manifest.is_file()
     for name in (
         "chart-latency-cost.png",
-        "chart-ai-friendliness.png",
+        "chart-ai-difficulty.png",
+        "chart-ai-recovery.png",
         "chart-market-coverage.png",
     ):
         assert (chart_dir / name).is_file()
+
+
+def test_ac5b_fx_dialect_tolerance_fixture_loads() -> None:
+    import yaml
+
+    document = yaml.safe_load(
+        (ROOT / "scripts/fixtures/fx-dialect-tolerance.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert document["capability"] == "FX.SPOT"
+    assert len(document["suppliers"]) == 6
+    for supplier in document["suppliers"]:
+        assert supplier["variants"]
+        for variant in supplier["variants"]:
+            assert variant["outcome"] in {
+                "accepted",
+                "accepted_empty",
+                "rejected_error",
+            }
 
 
 def test_ac7_article_keeps_internal_ids_and_aggregate_ratings_out() -> None:

@@ -105,6 +105,23 @@ def test_ac10_negative_control_na_reported_as_zero_fails() -> None:
     assert not checks.negative_state
 
 
+def test_ac11_negative_control_citing_error_code_passes() -> None:
+    response = (
+        '{"code": 400, "message": "**symbol** not found: EUR/ZZZ", "status": "error"}'
+    )
+    answer = "未找到 EUR/ZZZ 汇率，返回错误（code 400，status error）。"
+    checks = evaluate_interpretation(
+        _question(
+            question_id="fx-invalid-pair",
+            expected_values={},
+            negative_control=True,
+        ),
+        response,
+        answer,
+    )
+    assert checks.negative_state and checks.passed(), checks
+
+
 def test_ac7_run_probe_records_rounds() -> None:
     def llm_fn(question, response_text):
         return "AAPL 每股 0.27 美元，除息日 2026-05-11。"

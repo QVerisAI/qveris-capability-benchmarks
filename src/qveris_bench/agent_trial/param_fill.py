@@ -140,7 +140,12 @@ def extract_tool_call(message: dict[str, Any]) -> tuple[dict[str, Any] | None, s
     if not tool_calls:
         return None, "no tool call"
     if len(tool_calls) > 1:
-        return None, "multiple tool calls"
+        calls = [
+            f"{tc.get('function', {}).get('name', '?')}"
+            f"({tc.get('function', {}).get('arguments', '')})"
+            for tc in tool_calls
+        ]
+        return None, "multiple tool calls: " + " | ".join(calls)
     return tool_calls[0], ""
 
 
@@ -151,7 +156,7 @@ def classify_failure(result: ParamFillResult) -> str:
     if not result.checks.single_tool:
         if result.notes == "no tool call":
             return FailureMode.NO_TOOL_CALL.value
-        if result.notes == "multiple tool calls":
+        if result.notes.startswith("multiple tool calls"):
             return FailureMode.MULTIPLE_TOOLS.value
         return FailureMode.WRONG_TOOL.value
     if result.notes in ("malformed arguments", "arguments not an object"):

@@ -1,10 +1,10 @@
 guide_label: 外汇即期汇率 API
 edition_date: "2026-08-09"
 suppliers:
-  - {name: Alpha Vantage, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: Alpha Vantage, param_question: fx-eur-usd-spot}
-  - {name: Twelve Data, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: Twelve Data, param_question: fx-eur-usd-spot}
-  - {name: EODHD, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: EODHD, param_question: fx-eur-usd-spot}
-  - {name: 同花顺 iFinD, region: CN, markets: [USD, EUR, GBP, JPY, CNY, HKD, PLN], direct_supplier: 同花顺 iFinD, param_question: fx-usd-cny-spot}
-  - {name: 波兰国家银行, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, CNY, PLN], direct_supplier: 波兰国家银行, param_question: fx-usd-pln-official}
-  - {name: 融聚汇, region: HK, markets: [HKD], direct_supplier: 融聚汇, param_question: fx-hkd-usd-reference}
+  - {name: Alpha Vantage, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: Alpha Vantage, param_questions: [fx-eur-usd-spot, fx-jpy-cny-spot], recovery_questions: [fx-eur-usd-invalid-currency-recovery]}
+  - {name: Twelve Data, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: Twelve Data, param_questions: [fx-eur-usd-spot, fx-eur-usd-historical], recovery_questions: [fx-eur-usd-invalid-pair-recovery]}
+  - {name: EODHD, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], direct_supplier: EODHD, param_questions: [fx-eur-usd-spot, fx-eur-gbp-spot], recovery_questions: [fx-eur-usd-na-placeholder-recovery]}
+  - {name: 同花顺 iFinD, region: CN, markets: [USD, EUR, GBP, JPY, CNY, HKD, PLN], direct_supplier: 同花顺 iFinD, param_questions: [fx-usd-cny-spot, fx-usd-cny-date], recovery_questions: [fx-usd-cny-silent-empty-recovery]}
+  - {name: 波兰国家银行, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, CNY, PLN], direct_supplier: 波兰国家银行, param_questions: [fx-usd-pln-official, fx-usd-pln-last5], recovery_questions: [fx-usd-pln-no-data-recovery]}
+  - {name: 融聚汇, region: HK, markets: [HKD], direct_supplier: 融聚汇, param_questions: [fx-hkd-usd-reference, fx-hkd-usd-range], recovery_questions: []}
 market_universe: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN]

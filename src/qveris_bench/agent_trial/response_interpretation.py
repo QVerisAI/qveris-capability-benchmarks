@@ -10,6 +10,7 @@ from typing import Any
 _TICKER_RE = re.compile(r"\b[A-Z]{2,6}\b")
 _DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b|\b\d{10}\b")
 _NUMBER_RE = re.compile(r"-?\d+(?:\.\d+)?")
+_ERROR_CODE_RE = re.compile(r"(?:code|status|错误码|HTTP)\s*[:：]?\s*(-?\d+)")
 _NO_DATA_WORDS = (
     "no data",
     "no result",
@@ -116,6 +117,11 @@ def _has_number(answer: str) -> bool:
     return bool(_NUMBER_RE.search(answer))
 
 
+def _strip_error_codes(answer: str) -> str:
+    """Drop error-code citations (code 400 etc.) before the fabrication check."""
+    return _ERROR_CODE_RE.sub("", answer)
+
+
 def evaluate_interpretation(
     question: InterpretationQuestion,
     response_text: str,
@@ -138,7 +144,7 @@ def evaluate_interpretation(
         or all(_unit_in_answer(answer, unit) for _, unit in question.unit_fields)
     )
     negative_state = not question.negative_control or (
-        _has_no_data_signal(answer) and not _has_number(answer)
+        _has_no_data_signal(answer) and not _has_number(_strip_error_codes(answer))
     )
     as_of_used = not question.require_timestamp or bool(
         answer_dates & response_dates
