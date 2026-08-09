@@ -2,7 +2,7 @@
 
 快速结论：
 
-- 直接回答：本平台 Direct Test 实测（2026-08-09，固定用例 2 轮）中，Alpha Vantage、Twelve Data、EODHD、波兰国家银行、同花顺 iFinD、融聚汇 6 家全部通过外汇即期汇率核心用例（EUR/USD 正向 + 无效币对负向控制）。实测延迟最低的是 Twelve Data（平均 0.4 秒）；单次费用最低的是波兰国家银行、同花顺 iFinD 与融聚汇（正向调用各 1.00 credits）。
+- 直接回答：本平台 Direct Test 实测（2026-08-09，固定用例 2 轮）中，Alpha Vantage、Twelve Data、EODHD、波兰国家银行、同花顺 iFinD、融聚汇 6 家全部通过外汇即期汇率核心用例（EUR/USD 正向 + 无效币对负向控制）。实测延迟最低的是 Twelve Data（平均 0.4 秒）；平均单次费用最低的是波兰国家银行、同花顺 iFinD 与融聚汇（0.50 credits，成功调用约 1.00）。
 - AI 友好度（实测）：Alpha Vantage、Twelve Data、EODHD、波兰国家银行、同花顺 iFinD 五家 AI 落参 2/2 轮全对；融聚汇 1/2（一轮出现多工具调用）。出参解读 4/4（AI 能正确读出汇率、数据更新时间与币对，负向输入正确报"未找到"）。
 - 重要说明：本文延迟与费用为 2026-08-09 经 QVeris 网关由本平台实测，不代表供应商直连指标；结论全部来自本平台 Direct Test 与 AI 探针，第三方评估快照仅作候选参考。
 
@@ -18,7 +18,7 @@
 
 ## 6 家外汇汇率 API 对比（2026 年 8 月实测）
 
-结论为本平台 Direct Test 实测（2026-08-09）：固定用例（EUR/USD 即期汇率检索、无效币对负向控制）经 QVeris 真实执行，每个适用单元 2 轮；延迟与费用为本次执行的平均值（含负向控制，负向调用一般不计费）。供应商候选来自 Harbor 覆盖快照（仅作参考）。同一法律实体只占一行（本版各家均只有一个 canonical 外汇工具）。
+结论为本平台 Direct Test 实测（2026-08-09）：固定用例（EUR/USD 即期汇率检索、无效币对负向控制）经 QVeris 真实执行，每个适用单元 2 轮；延迟与费用为本次执行的平均值（含负向控制，负向调用一般不计费，成功调用单价见各供应商深度解析）。供应商候选来自 Harbor 覆盖快照（仅作参考）。同一法律实体只占一行（本版各家均只有一个 canonical 外汇工具）。
 
 | 供应商 | 实测延迟 | 实测单次费用（QVeris credits） | Direct Test | AI 落参（2 轮） | 覆盖侧重 | 链接 |
 |---|---|---|---|---|---|---|
@@ -107,11 +107,11 @@ Alpha Vantage 实测延迟 0.5 秒、返回 bid/ask 与更新时间；Twelve Dat
 
 ### 官方权威/合规引用
 
-波兰国家银行每日发布官方汇率表（中间价），来源权威、单次 1.00 credits；注意只覆盖兑 PLN 的货币对、没有 bid/ask，适合财务折算与合规场景，不适合交易级行情。
+波兰国家银行每日发布官方汇率表（中间价），来源权威、单次平均 0.50 credits（成功调用 1.00）；注意只覆盖兑 PLN 的货币对、没有 bid/ask，适合财务折算与合规场景，不适合交易级行情。
 
 ### 人民币/中国市场
 
-同花顺 iFinD 实测支持主要交叉币对（.FX 后缀），延迟 0.5 秒、单次 1.00 credits，AI 落参 2/2。
+同花顺 iFinD 实测支持主要交叉币对（.FX 后缀），延迟 0.5 秒、单次平均 0.50 credits（成功调用 1.00），AI 落参 2/2。
 
 ### 港股参考汇率
 
@@ -119,17 +119,17 @@ Alpha Vantage 实测延迟 0.5 秒、返回 bid/ask 与更新时间；Twelve Dat
 
 ## 供应商深度解析
 
-**Alpha Vantage —— 全球即期首选，含 bid/ask 且 AI 双向友好**：官方文档：[Alpha Vantage 文档](https://www.alphavantage.co/documentation/)。实测延迟 0.5 秒、单次费用平均 1.00 credits（正向 2.00）、Direct Test 4/4；AI 落参 2/2、出参解读 4/4（冻结样本），是目前 AI 双向最友好的全球即期选项。
+**Alpha Vantage —— 全球即期首选，含 bid/ask 且 AI 双向友好**：官方文档：[Alpha Vantage 文档](https://www.alphavantage.co/documentation/)。实测延迟 0.5 秒、单次费用平均 1.00 credits（EUR/USD 正向调用 2.00）、Direct Test 4/4；AI 落参 2/2、出参解读 4/4（冻结样本），是目前 AI 双向最友好的全球即期选项。
 
-**Twelve Data —— 延迟最低，响应结构清晰**：官方文档：[Twelve Data API](https://twelvedata.com/docs)。实测延迟 0.4 秒（短名单最低）、单次费用平均 1.19 credits（正向 2.37）、Direct Test 4/4；AI 落参 2/2（`symbol=EUR/USD`），同时覆盖法币与加密货币。
+**Twelve Data —— 延迟最低，响应结构清晰**：官方文档：[Twelve Data API](https://twelvedata.com/docs)。实测延迟 0.4 秒（短名单最低）、单次费用平均 1.19 credits（EUR/USD 正向调用 2.37）、Direct Test 4/4；AI 落参 2/2（`symbol=EUR/USD`），同时覆盖法币与加密货币。
 
 **EODHD —— 一个连接器覆盖多资产，成本最高**：官方文档：[EODHD 金融 API](https://eodhd.com/financial-apis/)。实测延迟 0.9 秒、单次费用 2.81 credits（短名单最高）、Direct Test 4/4；AI 落参 2/2（正确使用 `EURUSD.FOREX` 方言）。适合"股票 + 汇率 + 加密"一个连接器全包的场景。
 
-**波兰国家银行 —— 官方权威，仅兑 PLN**：官方 API：[NBP Web API](https://api.nbp.pl/en.html)。实测延迟 1.0 秒、单次 1.00 credits、Direct Test 4/4；AI 落参 2/2（`table=A`、`code=USD`）。官方每日均价（中间价），适合合规与财务折算，无 bid/ask。
+**波兰国家银行 —— 官方权威，仅兑 PLN**：官方 API：[NBP Web API](https://api.nbp.pl/en.html)。实测延迟 1.0 秒、单次平均 0.50 credits（成功调用 1.00）、Direct Test 4/4；AI 落参 2/2（`table=A`、`code=USD`）。官方每日均价（中间价），适合合规与财务折算，无 bid/ask。
 
-**同花顺 iFinD —— 交叉币对广，中国市场友好**：官方站点：[iFinD 量化数据 API](https://quantapi.51ifind.com/)。实测延迟 0.5 秒、单次 1.00 credits、Direct Test 4/4；AI 落参 2/2（`codes=USDCNY.FX`）。本版实测跑通 7 组主要交叉币对，覆盖最广的国内市场选项。
+**同花顺 iFinD —— 交叉币对广，中国市场友好**：官方站点：[iFinD 量化数据 API](https://quantapi.51ifind.com/)。实测延迟 0.5 秒、单次平均 0.50 credits（成功调用 1.00）、Direct Test 4/4；AI 落参 2/2（`codes=USDCNY.FX`）。本版实测跑通 7 组主要交叉币对，覆盖最广的国内市场选项。
 
-**融聚汇 —— 港股参考汇率，AI 落参需兜底**：官方网站：[融聚汇](http://www.szfiu.com/)。实测延迟 3.9 秒（短名单最高）、单次 1.00 credits、Direct Test 4/4；AI 落参 1/2（一轮出现多工具调用），Agent 自动调用需收敛工具选择。
+**融聚汇 —— 港股参考汇率，AI 落参需兜底**：官方网站：[融聚汇](http://www.szfiu.com/)。实测延迟 3.9 秒（短名单最高）、单次平均 0.50 credits（成功调用 1.00）、Direct Test 4/4；AI 落参 1/2（一轮出现多工具调用），Agent 自动调用需收敛工具选择。
 
 ## 局限与时效
 
@@ -151,7 +151,7 @@ Alpha Vantage 实测延迟 0.5 秒、返回 bid/ask 与更新时间；Twelve Dat
 
 **本次测试中哪家外汇汇率 API 最好？** 没有普遍最优：全球即期首选 Alpha Vantage 与 Twelve Data（低延迟、AI 友好）；官方权威选波兰国家银行；人民币市场选同花顺 iFinD；港股参考选融聚汇。
 
-**哪个最便宜？** 波兰国家银行、同花顺 iFinD、融聚汇正向调用均为 1.00 credits；EODHD 单次 2.81 credits 最高。
+**哪个最便宜？** 波兰国家银行、同花顺 iFinD、融聚汇平均单次 0.50 credits（成功调用 1.00）；EODHD 单次 2.81 credits 最高。
 
 **AI 自动调用选哪家？** Alpha Vantage、Twelve Data、EODHD、波兰国家银行、同花顺 iFinD AI 落参 2/2 全对；融聚汇 1/2，需收敛工具选择兜底。
 
