@@ -74,6 +74,7 @@ Dimensions are generic operators instantiated by each CAP contract:
 | `latency` / `reliability` / `cost` | gateway behavior | execution traces + billing |
 | `agent_param_fill` | AI 入参落参 | `standard_query.required` + question |
 | `agent_response_interpretation` | AI 出参解读 | question observations + response schema |
+| `agent_error_recovery` | AI 错误自愈 | 冻结失败响应 + 修正后重试（见 `docs/ai-friendliness-protocol.md`） |
 
 Market coverage for market_routing reuses Harbor SV (scope validation)
 outcomes as input where available; it is cross-checked by our own Direct Test

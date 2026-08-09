@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from qveris_bench.agent_trial.param_fill import (
     AgentQuestion,
+    FailureMode,
     ParamSpec,
     ToolContract,
+    classify_failure,
     evaluate_tool_call,
     run_probe,
 )
@@ -46,6 +48,7 @@ def test_ac1_valid_tool_call_passes_all_checks() -> None:
     assert result.checks.single_tool and result.checks.required_present
     assert result.checks.value_valid and result.checks.no_forbidden
     assert result.checks.semantics_match
+    assert result.failure_mode == FailureMode.PASS.value
 
 
 def test_ac2_missing_required_param_fails_required_present() -> None:
@@ -60,6 +63,60 @@ def test_ac3_hallucinated_extra_param_fails_no_forbidden() -> None:
     )
     assert not result.checks.no_forbidden
     assert not result.passed
+    assert result.failure_mode == FailureMode.FORBIDDEN_PARAM.value
+
+
+def test_ac9_failure_modes_are_classified() -> None:
+    cases = [
+        (
+            _tool_call("{}"),
+            FailureMode.MISSING_REQUIRED.value,
+        ),
+        (
+            {"tool_calls": []},
+            FailureMode.NO_TOOL_CALL.value,
+        ),
+        (
+            {
+                "tool_calls": [
+                    {"function": {"name": "a.tool.v1", "arguments": "{}"}},
+                    {"function": {"name": "b.tool.v1", "arguments": "{}"}},
+                ]
+            },
+            FailureMode.MULTIPLE_TOOLS.value,
+        ),
+        (
+            {
+                "tool_calls": [
+                    {"function": {"name": "other.tool.v1", "arguments": "{}"}}
+                ]
+            },
+            FailureMode.WRONG_TOOL.value,
+        ),
+        (
+            _tool_call("{not json"),
+            FailureMode.MALFORMED_ARGUMENTS.value,
+        ),
+        (
+            _tool_call('{"symbol": 123}'),
+            FailureMode.TYPE_INVALID.value,
+        ),
+        (
+            _tool_call('{"symbol": "MSFT"}'),
+            FailureMode.SEMANTICS_MISMATCH.value,
+        ),
+    ]
+    for message, expected in cases:
+        result = evaluate_tool_call(_contract(), _question(), message)
+        assert classify_failure(result) == expected, message
+
+
+def test_ac10_difficulty_defaults_and_run_probe_records_it() -> None:
+    def llm_fn(question, contract):
+        return _tool_call('{"symbol": "AAPL"}')
+
+    results = run_probe(_contract(), (_question(),), llm_fn, rounds=1)
+    assert results[0].difficulty == "L1"
 
 
 def test_ac4_no_tool_call_or_wrong_tool_fails_single_tool() -> None:

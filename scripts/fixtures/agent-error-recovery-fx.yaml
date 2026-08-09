@@ -1,0 +1,26 @@
+tools:
+  - tool_id: twelvedata.exchangerate.retrieve.v1.9eeb3b0d
+    name: Exchange rate
+    description: The exchange rate endpoint provides real-time exchange rates for specified currency pairs, including both forex and cryptocurrency.
+    params:
+      - {name: symbol, type: string, required: true, description: "The currency pair with slash delimiter, e.g. EUR/USD"}
+      - {name: date, type: string, required: false, description: Historical date or datetime, format 2006-01-02}
+      - {name: format, type: string, required: false, description: "Value can be JSON or CSV"}
+    cases:
+      - question_id: fx-eur-usd-invalid-pair-recovery
+        task: EUR/USD 当前汇率是多少？
+        failure_response: '{"code": 400, "message": "**symbol** not found: EUR/ZZZ. Please specify it correctly according to API Documentation.", "status": "error"}'
+        expected_retry_params: {symbol: "EUR/USD"}
+        difficulty: L2
+  - tool_id: eodhd.live_data.real_time.retrieve.v1.b60a4285
+    name: Retrieve Live (Delayed) OHLCV Stock and Currency Data
+    description: Retrieve live or delayed OHLCV data for stocks and currencies. FX symbols use EODHD format, e.g. EURUSD.FOREX.
+    params:
+      - {name: symbol, type: string, required: true, description: "Primary ticker symbol in EODHD format, e.g. EURUSD.FOREX"}
+      - {name: fmt, type: string, required: false, description: Response format json or csv}
+    cases:
+      - question_id: fx-eur-usd-na-placeholder-recovery
+        task: EUR/USD 当前汇率是多少？
+        failure_response: '{"code": "ZZZUSD.FOREX", "timestamp": "NA", "gmtoffset": 0, "open": "NA", "high": "NA", "low": "NA", "close": "NA", "volume": "NA", "previousClose": "NA", "change": "NA", "change_p": "NA"}'
+        expected_retry_params: {symbol: "EURUSD.FOREX"}
+        difficulty: L3

@@ -9,7 +9,7 @@ from typing import Any
 
 _TICKER_RE = re.compile(r"\b[A-Z]{2,6}\b")
 _DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b|\b\d{10}\b")
-_DECIMAL_RE = re.compile(r"\d+\.\d+")
+_NUMBER_RE = re.compile(r"-?\d+(?:\.\d+)?")
 _NO_DATA_WORDS = (
     "no data",
     "no result",
@@ -111,8 +111,9 @@ def _has_no_data_signal(answer: str) -> bool:
     return any(word in lowered for word in _NO_DATA_WORDS)
 
 
-def _has_decimal_number(answer: str) -> bool:
-    return bool(_DECIMAL_RE.search(answer))
+def _has_number(answer: str) -> bool:
+    """Any numeric token, including integers, counts as a fabricated value."""
+    return bool(_NUMBER_RE.search(answer))
 
 
 def evaluate_interpretation(
@@ -137,7 +138,7 @@ def evaluate_interpretation(
         or all(_unit_in_answer(answer, unit) for _, unit in question.unit_fields)
     )
     negative_state = not question.negative_control or (
-        _has_no_data_signal(answer) and not _has_decimal_number(answer)
+        _has_no_data_signal(answer) and not _has_number(answer)
     )
     as_of_used = not question.require_timestamp or bool(
         answer_dates & response_dates
