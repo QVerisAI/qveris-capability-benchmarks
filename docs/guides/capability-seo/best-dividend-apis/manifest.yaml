@@ -64,3 +64,7 @@ artifacts:
   direct_test_evidence: evidence/private/cap-direct-test.jsonl
   agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
   agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
+  charts:
+    - docs/guides/capability-seo/best-dividend-apis/charts/chart-latency-cost.png
+    - docs/guides/capability-seo/best-dividend-apis/charts/chart-ai-friendliness.png
+    - docs/guides/capability-seo/best-dividend-apis/charts/chart-market-coverage.png
