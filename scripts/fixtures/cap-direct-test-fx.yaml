@@ -1,0 +1,38 @@
+capability: FX.SPOT
+suppliers:
+  - supplier: Alpha Vantage
+    provider_id: alphavantage
+    tool_id: alphavantage.currency_exchange_rate.retrieve.v1
+    cases:
+      - {case_id: eur-usd-spot, parameters: {function: CURRENCY_EXCHANGE_RATE, from_currency: EUR, to_currency: USD}, expected_observations: ["Realtime Currency Exchange Rate"], negative_control: false}
+      - {case_id: invalid-pair, parameters: {function: CURRENCY_EXCHANGE_RATE, from_currency: ZZZ, to_currency: USD}, expected_observations: [], negative_control: true}
+  - supplier: Twelve Data
+    provider_id: twelvedata
+    tool_id: twelvedata.exchangerate.retrieve.v1.9eeb3b0d
+    cases:
+      - {case_id: eur-usd-spot, parameters: {symbol: "EUR/USD"}, expected_observations: ["symbol", "rate"], negative_control: false}
+      - {case_id: invalid-pair, parameters: {symbol: "EUR/ZZZ"}, expected_observations: [], negative_control: true}
+  - supplier: EODHD
+    provider_id: eodhd
+    tool_id: eodhd.live_data.real_time.retrieve.v1.b60a4285
+    cases:
+      - {case_id: eur-usd-spot, parameters: {symbol: "EURUSD.FOREX", fmt: json}, expected_observations: ["code", "close"], negative_control: false}
+      - {case_id: invalid-pair, parameters: {symbol: "ZZZUSD.FOREX", fmt: json}, expected_observations: [], negative_control: true}
+  - supplier: 波兰国家银行
+    provider_id: nbp_pl
+    tool_id: nbp_pl.exchangerates.rates.last.list.v1
+    cases:
+      - {case_id: usd-pln-official, parameters: {table: A, code: USD, topCount: 1}, expected_observations: ["code", "rates"], negative_control: false}
+      - {case_id: invalid-currency, parameters: {table: A, code: ZZZ, topCount: 1}, expected_observations: [], negative_control: true}
+  - supplier: 同花顺 iFinD
+    provider_id: cn_financial_pro
+    tool_id: cn_financial_pro.fx_rates.v1
+    cases:
+      - {case_id: usd-cny-spot, parameters: {codes: "USDCNY.FX"}, expected_observations: ["symbol", "price"], negative_control: false}
+      - {case_id: invalid-pair, parameters: {codes: "ZZZ.FX"}, expected_observations: [], negative_control: true}
+  - supplier: 融聚汇
+    provider_id: fiu_mcp_server
+    tool_id: fiu_mcp_server.postapihkf10referencecurrency.create.v2.af51218b
+    cases:
+      - {case_id: hkd-usd-reference, parameters: {currency: HKD, startDate: "2026-08-01", endDate: "2026-08-09"}, expected_observations: ["data"], negative_control: false}
+      - {case_id: invalid-currency, parameters: {currency: ZZZ, startDate: "2026-08-01", endDate: "2026-08-09"}, expected_observations: [], negative_control: true}

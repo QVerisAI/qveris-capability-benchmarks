@@ -1,0 +1,14 @@
+cases:
+  - question_id: fx-eur-usd-av-sample
+    task: EUR/USD 当前汇率是多少、数据更新时间是什么时候？只使用工具响应中的数据。
+    response_text: '{"Realtime Currency Exchange Rate": {"1. From_Currency Code": "EUR", "2. From_Currency Name": "Euro", "3. To_Currency Code": "USD", "4. To_Currency Name": "United States Dollar", "5. Exchange Rate": "1.15623967", "6. Last Refreshed": "2026-08-09 09:04:51", "7. Time Zone": "UTC", "8. Bid Price": "1.15621834", "9. Ask Price": "1.15629534"}}'
+    expected_values: {rate: 1.15623967, as_of: "2026-08-09"}
+    unit_fields: []
+    negative_control: false
+    require_timestamp: false
+  - question_id: fx-invalid-pair
+    task: EUR/ZZZ 有汇率吗？只使用工具响应中的数据。
+    response_text: '{"code": 400, "message": "**symbol** not found: EUR/ZZZ. Please specify it correctly according to API Documentation.", "status": "error"}'
+    expected_values: {}
+    negative_control: true
+    require_timestamp: false
