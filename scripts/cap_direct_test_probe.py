@@ -129,9 +129,9 @@ def build_executor(
             raise RuntimeError(f"search HTTP {exc.code}") from exc
         execute_request = urllib.request.Request(
             f"{base_url}/tools/execute?tool_id={urllib.parse.quote(tool_id)}",
-            data=json.dumps(
-                {"search_id": search_id, "parameters": parameters}
-            ).encode("utf-8"),
+            data=json.dumps({"search_id": search_id, "parameters": parameters}).encode(
+                "utf-8"
+            ),
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
@@ -293,9 +293,7 @@ def main(argv: list[str] | None = None) -> int:
         avg_latency = (
             f"{sum(latencies) / len(latencies):.0f}ms" if latencies else "无样本"
         )
-        avg_cost = (
-            f"{sum(costs) / len(costs):.2f} credits" if costs else "无样本"
-        )
+        avg_cost = f"{sum(costs) / len(costs):.2f} credits" if costs else "无样本"
         print(
             f"{probe.supplier}: {state} ({len(cells)} cells, failed={len(failed)}, "
             f"latency={avg_latency}, cost={avg_cost})"

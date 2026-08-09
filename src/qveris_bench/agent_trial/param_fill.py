@@ -204,9 +204,7 @@ def evaluate_tool_call(
     )
     declared = contract.declared_params()
     extra = set(arguments) - declared
-    no_forbidden = not extra and not (
-        set(question.forbidden_params) & set(arguments)
-    )
+    no_forbidden = not extra and not (set(question.forbidden_params) & set(arguments))
     value_valid = all(
         _type_valid(param, arguments[param.name])
         for param in contract.params

@@ -131,17 +131,17 @@ def evaluate_interpretation(
     no_hallucination = (
         answer_tickers <= response_tickers and answer_dates <= response_dates
     )
-    unit_semantics = question.negative_control or not question.unit_fields or all(
-        _unit_in_answer(answer, unit) for _, unit in question.unit_fields
+    unit_semantics = (
+        question.negative_control
+        or not question.unit_fields
+        or all(_unit_in_answer(answer, unit) for _, unit in question.unit_fields)
     )
-    negative_state = (
-        not question.negative_control
-        or (_has_no_data_signal(answer) and not _has_decimal_number(answer))
+    negative_state = not question.negative_control or (
+        _has_no_data_signal(answer) and not _has_decimal_number(answer)
     )
     as_of_used = not question.require_timestamp or bool(
-        answer_dates & response_dates or any(
-            token in answer for token in response_dates
-        )
+        answer_dates & response_dates
+        or any(token in answer for token in response_dates)
     )
     return InterpretationChecks(
         extraction_correct=extraction_correct,
