@@ -26,8 +26,11 @@ Questions are contract-derived, not hand-written from scratch:
 
 - `standard_query.required` → question input.
 - `field_spec.required` → required observations.
-- `scope.market_hint` → coverage question; `history_scope` → freshness
-  question; `row_key`/`output_cardinality` → shape/no-data question.
+- Tool-registry market tags (per tool, per capability) → market coverage
+  question. Harbor's `scope.market_hint` is no longer populated/used and must
+  not be treated as coverage evidence; the CAP contract's `scope` is a
+  reference only. `history_scope` → freshness question;
+  `row_key`/`output_cardinality` → shape/no-data question.
 - Every CAP needs `core_positive` + `boundary_negative`; other roles are added
   only when the contract supports them.
 - Boundary questions exercise the contract's explicit negative states
@@ -63,7 +66,7 @@ Dimensions are generic operators instantiated by each CAP contract:
 | `field_type_validity` | accuracy | `field_spec` types/enums |
 | `row_key_completeness` | shape | `output_cardinality` + `row_key` |
 | `timestamp_freshness` | freshness | time-semantic fields |
-| `market_routing` | market coverage | `scope` + input market |
+| `market_routing` | market coverage | tool-registry market tags + official declarations |
 | `language_mapping` | language coverage | language fields (only when meaningful) |
 | `latency` / `reliability` / `cost` | gateway behavior | execution traces + billing |
 | `agent_param_fill` | AI 入参落参 | `standard_query.required` + question |
