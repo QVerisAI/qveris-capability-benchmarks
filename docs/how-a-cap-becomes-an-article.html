@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从 CAP 到文章：QVeris Capability Benchmark 完整产线</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --ink: #1c2733;
+    --muted: #5b6b7b;
+    --line: #dce3ec;
+    --accent: #2f6fed;
+    --accent-soft: #e8f0fe;
+    --green: #1e9e63;
+    --green-soft: #e6f6ee;
+    --red: #d64545;
+    --red-soft: #fdeeee;
+    --amber: #b7791f;
+    --amber-soft: #fdf3e0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  header.hero {
+    background: linear-gradient(135deg, #16325c, #2f6fed);
+    color: #fff;
+    border-radius: 18px;
+    padding: 40px 36px;
+    margin-bottom: 28px;
+  }
+  header.hero h1 { font-size: 28px; margin-bottom: 10px; }
+  header.hero p { opacity: .88; max-width: 760px; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 999px;
+    padding: 2px 12px;
+    font-size: 13px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: 21px;
+    margin: 36px 0 14px;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 16px; margin: 18px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 12px 0;
+  }
+  code {
+    background: #eef2f7;
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #24407a;
+  }
+  /* pipeline flow */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .step {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-height: 96px;
+  }
+  .step .num {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .step .t { font-weight: 600; margin: 2px 0 4px; }
+  .step .d { font-size: 13px; color: var(--muted); }
+  .flow-arrow {
+    text-align: center;
+    color: var(--muted);
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+  /* tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #eef2f8; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .pill {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 1px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .ok { background: var(--green-soft); color: var(--green); }
+  .warn { background: var(--amber-soft); color: var(--amber); }
+  .bad { background: var(--red-soft); color: var(--red); }
+  .info { background: var(--accent-soft); color: var(--accent); }
+  .redline {
+    border-left: 4px solid var(--red);
+    background: var(--red-soft);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .redline li { margin: 6px 0; }
+  .example {
+    background: linear-gradient(180deg, #fbfdff, #f3f7fd);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 12px 0;
+  }
+  .example ol { margin-left: 20px; }
+  .example li { margin: 7px 0; }
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div>
+    <span class="badge">QVeris Capability Benchmarks</span>
+    <span class="badge">Contract v1 · 2026-08-09</span>
+  </div>
+  <h1>从 CAP 到文章：完整产线</h1>
+  <p>给定一个 CAP，如何完成选题、出题、选供应商、定评测标准、判定结果、写文章、画图，并保证每一步都可复现、证据可追。Harbor 评估只作参考，发布结论全部来自本平台自己的 Direct Test 与 AI 探针。</p>
+</header>
+
+<h2>① 总览：一条 CAP 怎么变成一篇文章</h2>
+<div class="flow">
+  <div class="step"><div class="num">01</div><div class="t">选题</div><div class="d">Harbor catalog 过滤：coverage=full 且 provider_count≥3</div></div>
+  <div class="step"><div class="num">02</div><div class="t">出题</div><div class="d">契约驱动：standard_query / field_spec / scope → 题目</div></div>
+  <div class="step"><div class="num">03</div><div class="t">选供应商</div><div class="d">快照只作候选：页面验证 + 执行授权 + 实体去重</div></div>
+  <div class="step"><div class="num">04</div><div class="t">定维度</div><div class="d">通用算子 × 契约实例化</div></div>
+  <div class="step"><div class="num">05</div><div class="t">Direct Test</div><div class="d">固定用例 × 2 轮，QVeris 真实执行，自采延迟/费用</div></div>
+  <div class="step"><div class="num">06</div><div class="t">AI 友好度</div><div class="d">入参落参 + 出参解读，DeepSeek Flash × 2 轮</div></div>
+  <div class="step"><div class="num">07</div><div class="t">判定与证据</div><div class="d">合格/未完全达标/未测/N/A，证据落盘 private</div></div>
+  <div class="step"><div class="num">08</div><div class="t">写文章</div><div class="d">固定结构 + 证据分级 + 红线</div></div>
+  <div class="step"><div class="num">09</div><div class="t">画图</div><div class="d">从证据出图 + 记录 digest</div></div>
+  <div class="step"><div class="num">10</div><div class="t">发布与复测</div><div class="d">链接校验；与 Harbor 不一致 → 提 issue</div></div>
+</div>
+<div class="flow-arrow">▲ 每步产物都是下一个步骤的输入，全部命令可复现 ▲</div>
+
+<h2>② 阶段与工具映射</h2>
+<table>
+  <tr><th>阶段</th><th>工具 / 文件</th><th>输入 → 输出</th></tr>
+  <tr><td>选题</td><td>Harbor explore catalog（只读）</td><td>161 CAP → 57 个可评测 CAP（coverage=full & provider≥3）</td></tr>
+  <tr><td>出题</td><td><code>question_bank/</code>、selection-framework §2</td><td>契约字段 → core_positive + boundary_negative 等题目</td></tr>
+  <tr><td>选供应商</td><td>coverage 快照 + <code>GET /rpc/v1/providers/{id}</code></td><td>候选列表 → 验证通过、有授权、实体去重后的短名单</td></tr>
+  <tr><td>Direct Test</td><td><code>scripts/cap_direct_test_probe.py</code></td><td>固定用例 → 每单元 2 轮结果 + 自采延迟/费用</td></tr>
+  <tr><td>AI 入参</td><td><code>scripts/agent_param_fill_probe.py</code></td><td>自然语言任务 → 五维检查结果</td></tr>
+  <tr><td>AI 出参</td><td><code>scripts/agent_response_interpretation_probe.py</code></td><td>冻结响应 → 五维解读检查结果</td></tr>
+  <tr><td>画图</td><td><code>scripts/render_cap_guide_charts.py</code></td><td>证据文件 → PNG + charts-manifest.json（含 digest）</td></tr>
+  <tr><td>文章</td><td><code>docs/guides/&lt;slug&gt;.md</code> + manifest</td><td>证据 + 官方来源 → 发布草稿</td></tr>
+</table>
+
+<h2>③ 分阶段说明</h2>
+
+<h3>01 选题：CAP 怎么进</h3>
+<div class="card">
+  <p>唯一来源是 Harbor catalog 的 CAP 契约接口。两层过滤：</p>
+  <ul>
+    <li><b>可评测性</b>：<code>coverage=full</code> 且 <code>provider_count ≥ 3</code>（当前 57 个）</li>
+    <li><b>选型价值</b>：报价 → 参考 → 新闻 → 基本面，按 provider_count 降序</li>
+  </ul>
+  <p class="muted">选题时查 QVeris 存量 guide，撞意图的跳过（例如财经新闻已有对比文，改做公司行动、分红等空档）。</p>
+</div>
+
+<h3>02 出题：题目是契约的实例</h3>
+<div class="card">
+  <table>
+    <tr><th>契约字段</th><th>对应题目</th></tr>
+    <tr><td><code>standard_query.required</code></td><td>题目输入（如 symbol、日期窗口）</td></tr>
+    <tr><td><code>field_spec.required</code></td><td>期望观察字段（如 amount、ex_date、currency）</td></tr>
+    <tr><td>工具 namespace 覆盖（claimed_namespaces − SV 失败的 unsupported_namespaces，SNS 注册表解析）</td><td>市场覆盖题（scope.market_hint 与 claimed_markets 均已废弃）</td></tr>
+    <tr><td>契约负向约束</td><td>boundary_negative：无效代码 / 缺必填组合 / 不支持枚举</td></tr>
+  </table>
+  <p>题目角色直接映射维度族：core_positive → 准确度/完整度；boundary_negative → 错误恢复；coverage → 市场覆盖；agent contract → AI 落参与解读。</p>
+</div>
+
+<h3>03 选供应商：谁进短名单</h3>
+<div class="card">
+  <ol>
+    <li>Harbor coverage 快照只用于<b>列候选</b>，不作结论依据</li>
+    <li>QVeris provider 页存在且验证 HTTP 200</li>
+    <li>有执行授权（Direct Test 要真跑；无凭据 → <span class="pill info">N/A</span>，不算低分）</li>
+    <li>同一法律实体只占一行（Massive/Polygon 合并、恒生 REST/MCP 合并）</li>
+    <li>对比文至少 3 家合格才发；不够只写单供应商测评</li>
+  </ol>
+</div>
+
+<h3>04 定维度：通用算子 × 契约实例化</h3>
+<table>
+  <tr><th>算子</th><th>测什么</th><th>由谁实例化</th></tr>
+  <tr><td><code>required_field_presence</code></td><td>完整度</td><td>field_spec.required</td></tr>
+  <tr><td><code>field_type_validity</code></td><td>准确度</td><td>field_spec 类型/enum</td></tr>
+  <tr><td><code>row_key_completeness</code></td><td>数据形态</td><td>output_cardinality + row_key</td></tr>
+  <tr><td><code>timestamp_freshness</code></td><td>时效</td><td>时间语义字段</td></tr>
+  <tr><td><code>market_routing</code></td><td>市场覆盖</td><td>工具 namespace（claimed_namespaces − SV unsupported_namespaces，SNS 解析）；SV 缺失时自跑逐 namespace 探测</td></tr>
+  <tr><td><code>language_mapping</code></td><td>语言覆盖</td><td>语言字段（有意义才测）</td></tr>
+  <tr><td><code>latency / reliability / cost</code></td><td>网关表现</td><td>执行 trace + billing</td></tr>
+  <tr><td><code>agent_param_fill</code></td><td>AI 入参落参</td><td>standard_query.required + 题目</td></tr>
+  <tr><td><code>agent_response_interpretation</code></td><td>AI 出参解读</td><td>题目观察字段 + 响应 schema</td></tr>
+</table>
+
+<h3>05 Direct Test：自己判合格</h3>
+<div class="card">
+  <ul>
+    <li>固定用例：正向（真实标的检索）+ 负向（无效代码控制）</li>
+    <li>每个适用单元 <b>2 轮</b>，经 QVeris 真实执行</li>
+    <li>正向判定：契约必填字段全部返回且非空 → <span class="pill ok">过</span></li>
+    <li>负向判定：返回空态或明确报错、不编造事件行 → <span class="pill ok">过</span></li>
+    <li>执行 401 / 无授权 → <span class="pill info">N/A</span></li>
+    <li>从执行响应采集<b>自己的</b>延迟与费用（文章数字来源）</li>
+  </ul>
+</div>
+
+<h3>06 AI 友好度：入参 + 出参</h3>
+<div class="card">
+  <p>同一个自然语言任务交给 DeepSeek Flash，每工具 2 轮：</p>
+  <ul>
+    <li><b>入参落参</b>：只调 canonical 工具、必填齐全、类型合法、不幻觉多余参数、语义正确</li>
+    <li><b>出参解读</b>：给冻结的真实响应，AI 读出金额/日期/单位是否正确、不添油加醋、负向不编造</li>
+  </ul>
+  <p class="muted">两步都过才算"AI 友好"；任何一步失败意味着 Agent 自动调用需要人工兜底。</p>
+</div>
+
+<h3>07 判定与证据</h3>
+<table>
+  <tr><th>状态</th><th>含义</th><th>示例</th></tr>
+  <tr><td><span class="pill ok">合格</span></td><td>所有适用单元通过，2 轮稳定</td><td>分红 6 家全部 4/4</td></tr>
+  <tr><td><span class="pill bad">未完全达标</span></td><td>任一单元失败</td><td>公司行动 Alpha Vantage（Harbor 快照口径）</td></tr>
+  <tr><td><span class="pill warn">未测</span></td><td>无 canonical 工具或未授权，不评分</td><td>分红 FMP / Yahoo</td></tr>
+  <tr><td><span class="pill info">N/A</span></td><td>契约不适用</td><td>无执行授权</td></tr>
+</table>
+<p class="muted">原始证据落 <code>evidence/private/</code>（gitignored）：供应商、用例、轮次、检查项、延迟、费用、时间戳。</p>
+
+<h3>08 写文章</h3>
+<div class="card">
+  <p>固定结构（参照流量文）：快速结论 → 直接回答 → 固定对比表+图 → 测试方法与证据分级 → 达标标准 → AI 友好度（带走查例子+图）→ 市场覆盖（矩阵+图）→ 场景推荐 → 深度解析 → 局限 → FAQ → 更正/复测 CTA。</p>
+  <table>
+    <tr><th>证据分级</th><th>允许的说法</th></tr>
+    <tr><td>实测</td><td>带日期、固定输入、连接器口径："2026-08-09 经 QVeris 网关实测"</td></tr>
+    <tr><td>官方来源</td><td>供应商文档声明，带直接链接</td></tr>
+    <tr><td>编辑解读</td><td>时间限定的买方建议："本次测试最佳适配"</td></tr>
+  </table>
+</div>
+
+<h3>09 画图</h3>
+<div class="card">
+  <p>图表从证据文件计算生成，不是手画：<code>render_cap_guide_charts.py</code> 读取 <code>evidence/private/</code> 最新一批，输出三张图并记录输入 digest 到 <code>charts-manifest.json</code>：</p>
+  <ul>
+    <li>延迟 × 单次费用散点</li>
+    <li>AI 入参通过率柱状（含出参样本标注）</li>
+    <li>市场覆盖热力图</li>
+  </ul>
+  <p class="muted">换数据重跑即可复现，图片与证据绑定。</p>
+</div>
+
+<h3>10 发布与复测</h3>
+<div class="card">
+  <ul>
+    <li>发布前：全部链接实测 200（官网 / provider 页 / 官方文档）、manifest 完整、正文无内部信息</li>
+    <li>复测：每次出新版跑同一套固定用例（Direct Test + 两个 AI 探针，2 轮），目标 2–4 小时</li>
+    <li>与 Harbor 不一致：以自己实测为准 + 去 Harbor 提 issue（例如公司行动 Alpha Vantage，issue #1368），不阻塞发布</li>
+  </ul>
+</div>
+
+<h2>④ 用分红 CAP 串一遍</h2>
+<div class="example">
+  <ol>
+    <li><b>选题</b>：MKT.DIVIDENDS，coverage=full、6 家达标供应商；无存量 guide 冲突</li>
+    <li><b>出题</b>：AAPL 分红历史检索（正向）+ 无效代码控制（负向）</li>
+    <li><b>选供应商</b>：EODHD / Twelve Data / Alpha Vantage / Massive / 恒生聚源 / iFinD；FMP、Yahoo 无 canonical 工具 → <span class="pill warn">未测</span></li>
+    <li><b>Direct Test</b>：6 家全部 4/4 合格，自采延迟与费用（0.50–1.41 credits）</li>
+    <li><b>AI 入参</b>：海外 4 家 2/2；恒生 0/2（漏 <code>600519.SH</code>）；iFinD 0/2（<code>period</code> 填 year/年报，契约要求 annual/H1/Q3/Q1）</li>
+    <li><b>AI 出参</b>：4/4（金额 0.27、除息日 2026-05-11、美元单位、负向不编造）</li>
+    <li><b>画图</b>：三张图从证据生成并记录 digest</li>
+    <li><b>文章</b>：<code>docs/guides/best-dividend-apis.md</code> + manifest</li>
+  </ol>
+</div>
+
+<h2>⑤ 红线</h2>
+<div class="card redline">
+  <ul>
+    <li>Harbor 评估只作候选与异常参考，<b>发布的合格结论必须来自本平台 Direct Test + AI 探针</b></li>
+    <li>正文不暴露 CAP ID、不暴露 grade、不合成总分、不写"永久最优"</li>
+    <li>无执行授权 = N/A，不是低分；缺证据 = 未测，不是结论</li>
+    <li>图表必须从绑定证据生成，禁止手填数值</li>
+    <li>发现快照异常 → 提 issue 跟进，但不阻塞发布</li>
+  </ul>
+</div>
+
+<footer>
+  配套文档：<code>docs/selection-framework.md</code>（四线选择契约）· <code>docs/operator-runbook.md</code>（发布回放验证）·
+  探针：<code>cap_direct_test_probe.py</code> / <code>agent_param_fill_probe.py</code> / <code>agent_response_interpretation_probe.py</code> / <code>render_cap_guide_charts.py</code>
+</footer>
+
+</div>
+</body>
+</html>
