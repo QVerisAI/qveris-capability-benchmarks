@@ -14,22 +14,22 @@
 
 做人民币或中国市场：同花顺 iFinD 实测支持主要交叉币对（USD/CNY、EUR/CNY、EUR/USD、USD/JPY、GBP/JPY、USD/HKD、USD/PLN 等），实测延迟 0.5 秒。
 
-做港股财务折算或港币参考汇率：融聚汇提供港币兑美元的每日参考汇率，实测通过核心用例，但延迟最高（约 3.9 秒）且 AI 落参需兜底。
+做港股财务折算或港币参考汇率：融聚汇提供港币兑美元的每日参考汇率，实测通过核心用例，但延迟最高（约 3.9 秒）且空 data 响应无诊断信息，Agent 自动调用需加数据有效性校验。
 
 ## 6 家外汇汇率 API 对比（2026 年 8 月实测）
 
 结论为本平台 Direct Test 实测（2026-08-09）：固定用例（EUR/USD 即期汇率检索、无效币对负向控制）经 QVeris 真实执行，每个适用单元 2 轮；延迟与费用为本次执行的平均值（含负向控制，负向调用一般不计费，成功调用单价见各供应商深度解析）。供应商候选来自 Harbor 覆盖快照（仅作参考）。同一法律实体只占一行（本版各家均只有一个 canonical 外汇工具）。
 
-| 供应商 | 实测延迟 | 实测单次费用（QVeris credits） | Direct Test | AI 落参（2 轮） | 覆盖侧重 | 链接 |
+| 供应商 | 实测延迟 | 实测单次费用（QVeris credits） | Direct Test | AI 入参（按难度） | 覆盖侧重 | 链接 |
 |---|---|---|---|---|---|---|
-| [Alpha Vantage](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) | 0.5s | 1.00 | 合格 | 2/2 | 全球 100+ 法币，含 bid/ask | [美国/全球](https://qveris.ai/providers/alphavantage) |
-| [Twelve Data](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) | 0.4s | 1.19 | 合格 | 2/2 | 全球法币 + 加密货币 | [全球](https://qveris.ai/providers/twelvedata) |
-| [EODHD](https://eodhd.com/) · [在 QVeris 中试用](https://qveris.ai/providers/eodhd) | 0.9s | 2.81 | 合格 | 2/2 | 全球多资产（股票/汇率/加密） | [全球](https://qveris.ai/providers/eodhd) |
-| [波兰国家银行 NBP](https://api.nbp.pl/en.html) · [在 QVeris 中试用](https://qveris.ai/providers/nbp_pl) | 1.0s | 0.50 | 合格 | 2/2 | 官方均价，兑 PLN | [官方](https://qveris.ai/providers/nbp_pl) |
-| [同花顺 iFinD](https://quantapi.51ifind.com/) · [在 QVeris 中试用](https://qveris.ai/providers/ths_ifind) | 0.5s | 0.50 | 合格 | 2/2 | 主要交叉币对（.FX） | [中国](https://qveris.ai/providers/ths_ifind) |
-| [融聚汇](http://www.szfiu.com/) · [在 QVeris 中试用](https://qveris.ai/providers/fiu_mcp_server) | 3.9s | 0.50 | 合格 | 1/2 | 港币参考汇率 | [香港](https://qveris.ai/providers/fiu_mcp_server) |
+| [Alpha Vantage](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) | 0.5s | 1.00 | 合格 | 4/4 | 全球 100+ 法币，含 bid/ask | [美国/全球](https://qveris.ai/providers/alphavantage) |
+| [Twelve Data](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) | 0.4s | 1.19 | 合格 | 4/4 | 全球法币 + 加密货币 | [全球](https://qveris.ai/providers/twelvedata) |
+| [EODHD](https://eodhd.com/) · [在 QVeris 中试用](https://qveris.ai/providers/eodhd) | 0.9s | 2.81 | 合格 | 2/4 | 全球多资产（股票/汇率/加密） | [全球](https://qveris.ai/providers/eodhd) |
+| [波兰国家银行 NBP](https://api.nbp.pl/en.html) · [在 QVeris 中试用](https://qveris.ai/providers/nbp_pl) | 1.0s | 0.50 | 合格 | 4/4 | 官方均价，兑 PLN | [官方](https://qveris.ai/providers/nbp_pl) |
+| [同花顺 iFinD](https://quantapi.51ifind.com/) · [在 QVeris 中试用](https://qveris.ai/providers/ths_ifind) | 0.5s | 0.50 | 合格 | 4/4 | 主要交叉币对（.FX） | [中国](https://qveris.ai/providers/ths_ifind) |
+| [融聚汇](http://www.szfiu.com/) · [在 QVeris 中试用](https://qveris.ai/providers/fiu_mcp_server) | 3.9s | 0.50 | 合格 | 4/4 | 港币参考汇率 | [香港](https://qveris.ai/providers/fiu_mcp_server) |
 
-综合判断：全球即期交易场景，Alpha Vantage 与 Twelve Data 是首选（低延迟、含 bid/ask、AI 落参全对）；官方权威场景选波兰国家银行；人民币/中国市场选同花顺 iFinD；港股参考汇率选融聚汇（注意其 AI 落参与延迟）。
+综合判断：全球即期交易场景，Alpha Vantage 与 Twelve Data 是首选（低延迟、含 bid/ask、AI 入参全过）；官方权威场景选波兰国家银行；人民币/中国市场选同花顺 iFinD；港股参考汇率选融聚汇（注意其延迟与空响应诊断信息）。
 
 ![外汇汇率 API 延迟与单次费用](capability-seo/best-forex-api-apis/charts/chart-latency-cost.png)
 
@@ -38,7 +38,7 @@
 ## 测试方法与证据分级
 
 - Direct Test（合格/未完全达标）：本平台 2026-08-09 实测。固定用例（EUR/USD 即期汇率检索、无效币对负向控制；波兰国家银行为 USD/PLN 官方汇率、融聚汇为 HKD/USD 参考汇率）经 QVeris 真实执行，每个适用单元 2 轮，按外汇契约必填字段判定。
-- AI 落参（入参）：2026-08-09 用 DeepSeek Flash 对每家 canonical 工具做固定提问，每个工具 2 轮，检查只调该工具、必填参数齐全、参数类型合法、不幻觉多余参数、语义正确（含各家代码方言）。题目按契约认知负担分 L1–L4，判定以工具真实执行结果为准。
+- AI 入参（入参落参）：2026-08-09 用 DeepSeek Flash 对每家 canonical 工具做固定提问，每个工具 2 轮，检查只调该工具、必填参数齐全、参数类型合法、不幻觉多余参数、语义正确（含各家代码方言）。题目按契约认知负担分 L1–L4，判定以工具真实执行结果为准。
 - AI 失败自愈：2026-08-09 用 DeepSeek Flash 对冻结的真实失败响应（错误或空态）做"错误解读 + 修正参数 + 同一工具重试"，每用例 2 轮。
 - AI 出参解读：2026-08-09 用 DeepSeek Flash 对冻结的真实汇率响应做解读（正向提取汇率与数据时间 + 负向空态），每用例 2 轮。
 - 契约容错性：对每家工具的写法变体（大小写、无后缀/无斜杠等）经 QVeris 真实执行各 1 次，判定以状态码与返回数据有效性为准。
@@ -188,11 +188,11 @@ Alpha Vantage 实测延迟 0.5 秒、返回 bid/ask 与更新时间；Twelve Dat
 
 ### 人民币/中国市场
 
-同花顺 iFinD 实测支持主要交叉币对（.FX 后缀），延迟 0.5 秒、单次平均 0.50 credits（成功调用 1.00），AI 落参 2/2。
+同花顺 iFinD 实测支持主要交叉币对（.FX 后缀），延迟 0.5 秒、单次平均 0.50 credits（成功调用 1.00），AI 入参 4/4。
 
 ### 港股参考汇率
 
-融聚汇提供港币兑美元每日参考汇率，适合港股财务折算；实测延迟约 3.9 秒（短名单最高），AI 落参 1/2 需兜底。
+融聚汇提供港币兑美元每日参考汇率，适合港股财务折算；实测延迟约 3.9 秒（短名单最高），AI 入参 4/4，但空 data 响应无诊断信息，需数据有效性校验兜底。
 
 ## 供应商深度解析
 
