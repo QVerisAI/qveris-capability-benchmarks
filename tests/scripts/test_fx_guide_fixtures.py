@@ -9,6 +9,9 @@ from scripts.agent_param_fill_probe import load_fixture as load_param_fixture
 from scripts.agent_response_interpretation_probe import (
     load_fixture as load_interpret_fixture,
 )
+from scripts.agent_response_self_description_probe import (
+    load_fixture as load_self_description_fixture,
+)
 from scripts.cap_direct_test_probe import load_fixture as load_direct_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -94,6 +97,14 @@ def test_ac5b_fx_dialect_tolerance_fixture_loads() -> None:
                 "accepted_empty",
                 "rejected_error",
             }
+
+
+def test_ac5c_fx_self_description_fixture_loads() -> None:
+    elements, cases = load_self_description_fixture(
+        ROOT / "scripts/fixtures/fx-response-self-description.yaml"
+    )
+    assert len(elements) == 3
+    assert len(cases) == 6
 
 
 def test_ac7_article_keeps_internal_ids_and_aggregate_ratings_out() -> None:
