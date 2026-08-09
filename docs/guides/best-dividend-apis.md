@@ -80,7 +80,7 @@ AI 友好度测的是"把同一个自然语言任务交给 AI，AI 能不能自�
 
 ## 市场覆盖
 
-覆盖判定来源：QVeris 工具注册表的 market 标签（EODHD、Twelve Data、Alpha Vantage）+ 官方声明（Massive 美股；恒生聚源与同花顺 iFinD 为 A 股）。● = 覆盖，○ = 未声明覆盖。覆盖范围不等于响应质量，仅表示该供应商的契约/声明支持对应市场。
+覆盖判定原则：以工具 SV 结果（claimed_markets + 逐市场探测）为准。当前 MKT.DIVIDENDS 在 Harbor 尚无 SV 探测记录，本版使用 QVeris 工具注册表的 claimed market 标签（EODHD、Twelve Data、Alpha Vantage）+ 官方声明（Massive 美股；恒生聚源与同花顺 iFinD 为 A 股）作为过渡口径，● = 已声明覆盖，○ = 未声明覆盖。覆盖范围不等于响应质量；SV 逐市场探测待补后以探测结果为准。
 
 | 供应商 | US | CN | HK | JP | UK | DE | FR | ES | CH | NL | SE | NO | BR | CA | TW |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -93,7 +93,7 @@ AI 友好度测的是"把同一个自然语言任务交给 AI，AI 能不能自�
 
 ![分红数据 API 市场覆盖](capability-seo/best-dividend-apis/charts/chart-market-coverage.png)
 
-说明：EODHD 覆盖 14 个市场（含欧洲多国、巴西、加拿大、台湾），是短名单中市场覆盖最广的；Twelve Data 与 Alpha Vantage 覆盖美、中、港、日、英、德 6 个市场；Massive、恒生聚源、同花顺 iFinD 分别聚焦美股与 A 股。
+说明：EODHD 声明覆盖 14 个市场（含欧洲多国、巴西、加拿大、台湾），是短名单中最广的；Twelve Data 与 Alpha Vantage 声明 6 个市场；Massive、恒生聚源、同花顺 iFinD 分别聚焦美股与 A 股。以上为 claimed 口径，SV 探测补跑后可能收缩（参考公司行动 CAP 中 Alpha Vantage 声明 US/GLOBAL 但多市场探测失败）。
 
 ## 按使用场景选择分红数据 API
 
@@ -128,7 +128,7 @@ Alpha Vantage 实测延迟最低（0.5 秒）；Twelve Data 响应结构清晰�
 - 本版 Direct Test 为 2 个固定用例 × 2 轮的核心字段冒烟（分红历史检索 + 无效代码负向控制），不是分红全量场景认证。
 - 延迟与费用为 2026-08-09 经 QVeris 网关的单次实测平均值，不代表供应商直连或 p95 表现；会随套餐、路由与市场状况变化。
 - AI 落参结果仅基于 DeepSeek Flash 单模型；出参解读以 Twelve Data 响应为样本，各家逐测待补齐。
-- 市场覆盖来自 QVeris 注册表标签与官方声明，不代表各家在覆盖市场上的实际响应质量；未声明市场不代表一定不可用，仅表示不在本次评估范围。
+- 市场覆盖本版为 claimed 口径（注册表标签 + 官方声明），MKT.DIVIDENDS 尚无 SV 逐市场探测；探测补跑后以 SV 结果为准，未声明市场不代表一定不可用。
 - Financial Modeling Prep 与雅虎财经本轮未测：FMP 无分红事件列表工具（自家分红接口未接入 QVeris），雅虎无独立分红事件接口。
 
 ## 如何选择
