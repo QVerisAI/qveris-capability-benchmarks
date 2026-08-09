@@ -1,0 +1,65 @@
+tools:
+  - tool_id: alphavantage.currency_exchange_rate.retrieve.v1
+    name: Get Realtime Currency Exchange Rate
+    description: Get the current exchange rate between two currencies, e.g. BTC to EUR.
+    params:
+      - {name: function, type: string, required: true, description: "The function of your choice. In this case, CURRENCY_EXCHANGE_RATE"}
+      - {name: from_currency, type: string, required: true, description: The from currency}
+      - {name: to_currency, type: string, required: true, description: The to currency}
+    questions:
+      - question_id: fx-eur-usd-spot
+        task: EUR/USD 当前汇率是多少？
+        expected_params: {function: CURRENCY_EXCHANGE_RATE, from_currency: EUR, to_currency: USD}
+  - tool_id: twelvedata.exchangerate.retrieve.v1.9eeb3b0d
+    name: Exchange rate
+    description: The exchange rate endpoint provides real-time exchange rates for specified currency pairs, including both forex and cryptocurrency.
+    params:
+      - {name: symbol, type: string, required: true, description: "The currency pair with slash delimiter, e.g. EUR/USD"}
+      - {name: date, type: string, required: false, description: Historical date or datetime, format 2006-01-02}
+      - {name: format, type: string, required: false, description: "Value can be JSON or CSV"}
+    questions:
+      - question_id: fx-eur-usd-spot
+        task: EUR/USD 当前汇率是多少？
+        expected_params: {symbol: "EUR/USD"}
+  - tool_id: eodhd.live_data.real_time.retrieve.v1.b60a4285
+    name: Retrieve Live (Delayed) OHLCV Stock and Currency Data
+    description: Retrieve live or delayed OHLCV data for stocks and currencies. FX symbols use EODHD format, e.g. EURUSD.FOREX.
+    params:
+      - {name: symbol, type: string, required: true, description: "Primary ticker symbol in EODHD format, e.g. EURUSD.FOREX"}
+      - {name: fmt, type: string, required: false, description: Response format json or csv}
+    questions:
+      - question_id: fx-eur-usd-spot
+        task: EUR/USD 当前汇率是多少？
+        expected_params: {symbol: "EURUSD.FOREX"}
+  - tool_id: nbp_pl.exchangerates.rates.last.list.v1
+    name: List last exchange rates for a specific currency
+    description: List the latest official NBP exchange rates for a specific currency against PLN.
+    params:
+      - {name: table, type: string, required: true, description: "Exchange rate table type A, B or C"}
+      - {name: code, type: string, required: true, description: ISO 4217 currency code}
+      - {name: topCount, type: integer, required: true, description: Number of latest rates to retrieve}
+    questions:
+      - question_id: fx-usd-pln-official
+        task: 美元兑波兰兹罗提的最新官方汇率是多少？
+        expected_params: {table: A, code: USD, topCount: 1}
+  - tool_id: cn_financial_pro.fx_rates.v1
+    name: Foreign Exchange Rates
+    description: Query FX pair rates, e.g. USDCNY.FX, from the data source.
+    params:
+      - {name: codes, type: string, required: true, description: "FX pair codes, comma separated, e.g. USDCNY.FX"}
+      - {name: date, type: string, required: false, description: Query date, defaults to today}
+    questions:
+      - question_id: fx-usd-cny-spot
+        task: 美元兑人民币当前汇率是多少？
+        expected_params: {codes: "USDCNY.FX"}
+  - tool_id: fiu_mcp_server.postapihkf10referencecurrency.create.v2.af51218b
+    name: HK F10 Reference Currency
+    description: Query HK reference currency rates by ISO currency code and date range.
+    params:
+      - {name: currency, type: string, required: true, description: "ISO 4217 currency code, e.g. HKD"}
+      - {name: startDate, type: string, required: false, description: Start date yyyy-MM-dd}
+      - {name: endDate, type: string, required: false, description: End date yyyy-MM-dd}
+    questions:
+      - question_id: fx-hkd-usd-reference
+        task: 港币兑美元最近一周的参考汇率是多少？
+        expected_params: {currency: HKD}

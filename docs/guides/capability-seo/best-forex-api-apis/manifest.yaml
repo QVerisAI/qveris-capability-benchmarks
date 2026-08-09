@@ -1,0 +1,72 @@
+schema_version: 1
+benchmark_id: fx-spot-2026-08
+article_slug: best-forex-api-apis
+edition: "2026-08-09"
+search_intent: 对比外汇即期汇率 API 的实测延迟、费用与 AI 友好度，帮助开发者选择汇率数据源
+primary_capability_ids: [FX.SPOT]
+related_capability_ids: []
+comparison_shortlist:
+  - Alpha Vantage
+  - Twelve Data
+  - EODHD
+  - 波兰国家银行
+  - 同花顺 iFinD
+  - 融聚汇
+supplier_entities:
+  Alpha Vantage: alphavantage.co
+  Twelve Data: twelvedata.com
+  EODHD: eodhd.com
+  波兰国家银行: nbp.pl
+  同花顺 iFinD: 51ifind.com
+  融聚汇: szfiu.com
+scenarios:
+  - {id: eur_usd_spot, article_label: EUR/USD 即期汇率, minimum_rounds: 2}
+  - {id: invalid_pair_control, article_label: 无效币对控制, minimum_rounds: 2}
+publication_policy:
+  one_tool_per_supplier_per_scenario: true
+  freeze_shortlist_after_baseline: true
+  states: [qualified, not_qualified, not_applicable]
+seo:
+  title: "2026 外汇汇率 API 对比：6 家即期汇率数据源实测"
+  meta_description: "2026 年 8 月实测：对比 6 家外汇汇率 API 的延迟、费用与 AI 友好度，帮助开发者选择即期汇率数据源。"
+  primary_keyword: 外汇汇率 API
+  secondary_keywords: [即期汇率 API, 汇率 API, forex API, 外汇数据源]
+  publication_action: new_page
+  inventory_checked_at: "2026-08-09"
+  target_slug: best-forex-api-apis
+  provider_inventory_checked_at: "2026-08-09"
+  competing_urls: []
+  supplier_sites:
+    Alpha Vantage: https://www.alphavantage.co/
+    Twelve Data: https://twelvedata.com/
+    EODHD: https://eodhd.com/
+    波兰国家银行: https://api.nbp.pl/en.html
+    同花顺 iFinD: https://quantapi.51ifind.com/
+    融聚汇: http://www.szfiu.com/
+  provider_pages:
+    Alpha Vantage: https://qveris.ai/providers/alphavantage
+    Twelve Data: https://qveris.ai/providers/twelvedata
+    EODHD: https://qveris.ai/providers/eodhd
+    波兰国家银行: https://qveris.ai/providers/nbp_pl
+    同花顺 iFinD: https://qveris.ai/providers/ths_ifind
+    融聚汇: https://qveris.ai/providers/fiu_mcp_server
+  official_sources:
+    Alpha Vantage 文档: https://www.alphavantage.co/documentation/
+    Twelve Data API: https://twelvedata.com/docs
+    EODHD 金融 API: https://eodhd.com/financial-apis/
+    NBP Web API: https://api.nbp.pl/en.html
+    iFinD 量化数据 API: https://quantapi.51ifind.com/
+    融聚汇官网: http://www.szfiu.com/
+  related_guides:
+    Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
+    AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
+    Best Free Stock APIs: https://qveris.ai/guides/stock-api-free-comparison/
+artifacts:
+  article: docs/guides/best-forex-api-apis.md
+  direct_test_evidence: evidence/private/cap-direct-test.jsonl
+  agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
+  agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
+  charts:
+    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-latency-cost.png
+    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-ai-friendliness.png
+    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-market-coverage.png

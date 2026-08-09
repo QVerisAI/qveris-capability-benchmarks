@@ -74,6 +74,8 @@ def main(argv: list[str] | None = None) -> int:
     config = yaml.safe_load(args.data.read_text(encoding="utf-8"))
     suppliers = config["suppliers"]
     market_universe = config["market_universe"]
+    guide_label = config.get("guide_label", "分红数据 API")
+    edition_date = config.get("edition_date", "2026-08-09")
 
     direct = _latest_batch(args.direct)
     param = _latest_batch(args.param)
@@ -113,6 +115,8 @@ def main(argv: list[str] | None = None) -> int:
         if interpret
         else 0.0
     )
+    interpret_ok = sum(1 for record in interpret if record["passed"])
+    interpret_total = len(interpret)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     chart_paths: list[str] = []
@@ -126,6 +130,8 @@ def main(argv: list[str] | None = None) -> int:
         "Alpha Vantage": "#1f77b4",
         "EODHD": "#1f77b4",
         "Massive": "#2ca02c",
+        "波兰国家银行": "#2ca02c",
+        "融聚汇": "#9467bd",
     }
     fig, ax = plt.subplots(figsize=(8, 5))
     for name in names:
@@ -143,9 +149,9 @@ def main(argv: list[str] | None = None) -> int:
             xytext=(8, 8),
             fontsize=9,
         )
-    ax.set_xlabel("实测平均延迟（ms，2026-08-09）")
+    ax.set_xlabel(f"实测平均延迟（ms，{edition_date}）")
     ax.set_ylabel("实测单次费用（QVeris credits）")
-    ax.set_title("分红数据 API：延迟与单次费用（本平台 Direct Test 实测）")
+    ax.set_title(f"{guide_label}：延迟与单次费用（本平台 Direct Test 实测）")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     path = args.output_dir / "chart-latency-cost.png"
@@ -165,7 +171,8 @@ def main(argv: list[str] | None = None) -> int:
     ax.set_ylabel("AI 入参通过率（%，2 轮）")
     ax.set_title(
         "AI 友好度：入参落参通过率（DeepSeek Flash）；"
-        f"出参解读通用样本 {interpret_pass * 100:.0f}%（4/4）"
+        f"出参解读通用样本 {interpret_pass * 100:.0f}%"
+        f"（{interpret_ok}/{interpret_total}）"
     )
     for index, value in enumerate(values):
         ax.text(index, value + 3, f"{value:.0f}%", ha="center", fontsize=9)
@@ -200,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
             va="center",
             fontsize=12,
         )
-    ax.set_title("分红数据 API 市场覆盖（QVeris 注册表标签 + 官方声明）")
+    ax.set_title(f"{guide_label} 市场覆盖（实测 + 工具契约声明）")
     fig.tight_layout()
     path = args.output_dir / "chart-market-coverage.png"
     fig.savefig(path, dpi=150)
@@ -214,7 +221,7 @@ def main(argv: list[str] | None = None) -> int:
             "agent-param-fill": _digest(args.param),
             "agent-response-interpretation": _digest(args.interpret),
         },
-        "rendered_at": "2026-08-09",
+        "rendered_at": edition_date,
     }
     (args.output_dir / "charts-manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8"
