@@ -208,9 +208,7 @@ def main(argv: list[str] | None = None) -> int:
     chart_paths.append(path.name)
 
     manifest: dict[str, object] = {
-        "charts": {
-            path: _digest(args.output_dir / path) for path in chart_paths
-        },
+        "charts": {path: _digest(args.output_dir / path) for path in chart_paths},
         "input_digests": {
             "cap-direct-test": _digest(args.direct),
             "agent-param-fill": _digest(args.param),
