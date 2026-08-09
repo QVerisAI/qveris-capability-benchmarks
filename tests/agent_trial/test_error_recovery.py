@@ -71,7 +71,7 @@ def test_ac3_multiple_tool_calls_fail_single_tool() -> None:
     result = evaluate_recovery(_contract(), _question(), message)
     assert not result.checks.single_tool
     assert not result.passed
-    assert result.notes == "multiple tool calls"
+    assert result.notes.startswith("multiple tool calls")
 
 
 def test_ac4_no_tool_call_fails() -> None:

@@ -65,6 +65,11 @@ def main(argv: list[str] | None = None) -> int:
         default=Path("evidence/private/agent-response-interpretation.jsonl"),
     )
     parser.add_argument(
+        "--recovery",
+        type=Path,
+        default=Path("evidence/private/agent-error-recovery.jsonl"),
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("docs/guides/capability-seo/best-dividend-apis/charts"),
@@ -80,6 +85,10 @@ def main(argv: list[str] | None = None) -> int:
     direct = _latest_batch(args.direct)
     param = _latest_batch(args.param)
     interpret = _latest_batch(args.interpret)
+    try:
+        recovery = _latest_batch(args.recovery)
+    except FileNotFoundError:
+        recovery = []
 
     latency: dict[str, float] = {}
     cost: dict[str, float] = {}
@@ -98,23 +107,32 @@ def main(argv: list[str] | None = None) -> int:
                 record["cost_credits"] for record in cells
             ) / len(cells)
 
-    param_pass: dict[str, float] = {}
+    def _question_ids(supplier: dict[str, object]) -> list[str]:
+        questions = supplier.get("param_questions") or []
+        if questions:
+            return list(questions)
+        legacy = supplier.get("param_question")
+        return [legacy] if legacy else []
+
+    difficulty_pass: dict[str, dict[str, tuple[int, int]]] = {}
     for supplier in suppliers:
         records = [
             record
             for record in param
-            if record["question_id"] == supplier["param_question"]
+            if record["question_id"] in _question_ids(supplier)
         ]
         if records:
-            param_pass[supplier["name"]] = sum(
-                1 for record in records if record["passed"]
-            ) / len(records)
+            per_level: dict[str, list[dict]] = {}
+            for record in records:
+                per_level.setdefault(record.get("difficulty", "L1"), []).append(record)
+            difficulty_pass[supplier["name"]] = {
+                level: (
+                    sum(1 for record in rows if record["passed"]),
+                    len(rows),
+                )
+                for level, rows in per_level.items()
+            }
 
-    interpret_pass = (
-        sum(1 for record in interpret if record["passed"]) / len(interpret)
-        if interpret
-        else 0.0
-    )
     interpret_ok = sum(1 for record in interpret if record["passed"])
     interpret_total = len(interpret)
 
@@ -159,30 +177,71 @@ def main(argv: list[str] | None = None) -> int:
     plt.close(fig)
     chart_paths.append(path.name)
 
-    # 2. AI param-fill pass rate
-    fig, ax = plt.subplots(figsize=(8, 5))
-    bar_names = [
-        supplier["name"] for supplier in suppliers if supplier["name"] in param_pass
-    ]
-    values = [param_pass[name] * 100 for name in bar_names]
-    bar_colors = [colors.get(name, "#333333") for name in bar_names]
-    ax.bar(bar_names, values, color=bar_colors)
-    ax.set_ylim(0, 105)
+    # 2. AI param-fill pass rate by difficulty
+    fig, ax = plt.subplots(figsize=(9, 5))
+    levels = ["L1", "L2", "L3", "L4"]
+    for supplier in suppliers:
+        name = supplier["name"]
+        series = difficulty_pass.get(name, {})
+        xs = [level for level in levels if level in series]
+        ys = [series[level][0] / series[level][1] * 100 for level in xs]
+        ax.plot(
+            xs,
+            ys,
+            marker="o",
+            label=name,
+            color=colors.get(name, "#333333"),
+        )
+        for x, y in zip(xs, ys, strict=True):
+            ax.annotate(
+                f"{y:.0f}%",
+                (x, y),
+                textcoords="offset points",
+                xytext=(0, 8),
+                fontsize=8,
+            )
+    ax.set_ylim(0, 110)
     ax.set_ylabel("AI 入参通过率（%，2 轮）")
+    ax.set_xlabel("题目难度（契约认知负担）")
     ax.set_title(
-        "AI 友好度：入参落参通过率（DeepSeek Flash）；"
-        f"出参解读通用样本 {interpret_pass * 100:.0f}%"
-        f"（{interpret_ok}/{interpret_total}）"
+        f"{guide_label} AI 友好度：入参通过率按难度（DeepSeek Flash）；"
+        f"出参解读 {interpret_ok}/{interpret_total}"
     )
-    for index, value in enumerate(values):
-        ax.text(index, value + 3, f"{value:.0f}%", ha="center", fontsize=9)
+    ax.legend(fontsize=8, loc="lower left")
+    ax.grid(True, alpha=0.3)
     fig.tight_layout()
-    path = args.output_dir / "chart-ai-friendliness.png"
+    path = args.output_dir / "chart-ai-difficulty.png"
     fig.savefig(path, dpi=150)
     plt.close(fig)
     chart_paths.append(path.name)
 
-    # 3. market coverage heatmap
+    # 3. error-recovery pass rate
+    recovery_pass: dict[str, float] = {}
+    for supplier in suppliers:
+        questions = supplier.get("recovery_questions") or []
+        records = [record for record in recovery if record["question_id"] in questions]
+        if records:
+            recovery_pass[supplier["name"]] = sum(
+                1 for record in records if record["passed"]
+            ) / len(records)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bar_names = [
+        supplier["name"] for supplier in suppliers if supplier["name"] in recovery_pass
+    ]
+    values = [recovery_pass[name] * 100 for name in bar_names]
+    ax.bar(bar_names, values, color=[colors.get(name, "#333333") for name in bar_names])
+    ax.set_ylim(0, 105)
+    ax.set_ylabel("失败自愈率（%，2 轮）")
+    ax.set_title(f"{guide_label} AI 友好度：失败自愈率（错误解读 + 修正重试）")
+    for index, value in enumerate(values):
+        ax.text(index, value + 3, f"{value:.0f}%", ha="center", fontsize=9)
+    fig.tight_layout()
+    path = args.output_dir / "chart-ai-recovery.png"
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+    chart_paths.append(path.name)
+
+    # 4. market coverage heatmap
     matrix = [
         [market in supplier["markets"] for market in market_universe]
         for supplier in suppliers

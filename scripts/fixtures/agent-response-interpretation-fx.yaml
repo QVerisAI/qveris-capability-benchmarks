@@ -12,3 +12,9 @@ cases:
     expected_values: {}
     negative_control: true
     require_timestamp: false
+  - question_id: fx-na-placeholder-eodhd
+    task: ZZZUSD.FOREX 有汇率数据吗？只使用工具响应中的数据。
+    response_text: '{"code": "ZZZUSD.FOREX", "timestamp": "NA", "gmtoffset": 0, "open": "NA", "high": "NA", "low": "NA", "close": "NA", "volume": "NA", "previousClose": "NA", "change": "NA", "change_p": "NA"}'
+    expected_values: {}
+    negative_control: true
+    require_timestamp: false

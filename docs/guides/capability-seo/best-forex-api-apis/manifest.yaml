@@ -65,8 +65,11 @@ artifacts:
   article: docs/guides/best-forex-api-apis.md
   direct_test_evidence: evidence/private/cap-direct-test.jsonl
   agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
+  agent_error_recovery_evidence: evidence/private/agent-error-recovery.jsonl
   agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
+  dialect_tolerance_fixture: scripts/fixtures/fx-dialect-tolerance.yaml
   charts:
     - docs/guides/capability-seo/best-forex-api-apis/charts/chart-latency-cost.png
-    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-ai-friendliness.png
+    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-ai-difficulty.png
+    - docs/guides/capability-seo/best-forex-api-apis/charts/chart-ai-recovery.png
     - docs/guides/capability-seo/best-forex-api-apis/charts/chart-market-coverage.png
