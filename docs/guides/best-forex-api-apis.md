@@ -22,6 +22,17 @@
 
 每项结构化价格事实都保留 `verified_at`、`source_digest`、`extractor_version`、`suite_fingerprint`、披露状态和来源许可状态。只有询价入口而没有公开数字的供应商记为“商务询价”，不会从营销文案推断价格。
 
+## 费用怎么读：这是两本账
+
+供应商官网套餐和 QVeris 路径观测费用回答的是两个不同问题：前者回答“直接向供应商采购要多少钱”，后者回答“在这次 QVeris Access Path 观测中消耗了多少 credits”。两者的合同主体、计费单位和适用路径都不同，不能换算，也不能用其中一个推断另一个。
+
+| 账本 | 回答的问题 | Alpha Vantage 示例 | 证据边界 |
+|---|---|---|---|
+| 供应商官网套餐 | 直接采购 Provider API 的公开门槛是什么？ | Premium USD 49.99/月起 | 官方价格页；核验日期 2026-08-10；保留页面内容摘要 |
+| QVeris 路径观测费用 | 通过这条 QVeris Access Path 的历史调用消耗多少？ | 平均 1.00 credits | 2026-08-09 路径级公开观测；不代表 Native API 单次价格 |
+
+官网价格变化时，我们会重新打开官方来源，更新核验日期和内容摘要；旧版本继续由 Git 历史保留。QVeris 费用发生变化时，则应生成新的路径级 release，不能直接覆盖成供应商官网价格。
+
 ## Access Path 测评状态
 
 | 供应商与接入路径 | Direct Test | QVeris 路径观测费用 | Agent 接口观察 | 接入入口 |
@@ -36,6 +47,13 @@
 四条 QVeris 结果是 2026-08-09 既有公开观测，并绑定原文章与图表 manifest 摘要。本次迁移只校正 Access Path 身份，不把它们冒充新的 Native 实测。后续复测应生成当前 Core release 所要求的完整 evidence ref、extractor version、suite fingerprint、run key 与 outcome identity。
 
 ![QVeris Access Path 延迟与观测费用](capability-seo/best-forex-api-apis/charts/chart-latency-cost.png)
+
+## 怎么选择费用口径
+
+- 如果你直接采购供应商 API，先看官网套餐、币种、免费额度和超额规则，再对对应 Native Access Path 单独做延迟与稳定性验证。
+- 如果你通过 QVeris 调用，可以用表中 2026-08-09 的 credits、延迟和 Agent 接口观察理解当时的路径表现；历史 credits 不是当前报价，采购前应以 QVeris 当前计费信息为准，也不要拿供应商月费除以调用次数来估算 QVeris 成本。
+- 如果你优先考虑零许可费，NBP 的官方接口是明确的免费候选，但本版没有 Native Direct Test，免费不等于已经验证可用。
+- 如果你需要 Native MCP，iFinD 已公开套餐和接入方式，但当前公开 skill 没有 FX canonical tool，因此本版仍不能给出 FX 实测成本。
 
 ## 当前能确认什么
 
