@@ -154,6 +154,25 @@ def test_ac5_article_separates_access_paths_and_price_facts() -> None:
     assert "Harbor" not in article
 
 
+def test_ac6_article_explains_the_two_cost_ledgers_and_buyer_choice() -> None:
+    article = (ROOT / "docs/guides/best-forex-api-apis.md").read_text(encoding="utf-8")
+
+    for expected in (
+        "两本账",
+        "官网套餐",
+        "QVeris 路径观测费用",
+        "不能换算",
+        "核验日期",
+        "内容摘要",
+        "如果你直接采购供应商 API",
+        "如果你通过 QVeris 调用",
+    ):
+        assert expected in article, f"AC6 article must explain {expected}"
+
+    assert "USD 49.99/月起" in article
+    assert "平均 1.00 credits" in article
+
+
 def test_ac5_released_fx_observations_keep_paths_distinct() -> None:
     document = yaml.safe_load(
         (ROOT / "scripts/fixtures/fx-released-observations.yaml").read_text(
