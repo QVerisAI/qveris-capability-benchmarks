@@ -2,36 +2,42 @@ capability: MKT.DIVIDENDS
 suppliers:
   - supplier: EODHD
     provider_id: eodhd
+    access_path_id: eodhd-dividends-qveris
     tool_id: eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
     cases:
       - {case_id: aapl-dividends, parameters: {symbol: AAPL, from: "2024-01-01", to: "2026-08-09"}, expected_observations: ["Date", "Dividends"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Twelve Data
     provider_id: twelvedata
+    access_path_id: twelve-data-dividends-qveris
     tool_id: twelvedata.dividends.retrieve.v1.c0c9b142
     cases:
       - {case_id: aapl-dividends, parameters: {symbol: AAPL, start_date: "2024-01-01", end_date: "2026-08-09"}, expected_observations: ["dividends"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Massive
     provider_id: massive_stocks
+    access_path_id: massive-stocks-dividends-qveris
     tool_id: polygon.stocks.dividends.list.v1.ea25c492
     cases:
       - {case_id: aapl-dividends, parameters: {ticker: AAPL, limit: 20}, expected_observations: ["results"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {ticker: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Alpha Vantage
     provider_id: alphavantage
+    access_path_id: alpha-vantage-dividends-qveris
     tool_id: alphavantage.dividends.list.v1.467a92c0
     cases:
       - {case_id: aapl-dividends, parameters: {function: DIVIDENDS, symbol: AAPL}, expected_observations: ["symbol", "data"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {function: DIVIDENDS, symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: 恒生聚源
     provider_id: hangseng_polysource
+    access_path_id: hangseng-polysource-dividends-qveris
     tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
     cases:
       - {case_id: 600519-dividends, parameters: {stockObject: ["600519.SH"], beginDate: "2024-01-01", endDate: "2026-08-09", pageSize: 20}, expected_observations: ["data"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {stockObject: ["ZZZZZZZZ"], pageSize: 20}, expected_observations: [], negative_control: true}
   - supplier: 同花顺 iFinD
     provider_id: cn_financial_pro
+    access_path_id: ifind-dividends-qveris
     tool_id: cn_financial_pro.dividend_plan.v1
     cases:
       - {case_id: 600519-dividends, parameters: {codes: "600519.SH", year: 2025, period: annual, limit: 20}, expected_observations: ["dividend_rows"], negative_control: false}

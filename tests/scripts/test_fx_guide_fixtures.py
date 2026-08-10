@@ -24,10 +24,14 @@ def test_ac2_fx_direct_test_fixture_loads_all_suppliers() -> None:
         "Alpha Vantage",
         "Twelve Data",
         "EODHD",
-        "波兰国家银行",
-        "同花顺 iFinD",
         "融聚汇",
     }
+    assert {probe.access_path_id for probe in probes} == {
+        "alpha-vantage-fx-spot-qveris",
+        "twelve-data-fx-spot-qveris",
+        "eodhd-fx-spot-qveris",
+        "rongjuhui-hkd-reference-rate",
+    }, "AC2 every Direct fixture must bind one explicit Access Path"
     for probe in probes:
         assert len(probe.cases) == 2
         assert sum(case.negative_control for case in probe.cases) == 1
@@ -36,8 +40,15 @@ def test_ac2_fx_direct_test_fixture_loads_all_suppliers() -> None:
 
 def test_ac3_fx_param_fill_fixture_two_questions_per_tool() -> None:
     probes = load_param_fixture(ROOT / "scripts/fixtures/agent-param-fill-fx.yaml")
-    assert len(probes) == 6
+    assert len(probes) == 4
     for contract, questions in probes:
+        assert contract.provider_id, "AC3 Agent fixture must retain provider identity"
+        assert contract.access_path_id, (
+            "AC3 Agent fixture must retain Access Path identity"
+        )
+        assert contract.tool_id != "cn_financial_pro.fx_rates.v1", (
+            "AC3 legacy QVeris iFinD evidence must not masquerade as native MCP"
+        )
         assert len(questions) == 2
         assert contract.params
         assert any(param.required for param in contract.params)
@@ -56,8 +67,17 @@ def test_ac4b_fx_error_recovery_fixture_loads() -> None:
     probes = load_recovery_fixture(
         ROOT / "scripts/fixtures/agent-error-recovery-fx.yaml"
     )
-    assert len(probes) == 5
+    assert len(probes) == 3
     for contract, questions in probes:
+        assert contract.provider_id, (
+            "AC4 recovery fixture must retain provider identity"
+        )
+        assert contract.access_path_id, (
+            "AC4 recovery fixture must retain Access Path identity"
+        )
+        assert contract.tool_id != "cn_financial_pro.fx_rates.v1", (
+            "AC4 legacy QVeris iFinD recovery evidence must not be relabeled"
+        )
         assert len(questions) == 1
         assert questions[0].failure_response
         assert questions[0].expected_retry_params
@@ -104,7 +124,13 @@ def test_ac5c_fx_self_description_fixture_loads() -> None:
         ROOT / "scripts/fixtures/fx-response-self-description.yaml"
     )
     assert len(elements) == 3
-    assert len(cases) == 6
+    assert len(cases) == 4
+    assert all(case.provider_id and case.access_path_id for case in cases), (
+        "AC5 response observations must retain Access Path identity"
+    )
+    assert all(
+        case.supplier not in {"同花顺 iFinD", "波兰国家银行"} for case in cases
+    ), "AC5 legacy gateway responses cannot stand in for native evidence"
 
 
 def test_ac7_article_keeps_internal_ids_and_aggregate_ratings_out() -> None:

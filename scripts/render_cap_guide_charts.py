@@ -14,6 +14,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
 
+from scripts.chart_metrics import direct_metrics_by_access_path
+
 try:
     from matplotlib import font_manager
 
@@ -92,20 +94,15 @@ def main(argv: list[str] | None = None) -> int:
 
     latency: dict[str, float] = {}
     cost: dict[str, float] = {}
+    path_metrics = direct_metrics_by_access_path(direct, suppliers)
     for supplier in suppliers:
-        cells = [
-            record
-            for record in direct
-            if record["supplier"] == supplier["direct_supplier"]
-            and record["latency_ms"] is not None
-        ]
-        if cells:
-            latency[supplier["name"]] = sum(
-                record["latency_ms"] for record in cells
-            ) / len(cells)
-            cost[supplier["name"]] = sum(
-                record["cost_credits"] for record in cells
-            ) / len(cells)
+        key = (supplier["provider_id"], supplier["access_path_id"])
+        metrics = path_metrics[key]
+        label = supplier.get("chart_label", supplier["name"])
+        if metrics["latency_ms"] is not None:
+            latency[label] = metrics["latency_ms"]
+        if metrics["cost_credits"] is not None:
+            cost[label] = metrics["cost_credits"]
 
     def _question_ids(supplier: dict[str, object]) -> list[str]:
         questions = supplier.get("param_questions") or []
@@ -140,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     chart_paths: list[str] = []
 
     # 1. latency vs cost scatter
-    names = list(latency)
+    names = [name for name in latency if name in cost]
     colors = {
         "恒生聚源": "#d62728",
         "同花顺 iFinD": "#d62728",

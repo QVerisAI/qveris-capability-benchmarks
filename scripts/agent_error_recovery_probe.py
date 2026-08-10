@@ -40,6 +40,8 @@ def load_fixture(
             tool_id=tool_doc["tool_id"],
             name=tool_doc["name"],
             description=tool_doc["description"],
+            provider_id=tool_doc.get("provider_id", ""),
+            access_path_id=tool_doc.get("access_path_id", ""),
             params=tuple(
                 ParamSpec(
                     name=param["name"],
@@ -114,6 +116,8 @@ def build_llm_fn(
 
 def _result_record(result: RecoveryResult, at: str) -> dict[str, Any]:
     return {
+        "provider_id": result.provider_id,
+        "access_path_id": result.access_path_id,
         "question_id": result.question_id,
         "round": result.round,
         "model": result.model,

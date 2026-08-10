@@ -100,6 +100,7 @@ def test_ac5_execution_unauthorized_is_n_a() -> None:
     probe = SupplierProbe(
         supplier="EODHD",
         provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
         tool_id="eodhd.splits",
         cases=(_case(),),
     )
@@ -120,3 +121,4 @@ def test_fixture_loads() -> None:
         "Massive",
         "恒生聚源",
     }
+    assert all(probe.access_path_id for probe in probes)

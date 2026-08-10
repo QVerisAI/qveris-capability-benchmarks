@@ -30,6 +30,7 @@ class Case:
 class SupplierProbe:
     supplier: str
     provider_id: str
+    access_path_id: str
     tool_id: str
     cases: tuple[Case, ...]
 
@@ -40,6 +41,8 @@ class CellResult:
     case_id: str
     round: int
     state: str
+    provider_id: str = ""
+    access_path_id: str = ""
     missing: tuple[str, ...] = ()
     notes: str = ""
     latency_ms: float | None = None
@@ -102,6 +105,7 @@ def load_fixture(path: Path) -> tuple[SupplierProbe, ...]:
             SupplierProbe(
                 supplier=supplier_doc["supplier"],
                 provider_id=supplier_doc["provider_id"],
+                access_path_id=supplier_doc["access_path_id"],
                 tool_id=supplier_doc["tool_id"],
                 cases=cases,
             )
@@ -215,6 +219,8 @@ def run_probe(
                         case.case_id,
                         round_index,
                         "n_a",
+                        provider_id=probe.provider_id,
+                        access_path_id=probe.access_path_id,
                         notes=str(exc),
                     )
                 results.append(
@@ -223,6 +229,8 @@ def run_probe(
                         case.case_id,
                         round_index,
                         result.state,
+                        provider_id=probe.provider_id,
+                        access_path_id=probe.access_path_id,
                         missing=result.missing,
                         notes=result.notes,
                         latency_ms=result.latency_ms,
@@ -265,6 +273,8 @@ def main(argv: list[str] | None = None) -> int:
                 json.dumps(
                     {
                         "supplier": result.supplier,
+                        "provider_id": result.provider_id,
+                        "access_path_id": result.access_path_id,
                         "case_id": result.case_id,
                         "round": result.round,
                         "state": result.state,
@@ -280,7 +290,12 @@ def main(argv: list[str] | None = None) -> int:
             )
 
     for probe in probes:
-        cells = [result for result in results if result.supplier == probe.supplier]
+        cells = [
+            result
+            for result in results
+            if result.provider_id == probe.provider_id
+            and result.access_path_id == probe.access_path_id
+        ]
         failed = [result for result in cells if result.state == "failed"]
         n_a = [result for result in cells if result.state == "n_a"]
         state = "n_a" if n_a and not cells else ("未完全达标" if failed else "合格")

@@ -2,30 +2,35 @@ capability: MKT.CORPORATE_ACTIONS
 suppliers:
   - supplier: EODHD
     provider_id: eodhd
+    access_path_id: eodhd-corporate-actions-qveris
     tool_id: eodhd.financial_apis.splits.retrieve.v1.b2ac7c39
     cases:
       - {case_id: aapl-splits, parameters: {symbol: AAPL, from: "2020-01-01", to: "2026-08-09"}, expected_observations: ["Stock Splits", "Date"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Twelve Data
     provider_id: twelvedata
+    access_path_id: twelve-data-corporate-actions-qveris
     tool_id: twelvedata.splits.retrieve.v1.43527690
     cases:
       - {case_id: aapl-splits, parameters: {symbol: AAPL, start_date: "2020-01-01", end_date: "2026-08-09"}, expected_observations: ["splits"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Alpha Vantage
     provider_id: alphavantage
+    access_path_id: alpha-vantage-corporate-actions-qveris
     tool_id: alphavantage.splits.list.v1.467a92c0
     cases:
       - {case_id: aapl-splits, parameters: {function: SPLITS, symbol: AAPL}, expected_observations: ["symbol", "data"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {function: SPLITS, symbol: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: Massive
     provider_id: massive_stocks
+    access_path_id: massive-stocks-corporate-actions-qveris
     tool_id: massive_stocks.stocks.splits.list.v1.9ba1ffe4
     cases:
       - {case_id: aapl-splits, parameters: {ticker: AAPL, execution_date.gte: "2020-01-01", execution_date.lte: "2026-08-09", limit: 20}, expected_observations: ["results"], negative_control: false}
       - {case_id: invalid-symbol, parameters: {ticker: NOTASTOCK}, expected_observations: [], negative_control: true}
   - supplier: 恒生聚源
     provider_id: hangseng_polysource
+    access_path_id: hangseng-polysource-corporate-actions-qveris
     tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
     cases:
       - {case_id: 600519-dividends, parameters: {stockObject: ["600519.SH"], beginDate: "2025-08-09", endDate: "2026-08-09", pageSize: 20}, expected_observations: ["data"], negative_control: false}
