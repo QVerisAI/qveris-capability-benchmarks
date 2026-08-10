@@ -313,7 +313,7 @@ def main(argv: list[str] | None = None) -> int:
             va="center",
             fontsize=12,
         )
-    ax.set_title(f"{guide_label}：尚无符合 release 规范的货币覆盖事实")
+    ax.set_title(f"{guide_label}：历史公开观测与工具契约中的货币覆盖")
     fig.tight_layout()
     path = args.output_dir / "chart-market-coverage.png"
     fig.savefig(path, dpi=150)

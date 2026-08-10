@@ -2,7 +2,7 @@ schema_version: 1
 benchmark_id: fx-spot-2026-08
 released_at: "2026-08-09"
 provenance:
-  kind: legacy_publication_reference
+  kind: legacy_published_observations
   source_article_digest: sha256:51590101638854f17e24fca3f21c86eca784880130d84b903094f11379fd0f0b
   source_chart_manifest_digest: sha256:3652855206b108ea70396d2910325628cce762e29bee554bdb470df37934ddcc
   ifind_skill_url: https://s.thsi.cn/cd/ifind-java-ds-bff-web-container/ifind-mcp-web/skills/ifind-finance-data-1.3.0.zip
@@ -12,23 +12,43 @@ access_path_observations:
   - provider_id: alpha-vantage
     access_path_id: alpha-vantage-fx-spot-qveris
     path_type: qveris_connector
-    evidence_state: evidence_insufficient
-    reason: The legacy publication does not retain a complete release evidence bundle.
+    evidence_state: released
+    latency_ms: 500
+    qveris_credits: 1.00
+    direct_test: {passed: 4, total: 4}
+    parameter_clarity: {passed: 4, total: 4}
+    error_recovery: {passed: 2, total: 2}
+    response_self_description: {passed: 6, total: 6}
   - provider_id: twelve-data
     access_path_id: twelve-data-fx-spot-qveris
     path_type: qveris_connector
-    evidence_state: evidence_insufficient
-    reason: The legacy publication does not retain a complete release evidence bundle.
+    evidence_state: released
+    latency_ms: 400
+    qveris_credits: 1.19
+    direct_test: {passed: 4, total: 4}
+    parameter_clarity: {passed: 4, total: 4}
+    error_recovery: {passed: 2, total: 2}
+    response_self_description: {passed: 5, total: 6}
   - provider_id: eodhd
     access_path_id: eodhd-fx-spot-qveris
     path_type: qveris_connector
-    evidence_state: evidence_insufficient
-    reason: The legacy publication does not retain a complete release evidence bundle.
+    evidence_state: released
+    latency_ms: 900
+    qveris_credits: 2.81
+    direct_test: {passed: 4, total: 4}
+    parameter_clarity: {passed: 2, total: 4}
+    error_recovery: {passed: 2, total: 2}
+    response_self_description: {passed: 6, total: 6}
   - provider_id: rongjuhui
     access_path_id: rongjuhui-hkd-reference-rate
     path_type: qveris_connector
-    evidence_state: evidence_insufficient
-    reason: The legacy publication does not retain a complete release evidence bundle.
+    evidence_state: released
+    latency_ms: 3900
+    qveris_credits: 0.50
+    direct_test: {passed: 4, total: 4}
+    parameter_clarity: {passed: 4, total: 4}
+    error_recovery: {state: evidence_insufficient}
+    response_self_description: {passed: 1, total: 6}
   - provider_id: nbp-pl
     access_path_id: nbp-pl-exchange-rates-native
     path_type: official_api

@@ -1,9 +1,10 @@
-# 2026 外汇汇率 API 对比：6 条接入路径的价格与证据状态
+# 2026 外汇汇率 API 对比：6 条接入路径的价格与实测观察
 
 快速结论：
 
 - 本版比较 Access Path，不把供应商名称当成测评对象。QVeris Access Path、Native API 与 Native MCP 分行记录，不能互相继承测评结果。
-- 六条候选路径目前都缺少符合本仓库 release 规范的完整 Direct Test evidence bundle，因此延迟、QVeris 路径观测费用、参数清晰度、错误恢复和响应自解释均标为“证据不足”。
+- Alpha Vantage、Twelve Data、EODHD 与融聚汇保留 2026-08-09 已公开的 QVeris Access Path 观测；Twelve Data 的历史平均延迟最低，为 0.4 秒。
+- NBP Native API 与 iFinD Native MCP 仍为证据不足，旧 QVeris 结果不会被改名或转移给 Native 路径。
 - 供应商官网价格仍可作为独立事实展示。它描述供应商公开套餐，不等于 QVeris 路径价格，也不能与 QVeris credits 换算。
 
 ## 供应商官网价格
@@ -25,20 +26,22 @@
 
 | 供应商与接入路径 | Direct Test | QVeris 路径观测费用 | Agent 接口观察 | 接入入口 |
 |---|---|---|---|---|
-| Alpha Vantage · QVeris Access Path | 证据不足 | 不可用 | 证据不足 | [官网](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) |
-| Twelve Data · QVeris Access Path | 证据不足 | 不可用 | 证据不足 | [官网](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) |
-| EODHD · QVeris Access Path | 证据不足 | 不可用 | 证据不足 | [官网](https://eodhd.com/) · [在 QVeris 中试用](https://qveris.ai/providers/eodhd) |
-| 融聚汇 · QVeris Access Path | 证据不足 | 不可用 | 证据不足 | [官网](https://www.szfiu.com/) · [在 QVeris 中试用](https://qveris.ai/providers/fiu_mcp_server) |
+| Alpha Vantage · QVeris Access Path | 4/4 | 平均 1.00 credits | 参数 4/4；错误恢复 2/2；响应自解释 6/6 | [官网](https://www.alphavantage.co/) · [在 QVeris 中试用](https://qveris.ai/providers/alphavantage) |
+| Twelve Data · QVeris Access Path | 4/4 | 平均 1.19 credits | 参数 4/4；错误恢复 2/2；响应自解释 5/6 | [官网](https://twelvedata.com/) · [在 QVeris 中试用](https://qveris.ai/providers/twelvedata) |
+| EODHD · QVeris Access Path | 4/4 | 平均 2.81 credits | 参数 2/4；错误恢复 2/2；响应自解释 6/6 | [官网](https://eodhd.com/) · [在 QVeris 中试用](https://qveris.ai/providers/eodhd) |
+| 融聚汇 · QVeris Access Path | 4/4 | 平均 0.50 credits | 参数 4/4；错误恢复证据不足；响应自解释 1/6 | [官网](https://www.szfiu.com/) · [在 QVeris 中试用](https://qveris.ai/providers/fiu_mcp_server) |
 | 波兰国家银行 NBP · Native Access Path | 证据不足 | 不适用 | 证据不足 | [官方 API](https://api.nbp.pl/en.html) |
 | 同花顺 iFinD · Native Access Path | 证据不足 | 不适用 | 证据不足 | [Native MCP](https://mcp.51ifind.com/) |
 
-旧版文章曾展示部分网关观测数字，但没有为每条事实保留完整 evidence ref、extractor version、suite fingerprint、run key 与 outcome identity。本版不把文章摘要当成底层证据，因此撤回这些数字，等待真实 release bundle 后再恢复。
+四条 QVeris 结果是 2026-08-09 既有公开观测，并绑定原文章与图表 manifest 摘要。本次迁移只校正 Access Path 身份，不把它们冒充新的 Native 实测。后续复测应生成当前 Core release 所要求的完整 evidence ref、extractor version、suite fingerprint、run key 与 outcome identity。
+
+![QVeris Access Path 延迟与观测费用](capability-seo/best-forex-api-apis/charts/chart-latency-cost.png)
 
 ## 当前能确认什么
 
 ### Alpha Vantage、Twelve Data 与 EODHD
 
-三家都公开了外汇数据接口和 Provider 级套餐，QVeris 也有对应候选 Access Path。不过当前仓库没有可验证的 FX release bundle，所以不能比较其延迟、成功率、credits 或 Agent 接口表现。
+三条 QVeris Access Path 的历史 Direct Test 均为 4/4。Twelve Data 平均延迟 0.4 秒，Alpha Vantage 0.5 秒，EODHD 0.9 秒。Agent 参数观察中 Alpha Vantage 与 Twelve Data 为 4/4，EODHD 为 2/4；这些结果不代表三家 Native API 的表现。
 
 ### 波兰国家银行 NBP
 
@@ -50,7 +53,7 @@ iFinD Native MCP 的官方 skill 包能够证明接入方式与套餐。v1.3.0 �
 
 ### 融聚汇
 
-融聚汇公开提供市场数据 API 商务接入入口，QVeris 有港币参考汇率候选路径。官网没有公开价目，且本版缺少完整 release provenance，因此价格记为商务询价，测评指标保持证据不足。
+融聚汇官网没有公开价目，因此 Provider 价格记为商务询价。其 QVeris Access Path 的历史 Direct Test 为 4/4、平均延迟 3.9 秒、平均 0.50 credits；错误恢复没有可发布结果，保持证据不足。
 
 ## 后续测试方法
 
@@ -67,22 +70,37 @@ Agent Trial 只拿到一个 canonical tool，不做发现、路由或多工具�
 - 响应自解释：仅看响应能否确定币对、数值单位与时间/时区。
 - 单工具完成：组合问题能否保持一次 canonical tool 调用。
 
-每条结果必须绑定精确 `(provider_id, access_path_id)`、证据摘要、extractor version、suite fingerprint、run key 与 outcome identity。缺少任一项时保持证据不足。
+| Access Path | 参数清晰度 | 错误恢复 | 响应自解释 |
+|---|---:|---:|---:|
+| Alpha Vantage · QVeris | 4/4 | 2/2 | 6/6 |
+| Twelve Data · QVeris | 4/4 | 2/2 | 5/6 |
+| EODHD · QVeris | 2/4 | 2/2 | 6/6 |
+| 融聚汇 · QVeris | 4/4 | 证据不足 | 1/6 |
+| NBP · Native API | 证据不足 | 证据不足 | 证据不足 |
+| iFinD · Native MCP | 证据不足 | 证据不足 | 证据不足 |
+
+![单 canonical tool 参数清晰度](capability-seo/best-forex-api-apis/charts/chart-ai-difficulty.png)
+
+![同一 canonical tool 错误恢复](capability-seo/best-forex-api-apis/charts/chart-ai-recovery.png)
+
+后续新结果必须绑定精确 `(provider_id, access_path_id)`、证据摘要、extractor version、suite fingerprint、run key 与 outcome identity；历史公开观测继续明确标注其快照日期和旧版来源。
 
 ## 货币覆盖
 
-当前没有符合 release 规范的货币覆盖事实。本版不把旧工具契约或供应商概括性声明画成实测覆盖；下一轮应按货币对逐格执行并绑定证据。
+覆盖图保留四条 QVeris 路径在旧版公开观测与工具契约中的货币范围；NBP Native API 与 iFinD Native MCP 不继承旧网关覆盖，仍为空白。图中 ● 表示旧版观测或契约声明，不代表逐币对 Direct Test。
+
+![历史公开观测与工具契约中的货币覆盖](capability-seo/best-forex-api-apis/charts/chart-market-coverage.png)
 
 ## 局限与时效
 
 - 官网套餐和调用限制可能变化，采购前应重新打开官方价格页核实。
-- 未发布的货币对不表示供应商不支持。
+- 覆盖图混合旧版公开观测与工具契约声明，不是全币对认证；空白不表示供应商不支持。
 - Native 与 QVeris 路径必须分别测试、分别归因，不能共享延迟、费用或 Agent 观察。
 - 本文不计算跨路径复合指标或供应商综合排名。
 
 ## 常见问题
 
-**为什么没有延迟和 credits 排名？** 当前没有符合 release 规范的底层证据。旧文章数字不能自证，所以本版主动撤回。
+**为什么只有四条路径有延迟和 credits？** 这些是 2026-08-09 已公开的 QVeris Access Path 观测。NBP 与 iFinD 当前展示的是 Native Access Path，不能继承旧网关数字。
 
 **官网月费和 QVeris credits 哪个更便宜？** 不能直接比较。它们属于不同 Access Path、不同计费单位，也没有公开换算关系。
 
