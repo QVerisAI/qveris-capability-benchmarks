@@ -3,17 +3,47 @@ provider:
   official_name: Fund Insight
   website: https://www.fundinsight.net/
   market_coverage: [US]
-  testing_authorization: QVeris exposes an attributable Direct Test connector.
-  qveris_integration: true
+  official_pricing:
+    - pricing_id: fund-insight-official-pricing
+      pricing_url: https://www.fundinsight.net/terms-of-service
+      applies_to:
+        - fiu-etf-holdings
+        - fiu-institutional-fix
+      currencies: [NONE]
+      free_tier: "No public free API tier"
+      paid_plans: "Institutional pricing under a separate MSA"
+      verified_at: 2026-08-10
+      source_digest: e39cc2a04ce753572ba7a3bc9d087d66d54094d8055fff1c22fb1d591be6790c
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
 access_paths:
   - access_path_id: fiu-etf-holdings
     provider_id: fiu
     path_type: qveris_connector
-    credential_env: [QVERIS_API_KEY]
     official_source: https://www.fundinsight.net/terms-of-service
     canonical_interface: US_F10_FUND_CONSTITUENT
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
     agent_trial_eligible: false
     qualification:
       disposition: included
-      reason: QVeris exposes an attributable US ETF constituent Direct path.
+      reason: Frozen Direct Test evidence supports this Access Path.
       evidence_digest: sha256:d284726a9c4150aa693eb9872edbd180c6a04990ad7228dd04c9bbd92b1e29e3
+  - access_path_id: fiu-institutional-fix
+    provider_id: fiu
+    path_type: official_api
+    official_source: https://www.fundinsight.net/terms-of-service
+    canonical_interface: FIX 4.4 institutional data feed
+    protocol: fix_44
+    endpoint_url: null
+    authentication: Endpoint and credentials issued under a customer MSA
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: The official native endpoint and benchmark authorization require a customer MSA.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c

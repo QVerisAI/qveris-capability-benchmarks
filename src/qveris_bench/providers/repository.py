@@ -7,15 +7,10 @@ import yaml
 from pydantic import Field, ValidationError, model_validator
 
 from qveris_bench.models.base import FrozenModel
-from qveris_bench.models.enums import AccessPathType, QualificationDisposition
 from qveris_bench.models.provider import (
     AccessPath,
     ProviderProfile,
     QualificationDecision,
-)
-from qveris_bench.providers.credentials import (
-    CredentialReferenceError,
-    validate_credential_reference,
 )
 from qveris_bench.providers.qualification import check_frozen_cohort
 from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
@@ -49,18 +44,15 @@ class ProviderRegistryEntry(FrozenModel):
             if access_path.access_path_id in path_ids:
                 raise ValueError(f"duplicate Access Path {access_path.access_path_id}")
             path_ids.add(access_path.access_path_id)
-            if (
-                access_path.path_type is AccessPathType.QVERIS_CONNECTOR
-                and access_path.qualification is not None
-                and access_path.qualification.disposition
-                is QualificationDisposition.INCLUDED
-                and not self.provider.qveris_integration
-            ):
+        for pricing in self.provider.official_pricing:
+            if pricing.applies_to == "provider_wide":
+                continue
+            unknown = set(pricing.applies_to) - path_ids
+            if unknown:
                 raise ValueError(
-                    "included qveris_connector requires provider qveris_integration"
+                    f"pricing {pricing.pricing_id} references unknown Access Paths: "
+                    + ", ".join(sorted(unknown))
                 )
-            for reference in access_path.credential_env:
-                validate_credential_reference(reference)
         return self
 
 
@@ -80,7 +72,7 @@ class ProviderRegistryRepository:
     def load(self, path: Path) -> ProviderRegistryEntry:
         try:
             return ProviderRegistryEntry.model_validate(_load_yaml_mapping(path))
-        except (ValidationError, CredentialReferenceError) as exc:
+        except ValidationError as exc:
             raise ProviderValidationError(
                 f"{path}: invalid provider definition: {exc}"
             ) from exc

@@ -21,15 +21,30 @@ def test_ac1_direct_binding_must_belong_to_an_included_suite_path(
   provider_id: fiu
   official_name: FIU
   website: https://example.com/
-  testing_authorization: QVeris Direct Test
-  qveris_integration: true
+  official_pricing:
+    - pricing_id: fiu-official-pricing
+      pricing_url: https://example.com/pricing
+      applies_to: [fiu-etf-holdings]
+      currencies: [USD]
+      free_tier: No public free tier
+      paid_plans: Test plan from USD 10/month
+      verified_at: 2026-08-10
+      source_digest: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+      extractor_version: 1.0.0
+      suite_fingerprint: >-
+        eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+      disclosure_level: sanitized_public
+      license_status: cleared
 access_paths:
   - access_path_id: fiu-etf-holdings
     provider_id: fiu
     path_type: official_api
-    credential_env: [QVERIS_API_KEY]
     official_source: https://example.com/docs
+    authorization: Frozen qualification evidence permits benchmark execution.
     canonical_interface: ETF_HOLDINGS
+    protocol: https_rest
+    endpoint_url: https://example.com/api
+    authentication: Managed test access
     agent_trial_eligible: false
     qualification:
       disposition: included

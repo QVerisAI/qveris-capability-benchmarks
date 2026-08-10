@@ -1,0 +1,34 @@
+provider:
+  provider_id: ifind
+  official_name: 同花顺 iFinD
+  website: https://mcp.51ifind.com/
+  market_coverage: [CN, HK, US, GLOBAL]
+  official_pricing:
+    - pricing_id: ifind-mcp-official-pricing
+      pricing_url: https://mcp.51ifind.com/?syncCookieTimes=1#/pricing
+      applies_to:
+        - ifind-native-mcp
+      currencies: [CNY]
+      free_tier: "New accounts receive 2,000 trial requests"
+      paid_plans: "Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests"
+      verified_at: 2026-08-10
+      source_digest: d8621d75747f02e66b4d054d4884a53b86eece43c0966af697215b1856616c00
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: ifind-native-mcp
+    provider_id: ifind
+    path_type: native_mcp
+    official_source: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md
+    canonical_interface: iFinD finance-data MCP tools
+    protocol: mcp_streamable_http
+    endpoint_url: https://api-mcp.51ifind.com:8643/ds-mcp-servers
+    authentication: Authorization header with the user-issued auth_token
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: true
+    qualification:
+      disposition: excluded
+      reason: A user-issued auth token is required before native Direct Test or Agent Trial.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c

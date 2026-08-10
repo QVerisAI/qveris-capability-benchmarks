@@ -20,6 +20,14 @@ class AccessPathType(StrEnum):
     QVERIS_CONNECTOR = "qveris_connector"
 
 
+class AccessProtocol(StrEnum):
+    HTTPS_REST = "https_rest"
+    MCP_STREAMABLE_HTTP = "mcp_streamable_http"
+    MCP_SSE = "mcp_sse"
+    FIX_44 = "fix_44"
+    SDK = "sdk"
+
+
 class QualificationDisposition(StrEnum):
     INCLUDED = "included"
     EXCLUDED = "excluded"

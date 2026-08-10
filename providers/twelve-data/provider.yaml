@@ -3,17 +3,47 @@ provider:
   official_name: Twelve Data
   website: https://twelvedata.com/
   market_coverage: [US]
-  testing_authorization: QVeris exposes an attributable Direct Test connector.
-  qveris_integration: true
+  official_pricing:
+    - pricing_id: twelve-data-official-pricing
+      pricing_url: https://twelvedata.com/pricing
+      applies_to:
+        - twelve-data-etf-holdings
+        - twelve-data-exchange-rate-native
+      currencies: [USD]
+      free_tier: "Basic with 8 API credits per minute and 800 per day"
+      paid_plans: "Grow from USD 29/month"
+      verified_at: 2026-08-10
+      source_digest: 00bd84cd0b0d9ce97da479e2a5ebfa25365bc3efa46f7b27c53f8384cb80f27d
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
 access_paths:
   - access_path_id: twelve-data-etf-holdings
     provider_id: twelve-data
     path_type: qveris_connector
-    credential_env: [QVERIS_API_KEY]
     official_source: https://twelvedata.com/docs
     canonical_interface: etfs-world
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
       disposition: excluded
       reason: Direct diagnostic does not expose the expected holdings structure.
       evidence_digest: sha256:a99ded8f868c20f5ffe0cd1c69db885653203f1e7b0adf2941884ef5d75347ee
+  - access_path_id: twelve-data-exchange-rate-native
+    provider_id: twelve-data
+    path_type: official_api
+    official_source: https://twelvedata.com/docs#exchange-rate
+    canonical_interface: exchange_rate
+    protocol: https_rest
+    endpoint_url: https://api.twelvedata.com/exchange_rate
+    authentication: API key in query parameter or Authorization header
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Native access is documented but no benchmark credential is recorded.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c

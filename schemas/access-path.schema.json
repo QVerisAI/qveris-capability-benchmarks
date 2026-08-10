@@ -12,6 +12,17 @@
       "title": "AccessPathType",
       "type": "string"
     },
+    "AccessProtocol": {
+      "enum": [
+        "https_rest",
+        "mcp_streamable_http",
+        "mcp_sse",
+        "fix_44",
+        "sdk"
+      ],
+      "title": "AccessProtocol",
+      "type": "string"
+    },
     "QualificationDecision": {
       "additionalProperties": false,
       "properties": {
@@ -59,31 +70,34 @@
       "title": "Agent Trial Eligible",
       "type": "boolean"
     },
+    "authentication": {
+      "minLength": 1,
+      "title": "Authentication",
+      "type": "string"
+    },
     "authorization": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Authorization"
+      "minLength": 1,
+      "title": "Authorization",
+      "type": "string"
     },
     "canonical_interface": {
       "minLength": 1,
       "title": "Canonical Interface",
       "type": "string"
     },
-    "credential_env": {
-      "default": [],
-      "items": {
-        "pattern": "^[A-Z][A-Z0-9_]*$",
-        "type": "string"
-      },
-      "title": "Credential Env",
-      "type": "array"
+    "endpoint_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Endpoint Url"
     },
     "official_source": {
       "format": "uri",
@@ -106,6 +120,9 @@
       ],
       "default": null,
       "title": "Plan Name"
+    },
+    "protocol": {
+      "$ref": "#/$defs/AccessProtocol"
     },
     "provider_id": {
       "maxLength": 128,
@@ -131,7 +148,11 @@
     "provider_id",
     "path_type",
     "official_source",
+    "authorization",
     "canonical_interface",
+    "protocol",
+    "endpoint_url",
+    "authentication",
     "agent_trial_eligible"
   ],
   "title": "AccessPath",

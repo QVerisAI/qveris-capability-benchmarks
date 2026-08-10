@@ -26,21 +26,39 @@ def _provider_data(
             "official_name": "Financial Modeling Prep",
             "website": "https://site.financialmodelingprep.com/",
             "market_coverage": ["US"],
-            "testing_authorization": "Public paid API plan",
-            "qveris_integration": True,
+            "official_pricing": [
+                {
+                    "pricing_id": "fmp-official-pricing",
+                    "pricing_url": (
+                        "https://site.financialmodelingprep.com/pricing-plans"
+                    ),
+                    "applies_to": "provider_wide",
+                    "currencies": ["USD"],
+                    "free_tier": "Basic plan with 250 calls per day",
+                    "paid_plans": "Starter from USD 22/month",
+                    "verified_at": "2026-08-10",
+                    "source_digest": "d" * 64,
+                    "extractor_version": "1.0.0",
+                    "suite_fingerprint": "e" * 64,
+                    "disclosure_level": "sanitized_public",
+                    "license_status": "cleared",
+                }
+            ],
         },
         "access_paths": [
             {
                 "access_path_id": access_path_id,
                 "provider_id": provider_id,
                 "path_type": "official_api",
-                "credential_env": ["FMP_API_KEY"],
                 "official_source": (
                     "https://site.financialmodelingprep.com/developer/docs"
                 ),
                 "plan_name": "Starter",
                 "authorization": "Internal benchmark use",
                 "canonical_interface": "etf-holder",
+                "protocol": "https_rest",
+                "endpoint_url": "https://financialmodelingprep.com/stable",
+                "authentication": "API key query parameter",
                 "agent_trial_eligible": False,
             }
         ],
@@ -66,9 +84,10 @@ def test_ac1_provider_entity_and_access_paths_load_separately(tmp_path: Path) ->
         {
             "access_path_id": "fmp-qveris-connector",
             "path_type": "qveris_connector",
-            "credential_env": ["QVERIS_API_KEY"],
             "official_source": "https://qveris.ai/",
             "canonical_interface": "fmp-etf-holder",
+            "endpoint_url": None,
+            "authentication": "Managed access",
         }
     )
     second_path["qualification"] = {
@@ -133,22 +152,25 @@ def test_ac4_frozen_cohort_requires_terminal_disposition(tmp_path: Path) -> None
         repository.cohort_check()
 
 
-def test_ac4_included_qveris_connector_requires_integrated_provider(
+def test_ac4_qveris_path_does_not_require_a_provider_relationship_flag(
     tmp_path: Path,
 ) -> None:
     data = _provider_data()
-    data["provider"]["qveris_integration"] = False
     data["access_paths"][0].update(
         {
             "path_type": "qveris_connector",
-            "credential_env": ["QVERIS_API_KEY"],
+            "endpoint_url": None,
+            "authentication": "Managed access",
         }
     )
     path = tmp_path / "provider.yaml"
     _write_provider(path, data)
 
-    with pytest.raises(ProviderValidationError, match="qveris_integration"):
-        ProviderRegistryRepository(tmp_path).load(path)
+    record = ProviderRegistryRepository(tmp_path).load(path)
+
+    assert record.access_paths[0].path_type == "qveris_connector", (
+        "AC4 Access Path identity must not leak into the Provider entity"
+    )
 
 
 @pytest.mark.parametrize("disposition", ["included", "excluded"])

@@ -17,7 +17,11 @@ def _path() -> AccessPath:
             "provider_id": "financial-modeling-prep",
             "path_type": "official_api",
             "official_source": "https://financialmodelingprep.com/docs",
+            "authorization": "Public test plan permits benchmark execution.",
             "canonical_interface": "etf-holdings",
+            "protocol": "https_rest",
+            "endpoint_url": "https://financialmodelingprep.com/stable",
+            "authentication": "API key query parameter",
             "agent_trial_eligible": False,
         }
     )
