@@ -19,7 +19,7 @@ def test_ac1_determined_answers_parse() -> None:
     assert not _determined("不能")
 
 
-def test_ac2_fixture_loads_six_suppliers_and_three_elements() -> None:
+def test_ac2_fixture_loads_four_access_paths_and_three_elements() -> None:
     elements, cases = load_fixture(
         ROOT / "scripts/fixtures/fx-response-self-description.yaml"
     )
@@ -28,8 +28,7 @@ def test_ac2_fixture_loads_six_suppliers_and_three_elements() -> None:
         "Alpha Vantage",
         "Twelve Data",
         "EODHD",
-        "波兰国家银行",
-        "同花顺 iFinD",
         "融聚汇",
     }
+    assert all(case.provider_id and case.access_path_id for case in cases)
     assert all(case.response_text for case in cases)

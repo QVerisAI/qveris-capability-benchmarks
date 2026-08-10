@@ -14,6 +14,8 @@ from qveris_bench.agent_trial.param_fill import ParamSpec
 def _contract() -> ToolContract:
     return ToolContract(
         tool_id="twelvedata.exchangerate.retrieve.v1.9eeb3b0d",
+        provider_id="twelve-data",
+        access_path_id="twelve-data-fx-spot-qveris",
         name="Exchange rate",
         description="Real-time exchange rates for currency pairs.",
         params=(ParamSpec(name="symbol", type="string", required=True),),

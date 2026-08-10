@@ -25,12 +25,16 @@ _DEFAULT_MODEL = "deepseek-v4-flash"
 @dataclass(frozen=True)
 class SelfDescriptionCase:
     supplier: str
+    provider_id: str
+    access_path_id: str
     response_text: str
 
 
 @dataclass(frozen=True)
 class ElementResult:
     supplier: str
+    provider_id: str
+    access_path_id: str
     element: str
     round: int
     determined: bool
@@ -45,6 +49,8 @@ def load_fixture(
     cases = tuple(
         SelfDescriptionCase(
             supplier=case["supplier"],
+            provider_id=case["provider_id"],
+            access_path_id=case["access_path_id"],
             response_text=case["response_text"],
         )
         for case in document["cases"]
@@ -131,6 +137,8 @@ def main(argv: list[str] | None = None) -> int:
                 results.append(
                     ElementResult(
                         supplier=case.supplier,
+                        provider_id=case.provider_id,
+                        access_path_id=case.access_path_id,
                         element=element,
                         round=round_index,
                         determined=_determined(answer),
@@ -146,6 +154,8 @@ def main(argv: list[str] | None = None) -> int:
                 json.dumps(
                     {
                         "supplier": result.supplier,
+                        "provider_id": result.provider_id,
+                        "access_path_id": result.access_path_id,
                         "element": result.element,
                         "round": result.round,
                         "determined": result.determined,

@@ -1,8 +1,8 @@
 schema_version: 1
 benchmark_id: fx-spot-2026-08
 article_slug: best-forex-api-apis
-edition: "2026-08-09"
-search_intent: 对比外汇即期汇率 API 的实测延迟、费用与 AI 友好度，帮助开发者选择汇率数据源
+edition: "2026-08-10"
+search_intent: 对比外汇即期汇率接入路径的官方价格、QVeris 路径观测与 Agent 接口表现
 primary_capability_ids: [FX.SPOT]
 related_capability_ids: []
 comparison_shortlist:
@@ -12,6 +12,13 @@ comparison_shortlist:
   - 波兰国家银行
   - 同花顺 iFinD
   - 融聚汇
+access_paths:
+  - {provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
+  - {provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
+  - {provider_id: eodhd, access_path_id: eodhd-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
+  - {provider_id: rongjuhui, access_path_id: rongjuhui-hkd-reference-rate, path_type: qveris_connector, evidence_state: released}
+  - {provider_id: nbp-pl, access_path_id: nbp-pl-exchange-rates-native, path_type: official_api, evidence_state: evidence_insufficient}
+  - {provider_id: ifind, access_path_id: ifind-native-mcp, path_type: native_mcp, evidence_state: evidence_insufficient}
 supplier_entities:
   Alpha Vantage: alphavantage.co
   Twelve Data: twelvedata.com
@@ -27,8 +34,8 @@ publication_policy:
   freeze_shortlist_after_baseline: true
   states: [qualified, not_qualified, not_applicable]
 seo:
-  title: "2026 外汇汇率 API 对比：6 家即期汇率数据源实测"
-  meta_description: "2026 年 8 月实测：对比 6 家外汇汇率 API 的延迟、费用与 AI 友好度，帮助开发者选择即期汇率数据源。"
+  title: "2026 外汇汇率 API 对比：6 条接入路径的价格与实测观察"
+  meta_description: "区分 Native 与 QVeris 接入路径，对比 6 条外汇汇率路径的官网价格、QVeris 历史实测与 Native 证据状态。"
   primary_keyword: 外汇汇率 API
   secondary_keywords: [即期汇率 API, 汇率 API, forex API, 外汇数据源]
   publication_action: new_page
@@ -47,8 +54,6 @@ seo:
     Alpha Vantage: https://qveris.ai/providers/alphavantage
     Twelve Data: https://qveris.ai/providers/twelvedata
     EODHD: https://qveris.ai/providers/eodhd
-    波兰国家银行: https://qveris.ai/providers/nbp_pl
-    同花顺 iFinD: https://qveris.ai/providers/ths_ifind
     融聚汇: https://qveris.ai/providers/fiu_mcp_server
   official_sources:
     Alpha Vantage 文档: https://www.alphavantage.co/documentation/
@@ -63,6 +68,7 @@ seo:
     Best Free Stock APIs: https://qveris.ai/guides/stock-api-free-comparison/
 artifacts:
   article: docs/guides/best-forex-api-apis.md
+  released_observations: scripts/fixtures/fx-released-observations.yaml
   direct_test_evidence: evidence/private/cap-direct-test.jsonl
   agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
   agent_error_recovery_evidence: evidence/private/agent-error-recovery.jsonl

@@ -7,6 +7,7 @@ from scripts.cap_direct_test_probe import (
     SupplierProbe,
     evaluate_cell,
     load_fixture,
+    probe_state,
     run_probe,
 )
 
@@ -100,23 +101,69 @@ def test_ac5_execution_unauthorized_is_n_a() -> None:
     probe = SupplierProbe(
         supplier="EODHD",
         provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
         tool_id="eodhd.splits",
         cases=(_case(),),
     )
     results = run_probe((probe,), execute, rounds=1)
     assert results[0].state == "n_a"
+    assert probe_state(results) == "n_a"
+
+
+def test_ac5_any_failed_or_unavailable_cell_fails_the_probe() -> None:
+    assert (
+        probe_state(
+            [
+                evaluate_cell(_case(), {"status_code": 200, "data": {"Date": "x"}}),
+                evaluate_cell(
+                    _case(),
+                    {
+                        "status_code": 200,
+                        "data": {"Date": "x", "Stock Splits": "2:1"},
+                    },
+                ),
+            ]
+        )
+        == "failed"
+    )
 
 
 def test_fixture_loads() -> None:
     from pathlib import Path
 
     probes = load_fixture(
-        Path("scripts/fixtures/cap-direct-test-corporate-actions.yaml")
+        Path("scripts/fixtures/cap-direct-test-corporate-actions.yaml"),
+        Path("providers"),
     )
     assert {probe.supplier for probe in probes} == {
         "EODHD",
         "Twelve Data",
         "Alpha Vantage",
         "Massive",
-        "恒生聚源",
     }
+    assert all(probe.access_path_id for probe in probes)
+
+
+def test_all_direct_fixtures_bind_registered_access_paths() -> None:
+    from pathlib import Path
+
+    for fixture in sorted(Path("scripts/fixtures").glob("cap-direct-test-*.yaml")):
+        probes = load_fixture(fixture, Path("providers"))
+        assert probes
+
+
+def test_legacy_direct_cohort_exclusions_remain_explicit() -> None:
+    from pathlib import Path
+
+    import yaml
+
+    expected_sizes = {
+        "cap-direct-test-corporate-actions.yaml": 5,
+        "cap-direct-test-dividends.yaml": 6,
+    }
+    for name, expected in expected_sizes.items():
+        document = yaml.safe_load((Path("scripts/fixtures") / name).read_text())
+        assert (
+            len(document["suppliers"]) + len(document["excluded_legacy_suppliers"])
+            == expected
+        )

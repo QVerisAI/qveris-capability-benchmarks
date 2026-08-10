@@ -1,5 +1,7 @@
 tools:
   - tool_id: alphavantage.currency_exchange_rate.retrieve.v1
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-fx-spot-qveris
     name: Get Realtime Currency Exchange Rate
     description: Get the current exchange rate between two currencies, e.g. BTC to EUR.
     params:
@@ -13,6 +15,8 @@ tools:
         expected_retry_params: {function: CURRENCY_EXCHANGE_RATE, from_currency: EUR, to_currency: USD}
         difficulty: L2
   - tool_id: twelvedata.exchangerate.retrieve.v1.9eeb3b0d
+    provider_id: twelve-data
+    access_path_id: twelve-data-fx-spot-qveris
     name: Exchange rate
     description: The exchange rate endpoint provides real-time exchange rates for specified currency pairs, including both forex and cryptocurrency.
     params:
@@ -26,6 +30,8 @@ tools:
         expected_retry_params: {symbol: "EUR/USD"}
         difficulty: L2
   - tool_id: eodhd.live_data.real_time.retrieve.v1.b60a4285
+    provider_id: eodhd
+    access_path_id: eodhd-fx-spot-qveris
     name: Retrieve Live (Delayed) OHLCV Stock and Currency Data
     description: Retrieve live or delayed OHLCV data for stocks and currencies. FX symbols use EODHD format, e.g. EURUSD.FOREX.
     params:
@@ -36,29 +42,4 @@ tools:
         task: EUR/USD 当前汇率是多少？
         failure_response: '{"code": "ZZZUSD.FOREX", "timestamp": "NA", "gmtoffset": 0, "open": "NA", "high": "NA", "low": "NA", "close": "NA", "volume": "NA", "previousClose": "NA", "change": "NA", "change_p": "NA"}'
         expected_retry_params: {symbol: "EURUSD.FOREX"}
-        difficulty: L3
-  - tool_id: nbp_pl.exchangerates.rates.last.list.v1
-    name: List last exchange rates for a specific currency
-    description: List the latest official NBP exchange rates for a specific currency against PLN.
-    params:
-      - {name: table, type: string, required: true, description: "Exchange rate table type A, B or C"}
-      - {name: code, type: string, required: true, description: ISO 4217 currency code}
-      - {name: topCount, type: integer, required: true, description: Number of latest rates to retrieve}
-    cases:
-      - question_id: fx-usd-pln-no-data-recovery
-        task: 美元兑波兰兹罗提的最新官方汇率是多少？
-        failure_response: '404 NotFound - Not Found - Brak danych'
-        expected_retry_params: {table: A, code: USD, topCount: 1}
-        difficulty: L2
-  - tool_id: cn_financial_pro.fx_rates.v1
-    name: Foreign Exchange Rates
-    description: Query FX pair rates, e.g. USDCNY.FX, from the data source.
-    params:
-      - {name: codes, type: string, required: true, description: "FX pair codes, comma separated, e.g. USDCNY.FX"}
-      - {name: date, type: string, required: false, description: Query date, defaults to today}
-    cases:
-      - question_id: fx-usd-cny-silent-empty-recovery
-        task: 美元兑人民币当前汇率是多少？
-        failure_response: '[{"symbol": "USDCNY", "price": null, "change": null, "previous_close": null, "open": null, "high": null, "low": null, "close": null, "date": "20260807"}]'
-        expected_retry_params: {codes: "USDCNY.FX"}
         difficulty: L3

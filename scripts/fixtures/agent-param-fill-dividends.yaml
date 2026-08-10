@@ -1,5 +1,12 @@
+excluded_legacy_tools:
+  - supplier: 恒生聚源
+    reason: Stable public Provider and Access Path identity has not been migrated.
+  - supplier: 同花顺 iFinD
+    reason: Legacy QVeris results cannot be relabeled as the Native MCP Access Path.
 tools:
   - tool_id: eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
+    provider_id: eodhd
+    access_path_id: eodhd-dividends-qveris
     name: Retrieve Dividends History
     description: Retrieve historical dividend events for a symbol.
     params:
@@ -12,6 +19,8 @@ tools:
         task: Return AAPL dividend events in the past year.
         expected_params: {symbol: AAPL}
   - tool_id: twelvedata.dividends.retrieve.v1.c0c9b142
+    provider_id: twelve-data
+    access_path_id: twelve-data-dividends-qveris
     name: Dividends
     description: Return dividend history for a symbol.
     params:
@@ -24,6 +33,8 @@ tools:
         task: Return AAPL dividend events in the past year.
         expected_params: {symbol: AAPL}
   - tool_id: polygon.stocks.dividends.list.v1.ea25c492
+    provider_id: massive-stocks
+    access_path_id: massive-stocks-dividends-qveris
     name: List Stock Dividends
     description: List historical dividend events, filterable by ticker and ex-dividend date.
     params:
@@ -36,6 +47,8 @@ tools:
         task: Return AAPL dividend events in the past year.
         expected_params: {ticker: AAPL}
   - tool_id: alphavantage.dividends.list.v1.467a92c0
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-dividends-qveris
     name: Corporate Action Dividends
     description: Retrieve corporate action dividend events for a symbol.
     params:
@@ -46,28 +59,3 @@ tools:
       - question_id: dividend-aapl-history
         task: Return AAPL dividend events in the past year.
         expected_params: {function: DIVIDENDS, symbol: AAPL}
-  - tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
-    name: Stock Dividend Query
-    description: Query dividend records for Shanghai, Shenzhen, Beijing listed companies.
-    params:
-      - {name: stockObject, type: array, required: true, description: Stock codes or names, supporting multiple}
-      - {name: beginDate, type: string, required: false, description: Start date YYYY-MM-DD}
-      - {name: endDate, type: string, required: false, description: End date YYYY-MM-DD}
-      - {name: pageNo, type: integer, required: false, description: Page number}
-      - {name: pageSize, type: integer, required: false, description: Page size}
-    questions:
-      - question_id: dividend-600519-history
-        task: 获取贵州茅台过去一年的分红记录。
-        expected_params: {stockObject: "600519.SH"}
-  - tool_id: cn_financial_pro.dividend_plan.v1
-    name: Dividend and Bonus Share Plans
-    description: Query dividend and bonus share plans for A-share companies.
-    params:
-      - {name: codes, type: string, required: true, description: Stock codes, comma separated, e.g. 600519.SH}
-      - {name: year, type: integer, required: true, description: Report year}
-      - {name: period, type: string, required: true, description: Report period, one of annual, H1, Q3, Q1}
-      - {name: limit, type: integer, required: false, description: Max results}
-    questions:
-      - question_id: dividend-600519-annual
-        task: 获取贵州茅台 2025 年度分红送转方案。
-        expected_params: {codes: "600519.SH", year: 2025, period: annual}

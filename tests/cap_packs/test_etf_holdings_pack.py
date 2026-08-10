@@ -108,7 +108,11 @@ def test_ac3_twelve_data_exclusion_references_direct_diagnostic_evidence() -> No
     twelve_data = next(
         record for record in records if record.provider_id == "twelve-data"
     )
-    path = twelve_data.access_paths[0]
+    path = next(
+        path
+        for path in twelve_data.access_paths
+        if path.access_path_id == "twelve-data-etf-holdings"
+    )
     evidence_path = ROOT / "docs/evidence/qveris-direct-diagnostic-2026-08-06.json"
 
     assert path.qualification is not None

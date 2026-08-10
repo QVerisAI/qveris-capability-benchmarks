@@ -31,17 +31,36 @@ def _provider_data(
             "official_name": provider_id.replace("-", " ").title(),
             "website": f"https://{provider_id}.example.com/",
             "market_coverage": ["US"],
-            "testing_authorization": "Approved internal benchmark plan",
-            "qveris_integration": False,
+            "official_pricing": [
+                {
+                    "pricing_id": f"{provider_id}-official-pricing",
+                    "pricing_url": f"https://{provider_id}.example.com/pricing",
+                    "applies_to": [access_path_id],
+                    "currencies": ["USD"],
+                    "free_tier": "No public free tier",
+                    "paid_plans": "Test plan from USD 10/month",
+                    "verified_at": "2026-08-10",
+                    "source_digest": "d" * 64,
+                    "extractor_version": "1.0.0",
+                    "suite_fingerprint": "e" * 64,
+                    "disclosure_level": "sanitized_public",
+                    "license_status": "cleared",
+                }
+            ],
         },
         "access_paths": [
             {
                 "access_path_id": access_path_id,
                 "provider_id": provider_id,
                 "path_type": path_type,
-                "credential_env": [],
                 "official_source": f"https://{provider_id}.example.com/docs",
+                "authorization": "Public test plan permits benchmark execution.",
                 "canonical_interface": "get-holdings",
+                "protocol": (
+                    "mcp_streamable_http" if path_type == "native_mcp" else "https_rest"
+                ),
+                "endpoint_url": f"https://{provider_id}.example.com/api",
+                "authentication": "Test credential",
                 "agent_trial_eligible": agent_eligible,
                 "qualification": {
                     "disposition": "included",

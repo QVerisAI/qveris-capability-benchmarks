@@ -6,14 +6,18 @@ elements:
   - {id: time, label: 数据的日期/时间及时区}
 cases:
   - supplier: Alpha Vantage
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-fx-spot-qveris
     response_text: '{"Realtime Currency Exchange Rate": {"1. From_Currency Code": "EUR", "2. From_Currency Name": "Euro", "3. To_Currency Code": "USD", "4. To_Currency Name": "United States Dollar", "5. Exchange Rate": "1.15623967", "6. Last Refreshed": "2026-08-09 09:04:51", "7. Time Zone": "UTC", "8. Bid Price": "1.15621834", "9. Ask Price": "1.15629534"}}'
   - supplier: Twelve Data
+    provider_id: twelve-data
+    access_path_id: twelve-data-fx-spot-qveris
     response_text: '{"symbol": "EUR/USD", "rate": 1.15606, "timestamp": 1786266180}'
   - supplier: EODHD
+    provider_id: eodhd
+    access_path_id: eodhd-fx-spot-qveris
     response_text: '{"code": "EURUSD.FOREX", "timestamp": 1786138200, "gmtoffset": 0, "open": 1.1523, "high": 1.1582, "low": 1.1522, "close": 1.1562}'
-  - supplier: 波兰国家银行
-    response_text: '{"table": "A", "currency": "dolar amerykański", "code": "USD", "rates": [{"effectiveDate": "2026-08-07", "mid": 3.7324}]}'
-  - supplier: 同花顺 iFinD
-    response_text: '[{"symbol": "USDCNY.FX", "price": 6.7477, "date": "20260807"}]'
   - supplier: 融聚汇
+    provider_id: rongjuhui
+    access_path_id: rongjuhui-hkd-reference-rate
     response_text: '{"code": "0", "data": [{"rateCurrency": 7.844906806945801, "currency": "HKD", "rateDate": "2026-08-08", "rateDollar": 0.12747123837471008}]}'

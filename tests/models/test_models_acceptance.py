@@ -84,14 +84,17 @@ def test_ac3_external_sources_require_pinned_provenance(missing: str) -> None:
         SourceReference(**values)
 
 
-def test_ac4_access_path_uses_approved_type_and_env_name_only() -> None:
+def test_ac4_access_path_uses_approved_type_without_credential_reference() -> None:
     access_path = AccessPath(
         access_path_id="fmp-official-api",
         provider_id="financial-modeling-prep",
         path_type=AccessPathType.OFFICIAL_API,
-        credential_env=("FMP_API_KEY",),
         official_source="https://site.financialmodelingprep.com/developer/docs",
+        authorization="Public paid plan permits benchmark execution.",
         canonical_interface="etf-holder",
+        protocol="https_rest",
+        endpoint_url="https://financialmodelingprep.com/stable",
+        authentication="API key query parameter",
         agent_trial_eligible=False,
     )
 
@@ -106,7 +109,11 @@ def test_ac4_access_path_uses_approved_type_and_env_name_only() -> None:
             path_type=AccessPathType.OFFICIAL_API,
             credential_env=("actual-secret-value",),
             official_source="https://site.financialmodelingprep.com/developer/docs",
+            authorization="Public paid plan permits benchmark execution.",
             canonical_interface="etf-holder",
+            protocol="https_rest",
+            endpoint_url="https://financialmodelingprep.com/stable",
+            authentication="API key query parameter",
             agent_trial_eligible=False,
         )
 

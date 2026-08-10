@@ -53,6 +53,8 @@ class RecoveryResult:
     passed: bool
     notes: str = ""
     difficulty: str = "L2"
+    provider_id: str = ""
+    access_path_id: str = ""
 
 
 _ERROR_SIGNALS = (
@@ -198,6 +200,8 @@ def run_recovery_probe(
                     passed=result.passed,
                     notes=result.notes,
                     difficulty=question.difficulty,
+                    provider_id=contract.provider_id,
+                    access_path_id=contract.access_path_id,
                 )
             )
     return results

@@ -17,6 +17,8 @@ from typing import Any
 
 import yaml
 
+from qveris_bench.providers.repository import ProviderRegistryRepository
+
 
 @dataclass(frozen=True)
 class Case:
@@ -30,6 +32,7 @@ class Case:
 class SupplierProbe:
     supplier: str
     provider_id: str
+    access_path_id: str
     tool_id: str
     cases: tuple[Case, ...]
 
@@ -40,6 +43,8 @@ class CellResult:
     case_id: str
     round: int
     state: str
+    provider_id: str = ""
+    access_path_id: str = ""
     missing: tuple[str, ...] = ()
     notes: str = ""
     latency_ms: float | None = None
@@ -85,7 +90,9 @@ def _has_event_rows(value: Any) -> bool:
     return False
 
 
-def load_fixture(path: Path) -> tuple[SupplierProbe, ...]:
+def load_fixture(
+    path: Path, providers_root: Path | None = None
+) -> tuple[SupplierProbe, ...]:
     document = yaml.safe_load(path.read_text(encoding="utf-8"))
     probes: list[SupplierProbe] = []
     for supplier_doc in document["suppliers"]:
@@ -102,11 +109,17 @@ def load_fixture(path: Path) -> tuple[SupplierProbe, ...]:
             SupplierProbe(
                 supplier=supplier_doc["supplier"],
                 provider_id=supplier_doc["provider_id"],
+                access_path_id=supplier_doc["access_path_id"],
                 tool_id=supplier_doc["tool_id"],
                 cases=cases,
             )
         )
-    return tuple(probes)
+    loaded = tuple(probes)
+    if providers_root is not None:
+        ProviderRegistryRepository(providers_root).validate_access_path_identities(
+            (probe.provider_id, probe.access_path_id) for probe in loaded
+        )
+    return loaded
 
 
 def build_executor(
@@ -215,6 +228,8 @@ def run_probe(
                         case.case_id,
                         round_index,
                         "n_a",
+                        provider_id=probe.provider_id,
+                        access_path_id=probe.access_path_id,
                         notes=str(exc),
                     )
                 results.append(
@@ -223,6 +238,8 @@ def run_probe(
                         case.case_id,
                         round_index,
                         result.state,
+                        provider_id=probe.provider_id,
+                        access_path_id=probe.access_path_id,
                         missing=result.missing,
                         notes=result.notes,
                         latency_ms=result.latency_ms,
@@ -230,6 +247,14 @@ def run_probe(
                     )
                 )
     return results
+
+
+def probe_state(cells: list[CellResult]) -> str:
+    if any(cell.state == "failed" for cell in cells):
+        return "failed"
+    if not cells or any(cell.state == "n_a" for cell in cells):
+        return "n_a"
+    return "passed"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -253,7 +278,11 @@ def main(argv: list[str] | None = None) -> int:
         print("QVERIS_API_KEY is required.", file=sys.stderr)
         return 2
 
-    probes = load_fixture(args.fixture)
+    providers = ProviderRegistryRepository(Path("providers"))
+    probes = load_fixture(args.fixture, Path("providers"))
+    providers.validate_direct_test_authorization(
+        (probe.provider_id, probe.access_path_id) for probe in probes
+    )
     execute = build_executor(args.base_url.rstrip("/"), api_key)
     results = run_probe(probes, execute, rounds=args.rounds)
 
@@ -265,6 +294,8 @@ def main(argv: list[str] | None = None) -> int:
                 json.dumps(
                     {
                         "supplier": result.supplier,
+                        "provider_id": result.provider_id,
+                        "access_path_id": result.access_path_id,
                         "case_id": result.case_id,
                         "round": result.round,
                         "state": result.state,
@@ -279,11 +310,23 @@ def main(argv: list[str] | None = None) -> int:
                 + "\n"
             )
 
+    exit_code = 0
     for probe in probes:
-        cells = [result for result in results if result.supplier == probe.supplier]
+        cells = [
+            result
+            for result in results
+            if result.provider_id == probe.provider_id
+            and result.access_path_id == probe.access_path_id
+        ]
         failed = [result for result in cells if result.state == "failed"]
-        n_a = [result for result in cells if result.state == "n_a"]
-        state = "n_a" if n_a and not cells else ("未完全达标" if failed else "合格")
+        state = probe_state(cells)
+        if state != "passed":
+            exit_code = 1
+        display_state = {
+            "passed": "合格",
+            "failed": "未完全达标",
+            "n_a": "n_a",
+        }[state]
         latencies = [
             result.latency_ms for result in cells if result.latency_ms is not None
         ]
@@ -295,10 +338,11 @@ def main(argv: list[str] | None = None) -> int:
         )
         avg_cost = f"{sum(costs) / len(costs):.2f} credits" if costs else "无样本"
         print(
-            f"{probe.supplier}: {state} ({len(cells)} cells, failed={len(failed)}, "
+            f"{probe.supplier}: {display_state} "
+            f"({len(cells)} cells, failed={len(failed)}, "
             f"latency={avg_latency}, cost={avg_cost})"
         )
-    return 0
+    return exit_code
 
 
 if __name__ == "__main__":

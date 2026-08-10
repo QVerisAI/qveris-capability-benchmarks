@@ -1,4 +1,122 @@
 {
+  "$defs": {
+    "DisclosureLevel": {
+      "enum": [
+        "private",
+        "summary_only",
+        "sanitized_public"
+      ],
+      "title": "DisclosureLevel",
+      "type": "string"
+    },
+    "LicenseStatus": {
+      "enum": [
+        "pending",
+        "cleared",
+        "restricted"
+      ],
+      "title": "LicenseStatus",
+      "type": "string"
+    },
+    "OfficialPricingFact": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "anyOf": [
+            {
+              "const": "provider_wide",
+              "type": "string"
+            },
+            {
+              "items": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Applies To"
+        },
+        "currencies": {
+          "items": {
+            "pattern": "^(?:[A-Z]{3}|NONE)$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Currencies",
+          "type": "array"
+        },
+        "disclosure_level": {
+          "$ref": "#/$defs/DisclosureLevel"
+        },
+        "extractor_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Extractor Version",
+          "type": "string"
+        },
+        "free_tier": {
+          "minLength": 1,
+          "title": "Free Tier",
+          "type": "string"
+        },
+        "license_status": {
+          "$ref": "#/$defs/LicenseStatus"
+        },
+        "paid_plans": {
+          "minLength": 1,
+          "title": "Paid Plans",
+          "type": "string"
+        },
+        "pricing_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Pricing Id",
+          "type": "string"
+        },
+        "pricing_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Pricing Url",
+          "type": "string"
+        },
+        "source_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Digest",
+          "type": "string"
+        },
+        "suite_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Suite Fingerprint",
+          "type": "string"
+        },
+        "verified_at": {
+          "format": "date",
+          "title": "Verified At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pricing_id",
+        "pricing_url",
+        "applies_to",
+        "currencies",
+        "free_tier",
+        "paid_plans",
+        "verified_at",
+        "source_digest",
+        "extractor_version",
+        "suite_fingerprint",
+        "disclosure_level",
+        "license_status"
+      ],
+      "title": "OfficialPricingFact",
+      "type": "object"
+    }
+  },
   "additionalProperties": false,
   "properties": {
     "market_coverage": {
@@ -14,21 +132,19 @@
       "title": "Official Name",
       "type": "string"
     },
+    "official_pricing": {
+      "items": {
+        "$ref": "#/$defs/OfficialPricingFact"
+      },
+      "minItems": 1,
+      "title": "Official Pricing",
+      "type": "array"
+    },
     "provider_id": {
       "maxLength": 128,
       "minLength": 1,
       "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
       "title": "Provider Id",
-      "type": "string"
-    },
-    "qveris_integration": {
-      "default": false,
-      "title": "Qveris Integration",
-      "type": "boolean"
-    },
-    "testing_authorization": {
-      "minLength": 1,
-      "title": "Testing Authorization",
       "type": "string"
     },
     "website": {
@@ -43,7 +159,7 @@
     "provider_id",
     "official_name",
     "website",
-    "testing_authorization"
+    "official_pricing"
   ],
   "title": "ProviderProfile",
   "type": "object"

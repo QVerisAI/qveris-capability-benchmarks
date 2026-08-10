@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -7,15 +8,10 @@ import yaml
 from pydantic import Field, ValidationError, model_validator
 
 from qveris_bench.models.base import FrozenModel
-from qveris_bench.models.enums import AccessPathType, QualificationDisposition
 from qveris_bench.models.provider import (
     AccessPath,
     ProviderProfile,
     QualificationDecision,
-)
-from qveris_bench.providers.credentials import (
-    CredentialReferenceError,
-    validate_credential_reference,
 )
 from qveris_bench.providers.qualification import check_frozen_cohort
 from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
@@ -49,18 +45,15 @@ class ProviderRegistryEntry(FrozenModel):
             if access_path.access_path_id in path_ids:
                 raise ValueError(f"duplicate Access Path {access_path.access_path_id}")
             path_ids.add(access_path.access_path_id)
-            if (
-                access_path.path_type is AccessPathType.QVERIS_CONNECTOR
-                and access_path.qualification is not None
-                and access_path.qualification.disposition
-                is QualificationDisposition.INCLUDED
-                and not self.provider.qveris_integration
-            ):
+        for pricing in self.provider.official_pricing:
+            if pricing.applies_to == "provider_wide":
+                continue
+            unknown = set(pricing.applies_to) - path_ids
+            if unknown:
                 raise ValueError(
-                    "included qveris_connector requires provider qveris_integration"
+                    f"pricing {pricing.pricing_id} references unknown Access Paths: "
+                    + ", ".join(sorted(unknown))
                 )
-            for reference in access_path.credential_env:
-                validate_credential_reference(reference)
         return self
 
 
@@ -80,7 +73,7 @@ class ProviderRegistryRepository:
     def load(self, path: Path) -> ProviderRegistryEntry:
         try:
             return ProviderRegistryEntry.model_validate(_load_yaml_mapping(path))
-        except (ValidationError, CredentialReferenceError) as exc:
+        except ValidationError as exc:
             raise ProviderValidationError(
                 f"{path}: invalid provider definition: {exc}"
             ) from exc
@@ -114,6 +107,58 @@ class ProviderRegistryRepository:
             )
         )
         return records
+
+    def validate_access_path_identities(
+        self, identities: Iterable[tuple[str, str]]
+    ) -> None:
+        registered = self._access_paths_by_identity()
+        unknown = set(identities) - registered.keys()
+        if unknown:
+            formatted = ", ".join(
+                f"{provider}/{path}" for provider, path in sorted(unknown)
+            )
+            raise ProviderValidationError(f"unknown Provider/Access Path: {formatted}")
+
+    def validate_direct_test_authorization(
+        self, identities: Iterable[tuple[str, str]]
+    ) -> None:
+        requested = set(identities)
+        self.validate_access_path_identities(requested)
+        registered = self._access_paths_by_identity()
+        denied: set[tuple[str, str]] = set()
+        for identity in requested:
+            qualification = registered[identity].qualification
+            if qualification is None or qualification.disposition.value != "included":
+                denied.add(identity)
+        if denied:
+            formatted = ", ".join(
+                f"{provider}/{path}" for provider, path in sorted(denied)
+            )
+            raise ProviderValidationError(f"Direct Test is not authorized: {formatted}")
+
+    def validate_agent_trial_eligibility(
+        self, identities: Iterable[tuple[str, str]]
+    ) -> None:
+        requested = set(identities)
+        self.validate_direct_test_authorization(requested)
+        registered = self._access_paths_by_identity()
+        ineligible = {
+            identity
+            for identity in requested
+            if not registered[identity].agent_trial_eligible
+        }
+        if ineligible:
+            formatted = ", ".join(
+                f"{provider}/{path}" for provider, path in sorted(ineligible)
+            )
+            raise ProviderValidationError(f"Agent Trial is not eligible: {formatted}")
+
+    def _access_paths_by_identity(self) -> dict[tuple[str, str], AccessPath]:
+        return {
+            (record.provider_id, path.access_path_id): path
+            for record in self.list()
+            for path in record.access_paths
+        }
 
 
 def qualify_provider_file(

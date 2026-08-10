@@ -46,6 +46,8 @@ class ParamSpec:
 @dataclass(frozen=True)
 class ToolContract:
     tool_id: str
+    provider_id: str
+    access_path_id: str
     name: str
     description: str
     params: tuple[ParamSpec, ...] = ()
@@ -117,6 +119,8 @@ class ParamFillResult:
     notes: str = ""
     failure_mode: str = FailureMode.PASS.value
     difficulty: str = "L1"
+    provider_id: str = ""
+    access_path_id: str = ""
 
 
 def _type_valid(param: ParamSpec, value: Any) -> bool:
@@ -318,6 +322,8 @@ def run_probe(
                     notes=result.notes,
                     failure_mode=classify_failure(result),
                     difficulty=question.difficulty,
+                    provider_id=contract.provider_id,
+                    access_path_id=contract.access_path_id,
                 )
             )
     return results

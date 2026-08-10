@@ -3,17 +3,75 @@ provider:
   official_name: Massive Stocks
   website: https://massive.com/
   market_coverage: [US]
-  testing_authorization: QVeris exposes an attributable SEC risk-factor Direct path.
-  qveris_integration: true
+  official_pricing:
+    - pricing_id: massive-stocks-official-pricing
+      pricing_url: https://massive.com/pricing?product=stocks
+      applies_to:
+        - massive-stocks-risk-factors
+        - massive-stocks-official-rest
+      currencies: [USD]
+      free_tier: "Stocks Basic at USD 0 with 5 API calls per minute"
+      paid_plans: "Stocks Starter USD 29/month"
+      verified_at: 2026-08-10
+      source_digest: 74c0b1e200eb072becdfb0463056f7dcb498f7cebae8df65480d46792a2255de
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
 access_paths:
+  - access_path_id: massive-stocks-corporate-actions-qveris
+    provider_id: massive-stocks
+    path_type: qveris_connector
+    official_source: https://massive.com/docs/rest/stocks/corporate-actions/splits
+    canonical_interface: splits
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: massive-stocks-dividends-qveris
+    provider_id: massive-stocks
+    path_type: qveris_connector
+    official_source: https://massive.com/docs/rest/stocks/corporate-actions/dividends
+    canonical_interface: dividends
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
   - access_path_id: massive-stocks-risk-factors
     provider_id: massive-stocks
     path_type: qveris_connector
-    credential_env: [QVERIS_API_KEY]
     official_source: https://massive.com/docs/rest/stocks/filings/risk-factors
     canonical_interface: risk-factors
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
     agent_trial_eligible: false
     qualification:
       disposition: included
-      reason: QVeris discovery exposed an attributable SEC risk-factor Direct path.
+      reason: Frozen Direct Test evidence supports this Access Path.
       evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
+  - access_path_id: massive-stocks-official-rest
+    provider_id: massive-stocks
+    path_type: official_api
+    official_source: https://massive.com/docs/rest/stocks/overview
+    canonical_interface: Stocks REST API
+    protocol: https_rest
+    endpoint_url: https://api.massive.com
+    authentication: API key
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Native access is documented but no benchmark credential is recorded.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
