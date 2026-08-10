@@ -1,5 +1,7 @@
 tools:
   - tool_id: finnhub.quote.retrieve.v1.f72cf5ef
+    provider_id: finnhub
+    access_path_id: finnhub-stock-quote
     name: Quote
     description: Get real-time quote data for US stocks.
     params:

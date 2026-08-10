@@ -208,6 +208,15 @@ def test_ac6_fx_qveris_observations_have_registered_access_paths() -> None:
     } <= path_ids
 
 
+def test_ac6_unknown_provider_access_path_pair_is_rejected() -> None:
+    repository = ProviderRegistryRepository(Path("providers"))
+
+    with pytest.raises(ProviderValidationError, match="unknown Provider/Access Path"):
+        repository.validate_access_path_identities(
+            [("twelve-data", "alpha-vantage-fx-spot-qveris")]
+        )
+
+
 def test_ac8_installed_provider_cli_validates_qualifies_and_checks_cohort(
     tmp_path: Path,
 ) -> None:

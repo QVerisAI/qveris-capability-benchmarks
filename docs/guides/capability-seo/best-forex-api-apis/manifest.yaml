@@ -13,10 +13,10 @@ comparison_shortlist:
   - 同花顺 iFinD
   - 融聚汇
 access_paths:
-  - {provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
-  - {provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
-  - {provider_id: eodhd, access_path_id: eodhd-fx-spot-qveris, path_type: qveris_connector, evidence_state: released}
-  - {provider_id: rongjuhui, access_path_id: rongjuhui-hkd-reference-rate, path_type: qveris_connector, evidence_state: released}
+  - {provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, path_type: qveris_connector, evidence_state: evidence_insufficient}
+  - {provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, path_type: qveris_connector, evidence_state: evidence_insufficient}
+  - {provider_id: eodhd, access_path_id: eodhd-fx-spot-qveris, path_type: qveris_connector, evidence_state: evidence_insufficient}
+  - {provider_id: rongjuhui, access_path_id: rongjuhui-hkd-reference-rate, path_type: qveris_connector, evidence_state: evidence_insufficient}
   - {provider_id: nbp-pl, access_path_id: nbp-pl-exchange-rates-native, path_type: official_api, evidence_state: evidence_insufficient}
   - {provider_id: ifind, access_path_id: ifind-native-mcp, path_type: native_mcp, evidence_state: evidence_insufficient}
 supplier_entities:
@@ -34,8 +34,8 @@ publication_policy:
   freeze_shortlist_after_baseline: true
   states: [qualified, not_qualified, not_applicable]
 seo:
-  title: "2026 外汇汇率 API 对比：6 条接入路径的价格与实测证据"
-  meta_description: "区分 Native 与 QVeris 接入路径，对比 6 条外汇汇率路径的官网价格、网关观测与 Agent 接口表现。"
+  title: "2026 外汇汇率 API 对比：6 条接入路径的价格与证据状态"
+  meta_description: "区分 Native 与 QVeris 接入路径，对比 6 条外汇汇率路径的官网价格、接入方式与测评证据状态。"
   primary_keyword: 外汇汇率 API
   secondary_keywords: [即期汇率 API, 汇率 API, forex API, 外汇数据源]
   publication_action: new_page

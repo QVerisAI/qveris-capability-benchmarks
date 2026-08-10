@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -106,6 +107,21 @@ class ProviderRegistryRepository:
             )
         )
         return records
+
+    def validate_access_path_identities(
+        self, identities: Iterable[tuple[str, str]]
+    ) -> None:
+        registered = {
+            (record.provider_id, path.access_path_id)
+            for record in self.list()
+            for path in record.access_paths
+        }
+        unknown = set(identities) - registered
+        if unknown:
+            formatted = ", ".join(
+                f"{provider}/{path}" for provider, path in sorted(unknown)
+            )
+            raise ProviderValidationError(f"unknown Provider/Access Path: {formatted}")
 
 
 def qualify_provider_file(

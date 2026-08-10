@@ -1,5 +1,7 @@
 tools:
   - tool_id: eodhd.financial_apis.splits.retrieve.v1.b2ac7c39
+    provider_id: eodhd
+    access_path_id: eodhd-corporate-actions-qveris
     name: Retrieve Historical Stock Splits
     description: Retrieve historical stock split events for a symbol.
     params:
@@ -12,6 +14,8 @@ tools:
         task: Return AAPL stock split events in the past year.
         expected_params: {symbol: AAPL}
   - tool_id: massive_stocks.stocks.splits.list.v1.9ba1ffe4
+    provider_id: massive-stocks
+    access_path_id: massive-stocks-corporate-actions-qveris
     name: List Stock Splits
     description: List historical stock split events, filterable by ticker and execution date.
     params:
@@ -25,6 +29,8 @@ tools:
         task: Return AAPL stock split events in the past year.
         expected_params: {ticker: AAPL}
   - tool_id: twelvedata.splits.retrieve.v1.43527690
+    provider_id: twelve-data
+    access_path_id: twelve-data-corporate-actions-qveris
     name: Splits
     description: Return split events for a symbol or identifier.
     params:
@@ -37,6 +43,8 @@ tools:
         task: Return AAPL stock split events in the past year.
         expected_params: {symbol: AAPL}
   - tool_id: alphavantage.splits.list.v1.467a92c0
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-corporate-actions-qveris
     name: Corporate Action Splits
     description: Retrieve corporate action split events for a symbol.
     params:
@@ -47,16 +55,3 @@ tools:
       - question_id: corp-actions-aapl-splits
         task: Return AAPL stock split events in the past year.
         expected_params: {function: SPLITS, symbol: AAPL}
-  - tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
-    name: Stock Dividend Query
-    description: Query dividend records for Shanghai, Shenzhen, Beijing listed companies.
-    params:
-      - {name: stockObject, type: array, required: true, description: Stock codes or names, supporting multiple}
-      - {name: beginDate, type: string, required: false, description: Start date YYYY-MM-DD}
-      - {name: endDate, type: string, required: false, description: End date YYYY-MM-DD}
-      - {name: pageNo, type: integer, required: false, description: Page number}
-      - {name: pageSize, type: integer, required: false, description: Page size}
-    questions:
-      - question_id: corp-actions-600519-dividends
-        task: 获取贵州茅台过去一年的分红记录。
-        expected_params: {stockObject: "600519.SH"}

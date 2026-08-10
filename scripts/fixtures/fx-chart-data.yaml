@@ -2,10 +2,10 @@ guide_label: 外汇即期汇率 API
 edition_date: "2026-08-10"
 observation_date: "2026-08-09"
 suppliers:
-  - {name: Alpha Vantage, provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], param_questions: [fx-eur-usd-spot, fx-jpy-cny-spot], recovery_questions: [fx-eur-usd-invalid-currency-recovery]}
-  - {name: Twelve Data, provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], param_questions: [fx-eur-usd-spot, fx-eur-usd-historical], recovery_questions: [fx-eur-usd-invalid-pair-recovery]}
-  - {name: EODHD, provider_id: eodhd, access_path_id: eodhd-fx-spot-qveris, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], param_questions: [fx-eur-usd-spot, fx-eur-gbp-spot], recovery_questions: [fx-eur-usd-na-placeholder-recovery]}
+  - {name: Alpha Vantage, chart_label: Alpha Vantage（QVeris）, provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, region: GLOBAL, markets: [], param_questions: [fx-eur-usd-spot, fx-jpy-cny-spot], recovery_questions: [fx-eur-usd-invalid-currency-recovery]}
+  - {name: Twelve Data, chart_label: Twelve Data（QVeris）, provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, region: GLOBAL, markets: [], param_questions: [fx-eur-usd-spot, fx-eur-usd-historical], recovery_questions: [fx-eur-usd-invalid-pair-recovery]}
+  - {name: EODHD, chart_label: EODHD（QVeris）, provider_id: eodhd, access_path_id: eodhd-fx-spot-qveris, region: GLOBAL, markets: [], param_questions: [fx-eur-usd-spot, fx-eur-gbp-spot], recovery_questions: [fx-eur-usd-na-placeholder-recovery]}
   - {name: 同花顺 iFinD, chart_label: 同花顺 iFinD（Native MCP）, provider_id: ifind, access_path_id: ifind-native-mcp, evidence_state: evidence_insufficient, region: CN, markets: [], param_questions: [], recovery_questions: []}
   - {name: 波兰国家银行, chart_label: 波兰国家银行（Native API）, provider_id: nbp-pl, access_path_id: nbp-pl-exchange-rates-native, evidence_state: evidence_insufficient, region: GLOBAL, markets: [], param_questions: [], recovery_questions: []}
-  - {name: 融聚汇, provider_id: rongjuhui, access_path_id: rongjuhui-hkd-reference-rate, region: HK, markets: [HKD], param_questions: [fx-hkd-usd-reference, fx-hkd-usd-range], recovery_questions: []}
+  - {name: 融聚汇, chart_label: 融聚汇（QVeris）, provider_id: rongjuhui, access_path_id: rongjuhui-hkd-reference-rate, region: HK, markets: [], param_questions: [fx-hkd-usd-reference, fx-hkd-usd-range], recovery_questions: []}
 market_universe: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN]

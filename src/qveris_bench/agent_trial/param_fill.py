@@ -46,11 +46,11 @@ class ParamSpec:
 @dataclass(frozen=True)
 class ToolContract:
     tool_id: str
+    provider_id: str
+    access_path_id: str
     name: str
     description: str
     params: tuple[ParamSpec, ...] = ()
-    provider_id: str = ""
-    access_path_id: str = ""
 
     def to_openai_tool(self) -> dict[str, Any]:
         properties: dict[str, Any] = {}

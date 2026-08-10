@@ -23,6 +23,7 @@ from qveris_bench.agent_trial.param_fill import (
     ToolContract,
     run_probe,
 )
+from qveris_bench.providers.repository import ProviderRegistryRepository
 
 _BASE_URL_ENV = "QVERIS_MODEL_BASE_URL"
 _API_KEY_ENV = "QVERIS_MODEL_API_KEY"
@@ -33,6 +34,7 @@ _DEFAULT_MODEL = "deepseek-v4-flash"
 
 def load_fixture(
     path: Path,
+    providers_root: Path | None = None,
 ) -> tuple[tuple[ToolContract, tuple[AgentQuestion, ...]], ...]:
     document = yaml.safe_load(path.read_text(encoding="utf-8"))
     probes: list[tuple[ToolContract, tuple[AgentQuestion, ...]]] = []
@@ -41,8 +43,8 @@ def load_fixture(
             tool_id=tool_doc["tool_id"],
             name=tool_doc["name"],
             description=tool_doc["description"],
-            provider_id=tool_doc.get("provider_id", ""),
-            access_path_id=tool_doc.get("access_path_id", ""),
+            provider_id=tool_doc["provider_id"],
+            access_path_id=tool_doc["access_path_id"],
             params=tuple(
                 ParamSpec(
                     name=param["name"],
@@ -64,7 +66,12 @@ def load_fixture(
             for question in tool_doc["questions"]
         )
         probes.append((contract, questions))
-    return tuple(probes)
+    loaded = tuple(probes)
+    if providers_root is not None:
+        ProviderRegistryRepository(providers_root).validate_access_path_identities(
+            (contract.provider_id, contract.access_path_id) for contract, _ in loaded
+        )
+    return loaded
 
 
 def build_llm_fn(
@@ -160,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
 
     llm_fn = build_llm_fn(args.base_url.rstrip("/"), key, args.model)
     results: list[ParamFillResult] = []
-    for contract, questions in load_fixture(args.fixture):
+    for contract, questions in load_fixture(args.fixture, Path("providers")):
         results.extend(
             run_probe(
                 contract,

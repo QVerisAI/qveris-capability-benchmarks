@@ -6,9 +6,7 @@ provider:
   official_pricing:
     - pricing_id: eodhd-official-pricing
       pricing_url: https://eodhd.com/pricing
-      applies_to:
-        - eodhd-stock-quote
-        - eodhd-etf-holdings
+      applies_to: provider_wide
       currencies: [USD]
       free_tier: "20 API calls per day"
       paid_plans: "All-in-One USD 99.99/month"
@@ -27,12 +25,40 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen published observations authorize this Access Path for the 2026-08 FX snapshot.
-    agent_trial_eligible: true
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: The released 2026-08 FX observations identify this QVeris Access Path.
-      evidence_digest: sha256:51590101638854f17e24fca3f21c86eca784880130d84b903094f11379fd0f0b
+      disposition: excluded
+      reason: The legacy publication does not retain complete release provenance.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: eodhd-corporate-actions-qveris
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+    canonical_interface: splits
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: eodhd-dividends-qveris
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+    canonical_interface: dividends
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
   - access_path_id: eodhd-stock-quote
     provider_id: eodhd
     path_type: qveris_connector

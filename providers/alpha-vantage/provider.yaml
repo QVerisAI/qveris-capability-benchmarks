@@ -6,10 +6,7 @@ provider:
   official_pricing:
     - pricing_id: alpha-vantage-official-pricing
       pricing_url: https://www.alphavantage.co/premium/
-      applies_to:
-        - alpha-vantage-income-statement
-        - alpha-vantage-etf-holdings
-        - alpha-vantage-stock-quote
+      applies_to: provider_wide
       currencies: [USD]
       free_tier: "25 API requests per day"
       paid_plans: "Premium from USD 49.99/month"
@@ -28,12 +25,40 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen published observations authorize this Access Path for the 2026-08 FX snapshot.
-    agent_trial_eligible: true
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: The released 2026-08 FX observations identify this QVeris Access Path.
-      evidence_digest: sha256:51590101638854f17e24fca3f21c86eca784880130d84b903094f11379fd0f0b
+      disposition: excluded
+      reason: The legacy publication does not retain complete release provenance.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: alpha-vantage-corporate-actions-qveris
+    provider_id: alpha-vantage
+    path_type: qveris_connector
+    official_source: https://www.alphavantage.co/documentation/#splits
+    canonical_interface: SPLITS
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: alpha-vantage-dividends-qveris
+    provider_id: alpha-vantage
+    path_type: qveris_connector
+    official_source: https://www.alphavantage.co/documentation/#dividends
+    canonical_interface: DIVIDENDS
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
   - access_path_id: alpha-vantage-income-statement
     provider_id: alpha-vantage
     path_type: qveris_connector

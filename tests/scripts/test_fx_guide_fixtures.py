@@ -58,6 +58,19 @@ def test_ac3_fx_param_fill_fixture_two_questions_per_tool() -> None:
         assert all(question.difficulty for question in questions)
 
 
+def test_ac3_all_agent_fixtures_bind_registered_access_paths() -> None:
+    for path in sorted((ROOT / "scripts/fixtures").glob("agent-param-fill-*.yaml")):
+        probes = load_param_fixture(path, ROOT / "providers")
+        assert all(
+            contract.provider_id and contract.access_path_id for contract, _ in probes
+        )
+    for path in sorted((ROOT / "scripts/fixtures").glob("agent-error-recovery-*.yaml")):
+        probes = load_recovery_fixture(path, ROOT / "providers")
+        assert all(
+            contract.provider_id and contract.access_path_id for contract, _ in probes
+        )
+
+
 def test_ac4_fx_interpretation_fixture_has_positive_and_negative() -> None:
     cases = load_interpret_fixture(
         ROOT / "scripts/fixtures/agent-response-interpretation-fx.yaml"
@@ -103,7 +116,15 @@ def test_ac5_article_manifest_and_charts_exist() -> None:
     chart_manifest = json.loads(
         (chart_dir / "charts-manifest.json").read_text(encoding="utf-8")
     )
-    assert set(chart_manifest["input_digests"]) == {"released-observations"}
+    assert set(chart_manifest["input_digests"]) == {
+        "chart-data",
+        "released-observations",
+    }
+    publication_manifest = yaml.safe_load(manifest.read_text(encoding="utf-8"))
+    assert all(
+        path["evidence_state"] == "evidence_insufficient"
+        for path in publication_manifest["access_paths"]
+    )
 
 
 def test_ac5_article_separates_access_paths_and_price_facts() -> None:
@@ -132,10 +153,10 @@ def test_ac5_released_fx_observations_keep_paths_distinct() -> None:
         ("nbp-pl", "nbp-pl-exchange-rates-native"),
     } <= keys
     for row in observations:
-        if row["provider_id"] in {"ifind", "nbp-pl"}:
-            assert row["evidence_state"] == "evidence_insufficient"
-            assert "latency_ms" not in row
-            assert "qveris_credits" not in row
+        assert row["evidence_state"] == "evidence_insufficient"
+        assert "latency_ms" not in row
+        assert "qveris_credits" not in row
+        assert "direct_test" not in row
 
 
 def test_ac5b_fx_dialect_tolerance_fixture_loads() -> None:

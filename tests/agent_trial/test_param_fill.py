@@ -16,6 +16,8 @@ from qveris_bench.agent_trial.param_fill import (
 def _contract() -> ToolContract:
     return ToolContract(
         tool_id="finnhub.quote.retrieve.v1.f72cf5ef",
+        provider_id="finnhub",
+        access_path_id="finnhub-stock-quote",
         name="Quote",
         description="Get real-time quote data for US stocks.",
         params=(ParamSpec(name="symbol", type="string", required=True),),
@@ -161,6 +163,8 @@ def test_ac7_run_probe_records_rounds_and_model() -> None:
 def test_ac8_array_param_semantics_normalized() -> None:
     contract = ToolContract(
         tool_id="hangseng.stock.dividend.query.v1",
+        provider_id="example-provider",
+        access_path_id="example-dividends",
         name="Stock Dividend Query",
         description="Query dividend records.",
         params=(ParamSpec(name="stockObject", type="array", required=True),),
