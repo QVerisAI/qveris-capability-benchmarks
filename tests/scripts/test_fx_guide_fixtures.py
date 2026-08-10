@@ -172,6 +172,39 @@ def test_ac6_article_explains_the_two_cost_ledgers_and_buyer_choice() -> None:
     assert "USD 49.99/月起" in article
     assert "平均 1.00 credits" in article
 
+    cost_section = article.split("## 费用怎么读：这是两本账", 1)[1].split(
+        "## Access Path 测评状态", 1
+    )[0]
+    provider_row = next(
+        line for line in cost_section.splitlines() if "供应商官网套餐 |" in line
+    )
+    qveris_row = next(
+        line for line in cost_section.splitlines() if "QVeris 路径观测费用 |" in line
+    )
+    assert "USD 49.99/月起" in provider_row and "credits" not in provider_row
+    assert "平均 1.00 credits" in qveris_row and "Native API 单次价格" in qveris_row
+
+    choice_section = article.split("## 怎么选择费用口径", 1)[1].split(
+        "## 当前能确认什么", 1
+    )[0]
+    assert "2026-08-09" in choice_section
+    assert "不是当前报价" in choice_section
+    assert "当前计费信息" in choice_section
+    assert "没有 Native Direct Test" in choice_section
+    assert "免费不等于已经验证可用" in choice_section
+
+    access_table = article.split("## Access Path 测评状态", 1)[1].split(
+        "四条 QVeris 结果", 1
+    )[0]
+    nbp_row = next(line for line in access_table.splitlines() if "NBP · Native" in line)
+    ifind_row = next(
+        line for line in access_table.splitlines() if "iFinD · Native" in line
+    )
+    assert "证据不足 | 不适用 | 证据不足" in nbp_row
+    assert "证据不足 | 不适用 | 证据不足" in ifind_row
+    assert "credits" not in nbp_row
+    assert "credits" not in ifind_row
+
 
 def test_ac5_released_fx_observations_keep_paths_distinct() -> None:
     document = yaml.safe_load(

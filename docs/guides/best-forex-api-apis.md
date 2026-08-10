@@ -51,7 +51,7 @@
 ## 怎么选择费用口径
 
 - 如果你直接采购供应商 API，先看官网套餐、币种、免费额度和超额规则，再对对应 Native Access Path 单独做延迟与稳定性验证。
-- 如果你通过 QVeris 调用，就看具体 QVeris Access Path 的 credits、延迟和 Agent 接口观察；不要拿供应商月费除以调用次数来估算 QVeris 成本。
+- 如果你通过 QVeris 调用，可以用表中 2026-08-09 的 credits、延迟和 Agent 接口观察理解当时的路径表现；历史 credits 不是当前报价，采购前应以 QVeris 当前计费信息为准，也不要拿供应商月费除以调用次数来估算 QVeris 成本。
 - 如果你优先考虑零许可费，NBP 的官方接口是明确的免费候选，但本版没有 Native Direct Test，免费不等于已经验证可用。
 - 如果你需要 Native MCP，iFinD 已公开套餐和接入方式，但当前公开 skill 没有 FX canonical tool，因此本版仍不能给出 FX 实测成本。
 
