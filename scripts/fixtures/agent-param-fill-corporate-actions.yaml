@@ -1,3 +1,6 @@
+excluded_legacy_tools:
+  - supplier: 恒生聚源
+    reason: Stable public Provider and Access Path identity has not been migrated.
 tools:
   - tool_id: eodhd.financial_apis.splits.retrieve.v1.b2ac7c39
     provider_id: eodhd

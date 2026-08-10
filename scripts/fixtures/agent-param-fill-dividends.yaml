@@ -1,3 +1,8 @@
+excluded_legacy_tools:
+  - supplier: 恒生聚源
+    reason: Stable public Provider and Access Path identity has not been migrated.
+  - supplier: 同花顺 iFinD
+    reason: Legacy QVeris results cannot be relabeled as the Native MCP Access Path.
 tools:
   - tool_id: eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
     provider_id: eodhd

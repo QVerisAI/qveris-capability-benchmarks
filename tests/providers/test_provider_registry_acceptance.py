@@ -217,6 +217,22 @@ def test_ac6_unknown_provider_access_path_pair_is_rejected() -> None:
         )
 
 
+def test_ac6_execution_requires_path_authorization_and_agent_eligibility() -> None:
+    repository = ProviderRegistryRepository(Path("providers"))
+
+    with pytest.raises(ProviderValidationError, match="Direct Test is not authorized"):
+        repository.validate_direct_test_authorization(
+            [("alpha-vantage", "alpha-vantage-fx-spot-qveris")]
+        )
+    repository.validate_direct_test_authorization(
+        [("rongjuhui", "rongjuhui-hkd-reference-rate")]
+    )
+    with pytest.raises(ProviderValidationError, match="Agent Trial is not eligible"):
+        repository.validate_agent_trial_eligibility(
+            [("finnhub", "finnhub-stock-quote")]
+        )
+
+
 def test_ac8_installed_provider_cli_validates_qualifies_and_checks_cohort(
     tmp_path: Path,
 ) -> None:

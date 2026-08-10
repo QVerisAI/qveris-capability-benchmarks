@@ -1,4 +1,7 @@
 capability: MKT.CORPORATE_ACTIONS
+excluded_legacy_suppliers:
+  - supplier: 恒生聚源
+    reason: Stable public Provider and Access Path identity has not been migrated.
 suppliers:
   - supplier: EODHD
     provider_id: eodhd

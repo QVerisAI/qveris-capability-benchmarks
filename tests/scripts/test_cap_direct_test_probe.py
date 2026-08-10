@@ -150,3 +150,20 @@ def test_all_direct_fixtures_bind_registered_access_paths() -> None:
     for fixture in sorted(Path("scripts/fixtures").glob("cap-direct-test-*.yaml")):
         probes = load_fixture(fixture, Path("providers"))
         assert probes
+
+
+def test_legacy_direct_cohort_exclusions_remain_explicit() -> None:
+    from pathlib import Path
+
+    import yaml
+
+    expected_sizes = {
+        "cap-direct-test-corporate-actions.yaml": 5,
+        "cap-direct-test-dividends.yaml": 6,
+    }
+    for name, expected in expected_sizes.items():
+        document = yaml.safe_load((Path("scripts/fixtures") / name).read_text())
+        assert (
+            len(document["suppliers"]) + len(document["excluded_legacy_suppliers"])
+            == expected
+        )
