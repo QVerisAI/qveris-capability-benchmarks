@@ -194,6 +194,20 @@ def test_ac5_terminal_dispositions_retain_reason_and_evidence(
     )
 
 
+def test_ac6_fx_qveris_observations_have_registered_access_paths() -> None:
+    records = ProviderRegistryRepository(Path("providers")).list()
+    path_ids = {
+        path.access_path_id for record in records for path in record.access_paths
+    }
+
+    assert {
+        "alpha-vantage-fx-spot-qveris",
+        "twelve-data-fx-spot-qveris",
+        "eodhd-fx-spot-qveris",
+        "rongjuhui-hkd-reference-rate",
+    } <= path_ids
+
+
 def test_ac8_installed_provider_cli_validates_qualifies_and_checks_cohort(
     tmp_path: Path,
 ) -> None:

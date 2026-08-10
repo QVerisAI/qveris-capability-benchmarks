@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+
+import yaml
 
 from scripts.agent_error_recovery_probe import load_fixture as load_recovery_fixture
 from scripts.agent_param_fill_probe import load_fixture as load_param_fixture
@@ -97,6 +100,42 @@ def test_ac5_article_manifest_and_charts_exist() -> None:
         "chart-market-coverage.png",
     ):
         assert (chart_dir / name).is_file()
+    chart_manifest = json.loads(
+        (chart_dir / "charts-manifest.json").read_text(encoding="utf-8")
+    )
+    assert set(chart_manifest["input_digests"]) == {"released-observations"}
+
+
+def test_ac5_article_separates_access_paths_and_price_facts() -> None:
+    article = (ROOT / "docs/guides/best-forex-api-apis.md").read_text(encoding="utf-8")
+    assert "QVeris Access Path" in article
+    assert "Native Access Path" in article
+    assert "供应商官网价格" in article
+    assert "QVeris 路径观测费用" in article
+    assert "证据不足" in article
+    assert "在 QVeris 中试用](https://qveris.ai/providers/ths_ifind)" not in article
+    assert "在 QVeris 中试用](https://qveris.ai/providers/nbp_pl)" not in article
+    assert "Harbor" not in article
+
+
+def test_ac5_released_fx_observations_keep_paths_distinct() -> None:
+    document = yaml.safe_load(
+        (ROOT / "scripts/fixtures/fx-released-observations.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    observations = document["access_path_observations"]
+    keys = {(row["provider_id"], row["access_path_id"]) for row in observations}
+    assert len(keys) == len(observations)
+    assert {
+        ("ifind", "ifind-native-mcp"),
+        ("nbp-pl", "nbp-pl-exchange-rates-native"),
+    } <= keys
+    for row in observations:
+        if row["provider_id"] in {"ifind", "nbp-pl"}:
+            assert row["evidence_state"] == "evidence_insufficient"
+            assert "latency_ms" not in row
+            assert "qveris_credits" not in row
 
 
 def test_ac5b_fx_dialect_tolerance_fixture_loads() -> None:
@@ -108,8 +147,10 @@ def test_ac5b_fx_dialect_tolerance_fixture_loads() -> None:
         )
     )
     assert document["capability"] == "FX.SPOT"
-    assert len(document["suppliers"]) == 6
+    assert len(document["suppliers"]) == 4
     for supplier in document["suppliers"]:
+        assert supplier["provider_id"]
+        assert supplier["access_path_id"]
         assert supplier["variants"]
         for variant in supplier["variants"]:
             assert variant["outcome"] in {

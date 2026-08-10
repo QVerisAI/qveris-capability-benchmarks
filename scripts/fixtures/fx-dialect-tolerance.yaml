@@ -3,30 +3,28 @@ edition: "2026-08-09"
 method: 每种写法变体经 QVeris 真实执行一次，判定以状态码与返回数据有效性为准
 suppliers:
   - supplier: Alpha Vantage
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-fx-spot-qveris
     variants:
       - {label: 标准大写, parameters: {function: CURRENCY_EXCHANGE_RATE, from_currency: EUR, to_currency: USD}, outcome: accepted}
       - {label: 币种小写, parameters: {function: CURRENCY_EXCHANGE_RATE, from_currency: eur, to_currency: usd}, outcome: accepted}
   - supplier: Twelve Data
+    provider_id: twelve-data
+    access_path_id: twelve-data-fx-spot-qveris
     variants:
       - {label: 标准斜杠, parameters: {symbol: "EUR/USD"}, outcome: accepted}
       - {label: 币种小写, parameters: {symbol: "eur/usd"}, outcome: accepted}
       - {label: 无斜杠, parameters: {symbol: "EURUSD"}, outcome: rejected_error}
   - supplier: EODHD
+    provider_id: eodhd
+    access_path_id: eodhd-fx-spot-qveris
     variants:
       - {label: 标准方言, parameters: {symbol: "EURUSD.FOREX", fmt: json}, outcome: accepted}
       - {label: 币种小写, parameters: {symbol: "eurusd.forex", fmt: json}, outcome: accepted}
       - {label: 斜杠写法, parameters: {symbol: "EUR/USD", fmt: json}, outcome: rejected_error}
-  - supplier: 波兰国家银行
-    variants:
-      - {label: 标准, parameters: {table: A, code: USD, topCount: 1}, outcome: accepted}
-      - {label: 代码小写, parameters: {table: A, code: usd, topCount: 1}, outcome: accepted}
-      - {label: 表类型小写, parameters: {table: a, code: USD, topCount: 1}, outcome: accepted}
-  - supplier: 同花顺 iFinD
-    variants:
-      - {label: 标准后缀, parameters: {codes: "USDCNY.FX"}, outcome: accepted}
-      - {label: 无后缀, parameters: {codes: "USDCNY"}, outcome: accepted_empty}
-      - {label: 币种小写, parameters: {codes: "usdcny.fx"}, outcome: accepted}
   - supplier: 融聚汇
+    provider_id: rongjuhui
+    access_path_id: rongjuhui-hkd-reference-rate
     variants:
       - {label: 标准大写, parameters: {currency: HKD, startDate: "2026-08-01", endDate: "2026-08-09"}, outcome: accepted}
       - {label: 币种小写, parameters: {currency: hkd, startDate: "2026-08-01", endDate: "2026-08-09"}, outcome: accepted}

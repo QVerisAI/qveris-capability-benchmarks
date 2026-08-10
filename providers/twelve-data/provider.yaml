@@ -19,6 +19,20 @@ provider:
       disclosure_level: sanitized_public
       license_status: cleared
 access_paths:
+  - access_path_id: twelve-data-fx-spot-qveris
+    provider_id: twelve-data
+    path_type: qveris_connector
+    official_source: https://twelvedata.com/docs#exchange-rate
+    canonical_interface: exchange_rate
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Frozen published observations authorize this Access Path for the 2026-08 FX snapshot.
+    agent_trial_eligible: true
+    qualification:
+      disposition: included
+      reason: The released 2026-08 FX observations identify this QVeris Access Path.
+      evidence_digest: sha256:51590101638854f17e24fca3f21c86eca784880130d84b903094f11379fd0f0b
   - access_path_id: twelve-data-etf-holdings
     provider_id: twelve-data
     path_type: qveris_connector

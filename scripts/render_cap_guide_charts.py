@@ -13,6 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
+from matplotlib.colors import ListedColormap
 
 from scripts.chart_metrics import direct_metrics_by_access_path
 
@@ -71,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("evidence/private/agent-error-recovery.jsonl"),
     )
+    parser.add_argument("--released", type=Path)
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -83,14 +85,30 @@ def main(argv: list[str] | None = None) -> int:
     market_universe = config["market_universe"]
     guide_label = config.get("guide_label", "分红数据 API")
     edition_date = config.get("edition_date", "2026-08-09")
+    observation_date = config.get("observation_date", edition_date)
 
-    direct = _latest_batch(args.direct)
-    param = _latest_batch(args.param)
-    interpret = _latest_batch(args.interpret)
-    try:
-        recovery = _latest_batch(args.recovery)
-    except FileNotFoundError:
+    released: list[dict] = []
+    if args.released:
+        released = yaml.safe_load(args.released.read_text(encoding="utf-8"))[
+            "access_path_observations"
+        ]
+        direct = [
+            {
+                **record,
+                "cost_credits": record.get("qveris_credits"),
+            }
+            for record in released
+            if record.get("evidence_state") == "released"
+        ]
+        param = []
         recovery = []
+    else:
+        direct = _latest_batch(args.direct)
+        param = _latest_batch(args.param)
+        try:
+            recovery = _latest_batch(args.recovery)
+        except FileNotFoundError:
+            recovery = []
 
     latency: dict[str, float] = {}
     cost: dict[str, float] = {}
@@ -111,42 +129,45 @@ def main(argv: list[str] | None = None) -> int:
         legacy = supplier.get("param_question")
         return [legacy] if legacy else []
 
-    difficulty_pass: dict[str, dict[str, tuple[int, int]]] = {}
-    for supplier in suppliers:
-        records = [
-            record
-            for record in param
-            if record["question_id"] in _question_ids(supplier)
-        ]
-        if records:
-            per_level: dict[str, list[dict]] = {}
-            for record in records:
-                per_level.setdefault(record.get("difficulty", "L1"), []).append(record)
-            difficulty_pass[supplier["name"]] = {
-                level: (
-                    sum(1 for record in rows if record["passed"]),
-                    len(rows),
+    parameter_clarity: dict[str, tuple[int, int]] = {}
+    if released:
+        released_by_path = {
+            (record["provider_id"], record["access_path_id"]): record
+            for record in released
+        }
+        for supplier in suppliers:
+            record = released_by_path.get(
+                (supplier["provider_id"], supplier["access_path_id"]), {}
+            )
+            observation = record.get("parameter_clarity")
+            if observation and "passed" in observation:
+                parameter_clarity[supplier["name"]] = (
+                    observation["passed"],
+                    observation["total"],
                 )
-                for level, rows in per_level.items()
-            }
-
-    interpret_ok = sum(1 for record in interpret if record["passed"])
-    interpret_total = len(interpret)
+    else:
+        for supplier in suppliers:
+            records = [
+                record
+                for record in param
+                if record["question_id"] in _question_ids(supplier)
+            ]
+            if records:
+                parameter_clarity[supplier["name"]] = (
+                    sum(1 for record in records if record["passed"]),
+                    len(records),
+                )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     chart_paths: list[str] = []
 
     # 1. latency vs cost scatter
     names = [name for name in latency if name in cost]
-    colors = {
-        "恒生聚源": "#d62728",
-        "同花顺 iFinD": "#d62728",
-        "Twelve Data": "#1f77b4",
-        "Alpha Vantage": "#1f77b4",
-        "EODHD": "#1f77b4",
-        "Massive": "#2ca02c",
-        "波兰国家银行": "#2ca02c",
-        "融聚汇": "#9467bd",
+    provider_colors = {
+        "Alpha Vantage": "#143F74",
+        "Twelve Data": "#2F78AD",
+        "EODHD": "#6EB0C2",
+        "融聚汇": "#8E6BBE",
     }
     fig, ax = plt.subplots(figsize=(8, 5))
     for name in names:
@@ -154,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
             latency[name],
             cost[name],
             s=140,
-            color=colors.get(name, "#333333"),
+            color=provider_colors.get(name, "#143F74"),
             zorder=3,
         )
         ax.annotate(
@@ -164,9 +185,9 @@ def main(argv: list[str] | None = None) -> int:
             xytext=(8, 8),
             fontsize=9,
         )
-    ax.set_xlabel(f"实测平均延迟（ms，{edition_date}）")
+    ax.set_xlabel(f"实测平均延迟（ms，{observation_date}）")
     ax.set_ylabel("实测单次费用（QVeris credits）")
-    ax.set_title(f"{guide_label}：延迟与单次费用（本平台 Direct Test 实测）")
+    ax.set_title(f"{guide_label}：QVeris Access Path 延迟与观测费用")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     path = args.output_dir / "chart-latency-cost.png"
@@ -174,37 +195,27 @@ def main(argv: list[str] | None = None) -> int:
     plt.close(fig)
     chart_paths.append(path.name)
 
-    # 2. AI param-fill pass rate by difficulty
+    # 2. parameter clarity
     fig, ax = plt.subplots(figsize=(9, 5))
-    levels = ["L1", "L2", "L3", "L4"]
-    for supplier in suppliers:
-        name = supplier["name"]
-        series = difficulty_pass.get(name, {})
-        xs = [level for level in levels if level in series]
-        ys = [series[level][0] / series[level][1] * 100 for level in xs]
-        ax.plot(
-            xs,
-            ys,
-            marker="o",
-            label=name,
-            color=colors.get(name, "#333333"),
-        )
-        for x, y in zip(xs, ys, strict=True):
-            ax.annotate(
-                f"{y:.0f}%",
-                (x, y),
-                textcoords="offset points",
-                xytext=(0, 8),
-                fontsize=8,
-            )
-    ax.set_ylim(0, 110)
-    ax.set_ylabel("AI 入参通过率（%，2 轮）")
-    ax.set_xlabel("题目难度（契约认知负担）")
-    ax.set_title(
-        f"{guide_label} AI 友好度：入参通过率按难度（DeepSeek Flash）；"
-        f"出参解读 {interpret_ok}/{interpret_total}"
+    param_names = [
+        supplier["name"]
+        for supplier in suppliers
+        if supplier["name"] in parameter_clarity
+    ]
+    param_values = [
+        parameter_clarity[name][0] / parameter_clarity[name][1] * 100
+        for name in param_names
+    ]
+    ax.bar(
+        param_names,
+        param_values,
+        color=[provider_colors.get(name, "#143F74") for name in param_names],
     )
-    ax.legend(fontsize=8, loc="lower left")
+    for index, value in enumerate(param_values):
+        ax.text(index, value + 3, f"{value:.0f}%", ha="center", fontsize=9)
+    ax.set_ylim(0, 110)
+    ax.set_ylabel("参数清晰度通过率（%）")
+    ax.set_title(f"{guide_label}：单 canonical tool 参数清晰度观察")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     path = args.output_dir / "chart-ai-difficulty.png"
@@ -214,22 +225,39 @@ def main(argv: list[str] | None = None) -> int:
 
     # 3. error-recovery pass rate
     recovery_pass: dict[str, float] = {}
-    for supplier in suppliers:
-        questions = supplier.get("recovery_questions") or []
-        records = [record for record in recovery if record["question_id"] in questions]
-        if records:
-            recovery_pass[supplier["name"]] = sum(
-                1 for record in records if record["passed"]
-            ) / len(records)
+    if released:
+        for supplier in suppliers:
+            record = released_by_path.get(
+                (supplier["provider_id"], supplier["access_path_id"]), {}
+            )
+            observation = record.get("error_recovery")
+            if observation and "passed" in observation:
+                recovery_pass[supplier["name"]] = (
+                    observation["passed"] / observation["total"]
+                )
+    else:
+        for supplier in suppliers:
+            questions = supplier.get("recovery_questions") or []
+            records = [
+                record for record in recovery if record["question_id"] in questions
+            ]
+            if records:
+                recovery_pass[supplier["name"]] = sum(
+                    1 for record in records if record["passed"]
+                ) / len(records)
     fig, ax = plt.subplots(figsize=(8, 5))
     bar_names = [
         supplier["name"] for supplier in suppliers if supplier["name"] in recovery_pass
     ]
     values = [recovery_pass[name] * 100 for name in bar_names]
-    ax.bar(bar_names, values, color=[colors.get(name, "#333333") for name in bar_names])
+    ax.bar(
+        bar_names,
+        values,
+        color=[provider_colors.get(name, "#143F74") for name in bar_names],
+    )
     ax.set_ylim(0, 105)
     ax.set_ylabel("失败自愈率（%，2 轮）")
-    ax.set_title(f"{guide_label} AI 友好度：失败自愈率（错误解读 + 修正重试）")
+    ax.set_title(f"{guide_label}：同一 canonical tool 的错误恢复观察")
     for index, value in enumerate(values):
         ax.text(index, value + 3, f"{value:.0f}%", ha="center", fontsize=9)
     fig.tight_layout()
@@ -244,11 +272,18 @@ def main(argv: list[str] | None = None) -> int:
         for supplier in suppliers
     ]
     fig, ax = plt.subplots(figsize=(11, 5))
-    ax.imshow(matrix, cmap="Greens", aspect="auto")
+    ax.imshow(
+        matrix,
+        cmap=ListedColormap(["#F3F7FA", "#2F78AD"]),
+        aspect="auto",
+    )
     ax.set_xticks(range(len(market_universe)))
     ax.set_xticklabels(market_universe, fontsize=9)
     ax.set_yticks(range(len(suppliers)))
-    ax.set_yticklabels([supplier["name"] for supplier in suppliers], fontsize=9)
+    ax.set_yticklabels(
+        [supplier.get("chart_label", supplier["name"]) for supplier in suppliers],
+        fontsize=9,
+    )
     cells = [
         (row, col)
         for row in range(len(suppliers))
@@ -263,20 +298,26 @@ def main(argv: list[str] | None = None) -> int:
             va="center",
             fontsize=12,
         )
-    ax.set_title(f"{guide_label} 市场覆盖（实测 + 工具契约声明）")
+    ax.set_title(f"{guide_label}：发布事实中的货币覆盖")
     fig.tight_layout()
     path = args.output_dir / "chart-market-coverage.png"
     fig.savefig(path, dpi=150)
     plt.close(fig)
     chart_paths.append(path.name)
 
-    manifest: dict[str, object] = {
-        "charts": {path: _digest(args.output_dir / path) for path in chart_paths},
-        "input_digests": {
+    input_digests = (
+        {"released-observations": _digest(args.released)}
+        if args.released
+        else {
             "cap-direct-test": _digest(args.direct),
             "agent-param-fill": _digest(args.param),
             "agent-response-interpretation": _digest(args.interpret),
-        },
+            "agent-error-recovery": _digest(args.recovery),
+        }
+    )
+    manifest: dict[str, object] = {
+        "charts": {path: _digest(args.output_dir / path) for path in chart_paths},
+        "input_digests": input_digests,
         "rendered_at": edition_date,
     }
     (args.output_dir / "charts-manifest.json").write_text(

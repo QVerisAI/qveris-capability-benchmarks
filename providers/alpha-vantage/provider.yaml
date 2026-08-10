@@ -20,6 +20,20 @@ provider:
       disclosure_level: sanitized_public
       license_status: cleared
 access_paths:
+  - access_path_id: alpha-vantage-fx-spot-qveris
+    provider_id: alpha-vantage
+    path_type: qveris_connector
+    official_source: https://www.alphavantage.co/documentation/#currency-exchange
+    canonical_interface: CURRENCY_EXCHANGE_RATE
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Frozen published observations authorize this Access Path for the 2026-08 FX snapshot.
+    agent_trial_eligible: true
+    qualification:
+      disposition: included
+      reason: The released 2026-08 FX observations identify this QVeris Access Path.
+      evidence_digest: sha256:51590101638854f17e24fca3f21c86eca784880130d84b903094f11379fd0f0b
   - access_path_id: alpha-vantage-income-statement
     provider_id: alpha-vantage
     path_type: qveris_connector

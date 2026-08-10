@@ -1,5 +1,6 @@
 guide_label: 外汇即期汇率 API
-edition_date: "2026-08-09"
+edition_date: "2026-08-10"
+observation_date: "2026-08-09"
 suppliers:
   - {name: Alpha Vantage, provider_id: alpha-vantage, access_path_id: alpha-vantage-fx-spot-qveris, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], param_questions: [fx-eur-usd-spot, fx-jpy-cny-spot], recovery_questions: [fx-eur-usd-invalid-currency-recovery]}
   - {name: Twelve Data, provider_id: twelve-data, access_path_id: twelve-data-fx-spot-qveris, region: GLOBAL, markets: [USD, EUR, GBP, JPY, CHF, AUD, CAD, CNY, HKD, PLN], param_questions: [fx-eur-usd-spot, fx-eur-usd-historical], recovery_questions: [fx-eur-usd-invalid-pair-recovery]}

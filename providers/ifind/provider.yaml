@@ -30,5 +30,5 @@ access_paths:
     agent_trial_eligible: true
     qualification:
       disposition: excluded
-      reason: A user-issued auth token is required before native Direct Test or Agent Trial.
-      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+      reason: The official skill package does not publish a canonical FX tool for this snapshot.
+      evidence_digest: sha256:0188a9872937bf845c1ab13c2da9034c77c295abb6934f7e870cc46fbe8e7720
