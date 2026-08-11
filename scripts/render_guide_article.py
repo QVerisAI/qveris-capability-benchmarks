@@ -37,9 +37,7 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
             f"证据文件缺失: {path} —— 请先运行 probe runner 生成 evidence"
         )
     lines = [
-        line
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
     parsed: list[dict[str, Any]] = []
     for index, line in enumerate(lines, start=1):
@@ -50,9 +48,7 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
         if isinstance(value, dict):
             parsed.append(value)
     if not parsed:
-        raise ValueError(
-            f"{path} 没有任何有效记录，空证据不应产出空文章"
-        )
+        raise ValueError(f"{path} 没有任何有效记录，空证据不应产出空文章")
     return parsed
 
 
@@ -82,9 +78,7 @@ def _provider_ids(records: list[dict[str, Any]]) -> set[str]:
     return ids
 
 
-def _warn_provider_mismatch(
-    chart: dict[str, Any], data: dict[str, Any]
-) -> None:
+def _warn_provider_mismatch(chart: dict[str, Any], data: dict[str, Any]) -> None:
     """Warn when chart suppliers and evidence providers diverge."""
     chart_ids = {s.get("provider_id") for s in chart.get("suppliers", [])}
     ev_ids: set[str] = set()
@@ -119,9 +113,7 @@ def _latest_batch(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [record for record in records if record.get("recorded_at") == latest]
 
 
-def render_main_table(
-    data: dict[str, Any], chart: dict[str, Any]
-) -> str:
+def render_main_table(data: dict[str, Any], chart: dict[str, Any]) -> str:
     """Build the overview table from per-provider probe records."""
     rows: list[str] = [
         "| 供应商 | 实测延迟 | 单次费用 | Direct Test | AI 落参 | AI 自愈 | 自解释 | 市场侧重 |",
@@ -166,9 +158,7 @@ def render_main_table(
     return "\n".join(rows)
 
 
-def render_param_fill_table(
-    data: dict[str, Any], chart: dict[str, Any]
-) -> str:
+def render_param_fill_table(data: dict[str, Any], chart: dict[str, Any]) -> str:
     rows = ["| 供应商 | 通过率 | 实测说明 |", "|---|---|---|"]
     for provider, info in sorted(data["param_fill"].items()):
         name = _provider_name(chart, provider)
@@ -178,9 +168,7 @@ def render_param_fill_table(
     return "\n".join(rows)
 
 
-def render_recovery_table(
-    data: dict[str, Any], chart: dict[str, Any]
-) -> str:
+def render_recovery_table(data: dict[str, Any], chart: dict[str, Any]) -> str:
     rows = [
         "| 供应商 | 通过率 | 失败样本 | 失败根因 |",
         "|---|---|---|---|",
@@ -194,9 +182,7 @@ def render_recovery_table(
     return "\n".join(rows)
 
 
-def render_self_description_table(
-    data: dict[str, Any], chart: dict[str, Any]
-) -> str:
+def render_self_description_table(data: dict[str, Any], chart: dict[str, Any]) -> str:
     rows = [
         "| 供应商 | 除息日 | 每股金额 | 币种 | 可确定/6 |",
         "|---|---|---|---|---|",
@@ -218,9 +204,7 @@ def render_self_description_table(
     return "\n".join(rows)
 
 
-def render_interpretation_summary(
-    data: dict[str, Any], chart: dict[str, Any]
-) -> str:
+def render_interpretation_summary(data: dict[str, Any], chart: dict[str, Any]) -> str:
     interp = data.get("interpretation", {})
     if not interp:
         return "<!-- TODO 出参解读（无证据数据） -->"
@@ -264,14 +248,11 @@ def load_probe_data(args: argparse.Namespace) -> dict[str, Any]:
         cells = [r for r in direct if r.get("provider_id") == provider]
         passed_cells = [r for r in cells if r.get("state") == "passed"]
         passed = len(passed_cells)
-        lat = [
-            r["latency_ms"] for r in passed_cells if r.get("latency_ms") is not None
-        ]
+        lat = [r["latency_ms"] for r in passed_cells if r.get("latency_ms") is not None]
         cost = [
             value
             for r in passed_cells
-            if isinstance((value := r.get("cost_credits")), (int, float))
-            and value > 0
+            if isinstance((value := r.get("cost_credits")), (int, float)) and value > 0
         ]
         dt[provider] = {
             "passed": passed,
@@ -286,9 +267,7 @@ def load_probe_data(args: argparse.Namespace) -> dict[str, Any]:
         determined = sum(1 for r in cells if r.get("determined"))
         by_element: dict[str, str] = {}
         for element in {
-            value
-            for r in cells
-            if isinstance((value := r.get("element")), str)
+            value for r in cells if isinstance((value := r.get("element")), str)
         }:
             sub = [r for r in cells if r.get("element") == element]
             p = sum(1 for r in sub if r.get("determined"))
@@ -317,9 +296,7 @@ def render_article(
         label = label[: -len("API")].rstrip()
     edition_date = edition or chart.get("edition_date", "2026-08-10")
     observation = chart.get("observation_date", edition_date)
-    market_universe = ", ".join(
-        str(item) for item in chart.get("market_universe", [])
-    )
+    market_universe = ", ".join(str(item) for item in chart.get("market_universe", []))
     supplier_count = len(chart.get("suppliers", []))
 
     main_table = render_main_table(data, chart)

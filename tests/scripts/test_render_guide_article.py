@@ -138,9 +138,7 @@ class _RecordArgs:
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
-    path.write_text(
-        "\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8"
-    )
+    path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
 
 
 def test_load_probe_data_aggregates_raw_records(tmp_path: Path) -> None:
@@ -148,9 +146,24 @@ def test_load_probe_data_aggregates_raw_records(tmp_path: Path) -> None:
     _write_jsonl(
         args.direct,
         [
-            {"provider_id": "twelve-data", "state": "passed", "latency_ms": 400, "cost_credits": 2.37},
-            {"provider_id": "twelve-data", "state": "passed", "latency_ms": 428, "cost_credits": 2.37},
-            {"provider_id": "twelve-data", "state": "passed", "latency_ms": 375, "cost_credits": 0.0},
+            {
+                "provider_id": "twelve-data",
+                "state": "passed",
+                "latency_ms": 400,
+                "cost_credits": 2.37,
+            },
+            {
+                "provider_id": "twelve-data",
+                "state": "passed",
+                "latency_ms": 428,
+                "cost_credits": 2.37,
+            },
+            {
+                "provider_id": "twelve-data",
+                "state": "passed",
+                "latency_ms": 375,
+                "cost_credits": 0.0,
+            },
         ],
     )
     _write_jsonl(args.param, [{"provider_id": "twelve-data", "passed": True}])
@@ -179,14 +192,29 @@ def test_load_probe_data_aggregates_raw_records(tmp_path: Path) -> None:
 def test_load_probe_data_latest_batch_only(tmp_path: Path) -> None:
     args = _RecordArgs(tmp_path)
     rows = [
-        {"provider_id": "twelve-data", "state": "passed", "latency_ms": 100, "cost_credits": 1.0, "recorded_at": "2026-08-09T00:00:00+00:00"},
-        {"provider_id": "twelve-data", "state": "passed", "latency_ms": 400, "cost_credits": 2.0, "recorded_at": "2026-08-10T00:00:00+00:00"},
+        {
+            "provider_id": "twelve-data",
+            "state": "passed",
+            "latency_ms": 100,
+            "cost_credits": 1.0,
+            "recorded_at": "2026-08-09T00:00:00+00:00",
+        },
+        {
+            "provider_id": "twelve-data",
+            "state": "passed",
+            "latency_ms": 400,
+            "cost_credits": 2.0,
+            "recorded_at": "2026-08-10T00:00:00+00:00",
+        },
     ]
     _write_jsonl(args.direct, rows)
     _write_jsonl(args.param, [{"provider_id": "twelve-data", "passed": True}])
     _write_jsonl(args.recovery, [{"provider_id": "twelve-data", "passed": True}])
     _write_jsonl(args.interpret, [{"question_id": "q1", "passed": True}])
-    _write_jsonl(args.self_description, [{"provider_id": "twelve-data", "element": "ex_date", "determined": True}])
+    _write_jsonl(
+        args.self_description,
+        [{"provider_id": "twelve-data", "element": "ex_date", "determined": True}],
+    )
 
     data = load_probe_data(args)
     dt = data["direct_test"]["twelve-data"]
