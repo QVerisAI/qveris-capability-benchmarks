@@ -14,7 +14,7 @@ access_path_ids:
   - eodhd-dividends-qveris
   - massive-stocks-dividends-qveris
 modes: [direct]
-rounds: 2
+rounds: 3
 environment:
   as_of: "2026-08-11"
 agent_protocol: null

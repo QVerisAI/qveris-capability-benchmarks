@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import yaml
+
 from qveris_bench.providers.repository import ProviderRegistryRepository
 from qveris_bench.question_bank.repository import load_question_bank
 from qveris_bench.suites.compiler import compile_suite
@@ -39,16 +41,21 @@ def test_ac1_suite_freezes_six_providers_and_six_access_paths() -> None:
     assert [path for path in paths if path.startswith("ifind-")] == ["ifind-native-mcp"]
 
 
-def test_ac2_market_applicability_produces_twenty_four_direct_calls() -> None:
+def test_ac2_market_applicability_produces_three_rounds_of_direct_calls() -> None:
     first = _compiled()
     second = _compiled()
 
-    assert len(first.run_plan.cells) == 36
-    assert sum(cell.applicable for cell in first.run_plan.cells) == 24
+    assert first.suite.rounds >= 3
+    assert len(first.run_plan.cells) == 54
+    assert sum(cell.applicable for cell in first.run_plan.cells) == 36
     assert all(cell.mode.value == "direct" for cell in first.run_plan.cells)
     assert [cell.run_key for cell in first.run_plan.cells] == [
         cell.run_key for cell in second.run_plan.cells
     ]
+    workflow = yaml.safe_load(
+        (ROOT / ".github/workflows/live-dividend-events-e2e.yml").read_text()
+    )
+    assert workflow["jobs"]["direct"]["strategy"]["matrix"]["round"] == [1, 2, 3]
 
     applicable = {
         (cell.case_id, cell.provider_id)

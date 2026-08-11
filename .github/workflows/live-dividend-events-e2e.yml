@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        round: [1, 2]
+        round: [1, 2, 3]
         binding_id:
           - ifind-cn-600519-dividends
           - ifind-invalid-dividend-symbol
