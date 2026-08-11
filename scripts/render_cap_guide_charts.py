@@ -52,6 +52,293 @@ def _sha256_identity(path: Path) -> str:
     return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
 
 
+_DIVIDEND_PROVIDERS = {
+    "hangseng": "恒生聚源",
+    "ifind": "同花顺 iFinD",
+    "twelve-data": "Twelve Data",
+    "alpha-vantage": "Alpha Vantage",
+    "eodhd": "EODHD",
+    "massive-stocks": "Massive",
+}
+_STATUS_STYLE = {
+    "observed": ("●", "#12B76A"),
+    "absent": ("—", "#94A3B8"),
+    "blocked": ("△", "#F79009"),
+    "unmeasured": ("◇", "#2F78AD"),
+}
+
+
+def _directory_digest(path: Path) -> str:
+    digest = hashlib.sha256()
+    for item in sorted(path.glob("*.json")):
+        digest.update(item.name.encode())
+        digest.update(b"\0")
+        digest.update(item.read_bytes())
+    return f"sha256:{digest.hexdigest()}"
+
+
+def _field_status(
+    records: list[dict[str, object]],
+    field: str,
+    *,
+    identity_blocked: bool,
+    completed: bool,
+) -> str:
+    present = all(item.get("facts", {}).get(field) is not None for item in records)
+    if not present:
+        return "absent"
+    if identity_blocked or not completed:
+        return "blocked"
+    return "observed"
+
+
+def _dividend_evidence_rows(
+    release_path: Path,
+    evidence_dir: Path,
+) -> list[dict[str, object]]:
+    document = json.loads(release_path.read_text(encoding="utf-8"))
+    released_by_run_key = {item["run_key"]: item for item in document["evidence"]}
+    terminals: dict[str, dict[str, object]] = {}
+    for run_key, released in released_by_run_key.items():
+        evidence_path = evidence_dir / f'{released["evidence_id"]}-terminal.json'
+        if _sha256_identity(evidence_path) != released["public_digest"]:
+            raise ValueError(f"public evidence digest mismatch: {evidence_path.name}")
+        terminals[run_key] = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    applicable = [
+        cell
+        for cell in document["cells"]
+        if cell["applicable"] and cell["mode"] == "direct"
+    ]
+    rows: list[dict[str, object]] = []
+    for provider_id, provider_label in _DIVIDEND_PROVIDERS.items():
+        positive_cells = [
+            cell
+            for cell in applicable
+            if cell["provider_id"] == provider_id
+            and cell["case_id"] != "invalid-dividend-symbol"
+        ]
+        negative_cells = [
+            cell
+            for cell in applicable
+            if cell["provider_id"] == provider_id
+            and cell["case_id"] == "invalid-dividend-symbol"
+        ]
+        if len(positive_cells) != 3 or len(negative_cells) != 3:
+            raise ValueError(
+                f"expected three positive and negative rounds: {provider_id}"
+            )
+        positive = [terminals[cell["run_key"]] for cell in positive_cells]
+        negative = [terminals[cell["run_key"]] for cell in negative_cells]
+        requested_symbol = positive_cells[0]["case_input"]["symbol"]
+        returned_symbols = {
+            item.get("facts", {}).get("symbol") for item in positive
+        }
+        identity_blocked = any(
+            symbol is not None and symbol != requested_symbol
+            for symbol in returned_symbols
+        )
+        completed = all(item["state"] == "completed" for item in positive)
+
+        transport = positive[0]["transport"]
+        access_path_label = "Native MCP" if transport == "native_mcp" else "QVeris"
+        market = "A 股" if positive_cells[0]["case_id"].startswith("cn-") else "美股"
+        rows.append(
+            {
+                "provider": provider_label,
+                "meta": f"{access_path_label} · {market} · {requested_symbol}",
+                "core": [
+                    _field_status(
+                        positive,
+                        "amount",
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    ),
+                    _field_status(
+                        positive,
+                        "effective_date",
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    ),
+                    (
+                        "observed"
+                        if all(item["state"] == "completed" for item in negative)
+                        else "blocked"
+                    ),
+                    "blocked" if identity_blocked else "unmeasured",
+                ],
+                "fields": [
+                    _field_status(
+                        positive,
+                        field,
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    )
+                    for field in (
+                        "currency",
+                        "declaration_date",
+                        "record_date",
+                        "payment_date",
+                    )
+                ],
+            }
+        )
+    return rows
+
+
+def _render_evidence_matrix_svg(
+    *,
+    title: str,
+    columns: list[tuple[str, str]],
+    rows: list[dict[str, object]],
+    row_key: str,
+) -> str:
+    parts = [
+        (
+            '<svg xmlns="http://www.w3.org/2000/svg" width="760" height="900" '
+            'viewBox="0 0 760 900" role="img" aria-labelledby="title desc">'
+        ),
+        f"<title id=\"title\">{title}</title>",
+        (
+            '<desc id="desc">六条 Provider 与 Access Path 的固定样本公开证据状态；'
+            "不代表全市场能力。</desc>"
+        ),
+        (
+            '<defs><linearGradient id="header" x1="0" y1="0" x2="1" y2="0">'
+            '<stop offset="0" stop-color="#143F74"/>'
+            '<stop offset="0.58" stop-color="#2F78AD"/>'
+            '<stop offset="1" stop-color="#6EB0C2"/></linearGradient><style>'
+            'text{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",'
+            '"Noto Sans SC",sans-serif}'
+            ".title{fill:#fff;font-size:34px;font-weight:800}"
+            ".subtitle{fill:#E2E8F0;font-size:24px}"
+            ".provider{fill:#0F172A;font-size:23px;font-weight:800}"
+            ".meta{fill:#475569;font-size:19px}"
+            ".head{fill:#143F74;font-size:23px;font-weight:800}"
+            ".symbol{font-size:34px;font-weight:800}"
+            ".legend{fill:#334155;font-size:22px}"
+            "</style></defs>"
+        ),
+        (
+            '<rect width="760" height="900" fill="#F8FAFC"/>'
+            '<rect width="760" height="155" fill="url(#header)"/>'
+        ),
+        f'<text x="38" y="58" class="title">{title}</text>',
+        (
+            '<text x="38" y="103" class="subtitle">'
+            "6 条 Provider × Access Path · 每条适用路径 3 轮</text>"
+        ),
+        '<text x="38" y="138" class="subtitle">固定样本证据 · 不代表全市场能力</text>',
+        (
+            '<text x="38" y="190" class="legend">'
+            '<tspan fill="#12B76A" font-weight="800">●</tspan> 已观察　'
+            '<tspan fill="#F79009" font-weight="800">△</tspan> 阻断</text>'
+        ),
+        (
+            '<text x="38" y="225" class="legend">'
+            '<tspan fill="#94A3B8" font-weight="800">—</tspan> 未观察/未发布　'
+            '<tspan fill="#2F78AD" font-weight="800">◇</tspan> 未独立测量</text>'
+        ),
+        (
+            '<rect x="24" y="250" width="712" height="568" rx="16" '
+            'fill="#FFFFFF" stroke="#E2E8F0"/>'
+            '<rect x="24" y="250" width="712" height="88" rx="16" '
+            'fill="#F1F5F9"/>'
+        ),
+        (
+            '<text x="132" y="287" text-anchor="middle" class="head">'
+            'Provider</text><text x="132" y="317" text-anchor="middle" '
+            'class="head">Access Path · 样本</text>'
+        ),
+    ]
+    for center, (first, second) in zip((305, 425, 545, 665), columns, strict=True):
+        parts.append(
+            f'<text x="{center}" y="287" text-anchor="middle" class="head">'
+            f'{first}</text><text x="{center}" y="317" text-anchor="middle" '
+            f'class="head">{second}</text>'
+        )
+    parts.append(
+        '<g stroke="#E2E8F0"><path '
+        'd="M240 250 V818 M365 250 V818 M485 250 V818 M605 250 V818"/>'
+        '<path d="M24 338 H736 M24 418 H736 M24 498 H736 M24 578 H736 '
+        'M24 658 H736 M24 738 H736"/></g>'
+    )
+    for index, row in enumerate(rows):
+        top = 338 + index * 80
+        parts.append(
+            f'<text x="38" y="{top + 31}" class="provider">'
+            f'{row["provider"]}</text><text x="38" y="{top + 61}" '
+            f'class="meta">{row["meta"]}</text>'
+        )
+        for center, status in zip((305, 425, 545, 665), row[row_key], strict=True):
+            symbol, color = _STATUS_STYLE[status]
+            parts.append(
+                f'<text x="{center}" y="{top + 52}" text-anchor="middle" '
+                f'class="symbol" fill="{color}">{symbol}</text>'
+            )
+    parts.append(
+        '<text x="380" y="864" text-anchor="middle" class="legend">'
+        "灰色不是能力否定；橙色记录不可直接采信</text></svg>\n"
+    )
+    return "".join(parts)
+
+
+def render_dividend_evidence_matrices(
+    release_dir: Path,
+    evidence_dir: Path,
+    output_dir: Path,
+    *,
+    edition_date: str,
+) -> dict[str, object]:
+    release_path = release_dir / "release.json"
+    rows = _dividend_evidence_rows(release_path, evidence_dir)
+    charts = {
+        "dividend-core-evidence.svg": _render_evidence_matrix_svg(
+            title="Dividend Event 核心可用性证据",
+            columns=[
+                ("单次金额", "语义"),
+                ("除权除息", "日期"),
+                ("无效", "symbol"),
+                ("证券身份", "验证"),
+            ],
+            rows=rows,
+            row_key="core",
+        ),
+        "dividend-field-evidence.svg": _render_evidence_matrix_svg(
+            title="Dividend Event 响应字段证据",
+            columns=[
+                ("响应内", "币种"),
+                ("公告", "日期"),
+                ("登记", "日期"),
+                ("支付", "日期"),
+            ],
+            rows=rows,
+            row_key="fields",
+        ),
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for name, content in charts.items():
+        (output_dir / name).write_text(content, encoding="utf-8")
+    manifest: dict[str, object] = {
+        "release_id": json.loads(release_path.read_text(encoding="utf-8"))[
+            "release"
+        ]["release_id"],
+        "charts": {
+            name: _sha256_identity(output_dir / name) for name in sorted(charts)
+        },
+        "input_digests": {
+            "release": _sha256_identity(release_path),
+            "public_evidence": _directory_digest(evidence_dir),
+        },
+        "rendered_at": edition_date,
+    }
+    (output_dir / "evidence-matrix-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
 def render_release_outcomes(
     release_dir: Path,
     cases_path: Path,

@@ -68,7 +68,7 @@ artifacts:
   cases: cap_packs/dividend_events/cases.yaml
   release: releases/dividend-events-2026-q3-v1/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
-  charts: []
-  editorial_visuals:
-    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-event-date-timeline.svg
-    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-api-evidence-matrix.svg
+  charts:
+    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-core-evidence.svg
+    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-field-evidence.svg
+  charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json

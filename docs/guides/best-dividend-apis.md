@@ -72,10 +72,6 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 实测事实、供应商官方说明和我们的编辑判断使用不同口径：表格中的轮次结果来自 Live Test；市场覆盖和产品能力若来自供应商文档，会链接到官方来源；“适合谁”属于基于本次结果的编辑判断，不会伪装成供应商承诺。
 
-![Dividend Event 四类日期语义时间轴](capability-seo/best-dividend-apis/charts/dividend-event-date-timeline.svg)
-
-时间轴展示的是常见事件顺序，具体市场和供应商的字段定义仍应以官方契约为准。本文把除权除息日作为 `effective_date`，是因为它直接影响收益回测与价格调整；支付日和登记日不能替代这一字段。
-
 ## 6 家供应商逐一分析
 
 ### 恒生聚源：A 股候选路径，但证券身份必须先闭环
@@ -128,9 +124,11 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 ## 不同开发需求怎么选
 
-![6 条分红数据 Access Path 公开证据矩阵](capability-seo/best-dividend-apis/charts/dividend-api-evidence-matrix.svg)
+![6 条分红数据 Access Path 核心可用性证据](capability-seo/best-dividend-apis/charts/dividend-core-evidence.svg)
 
-矩阵中的符号只表示本次固定样本公开了什么证据，不代表供应商在其他市场、symbol 或历史区间的完整能力。灰色横线必须理解为“本次未观察或未发布”，不能理解成供应商一定没有该字段。
+![6 条分红数据 Access Path 响应字段证据](capability-seo/best-dividend-apis/charts/dividend-field-evidence.svg)
+
+两张矩阵中的符号只表示本次固定样本公开了什么证据，不代表供应商在其他市场、symbol 或历史区间的完整能力。灰色横线必须理解为“本次未观察或未发布”，不能理解成供应商一定没有该字段；橙色三角表示记录存在语义或身份阻断，不能直接采信。
 
 ### 想用一个 key 快速比较多家供应商
 

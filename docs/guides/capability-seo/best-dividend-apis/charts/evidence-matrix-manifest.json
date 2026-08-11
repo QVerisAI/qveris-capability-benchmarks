@@ -1,0 +1,12 @@
+{
+  "release_id": "dividend-events-2026-q3-v1",
+  "charts": {
+    "dividend-core-evidence.svg": "sha256:06b2b3f2fa9b5defb597d898b9e811913e82da8396a3a8b201fa81a1d32e93d9",
+    "dividend-field-evidence.svg": "sha256:5052cfe79565be4b065804ae3f2cbda10cf2106f0aa3860d36a017f1c8a63f37"
+  },
+  "input_digests": {
+    "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
+    "public_evidence": "sha256:665cbceddb471a0d3b10b6dc5803bdeb14fe79617ec41290018543990700c36f"
+  },
+  "rendered_at": "2026-08-11"
+}

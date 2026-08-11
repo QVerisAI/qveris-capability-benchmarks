@@ -9,7 +9,10 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.render_cap_guide_charts import render_release_outcomes
+from scripts.render_cap_guide_charts import (
+    render_dividend_evidence_matrices,
+    render_release_outcomes,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 ARTICLE = ROOT / "docs/guides/best-dividend-apis.md"
@@ -20,12 +23,12 @@ PIPELINE_DOC = ROOT / "docs/how-a-cap-becomes-an-article.html"
 RELEASE_DIGEST = (
     "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
 )
-EDITORIAL_VISUALS = (
-    "capability-seo/best-dividend-apis/charts/dividend-event-date-timeline.svg",
-    "capability-seo/best-dividend-apis/charts/dividend-api-evidence-matrix.svg",
+EVIDENCE_CHARTS = (
+    "capability-seo/best-dividend-apis/charts/dividend-core-evidence.svg",
+    "capability-seo/best-dividend-apis/charts/dividend-field-evidence.svg",
 )
-MANIFEST_EDITORIAL_VISUALS = tuple(
-    f"docs/guides/{target}" for target in EDITORIAL_VISUALS
+MANIFEST_EVIDENCE_CHARTS = tuple(
+    f"docs/guides/{target}" for target in EVIDENCE_CHARTS
 )
 
 
@@ -77,14 +80,15 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     assert article.count("身份一致性未独立测量") == 5
 
 
-def test_article_editorial_visuals_are_declared_and_valid_svg() -> None:
+def test_article_evidence_charts_are_declared_and_valid_svg() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
-    assert manifest["artifacts"]["editorial_visuals"] == list(
-        MANIFEST_EDITORIAL_VISUALS
+    assert manifest["artifacts"]["charts"] == list(MANIFEST_EVIDENCE_CHARTS)
+    assert manifest["artifacts"]["charts_manifest"].endswith(
+        "evidence-matrix-manifest.json"
     )
-    for target in EDITORIAL_VISUALS:
+    for target in EVIDENCE_CHARTS:
         assert target in article
         path = ARTICLE.parent / target
         assert path.is_file()
@@ -94,26 +98,17 @@ def test_article_editorial_visuals_are_declared_and_valid_svg() -> None:
         assert width <= 760
         assert height > width
     assert "完整事件日期组" not in article
-    assert "decision-tree.svg" not in article
-    assert "evidence-chain.svg" not in article
-    assert all("market-coverage" not in target for target in EDITORIAL_VISUALS)
+    assert "date-timeline.svg" not in article
+    assert "dividend-api-evidence-matrix.svg" not in article
+    assert all("market-coverage" not in target for target in EVIDENCE_CHARTS)
 
 
-def test_editorial_visuals_encode_date_semantics_and_access_path_identity() -> None:
-    timeline = "".join(
-        ET.parse(ARTICLE.parent / EDITORIAL_VISUALS[0]).getroot().itertext()
-    )
+def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
     matrix = "".join(
-        ET.parse(ARTICLE.parent / EDITORIAL_VISUALS[1]).getroot().itertext()
+        text
+        for target in EVIDENCE_CHARTS
+        for text in ET.parse(ARTICLE.parent / target).getroot().itertext()
     )
-
-    for date_name in (
-        "Declaration Date",
-        "Ex-Dividend Date",
-        "Record Date",
-        "Payment Date",
-    ):
-        assert date_name in timeline
     for provider in (
         "恒生聚源",
         "同花顺 iFinD",
@@ -126,6 +121,28 @@ def test_editorial_visuals_encode_date_semantics_and_access_path_identity() -> N
     assert "Native MCP" in matrix
     assert matrix.count("QVeris") == 10
     assert "不代表全市场能力" in matrix
+    assert matrix.count("A 股 · 600519.SH") == 4
+    assert matrix.count("美股 · AAPL") == 8
+
+
+def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
+    chart_dir = MANIFEST.parent / "charts"
+    generated = render_dividend_evidence_matrices(
+        RELEASE_DIR,
+        ROOT / "evidence/dividend-events-2026-q3-v1",
+        tmp_path,
+        edition_date="2026-08-11",
+    )
+
+    for chart_name in ("dividend-core-evidence.svg", "dividend-field-evidence.svg"):
+        assert (tmp_path / chart_name).read_bytes() == (
+            chart_dir / chart_name
+        ).read_bytes()
+    committed = json.loads(
+        (chart_dir / "evidence-matrix-manifest.json").read_text(encoding="utf-8")
+    )
+    assert generated == committed
+    assert generated["input_digests"]["release"] == RELEASE_DIGEST
 
 
 def test_manifest_uses_public_release_as_source_of_truth() -> None:
