@@ -44,12 +44,32 @@ class GatewayMetricsSnapshot(FrozenModel):
 
     @model_validator(mode="after")
     def validate_measurement(self) -> GatewayMetricsSnapshot:
-        if self.state == "measured" and (
-            not self.evidence_refs
-            or not self.latency_evidence_refs
-            or self.latency_sample_size == 0
-        ):
-            raise ValueError("measured gateway metrics require samples and evidence")
+        if self.state == "measured":
+            latency_values = (
+                self.latency_min_ms,
+                self.latency_median_ms,
+                self.latency_max_ms,
+            )
+            if (
+                self.latency_sample_size == 0
+                or len(self.latency_evidence_refs) != self.latency_sample_size
+                or any(value is None for value in latency_values)
+            ):
+                raise ValueError("measured gateway latency requires complete samples")
+            complete_latency = tuple(
+                value for value in latency_values if value is not None
+            )
+            if complete_latency != tuple(sorted(complete_latency)):
+                raise ValueError(
+                    "gateway latency min, median, and max are out of order"
+                )
+            if self.cost_sample_size != len(self.cost_evidence_refs) or (
+                (self.cost_sample_size > 0) != (self.median_credits is not None)
+            ):
+                raise ValueError("gateway credits require complete samples")
+            combined = set(self.latency_evidence_refs) | set(self.cost_evidence_refs)
+            if set(self.evidence_refs) != combined:
+                raise ValueError("gateway evidence references do not match samples")
         if self.state == "not_applicable" and (
             self.evidence_refs
             or self.latency_evidence_refs
@@ -91,6 +111,16 @@ class RunObservationsSnapshot(FrozenModel):
             raise ValueError("measured run observations require plan and evidence")
         if self.terminal_observations > self.planned_observations:
             raise ValueError("terminal observations cannot exceed planned observations")
+        if self.state == "measured" and (
+            len(self.evidence_refs) != self.terminal_observations
+        ):
+            raise ValueError("run observation evidence must match terminal count")
+        if self.state != "measured" and (
+            self.terminal_observations
+            or self.planned_observations
+            or self.evidence_refs
+        ):
+            raise ValueError("unmeasured run observations cannot carry counts")
         return self
 
 
@@ -119,6 +149,7 @@ class OfficialPricingSnapshot(FrozenModel):
             self.verified_at,
             self.source_digest,
             self.applies_to,
+            self.currencies or None,
             self.extractor_version,
             self.suite_fingerprint,
             self.disclosure_level,
@@ -232,6 +263,16 @@ class ScopeValidationSnapshot(FrozenModel):
     disclosure_level: DisclosureLevel
     license_status: LicenseStatus
     results: tuple[ScopeValidationResult, ...]
+
+    @model_validator(mode="after")
+    def require_unique_scopes(self) -> ScopeValidationSnapshot:
+        keys = [
+            (item.provider_id, item.access_path_id, item.market)
+            for item in self.results
+        ]
+        if len(keys) != len(set(keys)):
+            raise ValueError("duplicate QVeris SV scope")
+        return self
 
 
 class SelectionMarketCase(FrozenModel):

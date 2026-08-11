@@ -239,25 +239,65 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     aliases = {"Massive Stocks": "Massive"}
+    runtime_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    pricing_rows = _markdown_table_rows(article, "| Provider / Access Path |")
+    market_rows = _markdown_table_rows(article, "本次固定市场样本")
 
     for row in snapshot["rows"]:
         provider = aliases.get(row["provider_name"], row["provider_name"])
-        assert provider in article
+        access_path = (
+            "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
+        )
+        runtime_row = _provider_row(runtime_rows, provider, access_path)
         metrics = row["gateway_metrics"]
         if metrics["state"] == "measured":
             runtime = (
                 f"{metrics['latency_median_ms']:.0f} ms / "
                 f"{metrics['median_credits']:.3f} credits"
             )
-            assert runtime in article
+            assert runtime in runtime_row[2]
+        else:
+            assert "不适用" in runtime_row[2]
+
+        pricing_row = _provider_row(pricing_rows, provider, access_path)
         pricing = row["official_pricing"]
         if pricing["state"] == "declared":
-            assert pricing["pricing_url"] in article
-            assert pricing["paid_plans"] in article
-        for market in row["market_coverage"]["tested_markets"]:
-            assert re.search(
-                rf"\| [^\n]*{re.escape(provider)}[^\n]*\| {market} ·", article
-            )
+            assert pricing["pricing_url"] in pricing_row[0]
+            assert pricing["free_tier"] in pricing_row[1]
+            assert pricing["paid_plans"] in pricing_row[2]
+        else:
+            assert "Evidence insufficient" in pricing_row[1]
+            assert "Evidence insufficient" in pricing_row[2]
+
+        market_row = _provider_row(market_rows, provider, access_path)
+        coverage = row["market_coverage"]
+        for market in coverage["tested_markets"]:
+            assert f"{market} ·" in market_row[1]
+        sv_label = {
+            "evidence_insufficient": "Evidence insufficient",
+            "not_applicable": "不适用",
+            "measured": ", ".join(coverage["sv_verified_markets"]),
+        }[coverage["sv_state"]]
+        assert sv_label in market_row[2]
+
+
+def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:
+    lines = article.splitlines()
+    header_index = next(
+        index for index, line in enumerate(lines) if header_fragment in line
+    )
+    rows: list[list[str]] = []
+    for line in lines[header_index + 2 :]:
+        if not line.startswith("|"):
+            break
+        rows.append([cell.strip() for cell in line.strip("|").split("|")])
+    return rows
+
+
+def _provider_row(rows: list[list[str]], provider: str, access_path: str) -> list[str]:
+    matches = [row for row in rows if provider in row[0] and access_path in row[0]]
+    assert len(matches) == 1
+    return matches[0]
 
 
 def test_article_embeds_only_decision_useful_snapshot_chart() -> None:

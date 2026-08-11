@@ -89,11 +89,11 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 | Provider / Access Path | 免费或试用入口 | 付费入口 | 价格证据作用域 |
 |---|---|---|---|
-| [恒生聚源 / QVeris](https://www.gildata.com/products/core-data.html) | 未公开 | `Commercial; see product page.` | 适用于当前 Dividend Access Path |
-| [同花顺 iFinD / Native MCP](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | 新账户 2,000 次试用 | `Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests` | 仅 Native MCP |
-| [Twelve Data / QVeris](https://twelvedata.com/pricing) | 8 credits/分钟、800/日 | `Grow from USD 29/month` | Provider-wide 官方价格 |
-| [Alpha Vantage / QVeris](https://www.alphavantage.co/premium/) | 25 次/日 | `Premium from USD 49.99/month` | Provider-wide 官方价格 |
-| [EODHD / QVeris](https://eodhd.com/pricing) | 20 次/日 | `All-in-One USD 99.99/month` | Provider-wide 官方价格 |
+| [恒生聚源 / QVeris](https://www.gildata.com/products/core-data.html) | `Not published for this snapshot.` | `Commercial; see product page.` | 适用于当前 Dividend Access Path |
+| [同花顺 iFinD / Native MCP](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | `New accounts receive 2,000 trial requests` | `Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests` | 仅 Native MCP |
+| [Twelve Data / QVeris](https://twelvedata.com/pricing) | `Basic with 8 API credits per minute and 800 per day` | `Grow from USD 29/month` | Provider-wide 官方价格 |
+| [Alpha Vantage / QVeris](https://www.alphavantage.co/premium/) | `25 API requests per day` | `Premium from USD 49.99/month` | Provider-wide 官方价格 |
+| [EODHD / QVeris](https://eodhd.com/pricing) | `20 API calls per day` | `All-in-One USD 99.99/month` | Provider-wide 官方价格 |
 | Massive / QVeris | **Evidence insufficient** | **Evidence insufficient** | registry 中的 Stocks 价格未覆盖这条 QVeris Dividend Access Path |
 
 价格会变化，正式采购前应点击各供应商官方链接复核调用额度、实时性、交易所费用、缓存和再分发权限。

@@ -34,8 +34,8 @@ from qveris_bench.models.selection import (
 from qveris_bench.providers.repository import ProviderRegistryRepository
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.replay import ReleaseReplayError, replay_release_dir
+from qveris_bench.suites.compiler import SuiteCompilationError, compile_suite
 from qveris_bench.suites.fingerprint import canonical_json_bytes
-from qveris_bench.suites.loader import SuiteLoadError, load_cases, load_suite
 from qveris_bench.suites.matrix import canonical_run_key
 from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
@@ -67,8 +67,14 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         suite_path = root / _string(config, "suite")
         cases_path = root / _string(config, "cases")
         case_markets_path = root / _string(config, "case_markets")
-        suite = load_suite(suite_path)
-        cases = load_cases(cases_path)
+        compiled = compile_suite(
+            suite_path,
+            cases_path,
+            providers_root,
+            suite_path.with_name("cap.yaml"),
+        )
+        suite = compiled.suite
+        cases = compiled.cases
         case_markets = SelectionMarketScope.model_validate(
             load_yaml_mapping(case_markets_path)
         )
@@ -76,7 +82,7 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         OSError,
         json.JSONDecodeError,
         YamlDocumentError,
-        SuiteLoadError,
+        SuiteCompilationError,
         ValidationError,
         ValueError,
     ) as exc:
@@ -109,17 +115,16 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         )
     cells = [item for item in release.get("cells", []) if isinstance(item, dict)]
     evidence = [item for item in release.get("evidence", []) if isinstance(item, dict)]
-    _validate_release_projection(release, cells, evidence, suite.suite_id)
-    if (
-        release_path.name == "release.json"
-        and (release_path.parent / "run-plan.json").is_file()
+    release_metadata = release.get("release")
+    if not isinstance(release_metadata, dict) or (
+        compiled.fingerprint != release_metadata.get("suite_fingerprint")
     ):
-        try:
-            replay_release_dir(
-                release_path.parent, expected_digest=actual_release_digest
-            )
-        except ReleaseReplayError as exc:
-            raise SelectionSnapshotBuildError(f"release replay failed: {exc}") from exc
+        raise SelectionSnapshotBuildError("compiled suite fingerprint mismatch")
+    _validate_release_projection(release, cells, evidence, suite.suite_id)
+    try:
+        replay_release_dir(release_path.parent, expected_digest=actual_release_digest)
+    except ReleaseReplayError as exc:
+        raise SelectionSnapshotBuildError(f"release replay failed: {exc}") from exc
     cells = [item for item in cells if str(item.get("mode")) == RunMode.DIRECT.value]
     evidence_by_run_key = {str(item["run_key"]): item for item in evidence}
     registry = ProviderRegistryRepository(providers_root).list()

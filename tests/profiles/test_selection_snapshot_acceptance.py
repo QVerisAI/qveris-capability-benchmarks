@@ -6,9 +6,16 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
+from qveris_bench.models.selection import (
+    GatewayMetricsSnapshot,
+    OfficialPricingSnapshot,
+    RunObservationsSnapshot,
+)
 from qveris_bench.profiles.selection import (
     SelectionSnapshotBuildError,
+    _agent_interface,
     build_selection_snapshot,
 )
 
@@ -119,7 +126,7 @@ def test_ac6_agent_signals_remain_independent_dimensions() -> None:
         )
 
 
-def test_ac6_provider_negative_is_not_an_agent_signal_pass(tmp_path: Path) -> None:
+def test_ac6_provider_negative_is_not_an_agent_signal_pass() -> None:
     release = json.loads(
         (ROOT / "releases/dividend-events-2026-q3-v1/release.json").read_text()
     )
@@ -131,17 +138,14 @@ def test_ac6_provider_negative_is_not_an_agent_signal_pass(tmp_path: Path) -> No
     ]
     for cell in negatives[1:]:
         cell["state"] = "provider_negative"
-    release_path = tmp_path / "release.json"
-    release_path.write_text(json.dumps(release), encoding="utf-8")
-    input_path = _selection_input_for_release(tmp_path, release_path)
-
-    row = next(
-        row
-        for row in build_selection_snapshot(input_path, ROOT).snapshot.rows
-        if row.provider_id == "twelve-data"
+    evidence_by_run_key = {item["run_key"]: item for item in release["evidence"]}
+    result = _agent_interface(
+        negatives,
+        {"invalid-dividend-symbol": True},
+        evidence_by_run_key,
     )
-    assert row.agent_interface.invalid_input_handling.passed == 1
-    assert row.agent_interface.invalid_input_handling.total == 3
+    assert result.invalid_input_handling.passed == 1
+    assert result.invalid_input_handling.total == 3
 
 
 def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
@@ -266,17 +270,73 @@ def test_ac3_snapshot_rejects_untrusted_sv(
         build_selection_snapshot(input_path, ROOT)
 
 
-def test_ac1_snapshot_rejects_release_identity_tampering(tmp_path: Path) -> None:
-    release = json.loads(
-        (ROOT / "releases/dividend-events-2026-q3-v1/release.json").read_text()
+def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
+    document = {
+        "snapshot_id": "dividend-sv-2026-q3-v1",
+        "version": "1.0.0",
+        "namespace": "MKT.DIVIDENDS",
+        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
+        "suite_fingerprint": "b" * 64,
+        "extractor_version": "1.0.0",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared",
+        "results": [
+            {
+                "provider_id": "twelve-data",
+                "access_path_id": "twelve-data-dividends-qveris",
+                "market": "US",
+                "supported": supported,
+                "evidence_ref": "sha256:" + token * 64,
+            }
+            for supported, token in ((True, "a"), (False, "b"))
+        ],
+    }
+    sv_path = tmp_path / "sv.json"
+    sv_path.write_text(json.dumps(document), encoding="utf-8")
+    input_path = tmp_path / "selection.yaml"
+    input_path.write_text(
+        INPUT.read_text().replace(
+            "snapshot: null\n  snapshot_digest: null",
+            f"snapshot: {sv_path}\n  snapshot_digest: {_digest(sv_path)}",
+        ),
+        encoding="utf-8",
     )
+
+    with pytest.raises(SelectionSnapshotBuildError, match="duplicate QVeris SV scope"):
+        build_selection_snapshot(input_path, ROOT)
+
+
+def test_ac1_snapshot_rejects_release_identity_tampering(tmp_path: Path) -> None:
+    release_dir = tmp_path / "dividend-events-2026-q3-v1"
+    shutil.copytree(ROOT / "releases/dividend-events-2026-q3-v1", release_dir)
+    release_path = release_dir / "release.json"
+    release = json.loads(release_path.read_text())
     cell = next(cell for cell in release["cells"] if cell["applicable"])
     cell["provider_id"] = "twelve-data"
-    release_path = tmp_path / "release.json"
     release_path.write_text(json.dumps(release), encoding="utf-8")
     input_path = _selection_input_for_release(tmp_path, release_path)
 
-    with pytest.raises(SelectionSnapshotBuildError, match="run key"):
+    with pytest.raises(SelectionSnapshotBuildError, match="run key|release replay"):
+        build_selection_snapshot(input_path, ROOT)
+
+
+def test_ac1_snapshot_rejects_case_semantic_drift(tmp_path: Path) -> None:
+    cases = tmp_path / "cases.yaml"
+    source = (ROOT / "cap_packs/dividend_events/cases.yaml").read_text()
+    cases.write_text(
+        source.replace(
+            "Return AAPL dividend events within a fixed window",
+            "Return AAPL dividend events using changed semantics",
+        ),
+        encoding="utf-8",
+    )
+    input_path = tmp_path / "selection.yaml"
+    input_path.write_text(
+        INPUT.read_text().replace("cap_packs/dividend_events/cases.yaml", str(cases)),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SelectionSnapshotBuildError, match="fingerprint mismatch"):
         build_selection_snapshot(input_path, ROOT)
 
 
@@ -303,6 +363,33 @@ def test_ac8_snapshot_build_runs_through_installed_cli(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert json.loads(output.read_text(encoding="utf-8"))["rows"]
+
+
+def test_selection_models_reject_contradictory_states() -> None:
+    evidence_ref = "sha256:" + "a" * 64
+    with pytest.raises(ValidationError, match="out of order"):
+        GatewayMetricsSnapshot(
+            state="measured",
+            latency_sample_size=1,
+            latency_min_ms=3,
+            latency_median_ms=2,
+            latency_max_ms=1,
+            cost_sample_size=0,
+            evidence_refs=(evidence_ref,),
+            latency_evidence_refs=(evidence_ref,),
+        )
+    with pytest.raises(ValidationError, match="unmeasured run observations"):
+        RunObservationsSnapshot(
+            state="evidence_insufficient",
+            terminal_observations=1,
+            planned_observations=1,
+            evidence_refs=(evidence_ref,),
+        )
+    with pytest.raises(ValidationError, match="cannot carry declarations"):
+        OfficialPricingSnapshot(
+            state="evidence_insufficient",
+            currencies=("USD",),
+        )
 
 
 def _digest(path: Path) -> str:
