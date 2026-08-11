@@ -1,0 +1,31 @@
+capability: MKT.DIVIDENDS
+edition: "2026-08-10"
+elements:
+  - {id: ex_date, label: 除息日}
+  - {id: amount, label: 每股分红金额}
+  - {id: currency, label: 币种/计价货币}
+cases:
+  - supplier: EODHD
+    provider_id: eodhd
+    access_path_id: eodhd-dividends-qveris
+    response_text: 'Date,Dividends\n2024-02-09,0.24\n2024-05-10,0.25\n2024-08-12,0.25\n2024-11-08,0.25\n2025-02-10,0.25\n2025-05-12,0.26\n2025-08-11,0.26\n2025-11-10,0.26\n2026-02-09,0.26\n2026-05-11,0.27\n'
+  - supplier: Twelve Data
+    provider_id: twelve-data
+    access_path_id: twelve-data-dividends-qveris
+    response_text: '{"meta": {"symbol": "AAPL", "name": "Apple Inc.", "currency": "USD", "exchange": "NASDAQ", "mic_code": "XNGS", "exchange_timezone": "America/New_York"}, "dividends": [{"ex_date": "2026-05-11", "amount": 0.27}, {"ex_date": "2026-02-09", "amount": 0.26}, {"ex_date": "2025-11-10", "amount": 0.26}, {"ex_date": "2025-08-11", "amount": 0.26}, {"ex_date": "2025-05-12", "amount": 0.26}, {"ex_date": "2025-02-10", "amount": 0.25}]}'
+  - supplier: Massive
+    provider_id: massive-stocks
+    access_path_id: massive-stocks-dividends-qveris
+    response_text: '{"status": "OK", "request_id": "aabae695bb3e4c63a0fe5ee32212fbbf", "results": [{"ticker": "AAPL", "record_date": "2022-11-07", "pay_date": "2022-11-10", "declaration_date": "2022-10-27", "ex_dividend_date": "2022-11-04", "cash_amount": 0.23, "frequency": 1, "currency": "USD", "dividend_type": "CD"}]}'
+  - supplier: Alpha Vantage
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-dividends-qveris
+    response_text: '{"symbol": "AAPL", "data": [{"ex_dividend_date": "2026-05-11", "declaration_date": "2026-04-30", "record_date": "2026-05-11", "payment_date": "2026-05-14", "amount": "0.27"}, {"ex_dividend_date": "2026-02-09", "declaration_date": "2026-01-27", "record_date": "2026-02-09", "payment_date": "2026-02-12", "amount": "0.26"}]}'
+  - supplier: 恒生聚源
+    provider_id: hangseng
+    access_path_id: hangseng-dividends-qveris
+    response_text: '{"success": true, "code": 0, "data": {"msg": "SUCCESS", "code": "200", "data": {"columnmeta": {"stockname": "STRING", "dividendaftertax": "DOUBLE", "bonustradedate": "DATE", "bonusscheme": "STRING", "bonuspershare": "DOUBLE", "stockobject": "STRING", "preanndate": "DATE"}, "rows": [{"stockname": "贵州茅台", "dividendaftertax": 23.82, "bonustradedate": "2024-06-26", "bonusscheme": "每10股派308.76元", "bonuspershare": 30.876, "stockobject": "600519.SH", "preanndate": "2024-04-02"}]}, "datatype": "string", "datasize": 1, "timestamp": 1786358947084}}}'
+  - supplier: 同花顺 iFinD
+    provider_id: ifind
+    access_path_id: ifind-dividends-qveris
+    response_text: '[{"stock_code": "600519.SH", "stock_name": "贵州茅台", "report_period": "20251231", "plan_status": "实施方案", "cash_dividend_per_share": 28.02423, "bonus_share_ratio": null, "transfer_share_ratio": null, "board_announce_date": "20260417", "plan_description": "每10股派280.2423元"}]'

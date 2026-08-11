@@ -1,0 +1,116 @@
+{
+  "benchmark": "MKT.DIVIDENDS",
+  "edition": "2026-08-10",
+  "source_evidence": {
+    "cap-direct-test": "866f298ce03eb3cee4b0c806a3e7ed9223f5bc2079c94b1f4ef124145f3af947",
+    "agent-param-fill": "78b779dfd5988f79310d52dd55eed103363779b77962c8202407a2c6b80a48f1",
+    "agent-error-recovery": "64b8a355208b2f6b0db7ffdbdb41675ffcc198754290939c520791d69137ccc5",
+    "agent-response-interpretation": "9c79123c0a5525699a405fc13a80a692b755ad194cdfeaf23fd298c68cc0dab4",
+    "agent-response-self-description": "d2265235dfe56e4c7bcd7c66f05177a042543e5ce41f36ac798adec073387d16"
+  },
+  "direct_test": {
+    "Alpha Vantage": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 614,
+      "success_call_credits": 2.0
+    },
+    "EODHD": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 812,
+      "success_call_credits": 2.81
+    },
+    "Massive": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 800,
+      "success_call_credits": 1.0
+    },
+    "Twelve Data": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 414,
+      "success_call_credits": 2.37
+    },
+    "同花顺 iFinD": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 419,
+      "success_call_credits": 1.0
+    },
+    "恒生聚源": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 513,
+      "success_call_credits": 1.0
+    }
+  },
+  "ai_param_fill": {
+    "dividend-600519-annual": {
+      "passed": 2,
+      "total": 2
+    },
+    "dividend-600519-history": {
+      "passed": 2,
+      "total": 2
+    },
+    "dividend-aapl-history": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "ai_error_recovery": {
+    "dividend-600519-recovery": {
+      "passed": 0,
+      "total": 4
+    },
+    "dividend-aapl-recovery": {
+      "passed": 6,
+      "total": 8
+    }
+  },
+  "ai_response_interpretation": {
+    "dividend-aapl-latest": {
+      "passed": 2,
+      "total": 2
+    },
+    "dividend-invalid-symbol": {
+      "passed": 2,
+      "total": 2
+    }
+  },
+  "ai_response_self_description": {
+    "Alpha Vantage": {
+      "amount": "1/2",
+      "currency": "0/2",
+      "ex_date": "2/2"
+    },
+    "EODHD": {
+      "amount": "1/2",
+      "currency": "0/2",
+      "ex_date": "1/2"
+    },
+    "Massive": {
+      "amount": "2/2",
+      "currency": "2/2",
+      "ex_date": "2/2"
+    },
+    "Twelve Data": {
+      "amount": "2/2",
+      "currency": "2/2",
+      "ex_date": "2/2"
+    },
+    "同花顺 iFinD": {
+      "amount": "2/2",
+      "currency": "1/2",
+      "ex_date": "0/2"
+    },
+    "恒生聚源": {
+      "amount": "2/2",
+      "currency": "0/2",
+      "ex_date": "0/2"
+    }
+  },
+  "note": "Sanitized aggregate summary. success_call_credits is the per-call price for positive cases only (negative controls are not billed). Raw probe records are kept private per the evidence policy; frozen fixtures and probe scripts live in the benchmark repository."
+}

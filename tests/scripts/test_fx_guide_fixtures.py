@@ -66,16 +66,15 @@ def test_ac3_all_agent_fixtures_bind_registered_access_paths() -> None:
         )
 
     expected_sizes = {
-        "agent-param-fill-corporate-actions.yaml": 5,
-        "agent-param-fill-dividends.yaml": 6,
+        "agent-param-fill-corporate-actions.yaml": (4, 1),
+        "agent-param-fill-dividends.yaml": (6, 0),
     }
-    for name, expected in expected_sizes.items():
+    for name, (tools, excluded) in expected_sizes.items():
         document = yaml.safe_load(
             (ROOT / "scripts/fixtures" / name).read_text(encoding="utf-8")
         )
-        assert (
-            len(document["tools"]) + len(document["excluded_legacy_tools"]) == expected
-        )
+        assert len(document["tools"]) == tools
+        assert len(document.get("excluded_legacy_tools", [])) == excluded
     for path in sorted((ROOT / "scripts/fixtures").glob("agent-error-recovery-*.yaml")):
         probes = load_recovery_fixture(path, ROOT / "providers")
         assert all(

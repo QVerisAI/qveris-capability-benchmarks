@@ -13,9 +13,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
+from chart_metrics import direct_metrics_by_access_path
 from matplotlib.colors import ListedColormap
-
-from scripts.chart_metrics import direct_metrics_by_access_path
 
 try:
     from matplotlib import font_manager

@@ -1,0 +1,34 @@
+provider:
+  provider_id: hangseng
+  official_name: 恒生聚源
+  website: https://www.gildata.com/
+  market_coverage: [CN]
+  official_pricing:
+    - pricing_id: hangseng-dividends-pricing
+      pricing_url: https://www.gildata.com/products/core-data.html
+      applies_to:
+        - hangseng-dividends-qveris
+      currencies: [CNY]
+      free_tier: "Not published for this snapshot."
+      paid_plans: "Commercial; see product page."
+      verified_at: 2026-08-10
+      source_digest: 67cb7320607025a487e72270e31f695de598efbb2836511b8775e15e3d211f35
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: hangseng-dividends-qveris
+    provider_id: hangseng
+    path_type: qveris_connector
+    official_source: https://www.gildata.com/products/core-data.html
+    canonical_interface: dividends
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: Dividend query tool is callable via the QVeris connector and returns complete dividend observations.
+      evidence_digest: sha256:d8621d75747f02e66b4d054d4884a53b86eece43c0966af697215b1856616c00

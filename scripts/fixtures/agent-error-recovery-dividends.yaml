@@ -1,0 +1,91 @@
+tools:
+  - tool_id: eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
+    provider_id: eodhd
+    access_path_id: eodhd-dividends-qveris
+    name: Retrieve Dividend History
+    description: Retrieve historical dividend events for a symbol over a date range.
+    params:
+      - {name: symbol, type: string, required: true, description: Symbol}
+      - {name: from, type: string, required: false, description: Start date YYYY-MM-DD}
+      - {name: to, type: string, required: false, description: End date YYYY-MM-DD}
+    cases:
+      - question_id: dividend-aapl-recovery
+        task: AAPL 最近一次每股分红金额和除息日是什么？
+        failure_response: 'Symbol not found'
+        expected_retry_params: {symbol: AAPL}
+        difficulty: L2
+  - tool_id: twelvedata.dividends.retrieve.v1.c0c9b142
+    provider_id: twelve-data
+    access_path_id: twelve-data-dividends-qveris
+    name: Dividends
+    description: Return dividend events for a symbol or identifier over a date range.
+    params:
+      - {name: symbol, type: string, required: true, description: Ticker symbol}
+      - {name: start_date, type: string, required: false, description: Start date YYYY-MM-DD}
+      - {name: end_date, type: string, required: false, description: End date YYYY-MM-DD}
+    cases:
+      - question_id: dividend-aapl-recovery
+        task: AAPL 最近一次每股分红金额和除息日是什么？
+        failure_response: '{"code": 404, "message": "**symbol** or **figi** parameter is missing or invalid. Please provide a valid symbol according to API documentation: https://twelvedata.com/docs#reference-data", "status": "error"}'
+        expected_retry_params: {symbol: AAPL}
+        difficulty: L2
+  - tool_id: polygon.stocks.dividends.list.v1.ea25c492
+    provider_id: massive-stocks
+    access_path_id: massive-stocks-dividends-qveris
+    name: List Stock Dividends
+    description: List historical dividend events, filterable by ticker.
+    params:
+      - {name: ticker, type: string, required: true, description: Ticker symbol}
+      - {name: limit, type: integer, required: false, description: Max results}
+    cases:
+      - question_id: dividend-aapl-recovery
+        task: AAPL 最近一次每股分红金额和除息日是什么？
+        failure_response: '{"status": "OK", "request_id": "af2fd4b8e0b24455810ac717cc2813a2", "results": []}'
+        expected_retry_params: {ticker: AAPL}
+        difficulty: L3
+  - tool_id: alphavantage.dividends.list.v1.467a92c0
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-dividends-qveris
+    name: Dividends
+    description: Retrieve dividend events for a ticker.
+    params:
+      - {name: function, type: string, required: true, description: The function of your choice. DIVIDENDS}
+      - {name: symbol, type: string, required: true, description: The symbol of the ticker}
+    cases:
+      - question_id: dividend-aapl-recovery
+        task: AAPL 最近一次每股分红金额和除息日是什么？
+        failure_response: '{"symbol": "NOTASTOCK", "data": []}'
+        expected_retry_params: {function: DIVIDENDS, symbol: AAPL}
+        difficulty: L3
+  - tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
+    provider_id: hangseng
+    access_path_id: hangseng-dividends-qveris
+    name: Stock Dividend Query
+    description: Query dividend records for Shanghai, Shenzhen, Beijing listed companies.
+    params:
+      - {name: stockObject, type: array, required: true, description: Stock codes or names, supporting multiple}
+      - {name: beginDate, type: string, required: false, description: Start date YYYY-MM-DD}
+      - {name: endDate, type: string, required: false, description: End date YYYY-MM-DD}
+      - {name: pageSize, type: integer, required: false, description: Page size}
+    cases:
+      - question_id: dividend-600519-recovery
+        task: 获取贵州茅台最近一次每股分红金额和除息日。
+        failure_response: '{"success": true, "code": 0, "data": {"msg": "For input string: \"ZZZZZZZZ\"", "code": "500", "data": {}, "datatype": "string", "datasize": 1, "timestamp": 1786358947074}, "message": "操作成功", "timestamp": 1786358947084}'
+        expected_retry_params: {stockObject: "600519.SH"}
+        difficulty: L3
+  - tool_id: cn_financial_pro.dividend_plan.v1
+    provider_id: ifind
+    access_path_id: ifind-dividends-qveris
+    name: Dividend Plan
+    description: Query dividend plans for Chinese listed companies.
+    params:
+      - {name: codes, type: string, required: true, description: Stock codes comma separated, e.g. 600519.SH}
+      - {name: year, type: integer, required: false, description: Report year}
+      - {name: period, type: string, required: false, description: Report period, annual/H1/Q3/Q1}
+      - {name: limit, type: integer, required: false, description: Max results}
+    cases:
+      - question_id: dividend-600519-recovery
+        task: 获取贵州茅台最近一次每股分红金额和除息日。
+        failure_response: '[]'
+        expected_retry_params: {codes: "600519.SH"}
+        difficulty: L3
