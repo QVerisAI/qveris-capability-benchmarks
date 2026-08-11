@@ -10,6 +10,10 @@ class DividendExtractionError(ValueError):
     pass
 
 
+class DividendNegativeControlError(DividendExtractionError):
+    pass
+
+
 _SYMBOL_FIELDS = ("symbol", "ticker", "stockobject", "stock_code")
 _DATE_FIELDS = (
     "effective_date",
@@ -42,7 +46,9 @@ def extract_dividend_event(
     rows, metadata = _provider_rows(provider_id, normalized)
     if negative_control:
         if rows:
-            raise DividendExtractionError("negative control returned dividend events")
+            raise DividendNegativeControlError(
+                "negative control returned dividend events"
+            )
         return {"validation_error": "invalid symbol or no dividend events"}
 
     selected_rows = _within_window(rows, start_date, end_date)

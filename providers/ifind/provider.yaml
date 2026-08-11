@@ -24,7 +24,7 @@ access_paths:
     official_source: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md
     canonical_interface: iFinD finance-data MCP tools
     protocol: mcp_streamable_http
-    endpoint_url: https://api-mcp.51ifind.com:8643/ds-mcp-servers
+    endpoint_url: https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-stock-mcp
     authentication: Authorization header with the user-issued auth_token
     authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: true

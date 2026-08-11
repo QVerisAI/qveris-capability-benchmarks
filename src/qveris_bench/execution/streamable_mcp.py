@@ -9,18 +9,26 @@ from mcp.client.streamable_http import streamable_http_client
 
 
 def build_bearer_headers(api_key: str) -> dict[str, str]:
+    return build_authorization_headers(api_key, bearer=True)
+
+
+def build_authorization_headers(
+    api_key: str, *, bearer: bool
+) -> dict[str, str]:
     if not api_key.strip():
         raise ValueError("MCP api key must not be blank")
-    return {"Authorization": f"Bearer {api_key}"}
+    value = f"Bearer {api_key}" if bearer else api_key
+    return {"Authorization": value}
 
 
 @asynccontextmanager
 async def streamable_mcp_session(
-    endpoint: str, api_key: str
+    endpoint: str, api_key: str, *, bearer: bool = True
 ) -> AsyncIterator[ClientSession]:
     if not endpoint.startswith("https://"):
         raise ValueError("MCP endpoint must use HTTPS")
-    async with httpx2.AsyncClient(headers=build_bearer_headers(api_key)) as client:
+    headers = build_authorization_headers(api_key, bearer=bearer)
+    async with httpx2.AsyncClient(headers=headers) as client:
         async with streamable_http_client(endpoint, http_client=client) as streams:
             async with ClientSession(*streams) as session:
                 await session.initialize()
