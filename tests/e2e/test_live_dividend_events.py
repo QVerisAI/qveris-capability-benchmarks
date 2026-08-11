@@ -110,6 +110,11 @@ def _public_diagnostic_payload(
     raw_digest: str | None,
     error_types: tuple[str, ...],
 ) -> bytes:
+    if str(binding.provider_id) == "ifind":
+        blocked_text = json.dumps(binding.parameters, ensure_ascii=False)
+        response_shape = _public_ifind_schema_shape(document, blocked_text, depth=8)
+    else:
+        response_shape = public_response_shape(document, depth=8)
     return (
         json.dumps(
             {
@@ -119,16 +124,80 @@ def _public_diagnostic_payload(
                 "access_path_id": binding.access_path_id,
                 "transport": binding.transport,
                 "raw_digest": raw_digest,
-                "response_shape": public_response_shape(document, depth=8),
+                "response_shape": response_shape,
                 "error_types": list(error_types),
                 "redaction_status": "structure_only",
                 "github_run_id": os.environ.get("GITHUB_RUN_ID"),
                 "github_sha": os.environ.get("GITHUB_SHA"),
             },
+            ensure_ascii=False,
             sort_keys=True,
         )
         + "\n"
     ).encode()
+
+
+def _public_ifind_schema_shape(
+    value: object, blocked_text: str, *, depth: int
+) -> dict[str, object]:
+    if isinstance(value, dict):
+        public_keys = sorted(
+            key
+            for key in value
+            if isinstance(key, str) and _public_ifind_field_name(key, blocked_text)
+        )
+        shape: dict[str, object] = {
+            "type": "object",
+            "keys": public_keys,
+            "field_count": len(value),
+            "redacted_key_count": len(value) - len(public_keys),
+        }
+        if depth > 0:
+            shape["fields"] = {
+                key: _public_ifind_schema_shape(
+                    value[key], blocked_text, depth=depth - 1
+                )
+                for key in public_keys
+            }
+        return shape
+    if isinstance(value, list):
+        shape = {"type": "array", "length": len(value)}
+        if value and depth > 0:
+            shape["item_shape"] = _public_ifind_schema_shape(
+                value[0], blocked_text, depth=depth - 1
+            )
+        return shape
+    if isinstance(value, str):
+        try:
+            decoded = json.loads(value)
+        except json.JSONDecodeError:
+            return {"type": "string"}
+        if isinstance(decoded, (dict, list)):
+            return {
+                "type": "json_string",
+                "value_shape": _public_ifind_schema_shape(
+                    decoded, blocked_text, depth=depth
+                ),
+            }
+        return {"type": "string"}
+    if value is None:
+        return {"type": "null"}
+    if isinstance(value, bool):
+        return {"type": "boolean"}
+    if isinstance(value, (int, float)):
+        return {"type": "number"}
+    return {"type": type(value).__name__}
+
+
+def _public_ifind_field_name(key: str, blocked_text: str) -> bool:
+    return (
+        bool(key.strip())
+        and len(key) <= 64
+        and key not in blocked_text
+        and not any(character.isdigit() for character in key)
+        and "." not in key
+        and "/" not in key
+    )
 
 
 def _error_types(error: BaseException) -> tuple[str, ...]:
@@ -286,7 +355,16 @@ def test_ac8_public_diagnostic_exposes_only_response_shape() -> None:
                     "text": json.dumps(
                         {
                             "code": 1,
-                            "data": {"rows": [{"symbol": "600519.SH"}]},
+                            "data": json.dumps(
+                                {
+                                    "数据表": [
+                                        {"股票代码": "600519.SH", "每股分红": 28.02}
+                                    ],
+                                    "查询条件": {"报告期": "latest"},
+                                    "贵州茅台": {"private": "dynamic key"},
+                                },
+                                ensure_ascii=False,
+                            ),
                         }
                     ),
                 }
@@ -297,7 +375,9 @@ def test_ac8_public_diagnostic_exposes_only_response_shape() -> None:
     ).decode()
 
     assert "response_shape" in content
-    assert "rows" in content
+    assert "数据表" in content
+    assert "股票代码" in content
+    assert "报告期" in content
     assert "600519.SH" not in content
     assert "Authorization" not in content
     assert "贵州茅台" not in content
