@@ -17,6 +17,10 @@ what conditions, and with how much integration risk.
 ## Release and consumer boundaries
 
 **Each benchmark release belongs to exactly one CAP. CAP is the measurement unit.**
+This is the official publication policy enforced by reviewed suite compilation and
+release admission. The historical v1 release schema does not carry a standalone
+`cap_id`; a future versioned release format must make that coordinate machine-visible
+without changing historical bytes.
 
 A CAP is one bounded machine-interface capability that can be tested, attributed,
 and replayed without mixing Provider behavior with model planning or unrelated

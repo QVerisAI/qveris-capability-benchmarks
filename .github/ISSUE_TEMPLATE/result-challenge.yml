@@ -64,3 +64,17 @@ body:
       description: Disclose relevant Provider, customer, sponsor, employment, or investment relationships; write none if absent.
     validations:
       required: true
+  - type: textarea
+    id: source_license
+    attributes:
+      label: Counter-evidence sources and licenses
+      description: Identify provenance, redistribution terms, and dates for every submitted source.
+    validations:
+      required: true
+  - type: checkboxes
+    id: right_to_submit
+    attributes:
+      label: Right to submit
+      options:
+        - label: I have the right to submit and publicly retain the counter-evidence linked here.
+          required: true

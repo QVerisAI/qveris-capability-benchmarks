@@ -1,6 +1,6 @@
 # Offline release replay
 
-Offline replay proves that the public files in one release directory are internally
+Offline replay proves that the five replay files in one release directory are internally
 consistent and deterministically rebuild the published `release.json` bytes. It
 does not rerun a Provider and does not establish community reproduction.
 
@@ -46,3 +46,7 @@ Replay fails closed on a missing or malformed file, plan digest mismatch, suite
 fingerprint mismatch, cell topology change, evidence-gate failure, canonical byte
 mismatch, or expected-digest mismatch. Preserve the checkout and open a Result
 challenge through `CONTRIBUTING.md`; do not edit a historical release in place.
+
+Six named historical bundles predate mandatory failure attribution. Replay recognizes
+only their exact published digests; every new or changed bundle must pass the current
+attribution gate.

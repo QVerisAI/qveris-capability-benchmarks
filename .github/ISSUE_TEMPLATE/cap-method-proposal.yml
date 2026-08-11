@@ -49,6 +49,13 @@ body:
     validations:
       required: true
   - type: checkboxes
+    id: right_to_submit
+    attributes:
+      label: Right to submit
+      options:
+        - label: I have the right to submit and publicly retain the proposed material.
+          required: true
+  - type: checkboxes
     id: no_aggregate
     attributes:
       label: Atomic evidence

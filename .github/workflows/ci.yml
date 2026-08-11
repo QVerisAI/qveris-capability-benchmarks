@@ -20,6 +20,19 @@ jobs:
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
+      - name: Reject changes to immutable release directories
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --depth=1 origin "$BASE_SHA"
+          changed_dirs=$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- releases/ | awk -F/ 'NF >= 2 {print $1 "/" $2}' | sort -u)
+          for release_dir in $changed_dirs; do
+            if git cat-file -e "$BASE_SHA:$release_dir" 2>/dev/null; then
+              echo "immutable release directory changed: $release_dir" >&2
+              exit 1
+            fi
+          done
       - name: Install the pinned uv bootstrap
         run: |
           uv_wheel="/tmp/uv-0.12.2-py3-none-manylinux_2_17_x86_64.whl"

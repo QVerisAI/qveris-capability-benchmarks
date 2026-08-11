@@ -3,7 +3,7 @@
 Open, evidence-first benchmarks for financial Agent developers. Choose a provider and Access Path
 for one concrete capability from replayable evidence.
 
-Every benchmark release evaluates exactly one CAP. Native APIs, native MCP
+Every official benchmark release evaluates exactly one CAP. Native APIs, native MCP
 interfaces, and QVeris Access Paths remain separate test cells, run under the same
 frozen cases and outcome rules. The project publishes observable facts and
 limitations—not a provider total score or an Agent-friendly rating.
@@ -30,7 +30,9 @@ the full trust boundary and optional external digest verification.
 - Direct Test outcomes for every included applicable Provider / Access Path cell.
 - Separate observations for parameter clarity, response schema, error recovery,
   pagination, language mapping, and single-tool task completion.
-- Evidence lineage, limitations, and failure attribution for every public fact.
+- Evidence lineage and limitations for every public fact, plus failure attribution
+  when recorded. New official releases require Provider-side attribution for every
+  Provider-negative outcome; named historical bundles retain their original bytes.
 - Native and QVeris paths independently, even when one path performs worse.
 
 Accuracy, precision, latency, reliability, cost, market coverage, language

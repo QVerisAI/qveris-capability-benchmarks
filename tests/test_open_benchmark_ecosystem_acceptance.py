@@ -32,11 +32,30 @@ def _field_ids(document: dict[str, object]) -> set[str]:
     return ids
 
 
-def test_ac5_single_cap_release_boundary_has_one_strategy_ssot() -> None:
+def _required_field_ids(document: dict[str, object]) -> set[str]:
+    body = document["body"]
+    assert isinstance(body, list)
+    required = set()
+    for field in body:
+        if not isinstance(field, dict) or not field.get("id"):
+            continue
+        validations = field.get("validations", {})
+        options = field.get("attributes", {}).get("options", [])
+        if (isinstance(validations, dict) and validations.get("required") is True) or (
+            field.get("type") == "checkboxes"
+            and options
+            and all(option.get("required") is True for option in options)
+        ):
+            required.add(field["id"])
+    return required
+
+
+def test_ac5_single_cap_official_release_policy_has_one_strategy_ssot() -> None:
     strategy = _read("docs/product-strategy.md")
     readme = _read("README.md")
 
     assert "Each benchmark release belongs to exactly one CAP" in strategy
+    assert "official publication policy" in strategy
     assert "consume facts from multiple independent CAP releases" in strategy
     assert "[product strategy](docs/product-strategy.md)" in readme
 
@@ -97,6 +116,8 @@ def test_ac7_issue_forms_are_structured_for_their_domain_contracts() -> None:
             "submitter_relationship",
             "disclosure_permission",
             "conflict_of_interest",
+            "source_license",
+            "right_to_submit",
         },
         "cap-method-proposal.yml": {
             "developer_decision",
@@ -105,6 +126,7 @@ def test_ac7_issue_forms_are_structured_for_their_domain_contracts() -> None:
             "outcome_rules",
             "source_license",
             "conflict_of_interest",
+            "right_to_submit",
             "no_aggregate",
         },
         "result-challenge.yml": {
@@ -116,6 +138,8 @@ def test_ac7_issue_forms_are_structured_for_their_domain_contracts() -> None:
             "claim",
             "counter_evidence",
             "conflict_of_interest",
+            "source_license",
+            "right_to_submit",
         },
     }
 
@@ -124,6 +148,7 @@ def test_ac7_issue_forms_are_structured_for_their_domain_contracts() -> None:
         assert document.get("name")
         assert document.get("description")
         assert expected_ids <= _field_ids(document)
+        assert expected_ids <= _required_field_ids(document)
         body = document["body"]
         assert isinstance(body, list)
         assert all(
@@ -148,6 +173,7 @@ def test_ac7_issue_chooser_routes_security_and_rejects_blank_issues() -> None:
         for link in links
         if isinstance(link, dict)
     )
+    assert (FORMS / "bug-report.yml").is_file()
 
 
 def test_ac7_pull_request_template_requires_evidence_and_validation() -> None:
@@ -169,3 +195,11 @@ def test_ac7_roadmap_keeps_live_byok_and_sites_out_of_v1() -> None:
     assert "QVeris Key" in ecosystem
     assert "Native BYOK" in ecosystem
     assert "not implemented in v1" in ecosystem
+
+
+def test_ac2_ci_rejects_changes_to_existing_release_directories() -> None:
+    workflow = _read(".github/workflows/ci.yml")
+
+    assert "github.event.pull_request.base.sha" in workflow
+    assert 'git cat-file -e "$BASE_SHA:$release_dir"' in workflow
+    assert "immutable release directory changed" in workflow

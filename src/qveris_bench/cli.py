@@ -567,10 +567,17 @@ def release_replay(
     except ReleaseReplayError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
-    typer.echo(
-        f"Offline release replay verified {result.release_id} "
-        f"{result.published_digest} (no provider API calls)"
-    )
+    if result.expected_digest_verified:
+        typer.echo(
+            f"External expected digest matched {result.release_id} "
+            f"{result.published_digest} (offline; no provider API calls)"
+        )
+    else:
+        typer.echo(
+            f"Internal consistency verified {result.release_id} "
+            f"{result.published_digest} "
+            "(external digest not checked; no provider API calls)"
+        )
 
 
 @schema_app.command("export")

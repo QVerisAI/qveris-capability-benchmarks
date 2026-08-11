@@ -6,6 +6,29 @@ from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.suite import BenchmarkCase, BenchmarkSuite
 
 
+def canonical_run_key(
+    suite_id: str,
+    suite_fingerprint: str,
+    *,
+    case_id: str,
+    provider_id: str,
+    access_path_id: str,
+    mode: RunMode,
+    round_number: int,
+) -> str:
+    return ":".join(
+        (
+            suite_id,
+            suite_fingerprint[:12],
+            case_id,
+            provider_id,
+            access_path_id,
+            mode.value,
+            str(round_number),
+        )
+    )
+
+
 def _applicability_reason(
     suite: BenchmarkSuite,
     case: BenchmarkCase,
@@ -40,16 +63,14 @@ def expand_run_plan(
             for mode in suite.modes:
                 reason = _applicability_reason(suite, case, access_path, mode)
                 for round_number in range(1, suite.rounds + 1):
-                    run_key = ":".join(
-                        (
-                            suite.suite_id,
-                            fingerprint[:12],
-                            case.case_id,
-                            access_path.provider_id,
-                            access_path.access_path_id,
-                            mode.value,
-                            str(round_number),
-                        )
+                    run_key = canonical_run_key(
+                        suite.suite_id,
+                        fingerprint,
+                        case_id=case.case_id,
+                        provider_id=access_path.provider_id,
+                        access_path_id=access_path.access_path_id,
+                        mode=mode,
+                        round_number=round_number,
                     )
                     cells.append(
                         RunCell(

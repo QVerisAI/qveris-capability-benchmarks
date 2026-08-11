@@ -37,18 +37,20 @@ change benchmark treatment.
 ## Submission and verification states
 
 These are governance workflow states, not fields that may be written back into an
-immutable release. Each state is attached to an exact coordinate: release digest,
-suite fingerprint, `provider_id`, and `access_path_id`; a decision may also name
-specific run keys.
+immutable release. Their coordinates reflect when the state can exist.
 
 - `provider_submitted`: the Provider or its representative supplied an integration,
-  self-test, or evidence. It is useful review input but cannot publish an official
-  result.
+  self-test, or evidence. The submission binds its Issue, target CAP or frozen suite,
+  `provider_id`, and `access_path_id`; no release digest exists yet. It is useful
+  review input but cannot publish an official result.
 - `maintainer_verified`: an eligible maintainer independently checked the submission
-  and performed or supervised the official run under the frozen suite.
+  and performed or supervised the official run under the frozen suite. After
+  publication, the record binds the release digest, suite fingerprint,
+  `provider_id`, and `access_path_id`.
 - `community_reproduced`: an independent contributor performed a new live run and
-  disclosed the environment and resulting evidence. Offline replay alone never
-  grants this state.
+  disclosed the environment and resulting evidence. It binds the referenced release
+  digest, suite fingerprint, `provider_id`, and `access_path_id`. Offline replay
+  alone never grants this state.
 
 Future machine-readable verification records must be append-only attestations or
 part of a successor release. They cannot mutate historical release bytes.

@@ -73,3 +73,17 @@ body:
       description: Disclose employment, sponsorship, customer, investment, or other relevant relationships; write none if absent.
     validations:
       required: true
+  - type: textarea
+    id: source_license
+    attributes:
+      label: Sources and licenses
+      description: Identify the source and redistribution terms for submitted documentation, fixtures, and evidence.
+    validations:
+      required: true
+  - type: checkboxes
+    id: right_to_submit
+    attributes:
+      label: Right to submit
+      options:
+        - label: I have the right to submit and publicly retain the material linked here.
+          required: true

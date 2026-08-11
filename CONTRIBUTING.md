@@ -16,6 +16,8 @@ in [GOVERNANCE.md](GOVERNANCE.md).
   [Result challenge form](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=result-challenge.yml).
 - **Code or documentation:** open a focused pull request after reading the
   architecture and local checks below.
+- **Technical bug:** use the
+  [bug report form](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=bug-report.yml).
 
 An early idea can start as an Issue. A change to executable cases, rules, extractors,
 adapters, evidence policy, or release behavior requires a pull request and tests.
