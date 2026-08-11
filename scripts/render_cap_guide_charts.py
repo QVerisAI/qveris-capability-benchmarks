@@ -13,8 +13,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
-from chart_metrics import direct_metrics_by_access_path
 from matplotlib.colors import ListedColormap
+
+try:
+    from chart_metrics import direct_metrics_by_access_path
+except ModuleNotFoundError:
+    from scripts.chart_metrics import direct_metrics_by_access_path
 
 try:
     from matplotlib import font_manager
@@ -42,6 +46,139 @@ def _latest_batch(path: Path) -> list[dict]:
 
 def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def _sha256_identity(path: Path) -> str:
+    return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+
+
+def render_release_outcomes(
+    release_dir: Path,
+    cases_path: Path,
+    output_dir: Path,
+    *,
+    edition_date: str,
+) -> dict[str, object]:
+    release_path = release_dir / "release.json"
+    document = json.loads(release_path.read_text(encoding="utf-8"))
+    applicable = [cell for cell in document["cells"] if cell["applicable"]]
+    case_document = yaml.safe_load(cases_path.read_text(encoding="utf-8"))
+    case_roles = {
+        case["case_id"]: case["negative_control"] for case in case_document["cases"]
+    }
+    unknown_case_ids = {
+        cell["case_id"] for cell in applicable if cell["case_id"] not in case_roles
+    }
+    if unknown_case_ids:
+        joined = ", ".join(sorted(unknown_case_ids))
+        raise ValueError(f"release contains cases absent from CAP Pack: {joined}")
+    provider_labels = {
+        "hangseng": "恒生聚源\nQVeris",
+        "ifind": "同花顺 iFinD\nNative MCP",
+        "twelve-data": "Twelve Data\nQVeris",
+        "alpha-vantage": "Alpha Vantage\nQVeris",
+        "eodhd": "EODHD\nQVeris",
+        "massive-stocks": "Massive\nQVeris",
+    }
+    provider_order = [
+        provider_id
+        for provider_id in provider_labels
+        if any(cell["provider_id"] == provider_id for cell in applicable)
+    ]
+    results = {
+        provider_id: {
+            "positive_completed": 0,
+            "positive_total": 0,
+            "negative_completed": 0,
+            "negative_total": 0,
+        }
+        for provider_id in provider_order
+    }
+    for cell in applicable:
+        result = results[cell["provider_id"]]
+        kind = "negative" if case_roles[cell["case_id"]] else "positive"
+        result[f"{kind}_total"] += 1
+        if cell["state"] == "completed":
+            result[f"{kind}_completed"] += 1
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    positions = list(range(len(provider_order)))
+    width = 0.36
+    positive = [
+        results[provider_id]["positive_completed"] for provider_id in provider_order
+    ]
+    negative = [
+        results[provider_id]["negative_completed"] for provider_id in provider_order
+    ]
+    positive_total = [
+        results[provider_id]["positive_total"] for provider_id in provider_order
+    ]
+    negative_total = [
+        results[provider_id]["negative_total"] for provider_id in provider_order
+    ]
+
+    fig, ax = plt.subplots(figsize=(10, 5.8), facecolor="#F8FAFC")
+    ax.set_facecolor("#F8FAFC")
+    positive_bars = ax.bar(
+        [position - width / 2 for position in positions],
+        positive,
+        width,
+        label="正向用例完成轮次",
+        color="#2F78AD",
+    )
+    negative_bars = ax.bar(
+        [position + width / 2 for position in positions],
+        negative,
+        width,
+        label="负向控制完成轮次",
+        color="#6EB0C2",
+    )
+    for bars, values, totals in (
+        (positive_bars, positive, positive_total),
+        (negative_bars, negative, negative_total),
+    ):
+        for bar, value, total in zip(bars, values, totals, strict=True):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                value + 0.08,
+                f"{value}/{total}",
+                ha="center",
+                color="#0F172A",
+                fontsize=9,
+            )
+    ax.set_xticks(positions)
+    ax.set_xticklabels([provider_labels[item] for item in provider_order], fontsize=9)
+    ax.set_ylim(0, 3.65)
+    ax.set_ylabel("完成轮次（每项分母为 3）", color="#0F172A")
+    ax.set_title(
+        "分红事件 Direct Test：正向字段门槛与负向控制",
+        color="#143F74",
+        fontsize=14,
+        fontweight="bold",
+    )
+    ax.grid(axis="y", alpha=0.2, color="#94A3B8")
+    ax.legend(frameon=False, loc="upper center", ncol=2)
+    for spine in ax.spines.values():
+        spine.set_color("#CBD5E1")
+    fig.tight_layout()
+    chart_path = output_dir / "chart-direct-outcomes.png"
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    manifest: dict[str, object] = {
+        "release_id": document["release"]["release_id"],
+        "charts": {chart_path.name: _sha256_identity(chart_path)},
+        "input_digests": {
+            "release": _sha256_identity(release_path),
+            "cases": _sha256_identity(cases_path),
+        },
+        "rendered_at": edition_date,
+    }
+    (output_dir / "charts-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -77,7 +214,22 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("docs/guides/capability-seo/best-dividend-apis/charts"),
     )
+    parser.add_argument("--release-dir", type=Path)
+    parser.add_argument("--cases", type=Path)
+    parser.add_argument("--edition-date", default="2026-08-11")
     args = parser.parse_args(argv)
+
+    if args.release_dir:
+        if not args.cases:
+            parser.error("--cases is required with --release-dir")
+        manifest = render_release_outcomes(
+            args.release_dir,
+            args.cases,
+            args.output_dir,
+            edition_date=args.edition_date,
+        )
+        print(json.dumps(manifest, ensure_ascii=False))
+        return 0
 
     config = yaml.safe_load(args.data.read_text(encoding="utf-8"))
     suppliers = config["suppliers"]

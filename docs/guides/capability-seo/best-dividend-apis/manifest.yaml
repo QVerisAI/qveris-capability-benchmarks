@@ -1,69 +1,72 @@
 schema_version: 1
-benchmark_id: dividend-data-2026-08
+benchmark_id: dividend-events-2026-q3-v1
 article_slug: best-dividend-apis
-edition: "2026-08-10"
-search_intent: 对比分红数据 API 的实测延迟、费用与 AI 友好度，帮助开发者选择分红、除息与送转数据源
+edition: "2026-08-11"
+search_intent: 对比分红数据 API 在除权除息日、每股现金分红与无效代码处理上的可复测结果
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
 comparison_shortlist:
   - 恒生聚源
-  - 同花顺 iFinD
   - Twelve Data
   - Alpha Vantage
   - EODHD
   - Massive
+native_supplements:
+  - 同花顺 iFinD
 supplier_entities:
   恒生聚源: gildata.com
   同花顺 iFinD: 51ifind.com
   Twelve Data: twelvedata.com
   Alpha Vantage: alphavantage.co
   EODHD: eodhd.com
-  Massive: massive.io
+  Massive: massive.com
 scenarios:
-  - {id: aapl_dividend_history, article_label: AAPL 分红历史, minimum_rounds: 2}
-  - {id: invalid_symbol_control, article_label: 无效代码控制, minimum_rounds: 2}
+  - {id: us_positive_dividend_event, article_label: AAPL 分红事件, minimum_rounds: 3}
+  - {id: cn_positive_dividend_event, article_label: 600519.SH 分红事件, minimum_rounds: 3}
+  - {id: invalid_symbol_control, article_label: 无效代码控制, minimum_rounds: 3}
 publication_policy:
-  one_tool_per_supplier_per_scenario: true
+  one_canonical_tool_per_access_path: true
+  direct_test_required: true
   freeze_shortlist_after_baseline: true
   states: [qualified, not_qualified, not_applicable]
+release:
+  directory: releases/dividend-events-2026-q3-v1
+  digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+  suite_fingerprint: 60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741
+  planned_cells: 54
+  applicable_cells: 36
+  public_evidence_records: 36
 seo:
-  title: "2026 分红数据 API 对比：6 家分红与除权数据源实测"
-  meta_description: "2026 年 8 月实测：对比 6 家分红数据 API 的延迟、费用与 AI 友好度，帮助开发者选择分红、除息与送转数据源。"
+  title: "2026 分红数据 API 对比：6 条 Access Path 可复测结果"
+  meta_description: "2026 年 8 月实测：用 36 次 Direct Test 对比 6 条分红数据 Access Path 的除权除息日、每股现金分红与负向控制结果。"
   primary_keyword: 分红数据 API
   secondary_keywords: [分红 API, 除息数据 API, 股息数据 API, dividend API]
   publication_action: new_page
-  inventory_checked_at: "2026-08-10"
+  inventory_checked_at: "2026-08-11"
   target_slug: best-dividend-apis
-  provider_inventory_checked_at: "2026-08-10"
+  provider_inventory_checked_at: "2026-08-11"
   competing_urls: []
   supplier_sites:
-    恒生聚源: https://www.gildata.com/
-    同花顺 iFinD: https://quantapi.51ifind.com/
-    Twelve Data: https://twelvedata.com/
-    Alpha Vantage: https://www.alphavantage.co/
-    EODHD: https://eodhd.com/
-    Massive: https://massive.io/
+    恒生聚源: https://www.gildata.com/products/core-data.html
+    同花顺 iFinD: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md
+    Twelve Data: https://twelvedata.com/docs#dividends
+    Alpha Vantage: https://www.alphavantage.co/documentation/#dividends
+    EODHD: https://eodhd.com/financial-apis/api-splits-dividends/
+    Massive: https://massive.com/docs/rest/stocks/corporate-actions/dividends
   provider_pages:
     恒生聚源: https://qveris.ai/providers/hangseng_polysource
-    同花顺 iFinD: https://qveris.ai/providers/ths_ifind
     Twelve Data: https://qveris.ai/providers/twelvedata
     Alpha Vantage: https://qveris.ai/providers/alphavantage
     EODHD: https://qveris.ai/providers/eodhd
     Massive: https://qveris.ai/providers/massive_stocks
-  official_sources:
-    恒生聚源基础数据库: https://www.gildata.com/products/core-data.html
-    Twelve Data API: https://twelvedata.com/docs
-    Alpha Vantage 文档: https://www.alphavantage.co/documentation/
-    EODHD 金融 API: https://eodhd.com/financial-apis/
   related_guides:
     Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
     AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
     Best Free Stock APIs: https://qveris.ai/guides/stock-api-free-comparison/
 artifacts:
   article: docs/guides/best-dividend-apis.md
-  direct_test_evidence: evidence/private/cap-direct-test.jsonl
-  agent_param_fill_evidence: evidence/private/agent-param-fill.jsonl
-  agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
+  cases: cap_packs/dividend_events/cases.yaml
+  release: releases/dividend-events-2026-q3-v1/release.json
+  public_evidence: evidence/dividend-events-2026-q3-v1
   charts:
-    - docs/guides/capability-seo/best-dividend-apis/charts/chart-latency-cost.png
-    - docs/guides/capability-seo/best-dividend-apis/charts/chart-market-coverage.png
+    - docs/guides/capability-seo/best-dividend-apis/charts/chart-direct-outcomes.png

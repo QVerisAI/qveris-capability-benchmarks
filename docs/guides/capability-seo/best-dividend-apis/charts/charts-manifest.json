@@ -1,14 +1,11 @@
 {
+  "release_id": "dividend-events-2026-q3-v1",
   "charts": {
-    "chart-latency-cost.png": "42bf41e607fc9cfb",
-    "chart-market-coverage.png": "b65da150c597ef8a"
+    "chart-direct-outcomes.png": "sha256:d5a87c11dc55d3629971600eb24f38ec84f55627780e6b0049859ff7b323cce5"
   },
   "input_digests": {
-    "chart-data": "f2a9fcedbceb436b",
-    "cap-direct-test": "866f298ce03eb3ce",
-    "agent-param-fill": "78b779dfd5988f79",
-    "agent-response-interpretation": "9c79123c0a552569",
-    "agent-error-recovery": "64b8a355208b2f6b"
+    "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
+    "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d"
   },
-  "rendered_at": "2026-08-10"
+  "rendered_at": "2026-08-11"
 }

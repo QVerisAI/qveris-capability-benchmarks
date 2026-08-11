@@ -6,13 +6,13 @@
 <title>从 CAP 到文章：QVeris Capability Benchmark 完整产线</title>
 <style>
   :root {
-    --bg: #f6f8fb;
+    --bg: #f8fafc;
     --card: #ffffff;
-    --ink: #1c2733;
-    --muted: #5b6b7b;
-    --line: #dce3ec;
-    --accent: #2f6fed;
-    --accent-soft: #e8f0fe;
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #cbd5e1;
+    --accent: #2f78ad;
+    --accent-soft: #eaf4f7;
     --green: #1e9e63;
     --green-soft: #e6f6ee;
     --red: #d64545;
@@ -31,7 +31,7 @@
   }
   .wrap { max-width: 980px; margin: 0 auto; }
   header.hero {
-    background: linear-gradient(135deg, #16325c, #2f6fed);
+    background: linear-gradient(135deg, #143f74, #2f78ad);
     color: #fff;
     border-radius: 18px;
     padding: 40px 36px;
@@ -167,124 +167,124 @@
 <header class="hero">
   <div>
     <span class="badge">QVeris Capability Benchmarks</span>
-    <span class="badge">Contract v1 · 2026-08-09</span>
+    <span class="badge">Release-first · 2026-08-11</span>
   </div>
   <h1>从 CAP 到文章：完整产线</h1>
-  <p>给定一个 CAP，如何完成选题、出题、选供应商、定评测标准、判定结果、写文章、画图，并保证每一步都可复现、证据可追。Harbor 评估只作参考，发布结论全部来自本平台自己的 Direct Test 与 AI 探针。</p>
+  <p>给定一个 CAP，如何完成选题、冻结 suite、区分 Provider 与 Access Path、执行 Direct Test、生成 immutable release，再让文章和图表只消费已发布事实。</p>
 </header>
 
 <h2>① 总览：一条 CAP 怎么变成一篇文章</h2>
 <div class="flow">
-  <div class="step"><div class="num">01</div><div class="t">选题</div><div class="d">Harbor catalog 过滤：coverage=full 且 provider_count≥3</div></div>
-  <div class="step"><div class="num">02</div><div class="t">出题</div><div class="d">契约驱动：standard_query / field_spec / scope → 题目</div></div>
-  <div class="step"><div class="num">03</div><div class="t">选供应商</div><div class="d">快照只作候选：页面验证 + 执行授权 + 实体去重</div></div>
-  <div class="step"><div class="num">04</div><div class="t">定维度</div><div class="d">通用算子 × 契约实例化</div></div>
-  <div class="step"><div class="num">05</div><div class="t">Direct Test</div><div class="d">固定用例 × 2 轮，QVeris 真实执行，自采延迟/费用</div></div>
-  <div class="step"><div class="num">06</div><div class="t">AI 友好度</div><div class="d">入参落参 + 出参解读，DeepSeek Flash × 2 轮</div></div>
-  <div class="step"><div class="num">07</div><div class="t">判定与证据</div><div class="d">合格/未完全达标/未测/N/A，证据落盘 private</div></div>
-  <div class="step"><div class="num">08</div><div class="t">写文章</div><div class="d">固定结构 + 证据分级 + 红线</div></div>
-  <div class="step"><div class="num">09</div><div class="t">画图</div><div class="d">从证据出图 + 记录 digest</div></div>
-  <div class="step"><div class="num">10</div><div class="t">发布与复测</div><div class="d">链接校验；与 Harbor 不一致 → 提 issue</div></div>
+  <div class="step"><div class="num">01</div><div class="t">选题</div><div class="d">一个开发者决策，只测一个原子 CAP</div></div>
+  <div class="step"><div class="num">02</div><div class="t">冻结规则</div><div class="d">正向、边界与负向用例进入版本化 CAP Pack</div></div>
+  <div class="step"><div class="num">03</div><div class="t">选 Access Path</div><div class="d">Native、Native MCP 与 QVeris 分开建模</div></div>
+  <div class="step"><div class="num">04</div><div class="t">生成 Run Plan</div><div class="d">suite fingerprint + 唯一 run key 冻结矩阵</div></div>
+  <div class="step"><div class="num">05</div><div class="t">Direct Test</div><div class="d">每个适用单元至少 3 轮真实调用</div></div>
+  <div class="step"><div class="num">06</div><div class="t">归因与脱敏</div><div class="d">业务结果归 CAP；公开证据先过安全门</div></div>
+  <div class="step"><div class="num">07</div><div class="t">构建 Release</div><div class="d">cells、outcomes、evidence 与 digest 绑定</div></div>
+  <div class="step"><div class="num">08</div><div class="t">离线 Replay</div><div class="d">重建相同 release 字节，不调用供应商</div></div>
+  <div class="step"><div class="num">09</div><div class="t">文章与图表</div><div class="d">只消费 release 事实，并保留证据锚点</div></div>
+  <div class="step"><div class="num">10</div><div class="t">挑战与复测</div><div class="d">历史 release 不改写，新结果追加发布</div></div>
 </div>
 <div class="flow-arrow">▲ 每步产物都是下一个步骤的输入，全部命令可复现 ▲</div>
 
 <h2>② 阶段与工具映射</h2>
 <table>
   <tr><th>阶段</th><th>工具 / 文件</th><th>输入 → 输出</th></tr>
-  <tr><td>选题</td><td>Harbor explore catalog（只读）</td><td>161 CAP → 57 个可评测 CAP（coverage=full & provider≥3）</td></tr>
-  <tr><td>出题</td><td><code>question_bank/</code>、selection-framework §2</td><td>契约字段 → core_positive + boundary_negative 等题目</td></tr>
-  <tr><td>选供应商</td><td>coverage 快照 + <code>GET /rpc/v1/providers/{id}</code></td><td>候选列表 → 验证通过、有授权、实体去重后的短名单</td></tr>
-  <tr><td>Direct Test</td><td><code>scripts/cap_direct_test_probe.py</code></td><td>固定用例 → 每单元 2 轮结果 + 自采延迟/费用</td></tr>
-  <tr><td>AI 入参</td><td><code>scripts/agent_param_fill_probe.py</code></td><td>自然语言任务 → 五维检查结果</td></tr>
-  <tr><td>AI 出参</td><td><code>scripts/agent_response_interpretation_probe.py</code></td><td>冻结响应 → 五维解读检查结果</td></tr>
-  <tr><td>画图</td><td><code>scripts/render_cap_guide_charts.py</code></td><td>证据文件 → PNG + charts-manifest.json（含 digest）</td></tr>
-  <tr><td>文章</td><td><code>docs/guides/&lt;slug&gt;.md</code> + manifest</td><td>证据 + 官方来源 → 发布草稿</td></tr>
+  <tr><td>选题</td><td>开发者决策 + 现有 guide inventory</td><td>一个购买/集成问题 → 一个原子 CAP</td></tr>
+  <tr><td>冻结规则</td><td><code>cap_packs/&lt;cap&gt;/</code></td><td>业务边界 → cases、observation schema、outcome rules 与 suite</td></tr>
+  <tr><td>选 Access Path</td><td><code>providers/</code> + 官方接口来源</td><td>候选列表 → 身份明确、有授权、可真实执行的矩阵</td></tr>
+  <tr><td>Direct Test</td><td><code>tests/e2e/</code> + Access Path adapters</td><td>冻结 run plan → 每个适用单元至少 3 轮终态证据</td></tr>
+  <tr><td>Release</td><td><code>qveris-bench release</code></td><td>终态 cells + evidence → immutable release + digest</td></tr>
+  <tr><td>Replay</td><td><code>qveris-bench release replay</code></td><td>release 目录 → 字节一致性与外部 digest 核验</td></tr>
+  <tr><td>画图</td><td><code>scripts/render_cap_guide_charts.py</code></td><td>release.json → PNG + charts-manifest.json</td></tr>
+  <tr><td>文章</td><td><code>docs/guides/&lt;slug&gt;.md</code> + manifest</td><td>release 事实 + 官方来源 → 发布草稿</td></tr>
 </table>
 
 <h2>③ 分阶段说明</h2>
 
 <h3>01 选题：CAP 怎么进</h3>
 <div class="card">
-  <p>唯一来源是 Harbor catalog 的 CAP 契约接口。两层过滤：</p>
+  <p>选题从开发者正在做的购买或集成决策出发，两层过滤：</p>
   <ul>
-    <li><b>可评测性</b>：<code>coverage=full</code> 且 <code>provider_count ≥ 3</code>（当前 57 个）</li>
-    <li><b>选型价值</b>：报价 → 参考 → 新闻 → 基本面，按 provider_count 降序</li>
+    <li><b>原子性</b>：一个 CAP 只测一种机器接口能力，不把多个金融任务混成总分</li>
+    <li><b>可评测性</b>：存在客观输入、业务字段规则、负向控制和至少一条可授权执行路径</li>
   </ul>
-  <p class="muted">选题时查 QVeris 存量 guide，撞意图的跳过（例如财经新闻已有对比文，改做公司行动、分红等空档）。</p>
+  <p class="muted">选题时先查 QVeris 存量 guide；相同搜索意图优先刷新已有文章，不制造互相竞争的重复页面。</p>
 </div>
 
 <h3>02 出题：题目是契约的实例</h3>
 <div class="card">
   <table>
-    <tr><th>契约字段</th><th>对应题目</th></tr>
-    <tr><td><code>standard_query.required</code></td><td>题目输入（如 symbol、日期窗口）</td></tr>
-    <tr><td><code>field_spec.required</code></td><td>期望观察字段（如 amount、ex_date、currency）</td></tr>
-    <tr><td>工具 namespace 覆盖（claimed_namespaces − SV 失败的 unsupported_namespaces，SNS 注册表解析）</td><td>市场覆盖题（scope.market_hint 与 claimed_markets 均已废弃）</td></tr>
-    <tr><td>契约负向约束</td><td>boundary_negative：无效代码 / 缺必填组合 / 不支持枚举</td></tr>
+    <tr><th>CAP Pack 文件</th><th>负责什么</th></tr>
+    <tr><td><code>cap.yaml</code></td><td>业务边界、市场、资产类型与明确排除项</td></tr>
+    <tr><td><code>cases.yaml</code></td><td>固定输入、正向用例、边界与负向控制</td></tr>
+    <tr><td><code>observation-schema.yaml</code></td><td>可观察字段及其业务语义</td></tr>
+    <tr><td><code>outcome-rules.yaml</code></td><td>怎样从观察事实得到单元结果</td></tr>
   </table>
-  <p>题目角色直接映射维度族：core_positive → 准确度/完整度；boundary_negative → 错误恢复；coverage → 市场覆盖；agent contract → AI 落参与解读。</p>
+  <p>CAP-specific 字段留在版本化 CAP Pack；Core 只负责通用的 suite、运行、证据和 release 合约。</p>
 </div>
 
 <h3>03 选供应商：谁进短名单</h3>
 <div class="card">
   <ol>
-    <li>Harbor coverage 快照只用于<b>列候选</b>，不作结论依据</li>
-    <li>QVeris provider 页存在且验证 HTTP 200</li>
-    <li>有执行授权（Direct Test 要真跑；无凭据 → <span class="pill info">N/A</span>，不算低分）</li>
-    <li>同一法律实体只占一行（Massive/Polygon 合并、恒生 REST/MCP 合并）</li>
-    <li>对比文至少 3 家合格才发；不够只写单供应商测评</li>
+    <li>Provider 与 Access Path 是两层身份，Native、Native MCP、QVeris 结果不合并</li>
+    <li>每条路径必须有官方接口来源、稳定 ID 和执行授权</li>
+    <li>Direct Test 要真跑；缺凭证是尚未形成证据，不是 N/A 或低分</li>
+    <li>同一 Provider 可以有多条路径，但每条路径保留独立 run key 与结果</li>
+    <li>没有满足发布门槛的证据就延后文章结论，不用供应商声明补齐</li>
   </ol>
 </div>
 
 <h3>04 定维度：通用算子 × 契约实例化</h3>
 <table>
   <tr><th>算子</th><th>测什么</th><th>由谁实例化</th></tr>
-  <tr><td><code>required_field_presence</code></td><td>完整度</td><td>field_spec.required</td></tr>
-  <tr><td><code>field_type_validity</code></td><td>准确度</td><td>field_spec 类型/enum</td></tr>
-  <tr><td><code>row_key_completeness</code></td><td>数据形态</td><td>output_cardinality + row_key</td></tr>
+  <tr><td><code>required_field_presence</code></td><td>完整度</td><td>CAP observation schema</td></tr>
+  <tr><td><code>field_type_validity</code></td><td>准确度</td><td>CAP field type / enum</td></tr>
+  <tr><td><code>row_key_completeness</code></td><td>数据形态</td><td>CAP output cardinality + row key</td></tr>
   <tr><td><code>timestamp_freshness</code></td><td>时效</td><td>时间语义字段</td></tr>
-  <tr><td><code>market_routing</code></td><td>市场覆盖</td><td>工具 namespace（claimed_namespaces − SV unsupported_namespaces，SNS 解析）；SV 缺失时自跑逐 namespace 探测</td></tr>
+  <tr><td><code>market_routing</code></td><td>市场适用性</td><td>CAP case 与 Access Path applicability</td></tr>
   <tr><td><code>language_mapping</code></td><td>语言覆盖</td><td>语言字段（有意义才测）</td></tr>
   <tr><td><code>latency / reliability / cost</code></td><td>网关表现</td><td>执行 trace + billing</td></tr>
-  <tr><td><code>agent_param_fill</code></td><td>AI 入参落参</td><td>standard_query.required + 题目</td></tr>
-  <tr><td><code>agent_response_interpretation</code></td><td>AI 出参解读</td><td>题目观察字段 + 响应 schema</td></tr>
+  <tr><td><code>parameter_clarity</code></td><td>参数清晰度</td><td>CAP-owned Agent-interface case</td></tr>
+  <tr><td><code>single_tool_completion</code></td><td>单工具完成</td><td>恰好一个 canonical tool 的受限 Agent Trial</td></tr>
 </table>
 
 <h3>05 Direct Test：自己判合格</h3>
 <div class="card">
   <ul>
     <li>固定用例：正向（真实标的检索）+ 负向（无效代码控制）</li>
-    <li>每个适用单元 <b>2 轮</b>，经 QVeris 真实执行</li>
+    <li>每个适用单元<b>至少 3 轮</b>，经明确的 Native、Native MCP 或 QVeris Access Path 真实执行</li>
     <li>正向判定：契约必填字段全部返回且非空 → <span class="pill ok">过</span></li>
     <li>负向判定：返回空态或明确报错、不编造事件行 → <span class="pill ok">过</span></li>
-    <li>执行 401 / 无授权 → <span class="pill info">N/A</span></li>
-    <li>从执行响应采集<b>自己的</b>延迟与费用（文章数字来源）</li>
+    <li>认证、网络和 runner 故障是基础设施失败，不能伪装成 N/A 或供应商失败</li>
+    <li>延迟与费用保留 Access Path 口径；QVeris 网关观测不能冒充 Native API 指标</li>
   </ul>
 </div>
 
-<h3>06 AI 友好度：入参 + 出参</h3>
+<h3>06 Agent-interface observations：维度分开</h3>
 <div class="card">
-  <p>同一个自然语言任务交给 DeepSeek Flash，每工具 2 轮：</p>
+  <p>只有 CAP 已定义测量且 release 携带证据时，才展示 Agent-interface observations：</p>
   <ul>
     <li><b>入参落参</b>：只调 canonical 工具、必填齐全、类型合法、不幻觉多余参数、语义正确</li>
     <li><b>出参解读</b>：给冻结的真实响应，AI 读出金额/日期/单位是否正确、不添油加醋、负向不编造</li>
   </ul>
-  <p class="muted">两步都过才算"AI 友好"；任何一步失败意味着 Agent 自动调用需要人工兜底。</p>
+  <p class="muted">参数清晰度、schema 稳定性、错误恢复、分页、语言映射与单工具完成保持独立，禁止压成一个评级。</p>
 </div>
 
 <h3>07 判定与证据</h3>
 <table>
   <tr><th>状态</th><th>含义</th><th>示例</th></tr>
-  <tr><td><span class="pill ok">合格</span></td><td>所有适用单元通过，2 轮稳定</td><td>分红 6 家全部 4/4</td></tr>
-  <tr><td><span class="pill bad">未完全达标</span></td><td>任一单元失败</td><td>公司行动 Alpha Vantage（Harbor 快照口径）</td></tr>
-  <tr><td><span class="pill warn">未测</span></td><td>无 canonical 工具或未授权，不评分</td><td>分红 FMP / Yahoo</td></tr>
-  <tr><td><span class="pill info">N/A</span></td><td>契约不适用</td><td>无执行授权</td></tr>
+  <tr><td><span class="pill ok">Qualified</span></td><td>全部适用规则与负向控制满足门槛</td><td>只对当前 CAP 与 Access Path 成立</td></tr>
+  <tr><td><span class="pill bad">Not qualified</span></td><td>至少一个适用单元未满足公开规则</td><td>必须写明直接失败原因</td></tr>
+  <tr><td><span class="pill warn">Evidence insufficient</span></td><td>没有可发布证据</td><td>不能从文档或其他路径推断</td></tr>
+  <tr><td><span class="pill info">N/A</span></td><td>用例对该路径不适用</td><td>不算通过或失败</td></tr>
 </table>
-<p class="muted">原始证据落 <code>evidence/private/</code>（gitignored）：供应商、用例、轮次、检查项、延迟、费用、时间戳。</p>
+<p class="muted">原始证据默认私有；仓库只提交通过脱敏、披露与来源许可检查的公开证据。</p>
 
 <h3>08 写文章</h3>
 <div class="card">
-  <p>固定结构（参照流量文）：快速结论 → 直接回答 → 固定对比表+图 → 测试方法与证据分级 → 达标标准 → AI 友好度（带走查例子+图）→ 市场覆盖（矩阵+图）→ 场景推荐 → 深度解析 → 局限 → FAQ → 更正/复测 CTA。</p>
+  <p>固定结构：直接回答 → Access Path 对比表 → release 方法与证据锚点 → 逐路径事实 → 复测 → 局限 → 供应商加入与 Result challenge。</p>
   <table>
     <tr><th>证据分级</th><th>允许的说法</th></tr>
     <tr><td>实测</td><td>带日期、固定输入、连接器口径："2026-08-09 经 QVeris 网关实测"</td></tr>
@@ -295,11 +295,11 @@
 
 <h3>09 画图</h3>
 <div class="card">
-  <p>图表从证据文件计算生成，不是手画：<code>render_cap_guide_charts.py</code> 读取 <code>evidence/private/</code> 最新一批，输出三张图并记录输入 digest 到 <code>charts-manifest.json</code>：</p>
+  <p>图表从 immutable release 计算生成，不是手画：<code>render_cap_guide_charts.py</code> 读取 <code>release.json</code>，输出 PNG 并把完整输入 digest 写入 <code>charts-manifest.json</code>：</p>
   <ul>
-    <li>延迟 × 单次费用散点</li>
-    <li>AI 入参通过率柱状（含出参样本标注）</li>
-    <li>市场覆盖热力图</li>
+    <li>每条 Access Path 的正向字段门槛完成轮次</li>
+    <li>每条 Access Path 的负向控制完成轮次</li>
+    <li>图、manifest 与 release digest 一一绑定</li>
   </ul>
   <p class="muted">换数据重跑即可复现，图片与证据绑定。</p>
 </div>
@@ -308,21 +308,21 @@
 <div class="card">
   <ul>
     <li>发布前：全部链接实测 200（官网 / provider 页 / 官方文档）、manifest 完整、正文无内部信息</li>
-    <li>复测：每次出新版跑同一套固定用例（Direct Test + 两个 AI 探针，2 轮），目标 2–4 小时</li>
-    <li>与 Harbor 不一致：以自己实测为准 + 去 Harbor 提 issue（例如公司行动 Alpha Vantage，issue #1368），不阻塞发布</li>
+    <li>复测：同一冻结 suite 对每个适用单元至少 3 轮；新事实生成 successor release</li>
+    <li>更正：用 release digest、Access Path 和反证提交 Result challenge，历史字节不改写</li>
   </ul>
 </div>
 
 <h2>④ 用分红 CAP 串一遍</h2>
 <div class="example">
   <ol>
-    <li><b>选题</b>：MKT.DIVIDENDS，coverage=full、6 家达标供应商；无存量 guide 冲突</li>
+    <li><b>选题</b>：Dividend Events，只测有日期的每股现金分红事件；刷新已有分红 guide</li>
     <li><b>出题</b>：AAPL 分红历史检索（正向）+ 无效代码控制（负向）</li>
     <li><b>选供应商</b>：EODHD / Twelve Data / Alpha Vantage / Massive / 恒生聚源 / iFinD；FMP、Yahoo 无 canonical 工具 → <span class="pill warn">未测</span></li>
-    <li><b>Direct Test</b>：6 家全部 4/4 合格，自采延迟与费用（0.50–1.41 credits）</li>
-    <li><b>AI 入参</b>：海外 4 家 2/2；恒生 0/2（漏 <code>600519.SH</code>）；iFinD 0/2（<code>period</code> 填 year/年报，契约要求 annual/H1/Q3/Q1）</li>
-    <li><b>AI 出参</b>：4/4（金额 0.27、除息日 2026-05-11、美元单位、负向不编造）</li>
-    <li><b>画图</b>：三张图从证据生成并记录 digest</li>
+    <li><b>Direct Test</b>：36 个适用单元全部形成终态；五条 QVeris 路径满足本 CAP，iFind Native MCP 正向三轮缺除权除息日</li>
+    <li><b>Release</b>：<code>dividend-events-2026-q3-v1</code> 绑定 54 个计划单元、36 份公开证据与 suite fingerprint</li>
+    <li><b>Replay</b>：用外部 digest 核对不可变发布身份，不调用供应商</li>
+    <li><b>画图</b>：Direct outcome 图从 release 生成并记录完整 digest</li>
     <li><b>文章</b>：<code>docs/guides/best-dividend-apis.md</code> + manifest</li>
   </ol>
 </div>
@@ -330,9 +330,9 @@
 <h2>⑤ 红线</h2>
 <div class="card redline">
   <ul>
-    <li>Harbor 评估只作候选与异常参考，<b>发布的合格结论必须来自本平台 Direct Test + AI 探针</b></li>
+    <li>任何外部快照只作候选与来源线索，<b>发布结论必须来自本项目 Direct Test 与 immutable release</b></li>
     <li>正文不暴露 CAP ID、不暴露 grade、不合成总分、不写"永久最优"</li>
-    <li>无执行授权 = N/A，不是低分；缺证据 = 未测，不是结论</li>
+    <li>缺执行授权或证据 = Evidence insufficient；只有业务不适用才是 N/A</li>
     <li>图表必须从绑定证据生成，禁止手填数值</li>
     <li>发现快照异常 → 提 issue 跟进，但不阻塞发布</li>
   </ul>
@@ -340,7 +340,7 @@
 
 <footer>
   配套文档：<code>docs/selection-framework.md</code>（四线选择契约）· <code>docs/operator-runbook.md</code>（发布回放验证）·
-  探针：<code>cap_direct_test_probe.py</code> / <code>agent_param_fill_probe.py</code> / <code>agent_response_interpretation_probe.py</code> / <code>render_cap_guide_charts.py</code>
+  主路：CAP Pack / Direct E2E / immutable release / offline replay / <code>render_cap_guide_charts.py</code>
 </footer>
 
 </div>
