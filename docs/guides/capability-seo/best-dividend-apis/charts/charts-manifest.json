@@ -1,13 +1,12 @@
 {
- "charts": {
-  "chart-latency-cost.png": "817211e1379d3af5",
-  "chart-ai-friendliness.png": "ff68fe6bdc2b06e8",
-  "chart-market-coverage.png": "da6513a41b96c5cc"
- },
- "input_digests": {
-  "cap-direct-test": "cd4207583ae03131",
-  "agent-param-fill": "aff1d1a62726d247",
-  "agent-response-interpretation": "1801538306159a2f"
- },
- "rendered_at": "2026-08-09"
+  "charts": {
+    "chart-latency-cost.png": "2572c45453f765ab",
+    "chart-market-coverage.png": "f2c064f8a41ca8e7"
+  },
+  "input_digests": {
+    "cap-direct-test": "8dc89911966268b8",
+    "agent-param-fill": "f276e2a4fa9d68d3",
+    "agent-response-interpretation": "8e36810f6faa7cdd"
+  },
+  "rendered_at": "2026-08-10"
 }

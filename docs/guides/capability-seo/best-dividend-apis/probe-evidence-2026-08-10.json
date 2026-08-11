@@ -1,0 +1,116 @@
+{
+  "benchmark": "MKT.DIVIDENDS",
+  "edition": "2026-08-10",
+  "source_evidence": {
+    "cap-direct-test": "8dc89911966268b81f3f7af99b24062b3e756e8afa805a1ebc80aa31fd23c366",
+    "agent-param-fill": "f276e2a4fa9d68d323bf6feabb829b6080f581bd0b965f9f76816dd6510be37f",
+    "agent-error-recovery": "0230ff8175ae6698088d70f7aa0d4ac4399f5f622c980a5da53ca959cf157cd5",
+    "agent-response-interpretation": "8e36810f6faa7cddbb7f932d385551b4b34f7622b4742911d66cb5aeba838dcb",
+    "agent-response-self-description": "7d249b99c332c2784cf5f82b2527fe60915c997ec1b75f2d670394ac5e72af3c"
+  },
+  "direct_test": {
+    "Alpha Vantage": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 560,
+      "avg_cost_credits": 1.0
+    },
+    "EODHD": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 1545,
+      "avg_cost_credits": 1.41
+    },
+    "Massive": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 1056,
+      "avg_cost_credits": 0.5
+    },
+    "Twelve Data": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 637,
+      "avg_cost_credits": 1.19
+    },
+    "同花顺 iFinD": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 373,
+      "avg_cost_credits": 0.5
+    },
+    "恒生聚源": {
+      "passed": 4,
+      "total": 4,
+      "avg_latency_ms": 835,
+      "avg_cost_credits": 0.5
+    }
+  },
+  "ai_param_fill": {
+    "dividend-600519-annual": {
+      "passed": 0,
+      "total": 2
+    },
+    "dividend-600519-history": {
+      "passed": 0,
+      "total": 2
+    },
+    "dividend-aapl-history": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "ai_error_recovery": {
+    "dividend-600519-recovery": {
+      "passed": 0,
+      "total": 4
+    },
+    "dividend-aapl-recovery": {
+      "passed": 7,
+      "total": 8
+    }
+  },
+  "ai_response_interpretation": {
+    "dividend-aapl-latest": {
+      "passed": 2,
+      "total": 2
+    },
+    "dividend-invalid-symbol": {
+      "passed": 2,
+      "total": 2
+    }
+  },
+  "ai_response_self_description": {
+    "Alpha Vantage": {
+      "amount": "1/2",
+      "currency": "0/2",
+      "ex_date": "2/2"
+    },
+    "EODHD": {
+      "amount": "1/2",
+      "currency": "0/2",
+      "ex_date": "1/2"
+    },
+    "Massive": {
+      "amount": "2/2",
+      "currency": "2/2",
+      "ex_date": "2/2"
+    },
+    "Twelve Data": {
+      "amount": "1/2",
+      "currency": "2/2",
+      "ex_date": "2/2"
+    },
+    "同花顺 iFinD": {
+      "amount": "2/2",
+      "currency": "0/2",
+      "ex_date": "0/2"
+    },
+    "恒生聚源": {
+      "amount": "2/2",
+      "currency": "0/2",
+      "ex_date": "1/2"
+    }
+  },
+  "note": "Sanitized aggregate summary. Raw probe records and frozen fixtures live in the benchmark repository; original provider responses are kept private per the evidence policy."
+}

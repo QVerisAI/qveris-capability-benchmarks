@@ -1,3 +1,6 @@
+capability: MKT.DIVIDENDS
+edition_date: "2026-08-10"
+guide_label: 分红数据 API
 suppliers:
   - {name: 恒生聚源, region: CN, markets: [CN], direct_supplier: 恒生聚源, param_question: dividend-600519-history}
   - {name: 同花顺 iFinD, region: CN, markets: [CN], direct_supplier: 同花顺 iFinD, param_question: dividend-600519-annual}
