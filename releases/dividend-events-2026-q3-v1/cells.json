@@ -1,0 +1,884 @@
+[
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:ifind:ifind-native-mcp:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:ifind:ifind-native-mcp:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:ifind:ifind-native-mcp:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:3",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:1",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:2",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": "Case does not apply to this Provider.",
+    "applicable": false,
+    "case_id": "cn-600519-dividends-fixed-window",
+    "case_input": {
+      "end_date": "2026-07-31",
+      "start_date": "2024-01-01",
+      "symbol": "600519.SH"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:3",
+    "state": "not_applicable"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "hangseng-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "hangseng",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "ifind-native-mcp",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "ifind",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 1,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 2,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-dividends-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "invalid-dividend-symbol",
+    "case_input": {
+      "symbol": "NOTASTOCK"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 3,
+    "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:3",
+    "state": "completed"
+  }
+]
