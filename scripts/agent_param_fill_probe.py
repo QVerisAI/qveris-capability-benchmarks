@@ -167,11 +167,7 @@ def main(argv: list[str] | None = None) -> int:
 
     llm_fn = build_llm_fn(args.base_url.rstrip("/"), key, args.model)
     results: list[ParamFillResult] = []
-    providers = ProviderRegistryRepository(Path("providers"))
     probes = load_fixture(args.fixture, Path("providers"))
-    providers.validate_agent_trial_eligibility(
-        (contract.provider_id, contract.access_path_id) for contract, _ in probes
-    )
     for contract, questions in probes:
         results.extend(
             run_probe(

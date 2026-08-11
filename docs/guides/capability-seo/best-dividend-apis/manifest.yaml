@@ -1,7 +1,7 @@
 schema_version: 1
 benchmark_id: dividend-data-2026-08
 article_slug: best-dividend-apis
-edition: "2026-08-09"
+edition: "2026-08-10"
 search_intent: 对比分红数据 API 的实测延迟、费用与 AI 友好度，帮助开发者选择分红、除息与送转数据源
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
@@ -32,9 +32,9 @@ seo:
   primary_keyword: 分红数据 API
   secondary_keywords: [分红 API, 除息数据 API, 股息数据 API, dividend API]
   publication_action: new_page
-  inventory_checked_at: "2026-08-09"
+  inventory_checked_at: "2026-08-10"
   target_slug: best-dividend-apis
-  provider_inventory_checked_at: "2026-08-09"
+  provider_inventory_checked_at: "2026-08-10"
   competing_urls: []
   supplier_sites:
     恒生聚源: https://www.gildata.com/
@@ -66,5 +66,4 @@ artifacts:
   agent_interpretation_evidence: evidence/private/agent-response-interpretation.jsonl
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/chart-latency-cost.png
-    - docs/guides/capability-seo/best-dividend-apis/charts/chart-ai-friendliness.png
     - docs/guides/capability-seo/best-dividend-apis/charts/chart-market-coverage.png

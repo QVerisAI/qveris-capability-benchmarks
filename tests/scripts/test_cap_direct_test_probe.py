@@ -157,13 +157,13 @@ def test_legacy_direct_cohort_exclusions_remain_explicit() -> None:
 
     import yaml
 
-    expected_sizes = {
-        "cap-direct-test-corporate-actions.yaml": 5,
-        "cap-direct-test-dividends.yaml": 6,
+    # corporate-actions retains legacy exclusions; dividends migrated all
+    # suppliers into the formal cohort with registered access paths.
+    expected = {
+        "cap-direct-test-corporate-actions.yaml": (4, 1),
+        "cap-direct-test-dividends.yaml": (6, 0),
     }
-    for name, expected in expected_sizes.items():
+    for name, (suppliers, excluded) in expected.items():
         document = yaml.safe_load((Path("scripts/fixtures") / name).read_text())
-        assert (
-            len(document["suppliers"]) + len(document["excluded_legacy_suppliers"])
-            == expected
-        )
+        assert len(document["suppliers"]) == suppliers
+        assert len(document.get("excluded_legacy_suppliers", [])) == excluded

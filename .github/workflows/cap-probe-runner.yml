@@ -1,0 +1,99 @@
+name: Capability Probe Runner
+
+# Run the full evidence pipeline for one CAP: Direct Test + AI probes
+# (param-fill, response-interpretation, error-recovery, self-description).
+# Select the CAP by choosing the fixture prefix; artifacts upload the
+# private evidence for local article writing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      fixture_prefix:
+        description: CAP fixture prefix under scripts/fixtures (e.g. dividends, fx)
+        required: true
+        default: dividends
+      rounds:
+        description: Execution rounds per case
+        required: true
+        default: "2"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - name: Run CAP Direct Test
+        if: hashFiles(format('scripts/fixtures/cap-direct-test-{0}.yaml', inputs.fixture_prefix)) != ''
+        run: |
+          uv run python scripts/cap_direct_test_probe.py \
+            --fixture "scripts/fixtures/cap-direct-test-$FIXTURE_PREFIX.yaml" \
+            --rounds "$ROUNDS" \
+            --output "evidence/private/cap-direct-test.jsonl"
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
+          ROUNDS: ${{ inputs.rounds }}
+      - name: Fail if no Direct Test fixture
+        if: hashFiles(format('scripts/fixtures/cap-direct-test-{0}.yaml', inputs.fixture_prefix)) == ''
+        run: |
+          echo "::error::No Direct Test fixture for prefix '${{ inputs.fixture_prefix }}'"
+          exit 1
+      - name: Run AI param-fill probe
+        if: hashFiles(format('scripts/fixtures/agent-param-fill-{0}.yaml', inputs.fixture_prefix)) != ''
+        run: |
+          uv run python scripts/agent_param_fill_probe.py \
+            --fixture "scripts/fixtures/agent-param-fill-$FIXTURE_PREFIX.yaml" \
+            --rounds "$ROUNDS" \
+            --output "evidence/private/agent-param-fill.jsonl"
+        env:
+          QVERIS_MODEL_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
+          ROUNDS: ${{ inputs.rounds }}
+      - name: Run AI response-interpretation probe
+        if: hashFiles(format('scripts/fixtures/agent-response-interpretation-{0}.yaml', inputs.fixture_prefix)) != ''
+        run: |
+          uv run python scripts/agent_response_interpretation_probe.py \
+            --fixture "scripts/fixtures/agent-response-interpretation-$FIXTURE_PREFIX.yaml" \
+            --rounds "$ROUNDS" \
+            --output "evidence/private/agent-response-interpretation.jsonl"
+        env:
+          QVERIS_MODEL_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
+          ROUNDS: ${{ inputs.rounds }}
+      - name: Run AI error-recovery probe
+        if: hashFiles(format('scripts/fixtures/agent-error-recovery-{0}.yaml', inputs.fixture_prefix)) != ''
+        run: |
+          uv run python scripts/agent_error_recovery_probe.py \
+            --fixture "scripts/fixtures/agent-error-recovery-$FIXTURE_PREFIX.yaml" \
+            --rounds "$ROUNDS" \
+            --output "evidence/private/agent-error-recovery.jsonl"
+        env:
+          QVERIS_MODEL_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
+          ROUNDS: ${{ inputs.rounds }}
+      - name: Run AI response self-description probe
+        if: hashFiles(format('scripts/fixtures/{0}-response-self-description.yaml', inputs.fixture_prefix)) != ''
+        run: |
+          uv run python scripts/agent_response_self_description_probe.py \
+            --fixture "scripts/fixtures/$FIXTURE_PREFIX-response-self-description.yaml" \
+            --rounds "$ROUNDS" \
+            --output "evidence/private/agent-response-self-description.jsonl"
+        env:
+          QVERIS_MODEL_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
+          ROUNDS: ${{ inputs.rounds }}
+      - name: Upload private evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-probe-evidence-${{ inputs.fixture_prefix }}
+          path: evidence/private/*.jsonl
+          if-no-files-found: error
