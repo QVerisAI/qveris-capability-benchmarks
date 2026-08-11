@@ -1,0 +1,89 @@
+name: Provider submission
+description: Propose an official Provider Access Path for a CAP benchmark.
+title: "[Provider]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, private raw responses, personal data, or unlicensed material. A submission is not an official result; maintainers arrange any credential exchange privately after scope review.
+  - type: input
+    id: provider_id
+    attributes:
+      label: Provider ID
+      description: Proposed stable lowercase ID and public organization name.
+    validations:
+      required: true
+  - type: input
+    id: access_path_id
+    attributes:
+      label: Access Path ID
+      description: Proposed stable ID for this exact interface.
+    validations:
+      required: true
+  - type: dropdown
+    id: access_path_type
+    attributes:
+      label: Access Path type
+      options:
+        - Native API
+        - Native MCP
+        - QVeris
+        - Other official machine interface
+    validations:
+      required: true
+  - type: input
+    id: official_interface
+    attributes:
+      label: Official interface
+      description: Public documentation URL for this Access Path.
+    validations:
+      required: true
+  - type: input
+    id: cap_id
+    attributes:
+      label: Target CAP
+      description: Existing CAP ID or a linked CAP proposal.
+    validations:
+      required: true
+  - type: textarea
+    id: submitter_relationship
+    attributes:
+      label: Submitter relationship
+      description: State whether you represent the Provider, use the service, or contribute independently.
+    validations:
+      required: true
+  - type: textarea
+    id: authorization
+    attributes:
+      label: Benchmark authorization and access constraints
+      description: Describe terms, plan, quota, geography, and redistribution constraints without credentials.
+    validations:
+      required: true
+  - type: checkboxes
+    id: disclosure_permission
+    attributes:
+      label: Public disclosure
+      options:
+        - label: I confirm the submitted public material may be reviewed and retained in this Issue.
+          required: true
+  - type: textarea
+    id: conflict_of_interest
+    attributes:
+      label: Conflict of interest
+      description: Disclose employment, sponsorship, customer, investment, or other relevant relationships; write none if absent.
+    validations:
+      required: true
+  - type: textarea
+    id: source_license
+    attributes:
+      label: Sources and licenses
+      description: Identify the source and redistribution terms for submitted documentation, fixtures, and evidence.
+    validations:
+      required: true
+  - type: checkboxes
+    id: right_to_submit
+    attributes:
+      label: Right to submit
+      options:
+        - label: I have the right to submit and publicly retain the material linked here.
+          required: true

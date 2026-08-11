@@ -1,23 +1,52 @@
-# Release replay
+# Offline release replay
 
-An independent operator may reproduce a release only from the frozen suite,
-run-plan, authorized public evidence, and immutable release inputs. Raw artifacts
-and credential values remain outside this repository.
+Offline replay proves that the five replay files in one release directory are internally
+consistent and deterministically rebuild the published `release.json` bytes. It
+does not rerun a Provider and does not establish community reproduction.
 
-## Prerequisites
+## Quickstart
 
-Use Python 3.12 and the locked dependency set. Do not add provider credentials to
-the repository or use a personal developer key. Replaying a release must not invoke
-provider APIs, MCP servers, or an Agent backend.
+Check out the release commit and use Python 3.12 with the locked dependency set:
 
-## Procedure
+```bash
+uv sync --locked --all-groups
+uv run qveris-bench release replay releases/<release-id>
+```
 
-1. Check out the release commit and run `uv sync --locked --all-groups`.
-2. Run `uv run qveris-bench release verify RELEASE.json --digest DIGEST`.
-3. Rebuild the bundle from the release manifest, terminal cells, and authorized
-   public evidence with `qveris-bench release build`.
-4. Compare the resulting canonical digest with the published digest.
-5. Run the local quality commands in `CONTRIBUTING.md` before reporting the result.
+The command validates:
 
-If a digest differs, preserve the inputs and report the mismatch. Do not edit a
-published release, regenerate private evidence, or assign a provider conclusion.
+1. `release-input.json`, `run-plan.json`, `cells.json`, `evidence.json`, and
+   `release.json` are present and schema-valid;
+2. the raw run-plan digest and suite fingerprint match the release input;
+3. planned and terminal cells have the same run keys and identities;
+4. public evidence passes the historical release gates;
+5. the rebuilt canonical bytes exactly equal the published release.
+
+Replaying a release must not invoke
+provider APIs, MCP servers, or an Agent backend. Raw artifacts and credential values remain outside
+this repository. The command does not write into the release directory.
+
+## Verify an external identity
+
+Internal consistency alone cannot detect a coordinated edit to every file in a
+checkout. Compare against a trusted digest published outside that checkout:
+
+```bash
+uv run qveris-bench release replay releases/<release-id> \
+  --expected-digest sha256:<published-digest>
+```
+
+The expected digest authenticates the published bundle identity. It still does not
+make provider calls. A maintainer rerun or community reproduction is a new live
+execution with new evidence and environment disclosure.
+
+## Failure handling
+
+Replay fails closed on a missing or malformed file, plan digest mismatch, suite
+fingerprint mismatch, cell topology change, evidence-gate failure, canonical byte
+mismatch, or expected-digest mismatch. Preserve the checkout and open a Result
+challenge through `CONTRIBUTING.md`; do not edit a historical release in place.
+
+Six named historical bundles predate mandatory failure attribution. Replay recognizes
+only their exact published digests; every new or changed bundle must pass the current
+attribution gate.

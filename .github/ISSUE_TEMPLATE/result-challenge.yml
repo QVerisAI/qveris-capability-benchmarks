@@ -1,0 +1,80 @@
+name: Result challenge
+description: Challenge a published fact with a precise release coordinate and evidence.
+title: "[Challenge]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, private raw responses, personal data, or unlicensed material. Accepted corrections create append-only status or a successor release; historical release bytes are never edited.
+  - type: input
+    id: release_id
+    attributes:
+      label: Release ID
+    validations:
+      required: true
+  - type: input
+    id: release_digest
+    attributes:
+      label: Release digest
+      description: The full sha256 digest of the challenged release.
+    validations:
+      required: true
+  - type: input
+    id: suite_fingerprint
+    attributes:
+      label: Suite fingerprint
+    validations:
+      required: true
+  - type: input
+    id: provider_id
+    attributes:
+      label: Provider ID
+    validations:
+      required: true
+  - type: input
+    id: access_path_id
+    attributes:
+      label: Access Path ID
+    validations:
+      required: true
+  - type: input
+    id: run_key
+    attributes:
+      label: Run key or fact coordinate
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Disputed claim
+      description: Quote or identify the exact fact, outcome, attribution, or limitation you dispute.
+    validations:
+      required: true
+  - type: textarea
+    id: counter_evidence
+    attributes:
+      label: Counter-evidence
+      description: Provide reproducible steps, public evidence digests, dates, and environment details.
+    validations:
+      required: true
+  - type: textarea
+    id: conflict_of_interest
+    attributes:
+      label: Conflict of interest
+      description: Disclose relevant Provider, customer, sponsor, employment, or investment relationships; write none if absent.
+    validations:
+      required: true
+  - type: textarea
+    id: source_license
+    attributes:
+      label: Counter-evidence sources and licenses
+      description: Identify provenance, redistribution terms, and dates for every submitted source.
+    validations:
+      required: true
+  - type: checkboxes
+    id: right_to_submit
+    attributes:
+      label: Right to submit
+      options:
+        - label: I have the right to submit and publicly retain the counter-evidence linked here.
+          required: true

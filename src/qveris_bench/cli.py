@@ -43,6 +43,7 @@ from qveris_bench.question_bank.repository import (
 )
 from qveris_bench.releases.builder import build_release
 from qveris_bench.releases.canonical import release_digest
+from qveris_bench.releases.replay import ReleaseReplayError, replay_release_dir
 from qveris_bench.releases.verify import verify_release
 from qveris_bench.suites.compiler import (
     CompiledSuite,
@@ -547,6 +548,36 @@ def release_verify(path: Path, digest: Annotated[str, typer.Option()]) -> None:
         typer.echo("release digest mismatch", err=True)
         raise typer.Exit(code=1)
     typer.echo(f"Verified release {digest}")
+
+
+@release_app.command("replay")
+def release_replay(
+    release_dir: Path,
+    expected_digest: Annotated[
+        str | None,
+        typer.Option(help="Trusted published digest from outside this checkout."),
+    ] = None,
+) -> None:
+    """Replay an immutable release offline without calling provider APIs."""
+    try:
+        result = replay_release_dir(
+            release_dir,
+            expected_digest=expected_digest,
+        )
+    except ReleaseReplayError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    if result.expected_digest_verified:
+        typer.echo(
+            f"External expected digest matched {result.release_id} "
+            f"{result.published_digest} (offline; no provider API calls)"
+        )
+    else:
+        typer.echo(
+            f"Internal consistency verified {result.release_id} "
+            f"{result.published_digest} "
+            "(external digest not checked; no provider API calls)"
+        )
 
 
 @schema_app.command("export")

@@ -1,0 +1,41 @@
+name: Technical bug report
+description: Report a reproducible defect in the CLI, schemas, tests, or documentation.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, private raw responses, personal data, or unlicensed material. Report security issues through the private link in the Issue chooser.
+  - type: textarea
+    id: observed_behavior
+    attributes:
+      label: Observed behavior
+      description: Include the exact command, sanitized output, and affected file or release ID.
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe, public reproduction.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, and installation method.
+    validations:
+      required: true
