@@ -6,12 +6,14 @@ def test_ac5_chart_metrics_never_merge_two_access_paths_for_one_provider() -> No
         {
             "provider_id": "example-provider",
             "access_path_id": "example-native",
+            "state": "passed",
             "latency_ms": 100,
             "cost_credits": None,
         },
         {
             "provider_id": "example-provider",
             "access_path_id": "example-qveris",
+            "state": "passed",
             "latency_ms": 900,
             "cost_credits": 2,
         },

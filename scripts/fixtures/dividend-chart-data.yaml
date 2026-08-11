@@ -7,6 +7,6 @@ suppliers:
   - {name: 恒生聚源, chart_label: 恒生聚源（QVeris）, provider_id: hangseng, access_path_id: hangseng-dividends-qveris, region: CN, markets: [CN], param_questions: [dividend-600519-history], recovery_questions: [dividend-600519-recovery]}
   - {name: Twelve Data, chart_label: Twelve Data（QVeris）, provider_id: twelve-data, access_path_id: twelve-data-dividends-qveris, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE], param_questions: [dividend-aapl-history], recovery_questions: [dividend-aapl-recovery]}
   - {name: Alpha Vantage, chart_label: Alpha Vantage（QVeris）, provider_id: alpha-vantage, access_path_id: alpha-vantage-dividends-qveris, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE], param_questions: [dividend-aapl-history], recovery_questions: [dividend-aapl-recovery]}
-  - {name: EODHD, chart_label: EODHD（QVeris）, provider_id: eodhd, access_path_id: eodhd-dividends-qveris, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, NO, BR, CA, TW], param_questions: [dividend-aapl-history], recovery_questions: [dividend-aapl-recovery]}
+  - {name: EODHD, chart_label: EODHD（QVeris）, provider_id: eodhd, access_path_id: eodhd-dividends-qveris, region: GLOBAL, markets: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, "NO", BR, CA, TW], param_questions: [dividend-aapl-history], recovery_questions: [dividend-aapl-recovery]}
   - {name: Massive, chart_label: Massive（QVeris）, provider_id: massive-stocks, access_path_id: massive-stocks-dividends-qveris, region: US, markets: [US], param_questions: [dividend-aapl-history], recovery_questions: [dividend-aapl-recovery]}
-market_universe: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, NO, BR, CA, TW]
+market_universe: [US, CN, HK, JP, UK, DE, FR, ES, CH, NL, SE, "NO", BR, CA, TW]
