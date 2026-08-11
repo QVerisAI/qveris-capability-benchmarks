@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="1300" viewBox="0 0 760 1300" role="img" aria-labelledby="title desc">
+  <title id="title">QVeris 分红 API 评测公开证据链</title>
+  <desc id="desc">固定输入经过真实 API 调用、脱敏、提取和规则判断，形成不可变发布物，再由文章解释并接受社区复测与供应商更正。</desc>
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#143F74"/><stop offset="0.58" stop-color="#2F78AD"/><stop offset="1" stop-color="#6EB0C2"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#143F74" flood-opacity="0.11"/></filter>
+    <style>
+      text { font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+      .title { fill: #fff; font-size: 34px; font-weight: 800; }
+      .subtitle { fill: #E2E8F0; font-size: 25px; }
+      .step { fill: #143F74; font-size: 29px; font-weight: 800; }
+      .body { fill: #334155; font-size: 26px; }
+      .number { fill: #fff; font-size: 26px; font-weight: 800; }
+    </style>
+  </defs>
+  <rect width="760" height="1300" fill="#F8FAFC"/>
+  <rect width="760" height="178" fill="url(#header)"/>
+  <text x="38" y="58" class="title">文章结论从哪里来？</text>
+  <text x="38" y="104" class="subtitle">Release 固化可复核证据</text>
+  <text x="38" y="142" class="subtitle">文章解释 · 社区与供应商持续纠错</text>
+
+  <path d="M380 278 V1090" fill="none" stroke="#6EB0C2" stroke-width="5" stroke-dasharray="10 12"/>
+
+  <g filter="url(#shadow)">
+    <rect x="38" y="220" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="82" cy="263" r="25" fill="#143F74"/><text x="82" y="272" text-anchor="middle" class="number">1</text>
+    <text x="201" y="276" text-anchor="middle" class="step">冻结输入</text>
+    <text x="201" y="326" text-anchor="middle" class="body">symbol · 时间窗</text>
+    <text x="201" y="362" text-anchor="middle" class="body">字段门槛 · 轮次</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="396" y="382" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="440" cy="425" r="25" fill="#2F78AD"/><text x="440" y="434" text-anchor="middle" class="number">2</text>
+    <text x="559" y="438" text-anchor="middle" class="step">真实 API 调用</text>
+    <text x="559" y="488" text-anchor="middle" class="body">每条适用路径</text>
+    <text x="559" y="524" text-anchor="middle" class="body">3 轮 Direct Test</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="38" y="544" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="82" cy="587" r="25" fill="#6EB0C2"/><text x="82" y="596" text-anchor="middle" class="number">3</text>
+    <text x="201" y="600" text-anchor="middle" class="step">脱敏与授权</text>
+    <text x="201" y="650" text-anchor="middle" class="body">Raw 默认私有</text>
+    <text x="201" y="686" text-anchor="middle" class="body">公开事实保留 digest</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="396" y="706" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="440" cy="749" r="25" fill="#2F78AD"/><text x="440" y="758" text-anchor="middle" class="number">4</text>
+    <text x="559" y="762" text-anchor="middle" class="step">提取与规则</text>
+    <text x="559" y="812" text-anchor="middle" class="body">字段、空态按 CAP 判断</text>
+    <text x="559" y="848" text-anchor="middle" class="body">身份一致性另行审查</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="38" y="868" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="82" cy="911" r="25" fill="#143F74"/><text x="82" y="920" text-anchor="middle" class="number">5</text>
+    <text x="201" y="924" text-anchor="middle" class="step">Immutable Release</text>
+    <text x="201" y="974" text-anchor="middle" class="body">证据与 suite 绑定</text>
+    <text x="201" y="1010" text-anchor="middle" class="body">历史版本不覆盖</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="396" y="1030" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="440" cy="1073" r="25" fill="#12B76A"/><text x="440" y="1082" text-anchor="middle" class="number">6</text>
+    <text x="559" y="1086" text-anchor="middle" class="step">解释与纠错</text>
+    <text x="559" y="1136" text-anchor="middle" class="body">文章 · 离线 replay</text>
+    <text x="559" y="1172" text-anchor="middle" class="body">复测 · Result challenge</text>
+  </g>
+
+  <rect x="38" y="1220" width="684" height="56" rx="16" fill="#FFF2E0" stroke="#F79009"/>
+  <text x="380" y="1257" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">证据不足保持不足，不由编辑猜测补齐</text>
+</svg>

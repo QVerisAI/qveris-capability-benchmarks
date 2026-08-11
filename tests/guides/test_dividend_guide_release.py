@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,13 @@ CASES = ROOT / "cap_packs/dividend_events/cases.yaml"
 PIPELINE_DOC = ROOT / "docs/how-a-cap-becomes-an-article.html"
 RELEASE_DIGEST = (
     "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+)
+EDITORIAL_VISUALS = (
+    "capability-seo/best-dividend-apis/charts/dividend-api-decision-tree.svg",
+    "capability-seo/best-dividend-apis/charts/evidence-chain.svg",
+)
+MANIFEST_EDITORIAL_VISUALS = tuple(
+    f"docs/guides/{target}" for target in EDITORIAL_VISUALS
 )
 
 
@@ -48,6 +56,44 @@ def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
     for page in provider_pages.values():
         assert page in article
     assert article.count("Try it in QVeris") == len(provider_pages)
+
+
+def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    assert "## Direct Test 可观察的 Agent 接入风险信号" in article
+    for signal in (
+        "必需事件字段",
+        "证券身份",
+        "无效 symbol",
+        "响应内币种",
+        "附加事件日期",
+        "参数清晰度、分页和 Agent Trial",
+    ):
+        assert signal in article
+    assert "AI 友好度" not in article
+    assert "Agent 总分" not in article
+    assert "与 `AAPL` 对应" not in article
+    assert article.count("身份一致性未独立测量") == 5
+
+
+def test_article_editorial_visuals_are_declared_and_valid_svg() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["artifacts"]["editorial_visuals"] == list(
+        MANIFEST_EDITORIAL_VISUALS
+    )
+    for target in EDITORIAL_VISUALS:
+        assert target in article
+        path = ARTICLE.parent / target
+        assert path.is_file()
+        root = ET.parse(path).getroot()
+        assert root.tag == "{http://www.w3.org/2000/svg}svg"
+        width, height = (int(value) for value in root.attrib["viewBox"].split()[2:])
+        assert width <= 760
+        assert height > width
+    assert "完整事件日期组" not in article
 
 
 def test_manifest_uses_public_release_as_source_of_truth() -> None:

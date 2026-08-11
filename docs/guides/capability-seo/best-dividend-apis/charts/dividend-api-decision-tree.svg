@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="1120" viewBox="0 0 760 1120" role="img" aria-labelledby="title desc">
+  <title id="title">分红数据 API 工作流选型图</title>
+  <desc id="desc">根据统一密钥、显式币种、样本事件日期字段和 A 股需求筛选分红数据 Access Path。</desc>
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#143F74"/><stop offset="0.58" stop-color="#2F78AD"/><stop offset="1" stop-color="#6EB0C2"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#143F74" flood-opacity="0.12"/></filter>
+    <style>
+      text { font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+      .title { fill: #fff; font-size: 34px; font-weight: 800; }
+      .subtitle { fill: #E2E8F0; font-size: 26px; }
+      .question { fill: #143F74; font-size: 30px; font-weight: 800; }
+      .label { fill: #143F74; font-size: 27px; font-weight: 800; }
+      .answer { fill: #0F172A; font-size: 26px; font-weight: 700; }
+      .note { fill: #334155; font-size: 26px; }
+      .pill { font-size: 25px; font-weight: 700; }
+    </style>
+  </defs>
+  <rect width="760" height="1120" fill="#F8FAFC"/>
+  <rect width="760" height="160" fill="url(#header)"/>
+  <text x="38" y="58" class="title">分红数据 API 怎么选？</text>
+  <text x="38" y="104" class="subtitle">先从工作流出发 · 不做综合排名</text>
+  <text x="38" y="140" class="subtitle">2026-08-11 实测快照</text>
+
+  <rect x="38" y="190" width="684" height="110" rx="18" fill="#FFFFFF" stroke="#E2E8F0" filter="url(#shadow)"/>
+  <rect x="38" y="190" width="684" height="8" rx="4" fill="url(#header)"/>
+  <text x="380" y="242" text-anchor="middle" class="question">你的工作流最在意什么？</text>
+  <text x="380" y="280" text-anchor="middle" class="note">先定字段和接入方式，再选路径</text>
+
+  <g filter="url(#shadow)">
+    <rect x="38" y="340" width="326" height="310" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="38" y="340" width="326" height="9" rx="4" fill="#2F78AD"/>
+    <text x="201" y="398" text-anchor="middle" class="label">一个 key 接入多家</text>
+    <text x="201" y="452" text-anchor="middle" class="answer">四条美股 QVeris 路径</text>
+    <text x="201" y="492" text-anchor="middle" class="note">Twelve Data</text>
+    <text x="201" y="530" text-anchor="middle" class="note">Alpha Vantage · EODHD</text>
+    <text x="201" y="568" text-anchor="middle" class="note">Massive</text>
+    <rect x="75" y="582" width="252" height="44" rx="22" fill="#E8F7F0"/>
+    <text x="201" y="613" text-anchor="middle" fill="#12B76A" class="pill">本次均 Qualified</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="396" y="340" width="326" height="310" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="396" y="340" width="326" height="9" rx="4" fill="#6EB0C2"/>
+    <text x="559" y="398" text-anchor="middle" class="label">响应必须显式带币种</text>
+    <text x="559" y="452" text-anchor="middle" class="answer">Twelve Data · Massive</text>
+    <text x="559" y="500" text-anchor="middle" class="note">公开样本中观察到</text>
+    <text x="559" y="540" text-anchor="middle" class="note">currency = USD</text>
+    <rect x="426" y="582" width="266" height="44" rx="22" fill="#EAF4F8"/>
+    <text x="559" y="613" text-anchor="middle" fill="#2F78AD" class="pill">仍需复测目标市场</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="38" y="684" width="326" height="310" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="38" y="684" width="326" height="9" rx="4" fill="#143F74"/>
+    <text x="201" y="742" text-anchor="middle" class="label">样本含更多事件日期</text>
+    <text x="201" y="796" text-anchor="middle" class="answer">Alpha Vantage · Massive</text>
+    <text x="201" y="844" text-anchor="middle" class="note">观察到公告日、登记日</text>
+    <text x="201" y="884" text-anchor="middle" class="note">除权除息日与支付日</text>
+    <rect x="68" y="926" width="266" height="44" rx="22" fill="#EAF4F8"/>
+    <text x="201" y="957" text-anchor="middle" fill="#143F74" class="pill">不外推到其他样本</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="396" y="684" width="326" height="310" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="396" y="684" width="326" height="9" rx="4" fill="#F79009"/>
+    <text x="559" y="742" text-anchor="middle" class="label">主要处理 A 股</text>
+    <text x="559" y="796" text-anchor="middle" class="answer">当前没有可发布赢家</text>
+    <text x="559" y="844" text-anchor="middle" class="note">iFind：缺单次金额语义</text>
+    <text x="559" y="884" text-anchor="middle" class="note">与事件日期</text>
+    <text x="559" y="924" text-anchor="middle" class="note">恒生：证券身份待验证</text>
+    <rect x="426" y="946" width="266" height="44" rx="22" fill="#FFF2E0"/>
+    <text x="559" y="977" text-anchor="middle" fill="#F79009" class="pill">修复后重新测试</text>
+  </g>
+
+  <text x="380" y="1050" text-anchor="middle" class="note">只反映本次固定用例；价格、SLA 与覆盖范围未测试</text>
+  <text x="380" y="1086" text-anchor="middle" class="note">Provider 与 Access Path 始终分开判断</text>
+</svg>

@@ -69,3 +69,6 @@ artifacts:
   release: releases/dividend-events-2026-q3-v1/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
   charts: []
+  editorial_visuals:
+    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-api-decision-tree.svg
+    - docs/guides/capability-seo/best-dividend-apis/charts/evidence-chain.svg
