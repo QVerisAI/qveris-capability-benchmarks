@@ -48,9 +48,56 @@ def test_self_description_uses_row_key() -> None:
     assert "effective_date" in out
 
 
-def test_sample_values_are_realistic() -> None:
-    from scripts.generate_cap_fixtures import _sample_value
+def test_comparison_fields_never_contain_angle_placeholders() -> None:
+    """A <field> placeholder in a comparison field would deterministically fail."""
+    from scripts.generate_cap_fixtures import (
+        render_direct_test,
+        render_interpretation,
+        render_param_fill,
+        render_recovery,
+    )
 
-    assert _sample_value("symbol", {}) == "AAPL"
-    assert _sample_value("currency", {}) == "USD"
-    assert _sample_value("unknown_field", {}) == "<unknown_field>"
+    contract = _dividends_contract()
+    for render in (
+        render_param_fill,
+        render_direct_test,
+        render_interpretation,
+        render_recovery,
+    ):
+        out = render(contract, "dividends")
+        # comparison values must be <TODO> markers, not fabricated <field> names
+        assert "<symbol>" not in out, f"{render.__name__} fabricated a fake value"
+
+
+def test_missing_contract_section_fails_closed() -> None:
+
+    from scripts.generate_cap_fixtures import _validate_contract
+
+    contract = _dividends_contract()
+    assert _validate_contract(contract) == []
+    broken = dict(contract)
+    broken.pop("field_spec")
+    assert "field_spec" in _validate_contract(broken)
+
+
+def test_generated_yaml_is_parseable() -> None:
+    import yaml
+
+    from scripts.generate_cap_fixtures import (
+        render_direct_test,
+        render_interpretation,
+        render_param_fill,
+        render_recovery,
+        render_self_description,
+    )
+
+    contract = _dividends_contract()
+    for render in (
+        render_direct_test,
+        render_param_fill,
+        render_interpretation,
+        render_recovery,
+        render_self_description,
+    ):
+        content = render(contract, "dividends")
+        yaml.safe_load(content)  # must not raise
