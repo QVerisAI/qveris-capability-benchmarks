@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import re
 from pathlib import Path
 
 import httpx
@@ -113,8 +114,10 @@ def _public_diagnostic_payload(
     if str(binding.provider_id) == "ifind":
         blocked_text = json.dumps(binding.parameters, ensure_ascii=False)
         response_shape = _public_ifind_schema_shape(document, blocked_text, depth=8)
+        answer_template = _public_ifind_answer_template(document)
     else:
         response_shape = public_response_shape(document, depth=8)
+        answer_template = None
     return (
         json.dumps(
             {
@@ -125,6 +128,7 @@ def _public_diagnostic_payload(
                 "transport": binding.transport,
                 "raw_digest": raw_digest,
                 "response_shape": response_shape,
+                "answer_template": answer_template,
                 "error_types": list(error_types),
                 "redaction_status": "structure_only",
                 "github_run_id": os.environ.get("GITHUB_RUN_ID"),
@@ -135,6 +139,39 @@ def _public_diagnostic_payload(
         )
         + "\n"
     ).encode()
+
+
+def _public_ifind_answer_template(document: object) -> str | None:
+    answer = _ifind_answer(document)
+    if answer is None:
+        return None
+    sanitized = re.sub(r"https?://\S+", "<URL>", answer)
+    sanitized = re.sub(r"[\w.+-]+@[\w.-]+", "<EMAIL>", sanitized)
+    for term in ("贵州茅台", "NOTASTOCK", "600519.SH", "600519"):
+        sanitized = sanitized.replace(term, "<ENTITY>")
+    sanitized = re.sub(r"\d+(?:[.,]\d+)*", "<NUMBER>", sanitized)
+    return " ".join(sanitized.split())[:600]
+
+
+def _ifind_answer(document: object) -> str | None:
+    if not isinstance(document, dict) or not isinstance(document.get("content"), list):
+        return None
+    for content in document["content"]:
+        if not isinstance(content, dict) or not isinstance(content.get("text"), str):
+            continue
+        try:
+            payload = json.loads(content["text"])
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict) or not isinstance(payload.get("data"), str):
+            continue
+        try:
+            data = json.loads(payload["data"])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict) and isinstance(data.get("answer"), str):
+            return data["answer"]
+    return None
 
 
 def _public_ifind_schema_shape(
@@ -357,6 +394,10 @@ def test_ac8_public_diagnostic_exposes_only_response_shape() -> None:
                             "code": 1,
                             "data": json.dumps(
                                 {
+                                    "answer": (
+                                        "贵州茅台 2025-06-27 每股现金分红 28.02 元，"
+                                        "详情见 https://private.example.test/report"
+                                    ),
                                     "数据表": [
                                         {"股票代码": "600519.SH", "每股分红": 28.02}
                                     ],
@@ -378,7 +419,12 @@ def test_ac8_public_diagnostic_exposes_only_response_shape() -> None:
     assert "数据表" in content
     assert "股票代码" in content
     assert "报告期" in content
+    assert "每股现金分红" in content
+    assert "<NUMBER>" in content
     assert "600519.SH" not in content
+    assert "2025-06-27" not in content
+    assert "28.02" not in content
+    assert "private.example.test" not in content
     assert "Authorization" not in content
     assert "贵州茅台" not in content
 
