@@ -14,17 +14,17 @@ def test_ac1_readme_leads_with_financial_agent_provider_selection() -> None:
     )
 
 
-def test_ac2_strategy_separates_product_and_measurement_units() -> None:
+def test_ac2_strategy_separates_release_and_consumer_boundaries() -> None:
     strategy = (ROOT / "docs/product-strategy.md").read_text(encoding="utf-8")
 
-    assert "Financial Task is the product unit" in strategy, (
-        "AC2 strategy must define the external product unit"
+    assert "Each benchmark release belongs to exactly one CAP" in strategy, (
+        "AC2 strategy must define the single-CAP release boundary"
     )
     assert "CAP is the measurement unit" in strategy, (
         "AC2 strategy must preserve atomic evaluation"
     )
-    assert "Financial Task -> required CAPs" in strategy, (
-        "AC2 strategy must define the task-to-evidence chain"
+    assert "consume facts from multiple independent CAP releases" in strategy, (
+        "AC2 strategy must keep Tasks and Profiles as release-fact consumers"
     )
 
 

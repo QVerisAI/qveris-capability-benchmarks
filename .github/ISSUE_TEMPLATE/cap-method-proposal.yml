@@ -1,0 +1,57 @@
+name: CAP or method proposal
+description: Propose a single-CAP question family, case, reference, or outcome rule.
+title: "[CAP]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, private raw responses, personal data, or material you cannot license. Proposals must stay inside one atomic CAP and must not introduce an aggregate Provider score.
+  - type: textarea
+    id: developer_decision
+    attributes:
+      label: Developer decision
+      description: What concrete integration or buying decision will this evidence improve?
+    validations:
+      required: true
+  - type: textarea
+    id: cap_boundary
+    attributes:
+      label: CAP boundary
+      description: Define the single machine-interface capability and what remains outside it.
+    validations:
+      required: true
+  - type: textarea
+    id: cases
+    attributes:
+      label: Proposed cases
+      description: Include positive, boundary, negative, market, and freshness cases as applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome_rules
+    attributes:
+      label: Reference and outcome rules
+      description: Explain objective expected facts, tolerances, evidence, and failure attribution.
+    validations:
+      required: true
+  - type: textarea
+    id: source_license
+    attributes:
+      label: Sources and licenses
+      description: Cite provenance and redistribution terms for every external source.
+    validations:
+      required: true
+  - type: textarea
+    id: conflict_of_interest
+    attributes:
+      label: Conflict of interest
+      description: Disclose relevant Provider, customer, sponsor, employment, or investment relationships; write none if absent.
+    validations:
+      required: true
+  - type: checkboxes
+    id: no_aggregate
+    attributes:
+      label: Atomic evidence
+      options:
+        - label: This proposal does not create an aggregate score, global winner, or Agent-friendly rating.
+          required: true

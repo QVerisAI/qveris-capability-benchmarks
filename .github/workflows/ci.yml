@@ -33,6 +33,11 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy src
       - run: uv run qveris-bench schema export --check
+      - name: Replay every committed release offline
+        run: |
+          for release_dir in releases/*; do
+            uv run qveris-bench release replay "$release_dir"
+          done
       - name: Verify Stock Quote release artifact provenance
         if: github.event_name == 'pull_request'
         env:

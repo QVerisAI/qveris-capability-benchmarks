@@ -1,40 +1,40 @@
-# Product Strategy: Financial Agent Provider Selection
+# Product Strategy: Single-CAP Provider Selection
 
 **Status:** Approved direction
-**Date:** 2026-08-07
+**Updated:** 2026-08-11
 
 ## Product objective
 
-QVeris Capability Benchmarks helps financial Agent developers choose the provider
-and Access Path that fit a concrete product task. It answers a buying and engineering
-decision, not the abstract question of which provider is globally best.
+QVeris Capability Benchmarks helps financial Agent developers choose the Provider
+and Access Path that fit one concrete machine-interface capability. It answers a
+buying and engineering decision, not the abstract question of which Provider is
+globally best.
 
-The product starts from the developer's intended workflow: market monitoring,
-company research, filing evidence, ETF analysis, financial news, or macro research.
-It then exposes the atomic evidence needed to decide which interfaces can support
-that workflow, under what conditions, and with how much integration risk.
+The current public benchmark and publication boundary is one CAP. A release exposes
+the atomic evidence needed to decide which interfaces support that capability, under
+what conditions, and with how much integration risk.
 
-## Product unit and measurement unit
+## Release and consumer boundaries
 
-**Financial Task is the product unit. CAP is the measurement unit.**
+**Each benchmark release belongs to exactly one CAP. CAP is the measurement unit.**
 
-A Financial Task reflects the developer's language and product intent. A CAP is one
-bounded machine-interface capability that can be tested, attributed, and replayed
-without mixing provider behavior with model planning or unrelated tools.
+A CAP is one bounded machine-interface capability that can be tested, attributed,
+and replayed without mixing Provider behavior with model planning or unrelated
+tools. Every case, Provider / Access Path cell, evidence bundle, outcome, and release
+fact remains attributable to that CAP.
 
 ```text
-Financial Task -> required CAPs -> provider and Access Path cells
-               -> Direct Test and constrained Agent Trial evidence
-               -> task-fit profile for the developer
+CAP -> Provider and Access Path cells -> Direct Test evidence
+    -> constrained Agent Trial observations -> immutable release facts
 ```
 
-The public experience should lead with Financial Tasks. CAPs remain the stable
-evaluation substrate and evidence drill-down. A task may compose several CAPs, but
-an individual benchmark case stays atomic.
+Financial Tasks and Task Fit Profiles may consume facts from multiple independent CAP releases
+as a future consumer layer. They cannot merge CAP execution, attribution, evidence,
+or outcomes, and they do not change the current single-CAP publication focus.
 
-This direction does not add a Financial Task runtime model, database, or leaderboard
-site to v1. It defines how later consumers organize the release facts already
-produced by the CAP platform.
+Existing `DeveloperScenario` and profile artifacts remain deterministic consumers of
+pinned release facts. This direction does not expand Financial Task runtime models,
+add a database, or build a leaderboard site in v1.
 
 ## Primary differentiation: Agent-interface fitness
 
@@ -114,19 +114,19 @@ observed outcome.
 
 ## Decision output
 
-The product publishes task-fit profiles, not a universal ranking. A useful conclusion
-explains that one path may fit a low-latency US market monitor, another may fit a
-cross-market research Agent, and another may require an adapter because its errors
-or pagination are ambiguous.
+The current product publishes CAP-level facts and contextual conclusions, not a
+universal ranking. A useful conclusion explains that one path may fit low-latency US
+quotes, another may fit cross-market coverage, and another may require an adapter
+because its errors or pagination are ambiguous.
 
 There is no context-free best provider, provider total score, or cross-task composite.
 The developer sees the evidence, limitations, and integration tradeoffs behind each
 task-specific conclusion.
 
-## Initial reference task
+## Future task consumer
 
-The first reference composition is a **Company Research Agent** because it exercises
-the strongest differentiator across several independent CAPs:
+The existing **Company Research Agent** reference composition illustrates how a
+future consumer can pin facts from several independent CAP releases:
 
 - Stock Quote;
 - Historical Price Series;
@@ -135,10 +135,10 @@ the strongest differentiator across several independent CAPs:
 - SEC Filing Evidence;
 - Financial News Evidence.
 
-The reference task is a product-facing composition target, not permission to turn
-these CAPs into one opaque end-to-end score. Each CAP must still be qualified,
-executed, evidenced, and released independently before its facts can support the
-task-fit profile.
+The reference task is not the current benchmark publication unit and is not
+permission to turn these CAPs into one opaque end-to-end score. Each CAP must still
+be qualified, executed, evidenced, and released independently before its facts can
+support a task-fit profile.
 
 ## Strategic test
 
