@@ -21,9 +21,9 @@ jobs:
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
       - name: Reject changes to immutable release directories
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
           git fetch --depth=1 origin "$BASE_SHA"
           changed_dirs=$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- releases/ | awk -F/ 'NF >= 2 {print $1 "/" $2}' | sort -u)

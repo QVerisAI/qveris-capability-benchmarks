@@ -201,5 +201,9 @@ def test_ac2_ci_rejects_changes_to_existing_release_directories() -> None:
     workflow = _read(".github/workflows/ci.yml")
 
     assert "github.event.pull_request.base.sha" in workflow
+    assert "github.event.before" in workflow
+    assert (
+        "github.event_name == 'pull_request' || github.event_name == 'push'" in workflow
+    )
     assert 'git cat-file -e "$BASE_SHA:$release_dir"' in workflow
     assert "immutable release directory changed" in workflow
