@@ -31,6 +31,7 @@ jobs:
           python-version: "3.12"
       - run: uv sync --locked --all-groups
       - name: Run CAP Direct Test
+        if: hashFiles(format('scripts/fixtures/cap-direct-test-{0}.yaml', inputs.fixture_prefix)) != ''
         run: |
           uv run python scripts/cap_direct_test_probe.py \
             --fixture "scripts/fixtures/cap-direct-test-$FIXTURE_PREFIX.yaml" \
@@ -40,6 +41,11 @@ jobs:
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
           FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
           ROUNDS: ${{ inputs.rounds }}
+      - name: Fail if no Direct Test fixture
+        if: hashFiles(format('scripts/fixtures/cap-direct-test-{0}.yaml', inputs.fixture_prefix)) == ''
+        run: |
+          echo "::error::No Direct Test fixture for prefix '${{ inputs.fixture_prefix }}'"
+          exit 1
       - name: Run AI param-fill probe
         if: hashFiles(format('scripts/fixtures/agent-param-fill-{0}.yaml', inputs.fixture_prefix)) != ''
         run: |
@@ -85,6 +91,7 @@ jobs:
           FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
           ROUNDS: ${{ inputs.rounds }}
       - name: Upload private evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cap-probe-evidence-${{ inputs.fixture_prefix }}
