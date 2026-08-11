@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="1480" viewBox="0 0 760 1480" role="img" aria-labelledby="title desc">
+  <title id="title">6 条分红数据 Access Path 公开证据矩阵</title>
+  <desc id="desc">分为核心可用性与响应字段丰富度两部分，比较六条 Access Path 的公开证据状态。</desc>
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#143F74"/><stop offset="0.58" stop-color="#2F78AD"/><stop offset="1" stop-color="#6EB0C2"/></linearGradient>
+    <style>
+      text { font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+      .title { fill: #fff; font-size: 34px; font-weight: 800; }
+      .subtitle { fill: #E2E8F0; font-size: 24px; }
+      .section { fill: #143F74; font-size: 29px; font-weight: 800; }
+      .provider { fill: #0F172A; font-size: 23px; font-weight: 800; }
+      .path { fill: #475569; font-size: 20px; }
+      .head { fill: #143F74; font-size: 23px; font-weight: 800; }
+      .symbol { font-size: 34px; font-weight: 800; }
+      .legend { fill: #334155; font-size: 23px; }
+      .note { fill: #475569; font-size: 22px; }
+    </style>
+  </defs>
+  <rect width="760" height="1480" fill="#F8FAFC"/>
+  <rect width="760" height="170" fill="url(#header)"/>
+  <text x="38" y="58" class="title">Dividend Event 公开证据矩阵</text>
+  <text x="38" y="103" class="subtitle">6 条 Provider × Access Path · 固定样本实测</text>
+  <text x="38" y="140" class="subtitle">展示证据状态，不代表全市场能力</text>
+
+  <text x="30" y="220" class="section">A. 核心可用性</text>
+  <rect x="24" y="242" width="712" height="542" rx="16" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <rect x="24" y="242" width="712" height="92" rx="16" fill="#F1F5F9"/>
+  <text x="132" y="280" text-anchor="middle" class="head">Provider</text><text x="132" y="310" text-anchor="middle" class="head">Access Path</text>
+  <text x="305" y="280" text-anchor="middle" class="head">单次金额</text><text x="305" y="310" text-anchor="middle" class="head">语义</text>
+  <text x="425" y="280" text-anchor="middle" class="head">除权除息</text><text x="425" y="310" text-anchor="middle" class="head">日期</text>
+  <text x="545" y="280" text-anchor="middle" class="head">无效</text><text x="545" y="310" text-anchor="middle" class="head">symbol</text>
+  <text x="665" y="280" text-anchor="middle" class="head">证券身份</text><text x="665" y="310" text-anchor="middle" class="head">验证</text>
+  <g stroke="#E2E8F0"><path d="M240 242 V784 M365 242 V784 M485 242 V784 M605 242 V784"/><path d="M24 334 H736 M24 409 H736 M24 484 H736 M24 559 H736 M24 634 H736 M24 709 H736"/></g>
+  <g>
+    <text x="38" y="364" class="provider">恒生聚源</text><text x="38" y="392" class="path">QVeris</text><text x="305" y="384" text-anchor="middle" class="symbol" fill="#F79009">△</text><text x="425" y="384" text-anchor="middle" class="symbol" fill="#F79009">△</text><text x="545" y="384" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="384" text-anchor="middle" class="symbol" fill="#F79009">△</text>
+    <text x="38" y="439" class="provider">同花顺 iFinD</text><text x="38" y="467" class="path">Native MCP</text><text x="305" y="459" text-anchor="middle" class="symbol" fill="#F79009">△</text><text x="425" y="459" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="545" y="459" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="459" text-anchor="middle" class="symbol" fill="#2F78AD">◇</text>
+    <text x="38" y="514" class="provider">Twelve Data</text><text x="38" y="542" class="path">QVeris</text><text x="305" y="534" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="534" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="534" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="534" text-anchor="middle" class="symbol" fill="#2F78AD">◇</text>
+    <text x="38" y="589" class="provider">Alpha Vantage</text><text x="38" y="617" class="path">QVeris</text><text x="305" y="609" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="609" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="609" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="609" text-anchor="middle" class="symbol" fill="#2F78AD">◇</text>
+    <text x="38" y="664" class="provider">EODHD</text><text x="38" y="692" class="path">QVeris</text><text x="305" y="684" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="684" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="684" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="684" text-anchor="middle" class="symbol" fill="#2F78AD">◇</text>
+    <text x="38" y="739" class="provider">Massive</text><text x="38" y="767" class="path">QVeris</text><text x="305" y="759" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="759" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="759" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="759" text-anchor="middle" class="symbol" fill="#2F78AD">◇</text>
+  </g>
+
+  <text x="30" y="840" class="section">B. 响应字段丰富度</text>
+  <rect x="24" y="862" width="712" height="542" rx="16" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <rect x="24" y="862" width="712" height="92" rx="16" fill="#F1F5F9"/>
+  <text x="132" y="900" text-anchor="middle" class="head">Provider</text><text x="132" y="930" text-anchor="middle" class="head">Access Path</text>
+  <text x="305" y="915" text-anchor="middle" class="head">响应内币种</text>
+  <text x="425" y="915" text-anchor="middle" class="head">公告日</text>
+  <text x="545" y="915" text-anchor="middle" class="head">登记日</text>
+  <text x="665" y="915" text-anchor="middle" class="head">支付日</text>
+  <g stroke="#E2E8F0"><path d="M240 862 V1404 M365 862 V1404 M485 862 V1404 M605 862 V1404"/><path d="M24 954 H736 M24 1029 H736 M24 1104 H736 M24 1179 H736 M24 1254 H736 M24 1329 H736"/></g>
+  <g>
+    <text x="38" y="984" class="provider">恒生聚源</text><text x="38" y="1012" class="path">QVeris</text><text x="305" y="1004" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="425" y="1004" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="1004" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="1004" text-anchor="middle" class="symbol" fill="#12B76A">●</text>
+    <text x="38" y="1059" class="provider">同花顺 iFinD</text><text x="38" y="1087" class="path">Native MCP</text><text x="305" y="1079" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="425" y="1079" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="545" y="1079" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="665" y="1079" text-anchor="middle" class="symbol" fill="#94A3B8">—</text>
+    <text x="38" y="1134" class="provider">Twelve Data</text><text x="38" y="1162" class="path">QVeris</text><text x="305" y="1154" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="1154" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="545" y="1154" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="665" y="1154" text-anchor="middle" class="symbol" fill="#94A3B8">—</text>
+    <text x="38" y="1209" class="provider">Alpha Vantage</text><text x="38" y="1237" class="path">QVeris</text><text x="305" y="1229" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="425" y="1229" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="1229" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="1229" text-anchor="middle" class="symbol" fill="#12B76A">●</text>
+    <text x="38" y="1284" class="provider">EODHD</text><text x="38" y="1312" class="path">QVeris</text><text x="305" y="1304" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="425" y="1304" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="545" y="1304" text-anchor="middle" class="symbol" fill="#94A3B8">—</text><text x="665" y="1304" text-anchor="middle" class="symbol" fill="#94A3B8">—</text>
+    <text x="38" y="1359" class="provider">Massive</text><text x="38" y="1387" class="path">QVeris</text><text x="305" y="1379" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="425" y="1379" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="545" y="1379" text-anchor="middle" class="symbol" fill="#12B76A">●</text><text x="665" y="1379" text-anchor="middle" class="symbol" fill="#12B76A">●</text>
+  </g>
+
+  <rect x="24" y="1420" width="712" height="44" rx="14" fill="#F1F5F9"/>
+  <text x="40" y="1450" class="note"><tspan fill="#12B76A" font-weight="800">●</tspan> 已观察　<tspan fill="#94A3B8" font-weight="800">—</tspan> 未观察/未发布　<tspan fill="#F79009" font-weight="800">△</tspan> 阻断　<tspan fill="#2F78AD" font-weight="800">◇</tspan> 未独立测量</text>
+</svg>

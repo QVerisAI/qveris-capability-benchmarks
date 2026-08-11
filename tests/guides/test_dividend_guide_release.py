@@ -21,8 +21,8 @@ RELEASE_DIGEST = (
     "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
 )
 EDITORIAL_VISUALS = (
-    "capability-seo/best-dividend-apis/charts/dividend-api-decision-tree.svg",
-    "capability-seo/best-dividend-apis/charts/evidence-chain.svg",
+    "capability-seo/best-dividend-apis/charts/dividend-event-date-timeline.svg",
+    "capability-seo/best-dividend-apis/charts/dividend-api-evidence-matrix.svg",
 )
 MANIFEST_EDITORIAL_VISUALS = tuple(
     f"docs/guides/{target}" for target in EDITORIAL_VISUALS
@@ -94,6 +94,38 @@ def test_article_editorial_visuals_are_declared_and_valid_svg() -> None:
         assert width <= 760
         assert height > width
     assert "完整事件日期组" not in article
+    assert "decision-tree.svg" not in article
+    assert "evidence-chain.svg" not in article
+    assert all("market-coverage" not in target for target in EDITORIAL_VISUALS)
+
+
+def test_editorial_visuals_encode_date_semantics_and_access_path_identity() -> None:
+    timeline = "".join(
+        ET.parse(ARTICLE.parent / EDITORIAL_VISUALS[0]).getroot().itertext()
+    )
+    matrix = "".join(
+        ET.parse(ARTICLE.parent / EDITORIAL_VISUALS[1]).getroot().itertext()
+    )
+
+    for date_name in (
+        "Declaration Date",
+        "Ex-Dividend Date",
+        "Record Date",
+        "Payment Date",
+    ):
+        assert date_name in timeline
+    for provider in (
+        "恒生聚源",
+        "同花顺 iFinD",
+        "Twelve Data",
+        "Alpha Vantage",
+        "EODHD",
+        "Massive",
+    ):
+        assert provider in matrix
+    assert "Native MCP" in matrix
+    assert matrix.count("QVeris") == 10
+    assert "不代表全市场能力" in matrix
 
 
 def test_manifest_uses_public_release_as_source_of_truth() -> None:

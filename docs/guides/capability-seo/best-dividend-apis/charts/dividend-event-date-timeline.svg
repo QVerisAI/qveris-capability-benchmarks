@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="1020" viewBox="0 0 760 1020" role="img" aria-labelledby="title desc">
+  <title id="title">Dividend Event 四类日期语义时间轴</title>
+  <desc id="desc">展示公告日、除权除息日、登记日和支付日的常见顺序，以及它们分别对应的开发任务。</desc>
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#143F74"/><stop offset="0.58" stop-color="#2F78AD"/><stop offset="1" stop-color="#6EB0C2"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#143F74" flood-opacity="0.11"/></filter>
+    <style>
+      text { font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+      .title { fill: #fff; font-size: 34px; font-weight: 800; }
+      .subtitle { fill: #E2E8F0; font-size: 25px; }
+      .date { fill: #143F74; font-size: 29px; font-weight: 800; }
+      .cn { fill: #334155; font-size: 26px; font-weight: 700; }
+      .use { fill: #0F172A; font-size: 26px; }
+      .note { fill: #475569; font-size: 24px; }
+      .number { fill: #fff; font-size: 25px; font-weight: 800; }
+    </style>
+  </defs>
+  <rect width="760" height="1020" fill="#F8FAFC"/>
+  <rect width="760" height="170" fill="url(#header)"/>
+  <text x="38" y="58" class="title">一个 Dividend Event，为什么有四个日期？</text>
+  <text x="38" y="105" class="subtitle">它们不是同义字段，而是事件生命周期</text>
+  <text x="38" y="143" class="subtitle">常见顺序 · 以供应商字段定义为准</text>
+
+  <path d="M108 245 V875" stroke="#6EB0C2" stroke-width="8" stroke-linecap="round"/>
+
+  <g filter="url(#shadow)">
+    <circle cx="108" cy="270" r="31" fill="#2F78AD"/><text x="108" y="279" text-anchor="middle" class="number">1</text>
+    <rect x="162" y="210" width="560" height="155" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="194" y="256" class="date">Declaration Date</text>
+    <text x="194" y="296" class="cn">公告日</text>
+    <text x="194" y="338" class="use">公司宣布分红 → 事件提醒与信息披露</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <circle cx="108" cy="460" r="31" fill="#143F74"/><text x="108" y="469" text-anchor="middle" class="number">2</text>
+    <rect x="162" y="400" width="560" height="155" rx="18" fill="#FFFFFF" stroke="#143F74" stroke-width="3"/>
+    <text x="194" y="446" class="date">Ex-Dividend Date</text>
+    <text x="194" y="486" class="cn">除权除息日 · 本文 effective_date</text>
+    <text x="194" y="528" class="use">持有权切换 → 收益回测与价格调整</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <circle cx="108" cy="650" r="31" fill="#6EB0C2"/><text x="108" y="659" text-anchor="middle" class="number">3</text>
+    <rect x="162" y="590" width="560" height="155" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="194" y="636" class="date">Record Date</text>
+    <text x="194" y="676" class="cn">登记日</text>
+    <text x="194" y="718" class="use">确认股东名册 → 分红资格核验</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <circle cx="108" cy="840" r="31" fill="#12B76A"/><text x="108" y="849" text-anchor="middle" class="number">4</text>
+    <rect x="162" y="780" width="560" height="155" rx="18" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="194" y="826" class="date">Payment Date</text>
+    <text x="194" y="866" class="cn">支付日</text>
+    <text x="194" y="908" class="use">现金实际发放 → 现金流预测与对账</text>
+  </g>
+
+  <text x="380" y="980" text-anchor="middle" class="note">只返回一个模糊的 date，可能让程序在业务上用错日期</text>
+</svg>
