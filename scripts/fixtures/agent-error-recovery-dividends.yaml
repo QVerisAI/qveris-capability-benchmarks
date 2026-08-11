@@ -1,5 +1,7 @@
 tools:
   - tool_id: eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
+    provider_id: eodhd
+    access_path_id: eodhd-dividends-qveris
     name: Retrieve Dividend History
     description: Retrieve historical dividend events for a symbol over a date range.
     params:
@@ -13,6 +15,8 @@ tools:
         expected_retry_params: {symbol: AAPL}
         difficulty: L2
   - tool_id: twelvedata.dividends.retrieve.v1.c0c9b142
+    provider_id: twelve-data
+    access_path_id: twelve-data-dividends-qveris
     name: Dividends
     description: Return dividend events for a symbol or identifier over a date range.
     params:
@@ -26,6 +30,8 @@ tools:
         expected_retry_params: {symbol: AAPL}
         difficulty: L2
   - tool_id: polygon.stocks.dividends.list.v1.ea25c492
+    provider_id: massive-stocks
+    access_path_id: massive-stocks-dividends-qveris
     name: List Stock Dividends
     description: List historical dividend events, filterable by ticker.
     params:
@@ -38,6 +44,8 @@ tools:
         expected_retry_params: {ticker: AAPL}
         difficulty: L3
   - tool_id: alphavantage.dividends.list.v1.467a92c0
+    provider_id: alpha-vantage
+    access_path_id: alpha-vantage-dividends-qveris
     name: Dividends
     description: Retrieve dividend events for a ticker.
     params:
@@ -50,6 +58,8 @@ tools:
         expected_retry_params: {function: DIVIDENDS, symbol: AAPL}
         difficulty: L3
   - tool_id: hangseng_polysource.stock.dividend.query.v2.6174546b
+    provider_id: hangseng
+    access_path_id: hangseng-dividends-qveris
     name: Stock Dividend Query
     description: Query dividend records for Shanghai, Shenzhen, Beijing listed companies.
     params:
@@ -64,6 +74,8 @@ tools:
         expected_retry_params: {stockObject: "600519.SH"}
         difficulty: L3
   - tool_id: cn_financial_pro.dividend_plan.v1
+    provider_id: ifind
+    access_path_id: ifind-dividends-qveris
     name: Dividend Plan
     description: Query dividend plans for Chinese listed companies.
     params:

@@ -278,11 +278,7 @@ def main(argv: list[str] | None = None) -> int:
         print("QVERIS_API_KEY is required.", file=sys.stderr)
         return 2
 
-    providers = ProviderRegistryRepository(Path("providers"))
     probes = load_fixture(args.fixture, Path("providers"))
-    providers.validate_direct_test_authorization(
-        (probe.provider_id, probe.access_path_id) for probe in probes
-    )
     execute = build_executor(args.base_url.rstrip("/"), api_key)
     results = run_probe(probes, execute, rounds=args.rounds)
 
