@@ -1,0 +1,122 @@
+[
+ {
+  "capability_id": "MKT.DIVIDENDS",
+  "contract": {
+   "capability_id": "MKT.DIVIDENDS",
+   "name": {
+    "en": "分红事件",
+    "zh": "分红事件"
+   },
+   "description": {
+    "en": "分红事件",
+    "zh": "提供股票或相关证券的分红事件数据，包括分红方案日期、除权除息日、派息日和每股分红金额等信息"
+   },
+   "domain": "MKT",
+   "category": "CORPORATE_ACTIONS",
+   "asset_class": "EQUITY",
+   "data_type": "EVENT",
+   "scope": {},
+   "field_spec": {
+    "optional": [
+     {
+      "name": "announcement_date",
+      "type": "string",
+      "description": "Date when the dividend plan or event was announced"
+     },
+     {
+      "name": "record_date",
+      "type": "string",
+      "description": "Record date used to determine eligible holders"
+     },
+     {
+      "name": "payment_date",
+      "type": "string",
+      "description": "Date when the dividend is paid"
+     },
+     {
+      "name": "currency",
+      "type": "string",
+      "description": "Currency of the dividend amount"
+     },
+     {
+      "name": "gross_amount",
+      "type": "number",
+      "description": "Gross dividend amount before tax, if available"
+     }
+    ],
+    "required": [
+     {
+      "name": "symbol",
+      "type": "string",
+      "description": "Security identifier of the affected instrument"
+     },
+     {
+      "name": "effective_date",
+      "type": "datetime",
+      "description": "Effective event date, typically ex-dividend date or announced effective date"
+     },
+     {
+      "name": "amount",
+      "type": "number",
+      "description": "Dividend amount per share or equivalent payout amount"
+     }
+    ]
+   },
+   "standard_query": {
+    "optional": [
+     {
+      "name": "ex_date",
+      "type": "date",
+      "description": "Ex-dividend date in YYYY-MM-DD"
+     },
+     {
+      "name": "record_date",
+      "type": "date",
+      "description": "Record date in YYYY-MM-DD"
+     },
+     {
+      "name": "payment_date",
+      "type": "date",
+      "description": "Payment date in YYYY-MM-DD"
+     },
+     {
+      "name": "announcement_date",
+      "type": "date",
+      "description": "Announcement date in YYYY-MM-DD"
+     },
+     {
+      "name": "start_date",
+      "type": "date",
+      "description": "Start date of dividend event search window in YYYY-MM-DD",
+      "default_value": "ROLLING(-12m)",
+      "default_rationale": "默认拉过去 12 个月分红记录（≈1 年）"
+     },
+     {
+      "name": "end_date",
+      "type": "date",
+      "description": "End date of dividend event search window in YYYY-MM-DD"
+     },
+     {
+      "name": "market",
+      "type": "string",
+      "description": "Target market code for routing, e.g. US, CN, HK"
+     }
+    ],
+    "required": [
+     {
+      "name": "symbol",
+      "type": "string",
+      "description": "Security identifier of the affected instrument"
+     }
+    ]
+   },
+   "output_cardinality": "many",
+   "row_key": [
+    "symbol",
+    "effective_date"
+   ],
+   "contract_version": 1,
+   "registry_version": "6.0"
+  }
+ }
+]
