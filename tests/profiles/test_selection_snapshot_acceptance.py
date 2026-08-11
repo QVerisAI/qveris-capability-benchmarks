@@ -21,6 +21,7 @@ def test_ac1_snapshot_is_deterministic_scoped_and_digest_bound() -> None:
     second = build_selection_snapshot(INPUT, ROOT)
 
     assert first.json_bytes == second.json_bytes
+    assert first.json_bytes == INPUT.with_suffix(".json").read_bytes()
     document = json.loads(first.json_bytes)
     assert document["cap_release_digest"].startswith("sha256:")
     assert document["input_digests"]["cases"].startswith("sha256:")
@@ -118,6 +119,31 @@ def test_ac6_agent_signals_remain_independent_dimensions() -> None:
         )
 
 
+def test_ac6_provider_negative_is_not_an_agent_signal_pass(tmp_path: Path) -> None:
+    release = json.loads(
+        (ROOT / "releases/dividend-events-2026-q3-v1/release.json").read_text()
+    )
+    negatives = [
+        cell
+        for cell in release["cells"]
+        if cell["provider_id"] == "twelve-data"
+        and cell["case_id"] == "invalid-dividend-symbol"
+    ]
+    for cell in negatives[1:]:
+        cell["state"] = "provider_negative"
+    release_path = tmp_path / "release.json"
+    release_path.write_text(json.dumps(release), encoding="utf-8")
+    input_path = _selection_input_for_release(tmp_path, release_path)
+
+    row = next(
+        row
+        for row in build_selection_snapshot(input_path, ROOT).snapshot.rows
+        if row.provider_id == "twelve-data"
+    )
+    assert row.agent_interface.invalid_input_handling.passed == 1
+    assert row.agent_interface.invalid_input_handling.total == 3
+
+
 def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
@@ -134,27 +160,32 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
     tmp_path: Path,
 ) -> None:
     sv_path = tmp_path / "sv.json"
-    sv_path.write_text(
-        json.dumps(
+    sv_document = {
+        "snapshot_id": "dividend-sv-2026-q3-v1",
+        "version": "1.0.0",
+        "namespace": "MKT.DIVIDENDS",
+        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
+        "suite_fingerprint": "b" * 64,
+        "extractor_version": "1.0.0",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared",
+        "results": [
             {
-                "namespace": "MKT.DIVIDENDS",
-                "results": [
-                    {
-                        "provider_id": "twelve-data",
-                        "access_path_id": "twelve-data-dividends-qveris",
-                        "market": "US",
-                        "supported": True,
-                        "evidence_ref": "sha256:" + "a" * 64,
-                    }
-                ],
+                "provider_id": "twelve-data",
+                "access_path_id": "twelve-data-dividends-qveris",
+                "market": "US",
+                "supported": True,
+                "evidence_ref": "sha256:" + "a" * 64,
             }
-        ),
-        encoding="utf-8",
-    )
+        ],
+    }
+    sv_path.write_text(json.dumps(sv_document), encoding="utf-8")
+    sv_digest = _digest(sv_path)
     input_path = tmp_path / "selection.yaml"
     input_path.write_text(
         INPUT.read_text(encoding="utf-8").replace(
-            "snapshot: null", f"snapshot: {sv_path}"
+            "snapshot: null\n  snapshot_digest: null",
+            f"snapshot: {sv_path}\n  snapshot_digest: {sv_digest}",
         ),
         encoding="utf-8",
     )
@@ -174,7 +205,78 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
         ),
         encoding="utf-8",
     )
+    input_path.write_text(
+        input_path.read_text().replace(sv_digest, _digest(sv_path)),
+        encoding="utf-8",
+    )
     with pytest.raises(SelectionSnapshotBuildError, match="unknown SV identity"):
+        build_selection_snapshot(input_path, ROOT)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (("supported", "false"), "valid boolean"),
+        (
+            ("observation_window", {"start": "2026-08-10", "end": "2026-08-10"}),
+            "window mismatch",
+        ),
+        (("disclosure_level", "private"), "publishable provenance"),
+    ],
+)
+def test_ac3_snapshot_rejects_untrusted_sv(
+    tmp_path: Path, mutation: tuple[str, object], message: str
+) -> None:
+    document = {
+        "snapshot_id": "dividend-sv-2026-q3-v1",
+        "version": "1.0.0",
+        "namespace": "MKT.DIVIDENDS",
+        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
+        "suite_fingerprint": "b" * 64,
+        "extractor_version": "1.0.0",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared",
+        "results": [
+            {
+                "provider_id": "twelve-data",
+                "access_path_id": "twelve-data-dividends-qveris",
+                "market": "US",
+                "supported": True,
+                "evidence_ref": "sha256:" + "a" * 64,
+            }
+        ],
+    }
+    key, value = mutation
+    if key == "supported":
+        document["results"][0][key] = value
+    else:
+        document[key] = value
+    sv_path = tmp_path / "sv.json"
+    sv_path.write_text(json.dumps(document), encoding="utf-8")
+    input_path = tmp_path / "selection.yaml"
+    input_path.write_text(
+        INPUT.read_text().replace(
+            "snapshot: null\n  snapshot_digest: null",
+            f"snapshot: {sv_path}\n  snapshot_digest: {_digest(sv_path)}",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SelectionSnapshotBuildError, match=message):
+        build_selection_snapshot(input_path, ROOT)
+
+
+def test_ac1_snapshot_rejects_release_identity_tampering(tmp_path: Path) -> None:
+    release = json.loads(
+        (ROOT / "releases/dividend-events-2026-q3-v1/release.json").read_text()
+    )
+    cell = next(cell for cell in release["cells"] if cell["applicable"])
+    cell["provider_id"] = "twelve-data"
+    release_path = tmp_path / "release.json"
+    release_path.write_text(json.dumps(release), encoding="utf-8")
+    input_path = _selection_input_for_release(tmp_path, release_path)
+
+    with pytest.raises(SelectionSnapshotBuildError, match="run key"):
         build_selection_snapshot(input_path, ROOT)
 
 
@@ -201,3 +303,25 @@ def test_ac8_snapshot_build_runs_through_installed_cli(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert json.loads(output.read_text(encoding="utf-8"))["rows"]
+
+
+def _digest(path: Path) -> str:
+    import hashlib
+
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _selection_input_for_release(tmp_path: Path, release_path: Path) -> Path:
+    input_path = tmp_path / "selection.yaml"
+    source = INPUT.read_text(encoding="utf-8")
+    old_path = "releases/dividend-events-2026-q3-v1/release.json"
+    old_digest = (
+        "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+    )
+    input_path.write_text(
+        source.replace(old_path, str(release_path)).replace(
+            old_digest, _digest(release_path)
+        ),
+        encoding="utf-8",
+    )
+    return input_path

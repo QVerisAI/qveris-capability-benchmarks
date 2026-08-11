@@ -3,22 +3,34 @@ from __future__ import annotations
 from datetime import date
 from typing import Literal
 
-from pydantic import Field, HttpUrl, model_validator
+from pydantic import Field, HttpUrl, StrictBool, model_validator
 
-from qveris_bench.models.base import EvidenceRef, FrozenModel, SemanticVersion, StableId
+from qveris_bench.models.base import (
+    EvidenceRef,
+    FrozenModel,
+    SemanticVersion,
+    Sha256,
+    StableId,
+)
+from qveris_bench.models.enums import AccessPathType, DisclosureLevel, LicenseStatus
 
-SelectionState = Literal[
-    "measured", "declared", "evidence_insufficient", "not_applicable"
-]
+MeasurementState = Literal["measured", "evidence_insufficient", "not_applicable"]
+PricingState = Literal["declared", "evidence_insufficient"]
 
 
 class ObservationWindow(FrozenModel):
     start: date
     end: date
 
+    @model_validator(mode="after")
+    def validate_order(self) -> ObservationWindow:
+        if self.start > self.end:
+            raise ValueError("observation window start must not follow end")
+        return self
+
 
 class GatewayMetricsSnapshot(FrozenModel):
-    state: SelectionState
+    state: MeasurementState
     measurement_boundary: Literal["qveris_gateway"] = "qveris_gateway"
     latency_sample_size: int = Field(ge=0)
     latency_min_ms: float | None = Field(default=None, ge=0)
@@ -27,22 +39,46 @@ class GatewayMetricsSnapshot(FrozenModel):
     cost_sample_size: int = Field(ge=0)
     median_credits: float | None = Field(default=None, ge=0)
     evidence_refs: tuple[EvidenceRef, ...] = ()
+    latency_evidence_refs: tuple[EvidenceRef, ...] = ()
+    cost_evidence_refs: tuple[EvidenceRef, ...] = ()
 
     @model_validator(mode="after")
     def validate_measurement(self) -> GatewayMetricsSnapshot:
         if self.state == "measured" and (
-            not self.evidence_refs or self.latency_sample_size == 0
+            not self.evidence_refs
+            or not self.latency_evidence_refs
+            or self.latency_sample_size == 0
         ):
             raise ValueError("measured gateway metrics require samples and evidence")
         if self.state == "not_applicable" and (
-            self.evidence_refs or self.latency_sample_size or self.cost_sample_size
+            self.evidence_refs
+            or self.latency_evidence_refs
+            or self.cost_evidence_refs
+            or self.latency_sample_size
+            or self.cost_sample_size
+            or self.latency_min_ms is not None
+            or self.latency_median_ms is not None
+            or self.latency_max_ms is not None
+            or self.median_credits is not None
         ):
             raise ValueError("not-applicable gateway metrics cannot carry observations")
+        if self.state == "evidence_insufficient" and (
+            self.evidence_refs
+            or self.latency_evidence_refs
+            or self.cost_evidence_refs
+            or self.latency_sample_size
+            or self.cost_sample_size
+            or self.latency_min_ms is not None
+            or self.latency_median_ms is not None
+            or self.latency_max_ms is not None
+            or self.median_credits is not None
+        ):
+            raise ValueError("insufficient gateway metrics cannot carry observations")
         return self
 
 
 class RunObservationsSnapshot(FrozenModel):
-    state: SelectionState
+    state: MeasurementState
     terminal_observations: int = Field(ge=0)
     planned_observations: int = Field(ge=0)
     evidence_refs: tuple[EvidenceRef, ...] = ()
@@ -59,7 +95,7 @@ class RunObservationsSnapshot(FrozenModel):
 
 
 class OfficialPricingSnapshot(FrozenModel):
-    state: SelectionState
+    state: PricingState
     pricing_id: StableId | None = None
     pricing_url: HttpUrl | None = None
     free_tier: str | None = None
@@ -90,11 +126,15 @@ class OfficialPricingSnapshot(FrozenModel):
         )
         if self.state == "declared" and any(item is None for item in required):
             raise ValueError("declared pricing requires complete provenance")
+        if self.state == "evidence_insufficient" and any(
+            item is not None for item in required
+        ):
+            raise ValueError("insufficient pricing cannot carry declarations")
         return self
 
 
 class SelectionObservation(FrozenModel):
-    state: SelectionState
+    state: MeasurementState
     passed: int | None = Field(default=None, ge=0)
     total: int | None = Field(default=None, ge=0)
     evidence_refs: tuple[EvidenceRef, ...] = ()
@@ -113,8 +153,10 @@ class SelectionObservation(FrozenModel):
             and self.passed > self.total
         ):
             raise ValueError("passed observations cannot exceed total")
-        if self.state == "evidence_insufficient" and self.evidence_refs:
-            raise ValueError("insufficient observation cannot carry evidence")
+        if self.state != "measured" and (
+            self.evidence_refs or self.passed is not None or self.total is not None
+        ):
+            raise ValueError("unmeasured observation cannot carry evidence or counts")
         return self
 
 
@@ -130,7 +172,7 @@ class MarketCoverageSnapshot(FrozenModel):
     tested_markets: tuple[str, ...] = ()
     tested_evidence_refs: tuple[EvidenceRef, ...] = ()
     sv_namespace: str = Field(min_length=1)
-    sv_state: SelectionState
+    sv_state: MeasurementState
     sv_verified_markets: tuple[str, ...] = ()
     sv_evidence_refs: tuple[EvidenceRef, ...] = ()
 
@@ -152,7 +194,7 @@ class SelectionSnapshotRow(FrozenModel):
     provider_id: StableId
     provider_name: str = Field(min_length=1)
     access_path_id: StableId
-    access_path_type: str = Field(min_length=1)
+    access_path_type: AccessPathType
     observation_window: ObservationWindow
     run_observations: RunObservationsSnapshot
     gateway_metrics: GatewayMetricsSnapshot
@@ -170,3 +212,33 @@ class SelectionSnapshot(FrozenModel):
     input_digests: dict[str, object]
     rows: tuple[SelectionSnapshotRow, ...] = Field(min_length=1)
     limitations: tuple[str, ...] = ()
+
+
+class ScopeValidationResult(FrozenModel):
+    provider_id: StableId
+    access_path_id: StableId
+    market: str = Field(pattern=r"^[A-Z]{2,8}$")
+    supported: StrictBool
+    evidence_ref: EvidenceRef
+
+
+class ScopeValidationSnapshot(FrozenModel):
+    snapshot_id: StableId
+    version: SemanticVersion
+    namespace: str = Field(pattern=r"^[A-Z][A-Z0-9]*(?:\.[A-Z0-9]+)+$")
+    observation_window: ObservationWindow
+    suite_fingerprint: Sha256
+    extractor_version: SemanticVersion
+    disclosure_level: DisclosureLevel
+    license_status: LicenseStatus
+    results: tuple[ScopeValidationResult, ...]
+
+
+class SelectionMarketCase(FrozenModel):
+    case_id: StableId
+    market: str = Field(pattern=r"^[A-Z]{2,8}$")
+
+
+class SelectionMarketScope(FrozenModel):
+    cap_id: StableId
+    cases: tuple[SelectionMarketCase, ...] = Field(min_length=1)

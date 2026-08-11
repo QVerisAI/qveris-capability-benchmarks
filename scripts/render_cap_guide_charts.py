@@ -354,6 +354,10 @@ def render_selection_tradeoff(
             }
         )
     rows.sort(key=lambda item: item["median_latency_ms"])
+    sample_sizes = {(item["latency_samples"], item["cost_samples"]) for item in rows}
+    if len(sample_sizes) != 1:
+        raise ValueError("selection chart requires consistent sample sizes")
+    latency_samples, cost_samples = next(iter(sample_sizes))
 
     output_dir.mkdir(parents=True, exist_ok=True)
     chart_name = "dividend-runtime-tradeoff.png"
@@ -406,8 +410,9 @@ def render_selection_tradeoff(
     fig.text(
         0.09,
         0.025,
-        f"QVeris gateway 小样本观测 · {edition} · 每条路径 latency n=6，"
-        "credits n=3；不是 Native API SLA 或官网价格",
+        f"QVeris gateway 小样本观测 · {edition} · 每条路径 latency "
+        f"n={latency_samples}，credits n={cost_samples}；"
+        "不是 Native API SLA 或官网价格",
         color="#475569",
         fontsize=9.5,
     )

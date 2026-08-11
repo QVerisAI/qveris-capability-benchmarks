@@ -8,22 +8,35 @@ from pathlib import Path
 from statistics import median
 from typing import Any
 
-from qveris_bench.models.enums import AccessPathType, CellState
+from pydantic import ValidationError
+
+from qveris_bench.models.enums import (
+    AccessPathType,
+    CellState,
+    DisclosureLevel,
+    LicenseStatus,
+    RunMode,
+)
 from qveris_bench.models.selection import (
     AgentInterfaceSnapshot,
     GatewayMetricsSnapshot,
     MarketCoverageSnapshot,
+    MeasurementState,
     ObservationWindow,
     OfficialPricingSnapshot,
     RunObservationsSnapshot,
+    ScopeValidationSnapshot,
+    SelectionMarketScope,
     SelectionObservation,
     SelectionSnapshot,
     SelectionSnapshotRow,
-    SelectionState,
 )
 from qveris_bench.providers.repository import ProviderRegistryRepository
 from qveris_bench.releases.canonical import release_digest
+from qveris_bench.releases.replay import ReleaseReplayError, replay_release_dir
 from qveris_bench.suites.fingerprint import canonical_json_bytes
+from qveris_bench.suites.loader import SuiteLoadError, load_cases, load_suite
+from qveris_bench.suites.matrix import canonical_run_key
 from qveris_bench.yaml_io import YamlDocumentError, load_yaml_mapping
 
 
@@ -51,9 +64,22 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
             )
         release = json.loads(release_bytes)
         providers_root = root / _string(config, "providers_root")
+        suite_path = root / _string(config, "suite")
         cases_path = root / _string(config, "cases")
-        cases = load_yaml_mapping(cases_path)
-    except (OSError, json.JSONDecodeError, YamlDocumentError, ValueError) as exc:
+        case_markets_path = root / _string(config, "case_markets")
+        suite = load_suite(suite_path)
+        cases = load_cases(cases_path)
+        case_markets = SelectionMarketScope.model_validate(
+            load_yaml_mapping(case_markets_path)
+        )
+    except (
+        OSError,
+        json.JSONDecodeError,
+        YamlDocumentError,
+        SuiteLoadError,
+        ValidationError,
+        ValueError,
+    ) as exc:
         if isinstance(exc, SelectionSnapshotBuildError):
             raise
         raise SelectionSnapshotBuildError(
@@ -61,14 +87,40 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         ) from exc
 
     cap_id = _string(config, "cap_id")
-    market_by_case = _mapping(config, "market_by_case")
-    case_roles = {
-        str(item["case_id"]): bool(item["negative_control"])
-        for item in cases.get("cases", [])
-        if isinstance(item, dict)
+    if cap_id != suite.cap_id:
+        raise SelectionSnapshotBuildError("selection CAP does not match suite CAP")
+    cases_by_id = {case.case_id: case for case in cases}
+    if set(cases_by_id) != set(suite.case_ids):
+        raise SelectionSnapshotBuildError("selection cases do not match suite cases")
+    if any(case.cap_id != cap_id for case in cases):
+        raise SelectionSnapshotBuildError("selection case belongs to another CAP")
+    case_roles = {case.case_id: case.negative_control for case in cases}
+    if case_markets.cap_id != cap_id:
+        raise SelectionSnapshotBuildError("market metadata belongs to another CAP")
+    market_by_case = {item.case_id: item.market for item in case_markets.cases}
+    expected_market_cases = {
+        case.case_id for case in cases if not case.negative_control
     }
+    if len(market_by_case) != len(case_markets.cases) or (
+        set(market_by_case) != expected_market_cases
+    ):
+        raise SelectionSnapshotBuildError(
+            "market metadata does not match positive cases"
+        )
     cells = [item for item in release.get("cells", []) if isinstance(item, dict)]
     evidence = [item for item in release.get("evidence", []) if isinstance(item, dict)]
+    _validate_release_projection(release, cells, evidence, suite.suite_id)
+    if (
+        release_path.name == "release.json"
+        and (release_path.parent / "run-plan.json").is_file()
+    ):
+        try:
+            replay_release_dir(
+                release_path.parent, expected_digest=actual_release_digest
+            )
+        except ReleaseReplayError as exc:
+            raise SelectionSnapshotBuildError(f"release replay failed: {exc}") from exc
+    cells = [item for item in cells if str(item.get("mode")) == RunMode.DIRECT.value]
     evidence_by_run_key = {str(item["run_key"]): item for item in evidence}
     registry = ProviderRegistryRepository(providers_root).list()
     registry_by_id = {item.provider_id: item for item in registry}
@@ -81,14 +133,20 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
 
     sv_spec = _mapping(config, "qveris_sv")
     sv_namespace = _string(sv_spec, "namespace")
-    sv_results, sv_digest = _load_sv_results(sv_spec, root, sv_namespace)
+    window = ObservationWindow.model_validate(_mapping(config, "observation_window"))
+    if suite.environment.get("as_of") != window.start.isoformat() or (
+        window.start != window.end
+    ):
+        raise SelectionSnapshotBuildError(
+            "observation window does not match suite as_of"
+        )
+    sv_results, sv_digest = _load_sv_results(sv_spec, root, sv_namespace, window)
     unknown_sv_identities = set(sv_results) - set(identity_cells)
     if unknown_sv_identities:
         provider_id, access_path_id = sorted(unknown_sv_identities)[0]
         raise SelectionSnapshotBuildError(
             f"unknown SV identity: {provider_id}/{access_path_id}"
         )
-    window = ObservationWindow.model_validate(_mapping(config, "observation_window"))
     rows: list[SelectionSnapshotRow] = []
     provider_digests: dict[str, str] = {}
     for (provider_id, access_path_id), scoped_cells in sorted(identity_cells.items()):
@@ -128,11 +186,14 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                 provider_id=provider_id,
                 provider_name=record.provider.official_name,
                 access_path_id=access_path_id,
-                access_path_type=access_path.path_type.value,
+                access_path_type=access_path.path_type,
                 observation_window=window,
                 run_observations=_run_observations(scoped_cells, refs),
                 gateway_metrics=_gateway_metrics(
-                    public_evidence, refs, is_qveris=is_qveris
+                    scoped_cells,
+                    evidence_by_run_key,
+                    case_roles,
+                    is_qveris=is_qveris,
                 ),
                 official_pricing=_pricing(
                     record.provider.official_pricing, access_path_id
@@ -162,6 +223,8 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
             "input": _sha256(input_path),
             "release": actual_release_digest,
             "cases": _sha256(cases_path),
+            "case_markets": _sha256(case_markets_path),
+            "suite": _sha256(suite_path),
             "providers": provider_digests,
             "qveris_sv": sv_digest,
         },
@@ -175,8 +238,9 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
 
 
 def _gateway_metrics(
-    evidence: list[dict[str, Any]],
-    refs: tuple[str, ...],
+    cells: list[dict[str, Any]],
+    evidence_by_run_key: dict[str, dict[str, Any]],
+    case_roles: dict[str, bool],
     *,
     is_qveris: bool,
 ) -> GatewayMetricsSnapshot:
@@ -186,16 +250,30 @@ def _gateway_metrics(
             latency_sample_size=0,
             cost_sample_size=0,
         )
+    latency_evidence = [
+        evidence_by_run_key[str(cell["run_key"])]
+        for cell in cells
+        if str(cell["run_key"]) in evidence_by_run_key
+    ]
+    cost_evidence = [
+        evidence_by_run_key[str(cell["run_key"])]
+        for cell in cells
+        if not case_roles.get(str(cell["case_id"]), False)
+        and str(cell.get("state")) == CellState.COMPLETED.value
+        and str(cell["run_key"]) in evidence_by_run_key
+    ]
     latencies = sorted(
         float(item["latency_ms"])
-        for item in evidence
+        for item in latency_evidence
         if isinstance(item.get("latency_ms"), (int, float))
     )
     costs = sorted(
         float(item["cost_credits"])
-        for item in evidence
+        for item in cost_evidence
         if isinstance(item.get("cost_credits"), (int, float))
     )
+    latency_refs = _public_refs(latency_evidence, field="latency_ms")
+    cost_refs = _public_refs(cost_evidence, field="cost_credits")
     return GatewayMetricsSnapshot(
         state="measured" if latencies else "evidence_insufficient",
         latency_sample_size=len(latencies),
@@ -204,7 +282,9 @@ def _gateway_metrics(
         latency_max_ms=max(latencies) if latencies else None,
         cost_sample_size=len(costs),
         median_credits=median(costs) if costs else None,
-        evidence_refs=refs if latencies else (),
+        evidence_refs=tuple(sorted(set(latency_refs + cost_refs))) if latencies else (),
+        latency_evidence_refs=latency_refs,
+        cost_evidence_refs=cost_refs,
     )
 
 
@@ -266,9 +346,7 @@ def _agent_interface(
         item for item in cells if case_roles.get(str(item["case_id"]), False)
     ]
     passed = sum(
-        str(item.get("state"))
-        in {CellState.COMPLETED.value, CellState.PROVIDER_NEGATIVE.value}
-        for item in negative_cells
+        str(item.get("state")) == CellState.COMPLETED.value for item in negative_cells
     )
     refs = tuple(
         sorted(
@@ -314,7 +392,7 @@ def _market_coverage(
         if evidence and evidence.get("public_digest"):
             refs.add(str(evidence["public_digest"]))
     if not sv_applicable:
-        sv_state: SelectionState = "not_applicable"
+        sv_state: MeasurementState = "not_applicable"
     elif sv_results:
         sv_state = "measured"
     else:
@@ -334,30 +412,87 @@ def _market_coverage(
 
 
 def _load_sv_results(
-    spec: dict[str, Any], root: Path, expected_namespace: str
+    spec: dict[str, Any],
+    root: Path,
+    expected_namespace: str,
+    expected_window: ObservationWindow,
 ) -> tuple[dict[tuple[str, str], list[dict[str, Any]]], str | None]:
     relative = spec.get("snapshot")
     if relative is None:
+        if spec.get("snapshot_digest") is not None:
+            raise SelectionSnapshotBuildError("QVeris SV digest requires a snapshot")
         return {}, None
     if not isinstance(relative, str) or not relative:
         raise SelectionSnapshotBuildError("qveris_sv.snapshot must be a path or null")
     path = root / relative
     try:
-        document = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        actual_digest = _sha256(path)
+        if actual_digest != spec.get("snapshot_digest"):
+            raise SelectionSnapshotBuildError("QVeris SV snapshot digest mismatch")
+        snapshot = ScopeValidationSnapshot.model_validate_json(path.read_bytes())
+    except (OSError, ValidationError) as exc:
         raise SelectionSnapshotBuildError(f"invalid QVeris SV snapshot: {exc}") from exc
-    if document.get("namespace") != expected_namespace:
+    if snapshot.namespace != expected_namespace:
         raise SelectionSnapshotBuildError("QVeris SV namespace mismatch")
+    if snapshot.observation_window != expected_window:
+        raise SelectionSnapshotBuildError("QVeris SV observation window mismatch")
+    if (
+        snapshot.disclosure_level is not DisclosureLevel.SANITIZED_PUBLIC
+        or snapshot.license_status is not LicenseStatus.CLEARED
+    ):
+        raise SelectionSnapshotBuildError("QVeris SV requires publishable provenance")
     results: dict[tuple[str, str], list[dict[str, Any]]] = {}
-    for item in document.get("results", []):
-        if not isinstance(item, dict):
-            raise SelectionSnapshotBuildError("QVeris SV results must be mappings")
-        identity = (str(item.get("provider_id")), str(item.get("access_path_id")))
-        evidence_ref = item.get("evidence_ref")
-        if not isinstance(evidence_ref, str) or not evidence_ref.startswith("sha256:"):
-            raise SelectionSnapshotBuildError("QVeris SV result requires evidence_ref")
-        results.setdefault(identity, []).append(item)
-    return results, _sha256(path)
+    for result in snapshot.results:
+        identity = (result.provider_id, result.access_path_id)
+        results.setdefault(identity, []).append(result.model_dump(mode="json"))
+    return results, actual_digest
+
+
+def _validate_release_projection(
+    release: dict[str, Any],
+    cells: list[dict[str, Any]],
+    evidence: list[dict[str, Any]],
+    suite_id: str,
+) -> None:
+    release_metadata = release.get("release")
+    if not isinstance(release_metadata, dict):
+        raise SelectionSnapshotBuildError("release metadata is missing")
+    fingerprint = str(release_metadata.get("suite_fingerprint", ""))
+    for cell in cells:
+        try:
+            expected = canonical_run_key(
+                suite_id,
+                fingerprint,
+                case_id=str(cell["case_id"]),
+                provider_id=str(cell["provider_id"]),
+                access_path_id=str(cell["access_path_id"]),
+                mode=RunMode(str(cell["mode"])),
+                round_number=int(cell["round"]),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise SelectionSnapshotBuildError("invalid release cell identity") from exc
+        if cell.get("run_key") != expected:
+            raise SelectionSnapshotBuildError("run key does not match release identity")
+    applicable = {
+        str(cell["run_key"])
+        for cell in cells
+        if cell.get("applicable") and str(cell.get("mode")) == RunMode.DIRECT.value
+    }
+    evidence_keys = [str(item.get("run_key")) for item in evidence]
+    if len(evidence_keys) != len(set(evidence_keys)) or applicable != set(
+        evidence_keys
+    ):
+        raise SelectionSnapshotBuildError("release evidence topology mismatch")
+
+
+def _public_refs(evidence: list[dict[str, Any]], *, field: str) -> tuple[str, ...]:
+    return tuple(
+        sorted(
+            str(item["public_digest"])
+            for item in evidence
+            if isinstance(item.get(field), (int, float)) and item.get("public_digest")
+        )
+    )
 
 
 def _sha256(path: Path) -> str:

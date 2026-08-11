@@ -9,6 +9,7 @@ import pytest
 import yaml
 from PIL import Image
 
+from qveris_bench.profiles.selection import build_selection_snapshot
 from scripts.render_cap_guide_charts import (
     render_dividend_evidence_heatmap,
     render_release_outcomes,
@@ -177,6 +178,18 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 
 
+def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(
+    tmp_path: Path,
+) -> None:
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    snapshot["rows"][0]["gateway_metrics"]["latency_sample_size"] = 5
+    path = tmp_path / "selection.json"
+    path.write_text(json.dumps(snapshot), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="consistent sample sizes"):
+        render_selection_tradeoff(path, tmp_path / "charts")
+
+
 def test_manifest_uses_public_release_as_source_of_truth() -> None:
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
@@ -191,6 +204,12 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert snapshot.is_file()
     assert manifest["selection_snapshot"]["digest"] == (
         f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
+    )
+    snapshot_input = ROOT / manifest["artifacts"]["selection_snapshot_input"]
+    fresh = build_selection_snapshot(snapshot_input, ROOT)
+    assert fresh.json_bytes == snapshot.read_bytes()
+    assert manifest["selection_snapshot"]["input_digest"] == (
+        f"sha256:{hashlib.sha256(snapshot_input.read_bytes()).hexdigest()}"
     )
 
 
@@ -214,6 +233,31 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     assert "861 ms / 0.100 credits" in article
     assert "综合 AI 友好度" not in article
     assert "已验证全球市场覆盖" not in article
+
+
+def test_article_selection_facts_match_every_snapshot_row() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    aliases = {"Massive Stocks": "Massive"}
+
+    for row in snapshot["rows"]:
+        provider = aliases.get(row["provider_name"], row["provider_name"])
+        assert provider in article
+        metrics = row["gateway_metrics"]
+        if metrics["state"] == "measured":
+            runtime = (
+                f"{metrics['latency_median_ms']:.0f} ms / "
+                f"{metrics['median_credits']:.3f} credits"
+            )
+            assert runtime in article
+        pricing = row["official_pricing"]
+        if pricing["state"] == "declared":
+            assert pricing["pricing_url"] in article
+            assert pricing["paid_plans"] in article
+        for market in row["market_coverage"]["tested_markets"]:
+            assert re.search(
+                rf"\| [^\n]*{re.escape(provider)}[^\n]*\| {market} ·", article
+            )
 
 
 def test_article_embeds_only_decision_useful_snapshot_chart() -> None:

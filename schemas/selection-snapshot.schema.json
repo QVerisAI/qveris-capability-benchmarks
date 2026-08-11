@@ -1,5 +1,17 @@
 {
   "$defs": {
+    "AccessPathType": {
+      "enum": [
+        "native_mcp",
+        "official_openapi",
+        "official_api",
+        "official_sdk",
+        "benchmark_wrapper",
+        "qveris_connector"
+      ],
+      "title": "AccessPathType",
+      "type": "string"
+    },
     "AgentInterfaceSnapshot": {
       "additionalProperties": false,
       "properties": {
@@ -32,6 +44,15 @@
     "GatewayMetricsSnapshot": {
       "additionalProperties": false,
       "properties": {
+        "cost_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Cost Evidence Refs",
+          "type": "array"
+        },
         "cost_sample_size": {
           "minimum": 0,
           "title": "Cost Sample Size",
@@ -44,6 +65,15 @@
             "type": "string"
           },
           "title": "Evidence Refs",
+          "type": "array"
+        },
+        "latency_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Latency Evidence Refs",
           "type": "array"
         },
         "latency_max_ms": {
@@ -112,7 +142,6 @@
         "state": {
           "enum": [
             "measured",
-            "declared",
             "evidence_insufficient",
             "not_applicable"
           ],
@@ -148,7 +177,6 @@
         "sv_state": {
           "enum": [
             "measured",
-            "declared",
             "evidence_insufficient",
             "not_applicable"
           ],
@@ -347,10 +375,8 @@
         },
         "state": {
           "enum": [
-            "measured",
             "declared",
-            "evidence_insufficient",
-            "not_applicable"
+            "evidence_insufficient"
           ],
           "title": "State",
           "type": "string"
@@ -408,7 +434,6 @@
         "state": {
           "enum": [
             "measured",
-            "declared",
             "evidence_insufficient",
             "not_applicable"
           ],
@@ -457,7 +482,6 @@
         "state": {
           "enum": [
             "measured",
-            "declared",
             "evidence_insufficient",
             "not_applicable"
           ],
@@ -495,9 +519,7 @@
           "type": "string"
         },
         "access_path_type": {
-          "minLength": 1,
-          "title": "Access Path Type",
-          "type": "string"
+          "$ref": "#/$defs/AccessPathType"
         },
         "agent_interface": {
           "$ref": "#/$defs/AgentInterfaceSnapshot"

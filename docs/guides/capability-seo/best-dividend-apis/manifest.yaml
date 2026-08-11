@@ -38,7 +38,8 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  digest: sha256:0e1028d8ad303df2ebb619f063682b3b7d8531be014169ac139554c7ed4af66a
+  input_digest: sha256:ced4a77c8647e67a6cd901f780ec138c47c6b146e992ac55581d9ee0260da297
+  digest: sha256:11d169f1565b4e72d49c4e06f2a4dcde6ffebd3fd8be17b7b2d7707d1baa62e6
 seo:
   title: "2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南"
   meta_description: "2026 年实测 6 家分红数据 API：对比事件字段、无效代码、QVeris 延迟与 credits、官方价格、市场证据及 Agent 接入风险，附公开证据与复测方法。"
@@ -69,6 +70,7 @@ seo:
 artifacts:
   article: docs/guides/best-dividend-apis.md
   cases: cap_packs/dividend_events/cases.yaml
+  case_markets: cap_packs/dividend_events/selection-markets.yaml
   release: releases/dividend-events-2026-q3-v1/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
