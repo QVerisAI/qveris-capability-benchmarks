@@ -79,6 +79,23 @@ def test_ac7_negative_control_distinguishes_empty_from_fabricated_rows() -> None
     )
 
 
+def test_ac7_explicit_provider_rejection_completes_the_negative_control() -> None:
+    result = evaluate_dividend_document(
+        "eodhd",
+        {
+            "result": {"status_code": 404, "data": "Symbol not found"},
+            "success": False,
+        },
+        _case("invalid-dividend-symbol"),
+        PACK / "observation-schema.yaml",
+        "sha256:" + "a" * 64,
+    )
+
+    assert result.state is CellState.COMPLETED
+    assert result.facts == {"validation_error": "invalid symbol or no dividend events"}
+    assert result.failure_attribution is None
+
+
 def test_ac7_malformed_response_stays_a_benchmark_error() -> None:
     with pytest.raises(DividendDirectError, match="extract"):
         evaluate_dividend_document(

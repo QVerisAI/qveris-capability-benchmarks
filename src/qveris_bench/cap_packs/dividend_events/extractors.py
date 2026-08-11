@@ -43,6 +43,10 @@ def extract_dividend_event(
     negative_control: bool = False,
 ) -> dict[str, Any]:
     normalized = _unwrap_gateway(document)
+    if negative_control and _is_explicit_provider_rejection(
+        provider_id, document, normalized
+    ):
+        return {"validation_error": "invalid symbol or no dividend events"}
     rows, metadata = _provider_rows(provider_id, normalized)
     if negative_control:
         if rows:
@@ -88,6 +92,50 @@ def _unwrap_gateway(document: object) -> object:
     if isinstance(result, dict) and "data" in result:
         return result["data"]
     return document
+
+
+def _is_explicit_provider_rejection(
+    provider_id: str, document: object, normalized: object
+) -> bool:
+    if provider_id == "eodhd":
+        return _gateway_status(document) >= 400 and isinstance(normalized, str)
+    if provider_id == "twelve-data":
+        if _gateway_status(document) < 400 or not isinstance(normalized, dict):
+            return False
+        return normalized.get("status") == "error" and isinstance(
+            normalized.get("message"), str
+        )
+    if provider_id == "hangseng" and isinstance(normalized, dict):
+        inner = normalized.get("data")
+        if not isinstance(inner, dict):
+            return False
+        code = _integer_code(inner.get("code"))
+        return (
+            code is not None
+            and code >= 400
+            and isinstance(inner.get("msg"), str)
+            and inner.get("data") == {}
+        )
+    return False
+
+
+def _gateway_status(document: object) -> int:
+    if not isinstance(document, dict):
+        return 0
+    result = document.get("result")
+    if not isinstance(result, dict):
+        return 0
+    return _integer_code(result.get("status_code")) or 0
+
+
+def _integer_code(value: object) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str) and value.isdigit():
+        return int(value)
+    return None
 
 
 def _provider_rows(

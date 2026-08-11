@@ -191,3 +191,70 @@ def test_ac5_negative_control_requires_an_explicit_empty_result() -> None:
             end_date=None,
             negative_control=True,
         )
+
+
+@pytest.mark.parametrize(
+    ("provider_id", "document"),
+    [
+        (
+            "eodhd",
+            {
+                "result": {"status_code": 404, "data": "Symbol not found"},
+                "success": False,
+            },
+        ),
+        (
+            "twelve-data",
+            {
+                "result": {
+                    "status_code": 4042,
+                    "data": {
+                        "code": 404,
+                        "message": "symbol parameter is invalid",
+                        "status": "error",
+                    },
+                }
+            },
+        ),
+        (
+            "hangseng",
+            {
+                "result": {
+                    "status_code": 200,
+                    "data": {
+                        "success": True,
+                        "code": 0,
+                        "data": {
+                            "msg": "invalid stock code",
+                            "code": "500",
+                            "data": {},
+                        },
+                    },
+                }
+            },
+        ),
+    ],
+)
+def test_ac5_negative_control_accepts_explicit_provider_rejection(
+    provider_id: str, document: object
+) -> None:
+    assert extract_dividend_event(
+        provider_id,
+        document,
+        symbol="NOTASTOCK",
+        start_date=None,
+        end_date=None,
+        negative_control=True,
+    ) == {"validation_error": "invalid symbol or no dividend events"}
+
+
+def test_ac5_negative_control_rejects_an_unknown_malformed_response() -> None:
+    with pytest.raises(DividendExtractionError):
+        extract_dividend_event(
+            "twelve-data",
+            {"message": "unknown response"},
+            symbol="NOTASTOCK",
+            start_date=None,
+            end_date=None,
+            negative_control=True,
+        )

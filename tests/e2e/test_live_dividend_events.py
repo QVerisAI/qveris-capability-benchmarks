@@ -24,6 +24,7 @@ from qveris_bench.execution.qveris import (
     QverisToolClient,
     execute_discovered_tool,
     gateway_metrics,
+    public_response_shape,
 )
 from qveris_bench.execution.streamable_mcp import streamable_mcp_session
 from qveris_bench.models.enums import AccessPathType, CellState
@@ -102,6 +103,48 @@ def _public_terminal_payload(
     ).encode()
 
 
+def _public_diagnostic_payload(
+    binding: DirectBinding,
+    run_key: str,
+    document: object,
+    raw_digest: str | None,
+    error_types: tuple[str, ...],
+) -> bytes:
+    return (
+        json.dumps(
+            {
+                "binding_id": binding.binding_id,
+                "run_key": run_key,
+                "provider_id": binding.provider_id,
+                "access_path_id": binding.access_path_id,
+                "transport": binding.transport,
+                "raw_digest": raw_digest,
+                "response_shape": public_response_shape(document, depth=8),
+                "error_types": list(error_types),
+                "redaction_status": "structure_only",
+                "github_run_id": os.environ.get("GITHUB_RUN_ID"),
+                "github_sha": os.environ.get("GITHUB_SHA"),
+            },
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode()
+
+
+def _error_types(error: BaseException) -> tuple[str, ...]:
+    if isinstance(error, BaseExceptionGroup):
+        return tuple(
+            sorted(
+                {
+                    nested
+                    for child in error.exceptions
+                    for nested in _error_types(child)
+                }
+            )
+        )
+    return (type(error).__name__,)
+
+
 @pytest.mark.skipif(
     os.environ.get("RUN_LIVE_DIVIDEND_EVENTS") != "1",
     reason="live dividend events run is disabled",
@@ -125,6 +168,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
     )
     compiled, case, cell = _selected_cell(binding, int(round_value))
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
+    public_store = PublicArtifactStore(public_root)
     raw_store = RawArtifactStore(tmp_path / "raw", ROOT)
 
     async def run():
@@ -162,7 +206,30 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         document = json.loads(result.raw_path.read_text())
         return result, document, None, None
 
-    adapter_result, document, latency_ms, cost_credits = asyncio.run(run())
+    try:
+        adapter_result, document, latency_ms, cost_credits = asyncio.run(run())
+    except Exception as exc:
+        public_store.persist(
+            f"{binding.binding_id}-round-{round_value}-diagnostic",
+            _public_diagnostic_payload(
+                binding,
+                cell.run_key,
+                None,
+                None,
+                _error_types(exc),
+            ),
+        )
+        raise
+    public_store.persist(
+        f"{binding.binding_id}-round-{round_value}-diagnostic",
+        _public_diagnostic_payload(
+            binding,
+            cell.run_key,
+            document,
+            adapter_result.raw_digest,
+            (),
+        ),
+    )
     terminal = evaluate_dividend_document(
         str(binding.provider_id),
         document,
@@ -180,7 +247,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         latency_ms,
         cost_credits,
     )
-    public = PublicArtifactStore(public_root).persist(
+    public = public_store.persist(
         f"{binding.binding_id}-round-{round_value}-terminal", content
     )
     assert public.digest != adapter_result.raw_digest
@@ -207,3 +274,50 @@ def test_ac8_public_terminal_excludes_credentials_and_request_parameters() -> No
     assert "Authorization" not in content
     assert "query" not in content
     assert "贵州茅台" not in content
+
+
+def test_ac8_public_diagnostic_exposes_only_response_shape() -> None:
+    binding = next(
+        item
+        for item in load_direct_binding_registry(REGISTRY_PATH).bindings
+        if item.binding_id == "ifind-cn-600519-dividends"
+    )
+    content = _public_diagnostic_payload(
+        binding,
+        "run-key",
+        {
+            "content": [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "code": 1,
+                            "data": {"rows": [{"symbol": "600519.SH"}]},
+                        }
+                    ),
+                }
+            ]
+        },
+        "sha256:" + "a" * 64,
+        (),
+    ).decode()
+
+    assert "response_shape" in content
+    assert "rows" in content
+    assert "600519.SH" not in content
+    assert "Authorization" not in content
+    assert "贵州茅台" not in content
+
+
+def test_ac8_public_transport_failure_exposes_only_exception_types() -> None:
+    binding = load_direct_binding_registry(REGISTRY_PATH).bindings[0]
+    content = _public_diagnostic_payload(
+        binding,
+        "run-key",
+        None,
+        None,
+        ("ReadTimeout",),
+    ).decode()
+
+    assert '"error_types": ["ReadTimeout"]' in content
+    assert "private timeout message" not in content

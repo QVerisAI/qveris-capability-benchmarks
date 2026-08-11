@@ -109,7 +109,7 @@ def test_ac_qveris_tool_description_uses_only_frozen_ids(tmp_path: Path) -> None
     asyncio.run(run())
 
 
-def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
+def test_ac_qveris_direct_execution_verifies_a_frozen_tool_absent_from_ranking(
     tmp_path: Path,
 ) -> None:
     async def run() -> None:
@@ -117,7 +117,15 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
 
         def handler(request: httpx.Request) -> httpx.Response:
             calls.append(request)
-            return httpx.Response(200, json={"search_id": "search-123", "results": []})
+            if request.url.path == "/api/v1/search":
+                return httpx.Response(
+                    200, json={"search_id": "search-123", "results": []}
+                )
+            if request.url.path == "/api/v1/tools/by-ids":
+                return httpx.Response(
+                    200, json={"results": [{"tool_id": "frozen-tool"}]}
+                )
+            return httpx.Response(200, json={"result": {"data": []}})
 
         client = QverisToolClient(
             httpx.AsyncClient(transport=httpx.MockTransport(handler)),
@@ -125,18 +133,58 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_discovery(
             "controlled-key",
         )
         try:
-            with pytest.raises(QverisProtocolError, match="not returned by discovery"):
+            execution = await execute_discovered_tool(
+                client,
+                "search",
+                "ETF holdings",
+                "frozen-tool",
+                {"symbol": "SPY"},
+            )
+        finally:
+            await client.close()
+
+        assert execution.result.raw_path.exists()
+        assert [request.url.path for request in calls] == [
+            "/api/v1/search",
+            "/api/v1/tools/by-ids",
+            "/api/v1/tools/execute",
+        ]
+
+    asyncio.run(run())
+
+
+def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_exact_lookup(
+    tmp_path: Path,
+) -> None:
+    async def run() -> None:
+        calls: list[httpx.Request] = []
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            calls.append(request)
+            if request.url.path == "/api/v1/search":
+                return httpx.Response(
+                    200, json={"search_id": "search-123", "results": []}
+                )
+            return httpx.Response(200, json={"results": []})
+
+        client = QverisToolClient(
+            httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            _store(tmp_path),
+            "controlled-key",
+        )
+        try:
+            with pytest.raises(QverisProtocolError, match="exact tool lookup"):
                 await execute_discovered_tool(
                     client,
                     "search",
                     "ETF holdings",
-                    "frozen-tool",
+                    "missing-tool",
                     {"symbol": "SPY"},
                 )
         finally:
             await client.close()
 
-        assert len(calls) == 1, "AC Direct execution must not call an unbound tool"
+        assert len(calls) == 2
 
     asyncio.run(run())
 
@@ -238,3 +286,40 @@ def test_ac_qveris_response_shape_exposes_only_allowlisted_error_structure() -> 
     assert "invalid_symbol" not in repr(shape)
     assert "NOTANETF" not in repr(shape)
     assert "private-request-id" not in repr(shape)
+
+
+def test_ac_qveris_response_shape_exposes_mcp_structure_without_values() -> None:
+    shape = public_response_shape(
+        {
+            "content": [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "code": 1,
+                            "msg": "success",
+                            "data": json.dumps(
+                                {
+                                    "rows": [
+                                        {
+                                            "symbol": "600519.SH",
+                                            "amount": 28.02,
+                                        }
+                                    ]
+                                }
+                            ),
+                        }
+                    ),
+                }
+            ],
+            "is_error": False,
+        },
+        depth=8,
+    )
+
+    rendered = repr(shape)
+    assert "content" in rendered
+    assert "rows" in rendered
+    assert "symbol" in rendered
+    assert "600519.SH" not in rendered
+    assert "28.02" not in rendered

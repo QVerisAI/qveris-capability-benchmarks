@@ -16,6 +16,7 @@ _PUBLIC_RESPONSE_KEYS = frozenset(
     {
         "code",
         "composition",
+        "content",
         "c",
         "data",
         "d",
@@ -25,14 +26,25 @@ _PUBLIC_RESPONSE_KEYS = frozenset(
         "error_message",
         "holdings",
         "h",
+        "is_error",
         "l",
         "message",
+        "meta",
+        "msg",
         "o",
         "pc",
+        "records",
         "result",
+        "result_type",
         "results",
+        "rows",
         "status",
+        "subCode",
+        "subMsg",
         "symbol",
+        "table",
+        "tables",
+        "text",
         "ticker",
         "t",
         "weight",
@@ -147,11 +159,28 @@ async def execute_discovered_tool(
         if isinstance(item, dict) and isinstance(item.get("tool_id"), str)
     }
     if tool_id not in discovered_ids:
-        raise QverisProtocolError("tool_id was not returned by discovery")
+        description = await client.describe_tools(
+            f"{search_artifact_id}-describe", (tool_id,)
+        )
+        described_ids = _tool_ids(_document(description))
+        if tool_id not in described_ids:
+            raise QverisProtocolError("tool_id was not returned by exact tool lookup")
     result = await client.execute(
         f"{search_artifact_id}-execute", tool_id, search.search_id, parameters
     )
     return QverisDirectExecution(search=search, result=result)
+
+
+def _tool_ids(document: dict[str, Any]) -> set[str]:
+    for key in ("results", "tools"):
+        values = document.get(key)
+        if isinstance(values, list):
+            return {
+                item["tool_id"]
+                for item in values
+                if isinstance(item, dict) and isinstance(item.get("tool_id"), str)
+            }
+    return set()
 
 
 def _document(result: AdapterResult) -> dict[str, Any]:
