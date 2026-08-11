@@ -14,6 +14,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
 from matplotlib.colors import ListedColormap
+from matplotlib.patches import Patch
 
 try:
     from chart_metrics import direct_metrics_by_access_path
@@ -60,14 +61,6 @@ _DIVIDEND_PROVIDERS = {
     "eodhd": "EODHD",
     "massive-stocks": "Massive",
 }
-_STATUS_STYLE = {
-    "observed": ("●", "#12B76A"),
-    "absent": ("—", "#94A3B8"),
-    "blocked": ("△", "#F79009"),
-    "unmeasured": ("◇", "#2F78AD"),
-}
-
-
 def _directory_digest(path: Path) -> str:
     digest = hashlib.sha256()
     for item in sorted(path.glob("*.json")):
@@ -186,104 +179,7 @@ def _dividend_evidence_rows(
     return rows
 
 
-def _render_evidence_matrix_svg(
-    *,
-    title: str,
-    columns: list[tuple[str, str]],
-    rows: list[dict[str, object]],
-    row_key: str,
-) -> str:
-    parts = [
-        (
-            '<svg xmlns="http://www.w3.org/2000/svg" width="760" height="900" '
-            'viewBox="0 0 760 900" role="img" aria-labelledby="title desc">'
-        ),
-        f"<title id=\"title\">{title}</title>",
-        (
-            '<desc id="desc">六条 Provider 与 Access Path 的固定样本公开证据状态；'
-            "不代表全市场能力。</desc>"
-        ),
-        (
-            '<defs><linearGradient id="header" x1="0" y1="0" x2="1" y2="0">'
-            '<stop offset="0" stop-color="#143F74"/>'
-            '<stop offset="0.58" stop-color="#2F78AD"/>'
-            '<stop offset="1" stop-color="#6EB0C2"/></linearGradient><style>'
-            'text{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",'
-            '"Noto Sans SC",sans-serif}'
-            ".title{fill:#fff;font-size:34px;font-weight:800}"
-            ".subtitle{fill:#E2E8F0;font-size:24px}"
-            ".provider{fill:#0F172A;font-size:23px;font-weight:800}"
-            ".meta{fill:#475569;font-size:19px}"
-            ".head{fill:#143F74;font-size:23px;font-weight:800}"
-            ".symbol{font-size:34px;font-weight:800}"
-            ".legend{fill:#334155;font-size:22px}"
-            "</style></defs>"
-        ),
-        (
-            '<rect width="760" height="900" fill="#F8FAFC"/>'
-            '<rect width="760" height="155" fill="url(#header)"/>'
-        ),
-        f'<text x="38" y="58" class="title">{title}</text>',
-        (
-            '<text x="38" y="103" class="subtitle">'
-            "6 条 Provider × Access Path · 每条适用路径 3 轮</text>"
-        ),
-        '<text x="38" y="138" class="subtitle">固定样本证据 · 不代表全市场能力</text>',
-        (
-            '<text x="38" y="190" class="legend">'
-            '<tspan fill="#12B76A" font-weight="800">●</tspan> 已观察　'
-            '<tspan fill="#F79009" font-weight="800">△</tspan> 阻断</text>'
-        ),
-        (
-            '<text x="38" y="225" class="legend">'
-            '<tspan fill="#94A3B8" font-weight="800">—</tspan> 未观察/未发布　'
-            '<tspan fill="#2F78AD" font-weight="800">◇</tspan> 未独立测量</text>'
-        ),
-        (
-            '<rect x="24" y="250" width="712" height="568" rx="16" '
-            'fill="#FFFFFF" stroke="#E2E8F0"/>'
-            '<rect x="24" y="250" width="712" height="88" rx="16" '
-            'fill="#F1F5F9"/>'
-        ),
-        (
-            '<text x="132" y="287" text-anchor="middle" class="head">'
-            'Provider</text><text x="132" y="317" text-anchor="middle" '
-            'class="head">Access Path · 样本</text>'
-        ),
-    ]
-    for center, (first, second) in zip((305, 425, 545, 665), columns, strict=True):
-        parts.append(
-            f'<text x="{center}" y="287" text-anchor="middle" class="head">'
-            f'{first}</text><text x="{center}" y="317" text-anchor="middle" '
-            f'class="head">{second}</text>'
-        )
-    parts.append(
-        '<g stroke="#E2E8F0"><path '
-        'd="M240 250 V818 M365 250 V818 M485 250 V818 M605 250 V818"/>'
-        '<path d="M24 338 H736 M24 418 H736 M24 498 H736 M24 578 H736 '
-        'M24 658 H736 M24 738 H736"/></g>'
-    )
-    for index, row in enumerate(rows):
-        top = 338 + index * 80
-        parts.append(
-            f'<text x="38" y="{top + 31}" class="provider">'
-            f'{row["provider"]}</text><text x="38" y="{top + 61}" '
-            f'class="meta">{row["meta"]}</text>'
-        )
-        for center, status in zip((305, 425, 545, 665), row[row_key], strict=True):
-            symbol, color = _STATUS_STYLE[status]
-            parts.append(
-                f'<text x="{center}" y="{top + 52}" text-anchor="middle" '
-                f'class="symbol" fill="{color}">{symbol}</text>'
-            )
-    parts.append(
-        '<text x="380" y="864" text-anchor="middle" class="legend">'
-        "灰色不是能力否定；橙色记录不可直接采信</text></svg>\n"
-    )
-    return "".join(parts)
-
-
-def render_dividend_evidence_matrices(
+def render_dividend_evidence_heatmap(
     release_dir: Path,
     evidence_dir: Path,
     output_dir: Path,
@@ -292,40 +188,130 @@ def render_dividend_evidence_matrices(
 ) -> dict[str, object]:
     release_path = release_dir / "release.json"
     rows = _dividend_evidence_rows(release_path, evidence_dir)
-    charts = {
-        "dividend-core-evidence.svg": _render_evidence_matrix_svg(
-            title="Dividend Event 核心可用性证据",
-            columns=[
-                ("单次金额", "语义"),
-                ("除权除息", "日期"),
-                ("无效", "symbol"),
-                ("证券身份", "验证"),
-            ],
-            rows=rows,
-            row_key="core",
-        ),
-        "dividend-field-evidence.svg": _render_evidence_matrix_svg(
-            title="Dividend Event 响应字段证据",
-            columns=[
-                ("响应内", "币种"),
-                ("公告", "日期"),
-                ("登记", "日期"),
-                ("支付", "日期"),
-            ],
-            rows=rows,
-            row_key="fields",
-        ),
+    columns = [
+        "单次金额\n语义",
+        "除权除息日",
+        "无效 symbol\n处理",
+        "证券身份\n一致性",
+        "响应内\n币种",
+        "公告日",
+        "登记日",
+        "支付日",
+    ]
+    status_values = {"absent": 0, "unmeasured": 1, "blocked": 2, "observed": 3}
+    status_text = {
+        "absent": "未观察",
+        "unmeasured": "未独立\n测量",
+        "blocked": "阻断",
+        "observed": "3/3",
     }
+    matrix_statuses = [row["core"] + row["fields"] for row in rows]
+    matrix = [
+        [status_values[status] for status in row_statuses]
+        for row_statuses in matrix_statuses
+    ]
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    for name, content in charts.items():
-        (output_dir / name).write_text(content, encoding="utf-8")
+    chart_name = "dividend-evidence-heatmap.png"
+    chart_path = output_dir / chart_name
+    colors = ["#F1F5F9", "#DCEAF2", "#F79009", "#12B76A"]
+    fig, ax = plt.subplots(figsize=(14, 7.6), facecolor="#FFFFFF")
+    ax.set_facecolor("#FFFFFF")
+    ax.imshow(matrix, cmap=ListedColormap(colors), vmin=0, vmax=3, aspect="auto")
+    ax.set_xticks(range(len(columns)))
+    ax.set_xticklabels(columns, fontsize=12, color="#334155")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(
+        [f'{row["provider"]}\n{row["meta"]}' for row in rows],
+        fontsize=11,
+        color="#334155",
+    )
+    for row_index, row_statuses in enumerate(matrix_statuses):
+        for column_index, status in enumerate(row_statuses):
+            label = status_text[status]
+            if status == "blocked" and rows[row_index]["provider"] == "恒生聚源":
+                label = "身份\n阻断"
+            ax.text(
+                column_index,
+                row_index,
+                label,
+                ha="center",
+                va="center",
+                fontsize=11,
+                fontweight="bold",
+                color="#0F172A",
+            )
+    ax.axvline(3.5, color="#FFFFFF", linewidth=5)
+    ax.text(
+        0.25,
+        1.035,
+        "核心可用性",
+        transform=ax.transAxes,
+        ha="center",
+        color="#143F74",
+        fontsize=13,
+        fontweight="bold",
+    )
+    ax.text(
+        0.75,
+        1.035,
+        "响应字段丰富度",
+        transform=ax.transAxes,
+        ha="center",
+        color="#143F74",
+        fontsize=13,
+        fontweight="bold",
+    )
+    ax.set_title(
+        "6 条 Access Path 的 Dividend Event 证据并不相同",
+        color="#143F74",
+        fontsize=20,
+        fontweight="bold",
+        pad=52,
+    )
+    for spine in ax.spines.values():
+        spine.set_color("#E2E8F0")
+    ax.tick_params(length=0)
+    ax.set_xticks([index - 0.5 for index in range(1, len(columns))], minor=True)
+    ax.set_yticks([index - 0.5 for index in range(1, len(rows))], minor=True)
+    ax.grid(which="minor", color="#FFFFFF", linewidth=3)
+    ax.tick_params(which="minor", bottom=False, left=False)
+    legend = [
+        Patch(facecolor="#12B76A", label="3 轮均观察到"),
+        Patch(facecolor="#F79009", label="语义或身份阻断"),
+        Patch(facecolor="#DCEAF2", label="未独立测量"),
+        Patch(facecolor="#F1F5F9", edgecolor="#E2E8F0", label="未观察 / 未发布"),
+    ]
+    ax.legend(
+        handles=legend,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.17),
+        ncol=4,
+        frameon=False,
+        fontsize=11,
+    )
+    fig.text(
+        0.08,
+        0.025,
+        "数据来源：QVeris Research，2026-08-11；灰色不代表供应商没有该能力",
+        color="#475569",
+        fontsize=10.5,
+    )
+    fig.subplots_adjust(left=0.22, right=0.98, top=0.78, bottom=0.24)
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    chart_data = {
+        "scope": "固定样本证据，不代表全市场能力",
+        "columns": columns,
+        "rows": rows,
+    }
     manifest: dict[str, object] = {
         "release_id": json.loads(release_path.read_text(encoding="utf-8"))[
             "release"
         ]["release_id"],
-        "charts": {
-            name: _sha256_identity(output_dir / name) for name in sorted(charts)
-        },
+        "charts": {chart_name: _sha256_identity(chart_path)},
+        "data": chart_data,
         "input_digests": {
             "release": _sha256_identity(release_path),
             "public_evidence": _directory_digest(evidence_dir),

@@ -1,8 +1,118 @@
 {
   "release_id": "dividend-events-2026-q3-v1",
   "charts": {
-    "dividend-core-evidence.svg": "sha256:06b2b3f2fa9b5defb597d898b9e811913e82da8396a3a8b201fa81a1d32e93d9",
-    "dividend-field-evidence.svg": "sha256:5052cfe79565be4b065804ae3f2cbda10cf2106f0aa3860d36a017f1c8a63f37"
+    "dividend-evidence-heatmap.png": "sha256:b89c930fbb98f8690c6684aaa76be8d6e4860b6dac134c3696cd462f7b0e20aa"
+  },
+  "data": {
+    "scope": "固定样本证据，不代表全市场能力",
+    "columns": [
+      "单次金额\n语义",
+      "除权除息日",
+      "无效 symbol\n处理",
+      "证券身份\n一致性",
+      "响应内\n币种",
+      "公告日",
+      "登记日",
+      "支付日"
+    ],
+    "rows": [
+      {
+        "provider": "恒生聚源",
+        "meta": "QVeris · A 股 · 600519.SH",
+        "core": [
+          "blocked",
+          "blocked",
+          "observed",
+          "blocked"
+        ],
+        "fields": [
+          "absent",
+          "blocked",
+          "blocked",
+          "blocked"
+        ]
+      },
+      {
+        "provider": "同花顺 iFinD",
+        "meta": "Native MCP · A 股 · 600519.SH",
+        "core": [
+          "blocked",
+          "absent",
+          "observed",
+          "unmeasured"
+        ],
+        "fields": [
+          "absent",
+          "absent",
+          "absent",
+          "absent"
+        ]
+      },
+      {
+        "provider": "Twelve Data",
+        "meta": "QVeris · 美股 · AAPL",
+        "core": [
+          "observed",
+          "observed",
+          "observed",
+          "unmeasured"
+        ],
+        "fields": [
+          "observed",
+          "absent",
+          "absent",
+          "absent"
+        ]
+      },
+      {
+        "provider": "Alpha Vantage",
+        "meta": "QVeris · 美股 · AAPL",
+        "core": [
+          "observed",
+          "observed",
+          "observed",
+          "unmeasured"
+        ],
+        "fields": [
+          "absent",
+          "observed",
+          "observed",
+          "observed"
+        ]
+      },
+      {
+        "provider": "EODHD",
+        "meta": "QVeris · 美股 · AAPL",
+        "core": [
+          "observed",
+          "observed",
+          "observed",
+          "unmeasured"
+        ],
+        "fields": [
+          "absent",
+          "absent",
+          "absent",
+          "absent"
+        ]
+      },
+      {
+        "provider": "Massive",
+        "meta": "QVeris · 美股 · AAPL",
+        "core": [
+          "observed",
+          "observed",
+          "observed",
+          "unmeasured"
+        ],
+        "fields": [
+          "observed",
+          "observed",
+          "observed",
+          "observed"
+        ]
+      }
+    ]
   },
   "input_digests": {
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",

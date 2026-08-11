@@ -3,14 +3,14 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
 import yaml
+from PIL import Image
 
 from scripts.render_cap_guide_charts import (
-    render_dividend_evidence_matrices,
+    render_dividend_evidence_heatmap,
     render_release_outcomes,
 )
 
@@ -24,8 +24,7 @@ RELEASE_DIGEST = (
     "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
 )
 EVIDENCE_CHARTS = (
-    "capability-seo/best-dividend-apis/charts/dividend-core-evidence.svg",
-    "capability-seo/best-dividend-apis/charts/dividend-field-evidence.svg",
+    "capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png",
 )
 MANIFEST_EVIDENCE_CHARTS = tuple(
     f"docs/guides/{target}" for target in EVIDENCE_CHARTS
@@ -80,7 +79,7 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     assert article.count("身份一致性未独立测量") == 5
 
 
-def test_article_evidence_charts_are_declared_and_valid_svg() -> None:
+def test_article_evidence_charts_are_declared_and_valid_image() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
@@ -92,11 +91,10 @@ def test_article_evidence_charts_are_declared_and_valid_svg() -> None:
         assert target in article
         path = ARTICLE.parent / target
         assert path.is_file()
-        root = ET.parse(path).getroot()
-        assert root.tag == "{http://www.w3.org/2000/svg}svg"
-        width, height = (int(value) for value in root.attrib["viewBox"].split()[2:])
-        assert width <= 760
-        assert height > width
+        with Image.open(path) as chart:
+            assert chart.width >= 1600
+            assert chart.height >= 900
+            assert chart.width > chart.height
     assert "完整事件日期组" not in article
     assert "date-timeline.svg" not in article
     assert "dividend-api-evidence-matrix.svg" not in article
@@ -104,11 +102,12 @@ def test_article_evidence_charts_are_declared_and_valid_svg() -> None:
 
 
 def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
-    matrix = "".join(
-        text
-        for target in EVIDENCE_CHARTS
-        for text in ET.parse(ARTICLE.parent / target).getroot().itertext()
+    chart_manifest = json.loads(
+        (MANIFEST.parent / "charts/evidence-matrix-manifest.json").read_text(
+            encoding="utf-8"
+        )
     )
+    matrix = json.dumps(chart_manifest["data"], ensure_ascii=False)
     for provider in (
         "恒生聚源",
         "同花顺 iFinD",
@@ -119,30 +118,31 @@ def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
     ):
         assert provider in matrix
     assert "Native MCP" in matrix
-    assert matrix.count("QVeris") == 10
+    assert matrix.count("QVeris") == 5
     assert "不代表全市场能力" in matrix
-    assert matrix.count("A 股 · 600519.SH") == 4
-    assert matrix.count("美股 · AAPL") == 8
+    assert matrix.count("A 股 · 600519.SH") == 2
+    assert matrix.count("美股 · AAPL") == 4
 
 
 def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     chart_dir = MANIFEST.parent / "charts"
-    generated = render_dividend_evidence_matrices(
+    generated = render_dividend_evidence_heatmap(
         RELEASE_DIR,
         ROOT / "evidence/dividend-events-2026-q3-v1",
         tmp_path,
         edition_date="2026-08-11",
     )
 
-    for chart_name in ("dividend-core-evidence.svg", "dividend-field-evidence.svg"):
-        assert (tmp_path / chart_name).read_bytes() == (
-            chart_dir / chart_name
-        ).read_bytes()
     committed = json.loads(
         (chart_dir / "evidence-matrix-manifest.json").read_text(encoding="utf-8")
     )
-    assert generated == committed
+    assert generated["data"] == committed["data"]
+    assert generated["input_digests"] == committed["input_digests"]
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
+    chart_name = "dividend-evidence-heatmap.png"
+    assert committed["charts"][chart_name] == (
+        f"sha256:{hashlib.sha256((chart_dir / chart_name).read_bytes()).hexdigest()}"
+    )
 
 
 def test_manifest_uses_public_release_as_source_of_truth() -> None:

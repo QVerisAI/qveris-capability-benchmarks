@@ -124,11 +124,9 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 ## 不同开发需求怎么选
 
-![6 条分红数据 Access Path 核心可用性证据](capability-seo/best-dividend-apis/charts/dividend-core-evidence.svg)
+![6 条分红数据 Access Path 的 Dividend Event 公开证据热力图](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)
 
-![6 条分红数据 Access Path 响应字段证据](capability-seo/best-dividend-apis/charts/dividend-field-evidence.svg)
-
-两张矩阵中的符号只表示本次固定样本公开了什么证据，不代表供应商在其他市场、symbol 或历史区间的完整能力。灰色横线必须理解为“本次未观察或未发布”，不能理解成供应商一定没有该字段；橙色三角表示记录存在语义或身份阻断，不能直接采信。
+热力图只表示本次固定样本公开了什么证据，不代表供应商在其他市场、symbol 或历史区间的完整能力。“未观察”不能理解成供应商一定没有该字段；“阻断”表示记录存在语义或身份问题，不能直接采信。
 
 ### 想用一个 key 快速比较多家供应商
 
