@@ -290,10 +290,14 @@ def render_dividend_evidence_heatmap(
         frameon=False,
         fontsize=11,
     )
+    footer = (
+        f"数据来源：QVeris Research，{edition_date}；"
+        "灰色不代表供应商没有该能力"
+    )
     fig.text(
         0.08,
         0.025,
-        "数据来源：QVeris Research，2026-08-11；灰色不代表供应商没有该能力",
+        footer,
         color="#475569",
         fontsize=10.5,
     )
@@ -303,6 +307,7 @@ def render_dividend_evidence_heatmap(
 
     chart_data = {
         "scope": "固定样本证据，不代表全市场能力",
+        "footer": footer,
         "columns": columns,
         "rows": rows,
     }

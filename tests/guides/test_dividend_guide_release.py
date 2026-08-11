@@ -108,6 +108,7 @@ def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
         )
     )
     matrix = json.dumps(chart_manifest["data"], ensure_ascii=False)
+    rows = chart_manifest["data"]["rows"]
     for provider in (
         "恒生聚源",
         "同花顺 iFinD",
@@ -118,7 +119,7 @@ def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
     ):
         assert provider in matrix
     assert "Native MCP" in matrix
-    assert matrix.count("QVeris") == 5
+    assert sum(row["meta"].startswith("QVeris") for row in rows) == 5
     assert "不代表全市场能力" in matrix
     assert matrix.count("A 股 · 600519.SH") == 2
     assert matrix.count("美股 · AAPL") == 4
@@ -136,13 +137,26 @@ def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     committed = json.loads(
         (chart_dir / "evidence-matrix-manifest.json").read_text(encoding="utf-8")
     )
-    assert generated["data"] == committed["data"]
-    assert generated["input_digests"] == committed["input_digests"]
+    assert generated == committed
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
     chart_name = "dividend-evidence-heatmap.png"
+    assert (tmp_path / chart_name).read_bytes() == (
+        chart_dir / chart_name
+    ).read_bytes()
     assert committed["charts"][chart_name] == (
         f"sha256:{hashlib.sha256((chart_dir / chart_name).read_bytes()).hexdigest()}"
     )
+
+
+def test_evidence_chart_footer_uses_requested_edition_date(tmp_path: Path) -> None:
+    manifest = render_dividend_evidence_heatmap(
+        RELEASE_DIR,
+        ROOT / "evidence/dividend-events-2026-q3-v1",
+        tmp_path,
+        edition_date="2026-11-01",
+    )
+
+    assert "2026-11-01" in manifest["data"]["footer"]
 
 
 def test_manifest_uses_public_release_as_source_of_truth() -> None:

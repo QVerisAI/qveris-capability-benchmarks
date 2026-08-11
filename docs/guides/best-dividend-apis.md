@@ -124,7 +124,8 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 ## 不同开发需求怎么选
 
-![6 条分红数据 Access Path 的 Dividend Event 公开证据热力图](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)
+[![6 条分红数据 Access Path 的 Dividend Event 公开证据热力图](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)
+<p align="center"><sub>点击查看高分辨率原图；移动端也可直接阅读文中的 HTML 结果表与 Agent 风险信号表</sub></p>
 
 热力图只表示本次固定样本公开了什么证据，不代表供应商在其他市场、symbol 或历史区间的完整能力。“未观察”不能理解成供应商一定没有该字段；“阻断”表示记录存在语义或身份问题，不能直接采信。
 
