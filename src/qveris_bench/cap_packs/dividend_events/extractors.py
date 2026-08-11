@@ -1,0 +1,240 @@
+from __future__ import annotations
+
+import csv
+import json
+from io import StringIO
+from typing import Any
+
+
+class DividendExtractionError(ValueError):
+    pass
+
+
+_SYMBOL_FIELDS = ("symbol", "ticker", "stockobject", "stock_code")
+_DATE_FIELDS = (
+    "effective_date",
+    "ex_date",
+    "ex_dividend_date",
+    "date",
+    "Date",
+    "bonustradedate",
+    "dividend_date",
+)
+_AMOUNT_FIELDS = (
+    "amount",
+    "cash_amount",
+    "Dividends",
+    "bonuspershare",
+    "cash_dividend_per_share",
+)
+
+
+def extract_dividend_event(
+    provider_id: str,
+    document: object,
+    *,
+    symbol: str,
+    start_date: str | None,
+    end_date: str | None,
+    negative_control: bool = False,
+) -> dict[str, Any]:
+    normalized = _unwrap_gateway(document)
+    rows, metadata = _provider_rows(provider_id, normalized)
+    if negative_control:
+        if rows:
+            raise DividendExtractionError("negative control returned dividend events")
+        return {"validation_error": "invalid symbol or no dividend events"}
+
+    selected_rows = _within_window(rows, start_date, end_date)
+    if not selected_rows:
+        return {"symbol": symbol}
+    selected = max(selected_rows, key=lambda row: _date_value(row) or "")
+    facts: dict[str, Any] = {
+        "symbol": _string_field(selected, _SYMBOL_FIELDS) or symbol,
+        "event_count": len(selected_rows),
+    }
+    effective_date = _date_value(selected)
+    if effective_date is not None:
+        facts["effective_date"] = effective_date
+    amount = _number_field(selected, _AMOUNT_FIELDS)
+    if amount is not None:
+        facts["amount"] = amount
+    currency = _string_field(selected, ("currency",)) or _string_field(
+        metadata, ("currency",)
+    )
+    if currency is not None:
+        facts["currency"] = currency
+    for output, aliases in (
+        ("payment_date", ("payment_date", "pay_date")),
+        ("declaration_date", ("declaration_date", "preanndate")),
+        ("record_date", ("record_date",)),
+    ):
+        value = _normalized_date(_field(selected, aliases))
+        if value is not None:
+            facts[output] = value
+    return facts
+
+
+def _unwrap_gateway(document: object) -> object:
+    if not isinstance(document, dict):
+        return document
+    result = document.get("result")
+    if isinstance(result, dict) and "data" in result:
+        return result["data"]
+    return document
+
+
+def _provider_rows(
+    provider_id: str, document: object
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    if provider_id == "eodhd":
+        return _csv_rows(document), {}
+    if provider_id == "twelve-data":
+        data = _mapping(document)
+        return _required_rows(data, "dividends"), _mapping(data.get("meta", {}))
+    if provider_id == "massive-stocks":
+        data = _mapping(document)
+        return _required_rows(data, "results"), data
+    if provider_id == "alpha-vantage":
+        data = _mapping(document)
+        return _required_rows(data, "data"), data
+    if provider_id == "hangseng":
+        data = _mapping(document)
+        rows = _find_rows(data, "rows")
+        if rows is None:
+            raise DividendExtractionError("Hangseng dividend rows are missing")
+        return rows, data
+    if provider_id == "ifind":
+        payload = _unwrap_mcp_content(document)
+        if isinstance(payload, list):
+            return _dict_rows(payload), {}
+        data = _mapping(payload)
+        rows = _find_rows(data, "data") or _find_rows(data, "rows")
+        if rows is None:
+            raise DividendExtractionError("iFind dividend rows are missing")
+        return rows, data
+    raise DividendExtractionError(f"unsupported dividend provider: {provider_id}")
+
+
+def _csv_rows(document: object) -> list[dict[str, Any]]:
+    if not isinstance(document, str):
+        raise DividendExtractionError("EODHD dividend response must be CSV")
+    reader = csv.DictReader(StringIO(document))
+    if not reader.fieldnames or not {"Date", "Dividends"}.issubset(reader.fieldnames):
+        raise DividendExtractionError("EODHD dividend columns are missing")
+    return _dict_rows(list(reader))
+
+
+def _unwrap_mcp_content(document: object) -> object:
+    if not isinstance(document, dict) or not isinstance(document.get("content"), list):
+        return document
+    texts: list[str] = []
+    for item in document["content"]:
+        if isinstance(item, dict) and isinstance(item.get("text"), str):
+            texts.append(item["text"])
+    for text in texts:
+        stripped = text.strip()
+        if stripped.startswith("```") and stripped.endswith("```"):
+            stripped = stripped.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+        try:
+            return json.loads(stripped)
+        except json.JSONDecodeError:
+            continue
+    raise DividendExtractionError("iFind MCP response has no structured dividend data")
+
+
+def _required_rows(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    value = data.get(key)
+    if not isinstance(value, list):
+        raise DividendExtractionError(f"dividend {key} are missing")
+    return _dict_rows(value)
+
+
+def _find_rows(value: object, key: str) -> list[dict[str, Any]] | None:
+    if not isinstance(value, dict):
+        return None
+    candidate = value.get(key)
+    if isinstance(candidate, list):
+        return _dict_rows(candidate)
+    for nested in value.values():
+        found = _find_rows(nested, key)
+        if found is not None:
+            return found
+    return None
+
+
+def _dict_rows(rows: list[object]) -> list[dict[str, Any]]:
+    if not all(isinstance(row, dict) for row in rows):
+        raise DividendExtractionError("dividend rows must contain objects")
+    return [dict(row) for row in rows if isinstance(row, dict)]
+
+
+def _within_window(
+    rows: list[dict[str, Any]], start_date: str | None, end_date: str | None
+) -> list[dict[str, Any]]:
+    selected = []
+    for row in rows:
+        event_date = _date_value(row)
+        if event_date is None:
+            selected.append(row)
+            continue
+        if start_date is not None and event_date < start_date:
+            continue
+        if end_date is not None and event_date > end_date:
+            continue
+        selected.append(row)
+    return selected
+
+
+def _date_value(row: dict[str, Any]) -> str | None:
+    return _normalized_date(_field(row, _DATE_FIELDS))
+
+
+def _normalized_date(value: object) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    normalized = value.strip()
+    if len(normalized) == 8 and normalized.isdigit():
+        normalized = f"{normalized[:4]}-{normalized[4:6]}-{normalized[6:]}"
+    if (
+        len(normalized) != 10
+        or normalized[4] != "-"
+        or normalized[7] != "-"
+        or not normalized.replace("-", "").isdigit()
+    ):
+        return None
+    return normalized
+
+
+def _number_field(row: dict[str, Any], names: tuple[str, ...]) -> float | None:
+    value = _field(row, names)
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, str):
+        try:
+            value = float(value.strip().replace(",", ""))
+        except ValueError:
+            return None
+    if not isinstance(value, (int, float)) or value <= 0:
+        return None
+    return float(value)
+
+
+def _string_field(row: dict[str, Any], names: tuple[str, ...]) -> str | None:
+    value = _field(row, names)
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+def _field(row: dict[str, Any], names: tuple[str, ...]) -> object:
+    lowered = {str(key).lower(): value for key, value in row.items()}
+    for name in names:
+        value = lowered.get(name.lower())
+        if value is not None:
+            return value
+    return None
+
+
+def _mapping(value: object) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise DividendExtractionError("dividend response must be an object")
+    return value

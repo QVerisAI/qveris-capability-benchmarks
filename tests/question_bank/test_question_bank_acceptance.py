@@ -39,6 +39,7 @@ def test_ac1_question_bank_curates_sixteen_distinct_capabilities() -> None:
         "stock-quote",
     }
     assert {cap.cap_id for cap in bank.capabilities if cap.lifecycle == "runnable"} == {
+        "dividend-events",
         "etf-holdings",
         "financial-statement-facts",
         "sec-filing-evidence",
@@ -735,7 +736,7 @@ def test_ac5_question_validate_runs_through_the_installed_cli() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "16 capabilities" in result.stdout
-    assert "44 questions" in result.stdout
+    assert "46 questions" in result.stdout
     assert result.stdout.endswith("2 scenarios.\n")
 
 

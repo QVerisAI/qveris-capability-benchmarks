@@ -1,0 +1,12 @@
+cap_id: dividend-events
+version: 1.0.0
+name: Dividend Events
+business_use: Compare dated per-share cash dividend event retrieval for equity data integrations.
+scope:
+  - US and mainland-China listed equity cash dividend events within a fixed date window.
+exclusions:
+  - Dividend forecasts, yield calculations, fund distributions, splits, rights issues, and cross-CAP aggregate rankings.
+markets: [US, CN]
+asset_types: [EQUITY]
+sources:
+  - source_type: qveris_original

@@ -1,0 +1,25 @@
+access_paths:
+  - access_path_id: ifind-native-mcp
+    provider_id: ifind
+    canonical_interface: iFinD finance-data MCP tools
+    official_source: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md
+  - access_path_id: hangseng-dividends-qveris
+    provider_id: hangseng
+    canonical_interface: dividends
+    official_source: https://www.gildata.com/products/core-data.html
+  - access_path_id: twelve-data-dividends-qveris
+    provider_id: twelve-data
+    canonical_interface: dividends
+    official_source: https://twelvedata.com/docs#dividends
+  - access_path_id: alpha-vantage-dividends-qveris
+    provider_id: alpha-vantage
+    canonical_interface: DIVIDENDS
+    official_source: https://www.alphavantage.co/documentation/#dividends
+  - access_path_id: eodhd-dividends-qveris
+    provider_id: eodhd
+    canonical_interface: dividends
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+  - access_path_id: massive-stocks-dividends-qveris
+    provider_id: massive-stocks
+    canonical_interface: dividends
+    official_source: https://massive.com/docs/rest/stocks/corporate-actions/dividends

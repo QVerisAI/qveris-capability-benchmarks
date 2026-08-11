@@ -29,8 +29,8 @@ access_paths:
     authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: true
     qualification:
-      disposition: excluded
-      reason: The official skill package does not publish a canonical FX tool for this snapshot.
+      disposition: included
+      reason: The official skill package publishes get_stock_events for user-key Native MCP Direct execution.
       evidence_digest: sha256:0188a9872937bf845c1ab13c2da9034c77c295abb6934f7e870cc46fbe8e7720
   - access_path_id: ifind-dividends-qveris
     provider_id: ifind
@@ -46,4 +46,3 @@ access_paths:
       disposition: included
       reason: Dividend plan tool is callable via the QVeris connector and returns complete dividend observations.
       evidence_digest: sha256:d8621d75747f02e66b4d054d4884a53b86eece43c0966af697215b1856616c00
-

@@ -60,6 +60,8 @@ def extract_observation(
         if unknown:
             raise ExtractionError("unknown observation fields: " + ", ".join(unknown))
     for field, type_name in field_types.items():
+        if field not in facts:
+            continue
         value = facts.get(field)
         valid_type = (
             (type_name == "string" and isinstance(value, str))

@@ -1,0 +1,27 @@
+required_fields: [symbol]
+field_types:
+  symbol: string
+  effective_date: string
+  amount: number
+  currency: string
+  payment_date: string
+  declaration_date: string
+  record_date: string
+  event_count: number
+field_constraints:
+  symbol: {non_empty: true}
+  effective_date: {non_empty: true}
+  amount: {finite: true, positive: true}
+  currency: {non_empty: true}
+  payment_date: {non_empty: true}
+  declaration_date: {non_empty: true}
+  record_date: {non_empty: true}
+  event_count: {finite: true, positive: true}
+additional_fields: false
+negative_control:
+  required_fields: [validation_error]
+  field_types:
+    validation_error: string
+  field_constraints:
+    validation_error: {non_empty: true}
+  additional_fields: false

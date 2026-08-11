@@ -1,0 +1,28 @@
+cases:
+  - case_id: aapl-dividends-fixed-window
+    cap_id: dividend-events
+    question: Return AAPL dividend events within a fixed window with ex-date, per-share amount, and currency when supplied.
+    input: {symbol: AAPL, start_date: 2024-01-01, end_date: 2026-07-31}
+    negative_control: false
+    expected_observations: [symbol, effective_date, amount, currency]
+    completion_conditions: [symbol, effective_date, amount]
+    disclosure_limits: []
+    applicable_provider_ids: [twelve-data, alpha-vantage, eodhd, massive-stocks]
+  - case_id: cn-600519-dividends-fixed-window
+    cap_id: dividend-events
+    question: Return 600519.SH dividend events within a fixed window with ex-date, per-share amount, and currency when supplied.
+    input: {symbol: 600519.SH, start_date: 2024-01-01, end_date: 2026-07-31}
+    negative_control: false
+    expected_observations: [symbol, effective_date, amount, currency]
+    completion_conditions: [symbol, effective_date, amount]
+    disclosure_limits: []
+    applicable_provider_ids: [ifind, hangseng]
+  - case_id: invalid-dividend-symbol
+    cap_id: dividend-events
+    question: Reject an invalid dividend-event symbol without inventing events.
+    input: {symbol: NOTASTOCK}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: []
+    applicable_provider_ids: []

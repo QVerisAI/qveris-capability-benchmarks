@@ -592,6 +592,28 @@ questions:
     text_origin: qveris_curated
     selection_rationale: Harbor contract MKT.DIVIDENDS requires symbol and effective_date with per-share amount; this tests dated event retrieval.
     review_status: approved
+  - question_id: dividend-events-aapl-window
+    cap_id: dividend-events
+    role: core_positive
+    task: Return dividend events for AAPL within a fixed window with ex-date, per-share amount, and currency.
+    input: {symbol: AAPL, start_date: 2024-01-01, end_date: 2026-07-31}
+    required_observations: [symbol, effective_date, amount, currency]
+    completion_conditions: [symbol, effective_date, amount]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Preserves the fixed AAPL comparison input used by the evidence-backed dividend guide while enforcing the formal event contract.
+    review_status: approved
+  - question_id: dividend-events-600519-window
+    cap_id: dividend-events
+    role: coverage
+    task: Return dividend events for 600519.SH within a fixed window with ex-date, per-share amount, and currency.
+    input: {symbol: 600519.SH, start_date: 2024-01-01, end_date: 2026-07-31}
+    required_observations: [symbol, effective_date, amount, currency]
+    completion_conditions: [symbol, effective_date, amount]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Extends the same dated per-share event contract to a canonical mainland-China equity without broadening the CAP.
+    review_status: approved
   - question_id: dividend-events-invalid-symbol
     cap_id: dividend-events
     role: boundary_negative

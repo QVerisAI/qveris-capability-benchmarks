@@ -50,3 +50,20 @@ def test_ac1_extractor_rejects_unknown_or_wrongly_typed_cap_fields(
             "sha256:" + "a" * 64,
             "1.0.0",
         )
+
+
+def test_ac1_declared_non_required_fields_are_optional(tmp_path: Path) -> None:
+    schema = tmp_path / "observation-schema.yaml"
+    schema.write_text(
+        "required_fields: [symbol]\n"
+        "field_types: {symbol: string, currency: string}\n"
+    )
+
+    observation = extract_observation(
+        schema,
+        {"symbol": "AAPL"},
+        "sha256:" + "a" * 64,
+        "1.0.0",
+    )
+
+    assert observation.facts == {"symbol": "AAPL"}

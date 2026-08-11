@@ -1,0 +1,21 @@
+suite_id: dividend-events-v1
+version: 1.0.0
+cap_id: dividend-events
+cap_version: 1.0.0
+case_ids:
+  - aapl-dividends-fixed-window
+  - cn-600519-dividends-fixed-window
+  - invalid-dividend-symbol
+access_path_ids:
+  - ifind-native-mcp
+  - hangseng-dividends-qveris
+  - twelve-data-dividends-qveris
+  - alpha-vantage-dividends-qveris
+  - eodhd-dividends-qveris
+  - massive-stocks-dividends-qveris
+modes: [direct]
+rounds: 2
+environment:
+  as_of: "2026-08-11"
+agent_protocol: null
+not_applicable: []
