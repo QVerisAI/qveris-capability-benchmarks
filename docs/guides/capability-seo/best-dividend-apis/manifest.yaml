@@ -28,7 +28,7 @@ publication_policy:
   one_canonical_tool_per_access_path: true
   direct_test_required: true
   freeze_shortlist_after_baseline: true
-  states: [qualified, not_qualified, not_applicable]
+  states: [qualified, not_qualified, evidence_insufficient, not_applicable]
 release:
   directory: releases/dividend-events-2026-q3-v1
   digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
@@ -37,8 +37,8 @@ release:
   applicable_cells: 36
   public_evidence_records: 36
 seo:
-  title: "2026 分红数据 API 对比：6 条 Access Path 可复测结果"
-  meta_description: "2026 年 8 月实测：用 36 次 Direct Test 对比 6 条分红数据 Access Path 的除权除息日、每股现金分红与负向控制结果。"
+  title: "2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南"
+  meta_description: "2026 年 8 月真实调用 6 家分红数据 API，对比除权除息日、每股现金分红、币种、事件日期与无效代码处理；包含 QVeris 与 iFind Native MCP 接入差异、适用场景、复测方法、公开证据和逐家优缺点，帮助开发者为行情应用、收益回测、公司行动流水线与 AI Agent 选择合适的数据源。"
   primary_keyword: 分红数据 API
   secondary_keywords: [分红 API, 除息数据 API, 股息数据 API, dividend API]
   publication_action: new_page
@@ -68,5 +68,4 @@ artifacts:
   cases: cap_packs/dividend_events/cases.yaml
   release: releases/dividend-events-2026-q3-v1/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
-  charts:
-    - docs/guides/capability-seo/best-dividend-apis/charts/chart-direct-outcomes.png
+  charts: []
