@@ -343,6 +343,21 @@ def test_ac5_negative_control_requires_an_explicit_empty_result() -> None:
                 }
             },
         ),
+        (
+            "hangseng",
+            {
+                "error_message": "tool returned no valid data",
+                "result": {
+                    "status_code": 200,
+                    "data": {
+                        "success": True,
+                        "code": 0,
+                        "message": "verify the request parameters",
+                        "data": {},
+                    },
+                },
+            },
+        ),
     ],
 )
 def test_ac5_negative_control_accepts_explicit_provider_rejection(

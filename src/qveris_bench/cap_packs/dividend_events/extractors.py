@@ -114,6 +114,16 @@ def _is_explicit_provider_rejection(
             normalized.get("message"), str
         )
     if provider_id == "hangseng" and isinstance(normalized, dict):
+        if (
+            _gateway_status(document) == 200
+            and isinstance(document, dict)
+            and isinstance(document.get("error_message"), str)
+            and normalized.get("success") is True
+            and _integer_code(normalized.get("code")) == 0
+            and isinstance(normalized.get("message"), str)
+            and normalized.get("data") == {}
+        ):
+            return True
         inner = normalized.get("data")
         if not isinstance(inner, dict):
             return False
