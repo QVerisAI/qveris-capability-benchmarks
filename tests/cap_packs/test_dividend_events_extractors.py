@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from qveris_bench.cap_packs.dividend_events.extractors import (
@@ -89,10 +91,12 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
                     "data": {
                         "rows": [
                             {
-                                "stockobject": "600519.SH",
-                                "bonustradedate": "2024-06-26",
-                                "bonuspershare": 30.876,
-                                "preanndate": "2024-04-02",
+                                "stockcode": "600519",
+                                "exdivdate": "2026-06-26",
+                                "dividendpretax": 28.02423,
+                                "paydate": "2026-06-26",
+                                "regdate": "2026-06-25",
+                                "preanndate": "2026-04-17",
                             }
                         ]
                     }
@@ -100,9 +104,11 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
             },
             {
                 "symbol": "600519.SH",
-                "effective_date": "2024-06-26",
-                "amount": 30.876,
-                "declaration_date": "2024-04-02",
+                "effective_date": "2026-06-26",
+                "amount": 28.02423,
+                "payment_date": "2026-06-26",
+                "record_date": "2026-06-25",
+                "declaration_date": "2026-04-17",
                 "event_count": 1,
             },
         ),
@@ -112,10 +118,23 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
                 "content": [
                     {
                         "type": "text",
-                        "text": (
-                            '{"data":[{"stock_code":"600519.SH",'
-                            '"ex_dividend_date":"2025-06-27",'
-                            '"cash_dividend_per_share":27.646,"currency":"CNY"}]}'
+                        "text": json.dumps(
+                            {
+                                "code": 1,
+                                "msg": "success",
+                                "data": json.dumps(
+                                    {
+                                        "answer": (
+                                            "|证券代码|证券简称|年度累计单位分红（单位：元）|"
+                                            "除权除息日|\n|---|---|---|---|\n"
+                                            "|600519.SH|贵州茅台|27.646|2025-06-27|"
+                                        ),
+                                        "indicators_params": {},
+                                    },
+                                    ensure_ascii=False,
+                                ),
+                            },
+                            ensure_ascii=False,
                         ),
                     }
                 ]
@@ -124,7 +143,6 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
                 "symbol": "600519.SH",
                 "effective_date": "2025-06-27",
                 "amount": 27.646,
-                "currency": "CNY",
                 "event_count": 1,
             },
         ),
@@ -170,6 +188,95 @@ def test_ac5_missing_required_date_produces_partial_facts() -> None:
     )
 
     assert facts == {"symbol": "600519.SH", "amount": 28.02423, "event_count": 1}
+
+
+def test_ac5_ifind_native_markdown_does_not_infer_ratio_or_total_as_amount() -> None:
+    document = {
+        "content": [
+            {
+                "type": "text",
+                "text": json.dumps(
+                    {
+                        "code": 1,
+                        "msg": "success",
+                        "data": json.dumps(
+                            {
+                                "answer": (
+                                    "|证券代码|证券简称|年度累计单位分红（单位：元）|"
+                                    "除权除息日|年度分红比例（单位：%）|年度累计分红总额（单位：元）|\n"
+                                    "|---|---|---|---|---|---|\n"
+                                    "|600519.SH|贵州茅台|||2.99|35000000000|"
+                                ),
+                                "indicators_params": {"年度分红比例": {"年度": "2025"}},
+                            },
+                            ensure_ascii=False,
+                        ),
+                    },
+                    ensure_ascii=False,
+                ),
+            }
+        ]
+    }
+
+    assert extract_dividend_event(
+        "ifind",
+        document,
+        symbol="600519.SH",
+        start_date="2024-01-01",
+        end_date="2026-07-31",
+    ) == {"symbol": "600519.SH"}
+
+
+def test_ac5_ifind_native_empty_answer_is_an_explicit_negative() -> None:
+    document = {
+        "content": [
+            {
+                "type": "text",
+                "text": json.dumps(
+                    {
+                        "code": 1,
+                        "msg": "success",
+                        "data": json.dumps(
+                            {"answer": "查询结果为空", "indicators_params": {}},
+                            ensure_ascii=False,
+                        ),
+                    },
+                    ensure_ascii=False,
+                ),
+            }
+        ]
+    }
+
+    assert extract_dividend_event(
+        "ifind",
+        document,
+        symbol="NOTASTOCK",
+        start_date=None,
+        end_date=None,
+        negative_control=True,
+    ) == {"validation_error": "invalid symbol or no dividend events"}
+
+
+def test_ac5_hangseng_bonus_share_fields_are_not_cash_dividend_facts() -> None:
+    facts = extract_dividend_event(
+        "hangseng",
+        {
+            "data": {
+                "rows": [
+                    {
+                        "stockcode": "600519",
+                        "bonustradedate": "2026-06-26",
+                        "bonuspershare": 0.1,
+                    }
+                ]
+            }
+        },
+        symbol="600519.SH",
+        start_date="2024-01-01",
+        end_date="2026-07-31",
+    )
+
+    assert facts == {"symbol": "600519.SH", "event_count": 1}
 
 
 def test_ac5_negative_control_requires_an_explicit_empty_result() -> None:

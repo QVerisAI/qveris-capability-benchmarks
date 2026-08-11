@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -48,6 +49,46 @@ def test_ac7_missing_required_event_date_is_provider_negative() -> None:
 
     assert result.state is CellState.PROVIDER_NEGATIVE
     assert result.unmet_conditions == ("effective_date",)
+    assert result.failure_attribution is FailureAttribution.EMPTY_OR_PARTIAL_DATA
+
+
+def test_ac7_ifind_native_ratio_only_response_is_partial_data() -> None:
+    result = evaluate_dividend_document(
+        "ifind",
+        {
+            "content": [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "code": 1,
+                            "msg": "success",
+                            "data": json.dumps(
+                                {
+                                    "answer": (
+                                        "|证券代码|证券简称|年度累计单位分红（单位：元）|"
+                                        "除权除息日|年度分红比例（单位：%）|"
+                                        "年度累计分红总额（单位：元）|\n"
+                                        "|---|---|---|---|---|---|\n"
+                                        "|600519.SH|贵州茅台|||2.99|35000000000|"
+                                    ),
+                                    "indicators_params": {"年度分红比例": {}},
+                                },
+                                ensure_ascii=False,
+                            ),
+                        },
+                        ensure_ascii=False,
+                    ),
+                }
+            ]
+        },
+        _case("cn-600519-dividends-fixed-window"),
+        PACK / "observation-schema.yaml",
+        "sha256:" + "a" * 64,
+    )
+
+    assert result.state is CellState.PROVIDER_NEGATIVE
+    assert result.unmet_conditions == ("effective_date", "amount")
     assert result.failure_attribution is FailureAttribution.EMPTY_OR_PARTIAL_DATA
 
 

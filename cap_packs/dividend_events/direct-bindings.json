@@ -34,7 +34,7 @@
       "transport": "qveris_connector",
       "source_digest": "sha256:866f298ce03eb3cee4b0c806a3e7ed9223f5bc2079c94b1f4ef124145f3af947",
       "tool_id": "hangseng_polysource.stock.dividend.query.v2.6174546b",
-      "parameters": {"stockObject": ["600519.SH"], "beginDate": "2024-01-01", "endDate": "2026-07-31", "pageSize": 20},
+      "parameters": {"stockObject": ["600519"], "beginDate": "2024-01-01", "endDate": "2026-07-31", "pageSize": 20},
       "discovery_query": "hangseng_polysource.stock.dividend.query.v2.6174546b"
     },
     {

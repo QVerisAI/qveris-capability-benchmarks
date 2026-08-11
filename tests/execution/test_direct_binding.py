@@ -48,6 +48,17 @@ def test_ac6_ifind_binding_is_native_mcp_only() -> None:
     assert {binding.tool_id for binding in ifind} == {"get_stock_events"}
 
 
+def test_ac6_hangseng_binding_maps_canonical_symbol_to_numeric_provider_code() -> None:
+    registry = load_direct_binding_registry(REGISTRY)
+    positive = next(
+        binding
+        for binding in registry.bindings
+        if binding.binding_id == "hangseng-cn-600519-dividends"
+    )
+
+    assert positive.parameters["stockObject"] == ["600519"]
+
+
 def test_ac6_registry_rejects_transport_or_identity_redirection() -> None:
     registry = load_direct_binding_registry(REGISTRY)
     original = registry.bindings[0]

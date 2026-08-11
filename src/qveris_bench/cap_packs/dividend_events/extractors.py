@@ -21,14 +21,14 @@ _DATE_FIELDS = (
     "ex_dividend_date",
     "date",
     "Date",
-    "bonustradedate",
+    "exdivdate",
     "dividend_date",
 )
 _AMOUNT_FIELDS = (
     "amount",
     "cash_amount",
     "Dividends",
-    "bonuspershare",
+    "dividendpretax",
     "cash_dividend_per_share",
 )
 
@@ -75,9 +75,9 @@ def extract_dividend_event(
     if currency is not None:
         facts["currency"] = currency
     for output, aliases in (
-        ("payment_date", ("payment_date", "pay_date")),
+        ("payment_date", ("payment_date", "pay_date", "paydate")),
         ("declaration_date", ("declaration_date", "preanndate")),
-        ("record_date", ("record_date",)),
+        ("record_date", ("record_date", "regdate")),
     ):
         value = _normalized_date(_field(selected, aliases))
         if value is not None:
@@ -97,6 +97,14 @@ def _unwrap_gateway(document: object) -> object:
 def _is_explicit_provider_rejection(
     provider_id: str, document: object, normalized: object
 ) -> bool:
+    if provider_id == "ifind":
+        try:
+            data = _ifind_data(_unwrap_mcp_content(normalized))
+        except DividendExtractionError:
+            return False
+        return (
+            data["answer"].strip() == "查询结果为空" and not data["indicators_params"]
+        )
     if provider_id == "eodhd":
         return _gateway_status(document) >= 400 and isinstance(normalized, str)
     if provider_id == "twelve-data":
@@ -162,11 +170,8 @@ def _provider_rows(
         payload = _unwrap_mcp_content(document)
         if isinstance(payload, list):
             return _dict_rows(payload), {}
-        data = _mapping(payload)
-        rows = _find_rows(data, "data") or _find_rows(data, "rows")
-        if rows is None:
-            raise DividendExtractionError("iFind dividend rows are missing")
-        return rows, data
+        data = _ifind_data(payload)
+        return _ifind_dividend_rows(data["answer"]), {}
     raise DividendExtractionError(f"unsupported dividend provider: {provider_id}")
 
 
@@ -195,6 +200,71 @@ def _unwrap_mcp_content(document: object) -> object:
         except json.JSONDecodeError:
             continue
     raise DividendExtractionError("iFind MCP response has no structured dividend data")
+
+
+def _ifind_data(payload: object) -> dict[str, Any]:
+    outer = _mapping(payload)
+    raw_data = outer.get("data")
+    if not isinstance(raw_data, str):
+        raise DividendExtractionError("iFind MCP data must be a JSON string")
+    try:
+        data = json.loads(raw_data)
+    except json.JSONDecodeError as error:
+        raise DividendExtractionError("iFind MCP data is not valid JSON") from error
+    if (
+        not isinstance(data, dict)
+        or not isinstance(data.get("answer"), str)
+        or not isinstance(data.get("indicators_params"), dict)
+    ):
+        raise DividendExtractionError("iFind MCP dividend fields are missing")
+    return data
+
+
+def _ifind_dividend_rows(answer: str) -> list[dict[str, Any]]:
+    required_headers = {
+        "证券代码",
+        "年度累计单位分红（单位：元）",
+        "除权除息日",
+    }
+    rows: list[dict[str, Any]] = []
+    lines = [line.strip() for line in answer.splitlines() if line.strip()]
+    index = 0
+    while index + 1 < len(lines):
+        headers = _markdown_cells(lines[index])
+        separator = _markdown_cells(lines[index + 1])
+        if not required_headers.issubset(headers) or not _is_markdown_separator(
+            separator
+        ):
+            index += 1
+            continue
+        index += 2
+        while index < len(lines):
+            values = _markdown_cells(lines[index])
+            if len(values) != len(headers) or _is_markdown_separator(values):
+                break
+            row = dict(zip(headers, values, strict=True))
+            effective_date = row["除权除息日"].strip()
+            amount = row["年度累计单位分红（单位：元）"].strip()
+            if effective_date or amount:
+                rows.append(
+                    {
+                        "stock_code": row["证券代码"],
+                        "ex_dividend_date": effective_date,
+                        "cash_dividend_per_share": amount,
+                    }
+                )
+            index += 1
+    return rows
+
+
+def _markdown_cells(line: str) -> list[str]:
+    if not line.startswith("|") or not line.endswith("|"):
+        return []
+    return [cell.strip() for cell in line[1:-1].split("|")]
+
+
+def _is_markdown_separator(cells: list[str]) -> bool:
+    return bool(cells) and all(cell and not cell.strip("-:") for cell in cells)
 
 
 def _required_rows(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
