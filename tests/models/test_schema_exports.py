@@ -16,6 +16,7 @@ EXPECTED_SCHEMAS = {
     "provider-profile.schema.json",
     "task-fit-profile.schema.json",
     "run-plan.schema.json",
+    "selection-snapshot.schema.json",
     "task-outcome.schema.json",
 }
 

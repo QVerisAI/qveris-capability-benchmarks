@@ -12,6 +12,7 @@ from PIL import Image
 from scripts.render_cap_guide_charts import (
     render_dividend_evidence_heatmap,
     render_release_outcomes,
+    render_selection_tradeoff,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,10 +26,9 @@ RELEASE_DIGEST = (
 )
 EVIDENCE_CHARTS = (
     "capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png",
+    "capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png",
 )
-MANIFEST_EVIDENCE_CHARTS = tuple(
-    f"docs/guides/{target}" for target in EVIDENCE_CHARTS
-)
+MANIFEST_EVIDENCE_CHARTS = tuple(f"docs/guides/{target}" for target in EVIDENCE_CHARTS)
 
 
 def test_article_is_bound_to_dividend_release() -> None:
@@ -140,9 +140,7 @@ def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     assert generated == committed
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
     chart_name = "dividend-evidence-heatmap.png"
-    assert (tmp_path / chart_name).read_bytes() == (
-        chart_dir / chart_name
-    ).read_bytes()
+    assert (tmp_path / chart_name).read_bytes() == (chart_dir / chart_name).read_bytes()
     assert committed["charts"][chart_name] == (
         f"sha256:{hashlib.sha256((chart_dir / chart_name).read_bytes()).hexdigest()}"
     )
@@ -159,6 +157,26 @@ def test_evidence_chart_footer_uses_requested_edition_date(tmp_path: Path) -> No
     assert "2026-11-01" in manifest["data"]["footer"]
 
 
+def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
+    snapshot = MANIFEST.parent / "selection-snapshot.json"
+    generated = render_selection_tradeoff(snapshot, tmp_path)
+    committed_dir = MANIFEST.parent / "charts"
+    committed = json.loads(
+        (committed_dir / "selection-charts-manifest.json").read_text(encoding="utf-8")
+    )
+
+    assert generated == committed
+    assert generated["input_digests"]["selection_snapshot"] == (
+        f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
+    )
+    chart_name = "dividend-runtime-tradeoff.png"
+    assert (tmp_path / chart_name).read_bytes() == (
+        committed_dir / chart_name
+    ).read_bytes()
+    assert len(generated["data"]["rows"]) == 5
+    assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
+
+
 def test_manifest_uses_public_release_as_source_of_truth() -> None:
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
@@ -169,6 +187,41 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert manifest["native_supplements"] == ["同花顺 iFinD"]
     assert "同花顺 iFinD" not in manifest["seo"]["provider_pages"]
     assert "direct_test_evidence" not in manifest["artifacts"]
+    snapshot = ROOT / manifest["artifacts"]["selection_snapshot"]
+    assert snapshot.is_file()
+    assert manifest["selection_snapshot"]["digest"] == (
+        f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
+    )
+
+
+def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    for phrase in (
+        "QVeris gateway 延迟中位数",
+        "成功调用 credits 中位数",
+        "官方价格",
+        "市场覆盖",
+        "MKT.DIVIDENDS",
+        "参数清晰度",
+        "schema 稳定性",
+        "错误恢复",
+    ):
+        assert phrase in article
+    assert "491 ms / 0.237 credits" in article
+    assert "576 ms / 0.200 credits" in article
+    assert "779 ms / 0.281 credits" in article
+    assert "861 ms / 0.100 credits" in article
+    assert "综合 AI 友好度" not in article
+    assert "已验证全球市场覆盖" not in article
+
+
+def test_article_embeds_only_decision_useful_snapshot_chart() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    assert "dividend-runtime-tradeoff.png" in article
+    assert "chart-market-coverage.png" not in article
+    assert "chart-ai-difficulty.png" not in article
 
 
 def test_release_chart_is_derived_from_release_bytes(tmp_path: Path) -> None:

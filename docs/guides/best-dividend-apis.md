@@ -2,7 +2,7 @@
 
 如果你的应用必须同时拿到**除权除息日**和**每股现金分红金额**，本次实测中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮通过字段门槛与无效代码测试；同花顺 iFinD Native MCP 返回了年度累计单位分红字段，却无法将它绑定到可核验的除权除息日；恒生聚源的响应证券标识与请求标的不一致，需要复测后才能形成可靠结论。
 
-这不是一张“谁家最好”的综合排行榜，而是一份面向开发者的单能力选型指南。我们只回答一个具体问题：**哪条 Access Path 能在固定输入下，稳定返回可用于程序处理的现金分红事件？**
+这不是一张“谁家最好”的综合排行榜，而是一份面向开发者的单能力选型指南。我们回答的是一组连在一起的工程问题：**哪条 Access Path 能返回可信的现金分红事件，调用成本与延迟如何，价格从哪里核验，市场范围又被什么证据证明？**
 
 > **快速建议**：想用一个 QVeris key 接入多家美股数据源，可从本次通过门槛的四条 QVeris Access Path 中选择；需要响应明确给出 `currency`，优先核验 Twelve Data 和 Massive；已有 iFinD Native MCP 权限，可以自行复测其年度累计单位分红字段，但不要把它当成已经绑定日期的单次 Dividend Event。
 
@@ -11,6 +11,7 @@
 - [实测结果一览](#实测结果一览)
 - [为什么分红 API 比看起来复杂](#为什么分红-api-比看起来复杂)
 - [我们如何测试](#我们如何测试)
+- [延迟、credits、价格与市场覆盖](#延迟credits价格与市场覆盖)
 - [6 家供应商逐一分析](#6-家供应商逐一分析)
 - [不同开发需求怎么选](#不同开发需求怎么选)
 - [Agent 接入风险信号](#direct-test-可观察的-agent-接入风险信号)
@@ -23,16 +24,16 @@
 
 测试日期为 2026-08-11。固定测试包含 A 股或美股正向用例，以及一个明确无效的 symbol 负向控制；每条适用 Access Path 各执行 3 轮，共 36 次真实 Direct Test。
 
-| 供应商与 Access Path | 测试市场 | 除权除息日 + 每股金额 | 无效代码处理 | 本次结论 | 接入凭证 |
-|---|---|---:|---:|---|---|
-| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | A 股 | 需要复测 | 3/3 | **Evidence insufficient**：响应证券标识无法与请求标的可靠对应 | QVeris key |
-| [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | A 股 | 0/3 | 3/3 | **Not qualified**：存在年度累计单位分红，但缺可核验除权除息日 | iFinD Native MCP key |
-| [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | 美股 | 3/3 | 3/3 | **Qualified** | QVeris key |
-| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | 美股 | 3/3 | 3/3 | **Qualified** | QVeris key |
-| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/eodhd) | 美股 | 3/3 | 3/3 | **Qualified** | QVeris key |
-| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | 美股 | 3/3 | 3/3 | **Qualified** | QVeris key |
+| 供应商与 Access Path | 本次 CAP 结论 | QVeris gateway 延迟中位数 / 成功调用 credits 中位数 | 官方价格事实 | 更适合优先复测的需求 |
+|---|---|---:|---|---|
+| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **Evidence insufficient**：证券身份未闭环 | 623 ms / 0.100 credits | 未公开标准价，商务询价 | A 股候选；必须先修复身份映射 |
+| [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | **Not qualified**：缺单次事件日期与金额语义 | 不适用，Native MCP 不混入 QVeris 指标 | 个人版 CNY 40/月起，5,000 次请求 | 已有 iFinD 权限、只需要复核年度累计字段 |
+| [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Qualified**：核心字段与负向控制 3/3 | 491 ms / 0.237 credits | Grow USD 29/月起；免费层 800 credits/日 | 明确币种、较低观测延迟 |
+| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Qualified**：核心字段与负向控制 3/3 | 576 ms / 0.200 credits | Premium USD 49.99/月起；免费层 25 次/日 | 公告日、登记日和支付日 |
+| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Qualified**：核心字段与负向控制 3/3 | 779 ms / 0.281 credits | All-in-One USD 99.99/月 | 精简核心事件结构 |
+| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Qualified**：核心字段与负向控制 3/3 | 861 ms / 0.100 credits | 当前 registry 价格事实不适用于该 QVeris 路径 | 明确币种与完整日期组 |
 
-`Qualified` 只表示该 Access Path 在本次冻结输入和规则下通过了这一项分红事件能力测试。它不代表供应商在价格、全市场覆盖、历史深度、延迟、服务等级或其他金融数据能力上更好。
+`Qualified` 只表示该 Access Path 在本次冻结输入和规则下通过了这一项分红事件能力测试。运行指标、官网套餐和市场证据是独立维度：表中 ms/credits 来自 QVeris gateway 小样本，官网价格是 2026-08-10 核验的供应商声明，两者都不能替代持续 SLA、Native API 性能或授权条款。
 
 ## 为什么分红 API 比看起来复杂
 
@@ -71,6 +72,44 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 - **证据处理**：原始响应默认私有，只公开通过脱敏和授权检查的终态事实与 digest。
 
 实测事实、供应商官方说明和我们的编辑判断使用不同口径：表格中的轮次结果来自 Live Test；市场覆盖和产品能力若来自供应商文档，会链接到官方来源；“适合谁”属于基于本次结果的编辑判断，不会伪装成供应商承诺。
+
+## 延迟、credits、价格与市场覆盖
+
+### QVeris 运行表现：可比较，但不能冒充 Native API SLA
+
+[![五条 QVeris 分红 Access Path 的延迟与 credits 取舍](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)
+
+六条 Access Path 都产生了 6/6 份终态证据，包括 iFind Native MCP；这只能说明固定窗口内没有留下未决运行，不能冒充长期可靠性。图中只放五条 QVeris Access Path：latency 样本为 6 次（3 次正向、3 次负向控制），credits 只统计 3 次成功正向调用。横坐标是 QVeris gateway 延迟中位数，横线显示本次最小—最大值；纵坐标是成功调用 credits 中位数。恒生聚源即使能完成调用，其证券身份仍然被业务语义门禁阻断。
+
+开发者可以用这张图做第一轮工程预算：Twelve Data 在本次样本中延迟中位数最低；恒生聚源和 Massive 的成功调用 credits 中位数最低；EODHD 的观测 credits 与延迟都更高。但样本只有 6 次，不能据此预测峰值、地域差异或生产流量下的 P95/P99。
+
+### 官方价格：能比较入口，不能直接比较总拥有成本
+
+本文将官网套餐与 QVeris credits 分开。前者是供应商公开的套餐事实，后者是这条 QVeris Access Path 的调用观测。套餐包含的产品、频率、交易所授权和再分发权不同，不能只按“每月最低价”排序。
+
+| Provider / Access Path | 免费或试用入口 | 付费入口 | 价格证据作用域 |
+|---|---|---|---|
+| 恒生聚源 / QVeris | 未公开 | 商务询价 | 适用于当前 Dividend Access Path |
+| 同花顺 iFinD / Native MCP | 新账户 2,000 次试用 | 个人版 CNY 40/月；企业版 CNY 5,000/月 | 仅 Native MCP |
+| Twelve Data / QVeris | 8 credits/分钟、800/日 | Grow USD 29/月起 | Provider-wide 官方价格 |
+| Alpha Vantage / QVeris | 25 次/日 | Premium USD 49.99/月起 | Provider-wide 官方价格 |
+| EODHD / QVeris | 20 次/日 | All-in-One USD 99.99/月 | Provider-wide 官方价格 |
+| Massive / QVeris | **Evidence insufficient** | **Evidence insufficient** | registry 中的 Stocks 价格未覆盖这条 QVeris Dividend Access Path |
+
+价格会变化，正式采购前应点击各供应商官方链接复核调用额度、实时性、交易所费用、缓存和再分发权限。
+
+### 市场覆盖：本版只发布“测过哪里”
+
+| Provider / Access Path | 本次固定市场样本 | QVeris `MKT.DIVIDENDS` SV 验证范围 | 可以得出的结论 |
+|---|---|---|---|
+| 恒生聚源 / QVeris | CN · `600519.SH` | **Evidence insufficient** | 调用过 A 股样本，但身份错配，不能升级为覆盖证明 |
+| 同花顺 iFinD / Native MCP | CN · `600519.SH` | 不适用 | 只证明 Native MCP 的这个样本被执行 |
+| Twelve Data / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
+| Alpha Vantage / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
+| EODHD / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
+| Massive / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
+
+QVeris 的 SV 结果是跨 CAP 可复用的市场验证来源，但本版没有绑定可公开复核的 `MKT.DIVIDENDS` SV snapshot，所以不会把 Provider registry 或官网宣传的市场列表画成实测覆盖图。未来绑定相同 Provider、Access Path、namespace、market 和观察窗口的 SV 证据后，这张表可以直接扩展；历史文章仍保持原 Snapshot 不变。
 
 ## 6 家供应商逐一分析
 
@@ -147,7 +186,7 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 ### 延迟是第一优先级
 
-不要根据本文决定。QVeris 路径的延迟是网关侧小样本观测，不能等同于供应商 Native API 性能；iFind Native MCP 与 QVeris Access Path 的链路也不可直接横比。延迟选型需要独立 CAP、更多轮次和明确的百分位统计。
+先用本文的 QVeris gateway 小样本排出复测顺序，再用你的部署区域、调用频率和目标 symbol 做持续压测。不要把 iFind Native MCP 与 QVeris 路径横比，也不要把 6 次调用的中位数当成生产 SLA。
 
 ## Direct Test 可观察的 Agent 接入风险信号
 
@@ -203,7 +242,7 @@ uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
   --expected-digest sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
 ```
 
-你可以检查 [release.json](../../releases/dividend-events-2026-q3-v1/release.json)、[公开脱敏证据](../../evidence/dividend-events-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。当前 release `dividend-events-2026-q3-v1` 的 digest 为 `sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0`。
+你可以检查 [release.json](../../releases/dividend-events-2026-q3-v1/release.json)、[Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json)、[公开脱敏证据](../../evidence/dividend-events-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。当前 release `dividend-events-2026-q3-v1` 的 digest 为 `sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0`。
 
 ### 有 key：重新执行真实调用
 
@@ -225,7 +264,7 @@ uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
 
 - 本文只测试 Dividend Events 这一项能力，不代表供应商的综合金融数据质量。
 - 测试只覆盖 `AAPL`、`600519.SH` 和无效 symbol；没有证据的市场、字段与接入方式保持 unavailable。
-- 本次比较没有测试官网价格、套餐限制、SLA、全市场覆盖、分页、历史修订或企业授权条款。
+- 官网价格来自 2026-08-10 的官方事实快照；没有实测套餐限额、SLA、全市场覆盖、分页、历史修订或企业授权条款。
 - QVeris Access Path 的 latency 和 credits 只描述网关侧观测，不能归因于供应商 Native API。
 - QVeris 运营平台参与部分 Access Path 的接入，但测试规则、终态证据和复测入口公开；本文不接受付费排名。
 - 恒生聚源的证券身份问题修复后必须重跑受影响用例。本稿不会用旧证据维持 Qualified 结论。

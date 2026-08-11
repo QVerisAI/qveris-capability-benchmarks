@@ -61,6 +61,8 @@ _DIVIDEND_PROVIDERS = {
     "eodhd": "EODHD",
     "massive-stocks": "Massive",
 }
+
+
 def _directory_digest(path: Path) -> str:
     digest = hashlib.sha256()
     for item in sorted(path.glob("*.json")):
@@ -93,7 +95,7 @@ def _dividend_evidence_rows(
     released_by_run_key = {item["run_key"]: item for item in document["evidence"]}
     terminals: dict[str, dict[str, object]] = {}
     for run_key, released in released_by_run_key.items():
-        evidence_path = evidence_dir / f'{released["evidence_id"]}-terminal.json'
+        evidence_path = evidence_dir / f"{released['evidence_id']}-terminal.json"
         if _sha256_identity(evidence_path) != released["public_digest"]:
             raise ValueError(f"public evidence digest mismatch: {evidence_path.name}")
         terminals[run_key] = json.loads(evidence_path.read_text(encoding="utf-8"))
@@ -124,9 +126,7 @@ def _dividend_evidence_rows(
         positive = [terminals[cell["run_key"]] for cell in positive_cells]
         negative = [terminals[cell["run_key"]] for cell in negative_cells]
         requested_symbol = positive_cells[0]["case_input"]["symbol"]
-        returned_symbols = {
-            item.get("facts", {}).get("symbol") for item in positive
-        }
+        returned_symbols = {item.get("facts", {}).get("symbol") for item in positive}
         identity_blocked = any(
             symbol is not None and symbol != requested_symbol
             for symbol in returned_symbols
@@ -222,7 +222,7 @@ def render_dividend_evidence_heatmap(
     ax.set_xticklabels(columns, fontsize=12, color="#334155")
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
-        [f'{row["provider"]}\n{row["meta"]}' for row in rows],
+        [f"{row['provider']}\n{row['meta']}" for row in rows],
         fontsize=11,
         color="#334155",
     )
@@ -290,10 +290,7 @@ def render_dividend_evidence_heatmap(
         frameon=False,
         fontsize=11,
     )
-    footer = (
-        f"数据来源：QVeris Research，{edition_date}；"
-        "灰色不代表供应商没有该能力"
-    )
+    footer = f"数据来源：QVeris Research，{edition_date}；灰色不代表供应商没有该能力"
     fig.text(
         0.08,
         0.025,
@@ -312,9 +309,9 @@ def render_dividend_evidence_heatmap(
         "rows": rows,
     }
     manifest: dict[str, object] = {
-        "release_id": json.loads(release_path.read_text(encoding="utf-8"))[
-            "release"
-        ]["release_id"],
+        "release_id": json.loads(release_path.read_text(encoding="utf-8"))["release"][
+            "release_id"
+        ],
         "charts": {chart_name: _sha256_identity(chart_path)},
         "data": chart_data,
         "input_digests": {
@@ -324,6 +321,110 @@ def render_dividend_evidence_heatmap(
         "rendered_at": edition_date,
     }
     (output_dir / "evidence-matrix-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def render_selection_tradeoff(
+    selection_snapshot_path: Path,
+    output_dir: Path,
+) -> dict[str, object]:
+    snapshot = json.loads(selection_snapshot_path.read_text(encoding="utf-8"))
+    rows = []
+    for item in snapshot["rows"]:
+        metrics = item["gateway_metrics"]
+        if metrics["state"] != "measured":
+            continue
+        rows.append(
+            {
+                "provider": (
+                    "Massive"
+                    if item["provider_id"] == "massive-stocks"
+                    else item["provider_name"]
+                ),
+                "access_path": "QVeris",
+                "median_latency_ms": metrics["latency_median_ms"],
+                "min_latency_ms": metrics["latency_min_ms"],
+                "max_latency_ms": metrics["latency_max_ms"],
+                "median_credits": metrics["median_credits"],
+                "latency_samples": metrics["latency_sample_size"],
+                "cost_samples": metrics["cost_sample_size"],
+            }
+        )
+    rows.sort(key=lambda item: item["median_latency_ms"])
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_name = "dividend-runtime-tradeoff.png"
+    chart_path = output_dir / chart_name
+    colors = ["#2F78AD", "#6EB0C2", "#143F74", "#FF8C00", "#12B76A"]
+    fig, ax = plt.subplots(figsize=(11, 6.5), facecolor="#F8FAFC")
+    ax.set_facecolor("#F8FAFC")
+    for index, item in enumerate(rows):
+        median_latency = item["median_latency_ms"]
+        min_latency = item["min_latency_ms"]
+        max_latency = item["max_latency_ms"]
+        credits = item["median_credits"]
+        ax.errorbar(
+            median_latency,
+            credits,
+            xerr=[
+                [median_latency - min_latency],
+                [max_latency - median_latency],
+            ],
+            fmt="o",
+            markersize=11,
+            capsize=5,
+            color=colors[index % len(colors)],
+            ecolor="#94A3B8",
+            elinewidth=2,
+            zorder=3,
+        )
+        ax.annotate(
+            item["provider"],
+            (median_latency, credits),
+            textcoords="offset points",
+            xytext=(9, 10 if index % 2 == 0 else -18),
+            fontsize=11,
+            fontweight=600,
+            color="#0F172A",
+        )
+    ax.set_xlabel("QVeris gateway 延迟中位数（ms；横线为最小—最大）", color="#334155")
+    ax.set_ylabel("成功调用 credits 中位数", color="#334155")
+    ax.set_title(
+        "一次 Dividend Event 调用：延迟与 credits 的取舍",
+        color="#143F74",
+        fontsize=18,
+        fontweight=600,
+        pad=18,
+    )
+    ax.grid(True, color="#E2E8F0", linewidth=1)
+    for spine in ax.spines.values():
+        spine.set_color("#CBD5E1")
+    edition = snapshot["edition"]
+    fig.text(
+        0.09,
+        0.025,
+        f"QVeris gateway 小样本观测 · {edition} · 每条路径 latency n=6，"
+        "credits n=3；不是 Native API SLA 或官网价格",
+        color="#475569",
+        fontsize=9.5,
+    )
+    fig.subplots_adjust(left=0.1, right=0.96, top=0.84, bottom=0.17)
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    manifest: dict[str, object] = {
+        "snapshot_id": snapshot["snapshot_id"],
+        "charts": {chart_name: _sha256_identity(chart_path)},
+        "data": {"rows": rows},
+        "input_digests": {
+            "selection_snapshot": _sha256_identity(selection_snapshot_path),
+        },
+        "rendered_at": edition,
+    }
+    (output_dir / "selection-charts-manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -493,9 +594,18 @@ def main(argv: list[str] | None = None) -> int:
         default=Path("docs/guides/capability-seo/best-dividend-apis/charts"),
     )
     parser.add_argument("--release-dir", type=Path)
+    parser.add_argument("--selection-snapshot", type=Path)
     parser.add_argument("--cases", type=Path)
     parser.add_argument("--edition-date", default="2026-08-11")
     args = parser.parse_args(argv)
+
+    if args.selection_snapshot:
+        manifest = render_selection_tradeoff(
+            args.selection_snapshot,
+            args.output_dir,
+        )
+        print(json.dumps(manifest, ensure_ascii=False))
+        return 0
 
     if args.release_dir:
         if not args.cases:

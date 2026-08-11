@@ -1,0 +1,677 @@
+{
+  "cap_id": "dividend-events",
+  "cap_release_digest": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
+  "edition": "2026-08-11",
+  "input_digests": {
+    "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
+    "input": "sha256:507ae01b7bad97dd93a789d4e4bf19543910b28c85063cf6844e32b39b982133",
+    "providers": {
+      "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
+      "eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
+      "hangseng": "sha256:ef506460ef0a08dd0ddc432ccc4b816bd9ee8e7179f8e539ef9f00280609fa3c",
+      "ifind": "sha256:59c057e4f0a211582b5e9a534537ec546cc8675b22a539a33206452adfad2039",
+      "massive-stocks": "sha256:64b50bc3ec8fff193b4ef7a6f5f35d9a2f5f908760ff0d7b30579b3436e7a221",
+      "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
+    },
+    "qveris_sv": null,
+    "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+  },
+  "limitations": [
+    "Tested markets are fixed Direct Test samples, not comprehensive market coverage.",
+    "No publishable MKT.DIVIDENDS QVeris SV snapshot is bound to this edition.",
+    "QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing."
+  ],
+  "rows": [
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:be62eb3461a854b986672d5559afe249106fa386a9e6ed045fab1ac9b5b080d6",
+            "sha256:f7e458a58117138595e719893a244a1f7e1022823e94df76abc8e732032e98a2",
+            "sha256:fb15fc5ffc02097215a925f9c5407a2af25a3c0a09a018ddc9a7714b718e923d"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 3,
+        "evidence_refs": [
+          "sha256:74bbef735af28d5aebe617ad154efcb0033280a143b1a66ca5b730e644b6bd9c",
+          "sha256:be62eb3461a854b986672d5559afe249106fa386a9e6ed045fab1ac9b5b080d6",
+          "sha256:db47caca833b2d8c70f12d5fe934953e5be90aee09730d4b7510b883abae1d83",
+          "sha256:db7d5ad24aa0a6f67b6950594db85fee6d6a37d84b44b69eb96f5f21e3019ebe",
+          "sha256:f7e458a58117138595e719893a244a1f7e1022823e94df76abc8e732032e98a2",
+          "sha256:fb15fc5ffc02097215a925f9c5407a2af25a3c0a09a018ddc9a7714b718e923d"
+        ],
+        "latency_max_ms": 1783.63,
+        "latency_median_ms": 575.685,
+        "latency_min_ms": 383.85,
+        "latency_sample_size": 6,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": 0.2,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "evidence_insufficient",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:74bbef735af28d5aebe617ad154efcb0033280a143b1a66ca5b730e644b6bd9c",
+          "sha256:db47caca833b2d8c70f12d5fe934953e5be90aee09730d4b7510b883abae1d83",
+          "sha256:db7d5ad24aa0a6f67b6950594db85fee6d6a37d84b44b69eb96f5f21e3019ebe"
+        ],
+        "tested_markets": [
+          "US"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "25 API requests per day",
+        "license_status": "cleared",
+        "paid_plans": "Premium from USD 49.99/month",
+        "pricing_id": "alpha-vantage-official-pricing",
+        "pricing_url": "https://www.alphavantage.co/premium/",
+        "source_digest": "8c1c5dc3b6635a7d3d58f64378fab701c4d8ec5f122302aa00981aa81da90baa",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "alpha-vantage",
+      "provider_name": "Alpha Vantage",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:74bbef735af28d5aebe617ad154efcb0033280a143b1a66ca5b730e644b6bd9c",
+          "sha256:be62eb3461a854b986672d5559afe249106fa386a9e6ed045fab1ac9b5b080d6",
+          "sha256:db47caca833b2d8c70f12d5fe934953e5be90aee09730d4b7510b883abae1d83",
+          "sha256:db7d5ad24aa0a6f67b6950594db85fee6d6a37d84b44b69eb96f5f21e3019ebe",
+          "sha256:f7e458a58117138595e719893a244a1f7e1022823e94df76abc8e732032e98a2",
+          "sha256:fb15fc5ffc02097215a925f9c5407a2af25a3c0a09a018ddc9a7714b718e923d"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:0c074fb42628cf14967e30b8984eb96a6579ba9624ac0d42c1b72d84ab4bec4a",
+            "sha256:5cce9c6ef9147f7e840c1a77e32bd14adf9fca91f708ad8ff974294b822b6467",
+            "sha256:f79f4e99ac802c04e7d4192151fa1b522f5857dc77fae368188cd1a5b7b6af18"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 3,
+        "evidence_refs": [
+          "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
+          "sha256:0c074fb42628cf14967e30b8984eb96a6579ba9624ac0d42c1b72d84ab4bec4a",
+          "sha256:5cce9c6ef9147f7e840c1a77e32bd14adf9fca91f708ad8ff974294b822b6467",
+          "sha256:71f353bfe03fc39905511e6a4b97a93cdd2955779443f1cd136e8291bbfb84dd",
+          "sha256:b3daa8ae531a3f2deec59600b0cf3ccd307c636ad3214386cdb1a13c3543d405",
+          "sha256:f79f4e99ac802c04e7d4192151fa1b522f5857dc77fae368188cd1a5b7b6af18"
+        ],
+        "latency_max_ms": 1555.72,
+        "latency_median_ms": 778.74,
+        "latency_min_ms": 687.55,
+        "latency_sample_size": 6,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": 0.281,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "evidence_insufficient",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
+          "sha256:71f353bfe03fc39905511e6a4b97a93cdd2955779443f1cd136e8291bbfb84dd",
+          "sha256:b3daa8ae531a3f2deec59600b0cf3ccd307c636ad3214386cdb1a13c3543d405"
+        ],
+        "tested_markets": [
+          "US"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "20 API calls per day",
+        "license_status": "cleared",
+        "paid_plans": "All-in-One USD 99.99/month",
+        "pricing_id": "eodhd-official-pricing",
+        "pricing_url": "https://eodhd.com/pricing",
+        "source_digest": "3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "eodhd",
+      "provider_name": "EODHD",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
+          "sha256:0c074fb42628cf14967e30b8984eb96a6579ba9624ac0d42c1b72d84ab4bec4a",
+          "sha256:5cce9c6ef9147f7e840c1a77e32bd14adf9fca91f708ad8ff974294b822b6467",
+          "sha256:71f353bfe03fc39905511e6a4b97a93cdd2955779443f1cd136e8291bbfb84dd",
+          "sha256:b3daa8ae531a3f2deec59600b0cf3ccd307c636ad3214386cdb1a13c3543d405",
+          "sha256:f79f4e99ac802c04e7d4192151fa1b522f5857dc77fae368188cd1a5b7b6af18"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:41d0ca23c3987891e3bdec4ee0520acf88012981b256f420b047e4dc04cde985",
+            "sha256:70bc80b312c495002bacf9e2ae576661ac6de55b386fbb08b768939b7df25e32",
+            "sha256:b8db2a2ccdf679bbe2b878cc54a1d54c057747d40254d4e67f47848b2bac09e3"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 3,
+        "evidence_refs": [
+          "sha256:41d0ca23c3987891e3bdec4ee0520acf88012981b256f420b047e4dc04cde985",
+          "sha256:4eb6ed2fe0163e5bed8bc5bd0ce4df5a074c83c1288d61d4e9fafdfbd6fbd109",
+          "sha256:4f2bbbca398abf2c1db79e85a586b43c5362cd81d223ae09cdbdc504b950ffc2",
+          "sha256:70bc80b312c495002bacf9e2ae576661ac6de55b386fbb08b768939b7df25e32",
+          "sha256:b8db2a2ccdf679bbe2b878cc54a1d54c057747d40254d4e67f47848b2bac09e3",
+          "sha256:d647d52a44b4780b7c2a80072bdbd19c685e3eba8dd2d0565888f97e9b69a762"
+        ],
+        "latency_max_ms": 1708.29,
+        "latency_median_ms": 623.01,
+        "latency_min_ms": 497.68,
+        "latency_sample_size": 6,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": 0.1,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "evidence_insufficient",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:4eb6ed2fe0163e5bed8bc5bd0ce4df5a074c83c1288d61d4e9fafdfbd6fbd109",
+          "sha256:4f2bbbca398abf2c1db79e85a586b43c5362cd81d223ae09cdbdc504b950ffc2",
+          "sha256:d647d52a44b4780b7c2a80072bdbd19c685e3eba8dd2d0565888f97e9b69a762"
+        ],
+        "tested_markets": [
+          "CN"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": [
+          "hangseng-dividends-qveris"
+        ],
+        "currencies": [
+          "CNY"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Not published for this snapshot.",
+        "license_status": "cleared",
+        "paid_plans": "Commercial; see product page.",
+        "pricing_id": "hangseng-dividends-pricing",
+        "pricing_url": "https://www.gildata.com/products/core-data.html",
+        "source_digest": "67cb7320607025a487e72270e31f695de598efbb2836511b8775e15e3d211f35",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "hangseng",
+      "provider_name": "\u6052\u751f\u805a\u6e90",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:41d0ca23c3987891e3bdec4ee0520acf88012981b256f420b047e4dc04cde985",
+          "sha256:4eb6ed2fe0163e5bed8bc5bd0ce4df5a074c83c1288d61d4e9fafdfbd6fbd109",
+          "sha256:4f2bbbca398abf2c1db79e85a586b43c5362cd81d223ae09cdbdc504b950ffc2",
+          "sha256:70bc80b312c495002bacf9e2ae576661ac6de55b386fbb08b768939b7df25e32",
+          "sha256:b8db2a2ccdf679bbe2b878cc54a1d54c057747d40254d4e67f47848b2bac09e3",
+          "sha256:d647d52a44b4780b7c2a80072bdbd19c685e3eba8dd2d0565888f97e9b69a762"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "access_path_type": "native_mcp",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:52bac8cb79cdf496442b0f60764ecb802cfbc1183ac6bfa7c1737c6f7f9af73a",
+            "sha256:a6589d28c60ee05d3a114d447baeebc822dea53ceeab5b5c50e8e523741dffd4",
+            "sha256:c233b205451974fa570cbfb6f8b02887b80182cef7ed2dcac83d8eddbf9d6513"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 0,
+        "evidence_refs": [],
+        "latency_max_ms": null,
+        "latency_median_ms": null,
+        "latency_min_ms": null,
+        "latency_sample_size": 0,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "not_applicable"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "not_applicable",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:4c3d76be5e3ecfe7c2d10a6af26e7d63489dfa4f2ccae57095c745f00e5e5390",
+          "sha256:953aecd58c8561895c3b399d94a6876542b980ba391083d60761c427b1c7828a",
+          "sha256:c2d877992785d8b58900874072b84de0e688a5c8aff765cb0da56497f7a857a9"
+        ],
+        "tested_markets": [
+          "CN"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": [
+          "ifind-native-mcp"
+        ],
+        "currencies": [
+          "CNY"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "New accounts receive 2,000 trial requests",
+        "license_status": "cleared",
+        "paid_plans": "Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests",
+        "pricing_id": "ifind-mcp-official-pricing",
+        "pricing_url": "https://mcp.51ifind.com/?syncCookieTimes=1#/pricing",
+        "source_digest": "d8621d75747f02e66b4d054d4884a53b86eece43c0966af697215b1856616c00",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "ifind",
+      "provider_name": "\u540c\u82b1\u987a iFinD",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:4c3d76be5e3ecfe7c2d10a6af26e7d63489dfa4f2ccae57095c745f00e5e5390",
+          "sha256:52bac8cb79cdf496442b0f60764ecb802cfbc1183ac6bfa7c1737c6f7f9af73a",
+          "sha256:953aecd58c8561895c3b399d94a6876542b980ba391083d60761c427b1c7828a",
+          "sha256:a6589d28c60ee05d3a114d447baeebc822dea53ceeab5b5c50e8e523741dffd4",
+          "sha256:c233b205451974fa570cbfb6f8b02887b80182cef7ed2dcac83d8eddbf9d6513",
+          "sha256:c2d877992785d8b58900874072b84de0e688a5c8aff765cb0da56497f7a857a9"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:2298942b126a122a41a009692281d3719cd02aca75356dc963f6f5a5dd075ea9",
+            "sha256:5c5e9b4e02bcbda07c57adee27b26d39ee46114f011a86c2036c3c89cc1b22e2",
+            "sha256:83e2da2a23060e219f3f3fea52dddd6940d09c4c824efa491216deffd086831a"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 3,
+        "evidence_refs": [
+          "sha256:08926242dd2627a1c6120252e97f56ad4413d033ea4fb8605277d635c442cd59",
+          "sha256:2298942b126a122a41a009692281d3719cd02aca75356dc963f6f5a5dd075ea9",
+          "sha256:5c5e9b4e02bcbda07c57adee27b26d39ee46114f011a86c2036c3c89cc1b22e2",
+          "sha256:83e2da2a23060e219f3f3fea52dddd6940d09c4c824efa491216deffd086831a",
+          "sha256:85a3e4f511ea3446e9a2c3ef92a2709c712713d97b9f8b40eb10825c751bc54e",
+          "sha256:ff3a236ef498a4cef221961e6f0939a8018fa6425743dd1fbd62f14336e42934"
+        ],
+        "latency_max_ms": 1202.26,
+        "latency_median_ms": 860.975,
+        "latency_min_ms": 761.87,
+        "latency_sample_size": 6,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": 0.1,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "evidence_insufficient",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:08926242dd2627a1c6120252e97f56ad4413d033ea4fb8605277d635c442cd59",
+          "sha256:85a3e4f511ea3446e9a2c3ef92a2709c712713d97b9f8b40eb10825c751bc54e",
+          "sha256:ff3a236ef498a4cef221961e6f0939a8018fa6425743dd1fbd62f14336e42934"
+        ],
+        "tested_markets": [
+          "US"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "provider_id": "massive-stocks",
+      "provider_name": "Massive Stocks",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:08926242dd2627a1c6120252e97f56ad4413d033ea4fb8605277d635c442cd59",
+          "sha256:2298942b126a122a41a009692281d3719cd02aca75356dc963f6f5a5dd075ea9",
+          "sha256:5c5e9b4e02bcbda07c57adee27b26d39ee46114f011a86c2036c3c89cc1b22e2",
+          "sha256:83e2da2a23060e219f3f3fea52dddd6940d09c4c824efa491216deffd086831a",
+          "sha256:85a3e4f511ea3446e9a2c3ef92a2709c712713d97b9f8b40eb10825c751bc54e",
+          "sha256:ff3a236ef498a4cef221961e6f0939a8018fa6425743dd1fbd62f14336e42934"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:30e7395da0e5c3299cd97901f5777e7cab5fc329eee54d4c9d8401a06d4a5ce5",
+            "sha256:42b40bccdca8e9bc603eaab480d1f595c3ee315185b2ed6f766adea8c0992913",
+            "sha256:91f90f88b2096b37cec02205ac39deba41b2149d04b6adea1510576cc3cff23c"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "dividend-events",
+      "gateway_metrics": {
+        "cost_sample_size": 3,
+        "evidence_refs": [
+          "sha256:30e7395da0e5c3299cd97901f5777e7cab5fc329eee54d4c9d8401a06d4a5ce5",
+          "sha256:42b40bccdca8e9bc603eaab480d1f595c3ee315185b2ed6f766adea8c0992913",
+          "sha256:91f90f88b2096b37cec02205ac39deba41b2149d04b6adea1510576cc3cff23c",
+          "sha256:a64becbb23864150f887b9bad105ba833aa57bafd45d8259175e8cc64fe0c613",
+          "sha256:b3b53752b9a5f1b2c3af3bf05b71bc23376648b92f318c4e98522edebbce96a8",
+          "sha256:c6cfdb662327eabf98d280feb8e17e3505420a73f37517f41fd24fc5ba2c6899"
+        ],
+        "latency_max_ms": 560.82,
+        "latency_median_ms": 491.005,
+        "latency_min_ms": 372.38,
+        "latency_sample_size": 6,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": 0.237,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "sv_evidence_refs": [],
+        "sv_namespace": "MKT.DIVIDENDS",
+        "sv_state": "evidence_insufficient",
+        "sv_verified_markets": [],
+        "tested_evidence_refs": [
+          "sha256:a64becbb23864150f887b9bad105ba833aa57bafd45d8259175e8cc64fe0c613",
+          "sha256:b3b53752b9a5f1b2c3af3bf05b71bc23376648b92f318c4e98522edebbce96a8",
+          "sha256:c6cfdb662327eabf98d280feb8e17e3505420a73f37517f41fd24fc5ba2c6899"
+        ],
+        "tested_markets": [
+          "US"
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-11",
+        "start": "2026-08-11"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Basic with 8 API credits per minute and 800 per day",
+        "license_status": "cleared",
+        "paid_plans": "Grow from USD 29/month",
+        "pricing_id": "twelve-data-official-pricing",
+        "pricing_url": "https://twelvedata.com/pricing",
+        "source_digest": "00bd84cd0b0d9ce97da479e2a5ebfa25365bc3efa46f7b27c53f8384cb80f27d",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "twelve-data",
+      "provider_name": "Twelve Data",
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:30e7395da0e5c3299cd97901f5777e7cab5fc329eee54d4c9d8401a06d4a5ce5",
+          "sha256:42b40bccdca8e9bc603eaab480d1f595c3ee315185b2ed6f766adea8c0992913",
+          "sha256:91f90f88b2096b37cec02205ac39deba41b2149d04b6adea1510576cc3cff23c",
+          "sha256:a64becbb23864150f887b9bad105ba833aa57bafd45d8259175e8cc64fe0c613",
+          "sha256:b3b53752b9a5f1b2c3af3bf05b71bc23376648b92f318c4e98522edebbce96a8",
+          "sha256:c6cfdb662327eabf98d280feb8e17e3505420a73f37517f41fd24fc5ba2c6899"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    }
+  ],
+  "snapshot_id": "dividend-events-selection-2026-q3-v1",
+  "version": "1.0.0"
+}

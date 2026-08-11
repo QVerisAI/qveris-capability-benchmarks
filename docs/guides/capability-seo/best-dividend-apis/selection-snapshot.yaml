@@ -1,0 +1,22 @@
+snapshot_id: dividend-events-selection-2026-q3-v1
+version: 1.0.0
+edition: "2026-08-11"
+cap_id: dividend-events
+cap_release:
+  release: releases/dividend-events-2026-q3-v1/release.json
+  digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+cases: cap_packs/dividend_events/cases.yaml
+providers_root: providers
+observation_window:
+  start: "2026-08-11"
+  end: "2026-08-11"
+market_by_case:
+  aapl-dividends-fixed-window: US
+  cn-600519-dividends-fixed-window: CN
+qveris_sv:
+  namespace: MKT.DIVIDENDS
+  snapshot: null
+limitations:
+  - Tested markets are fixed Direct Test samples, not comprehensive market coverage.
+  - No publishable MKT.DIVIDENDS QVeris SV snapshot is bound to this edition.
+  - QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing.

@@ -1,0 +1,621 @@
+{
+  "$defs": {
+    "AgentInterfaceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "invalid_input_handling": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "pagination": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "parameter_clarity": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "schema_stability": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "single_tool_completion": {
+          "$ref": "#/$defs/SelectionObservation"
+        }
+      },
+      "required": [
+        "invalid_input_handling",
+        "parameter_clarity",
+        "schema_stability",
+        "pagination",
+        "single_tool_completion"
+      ],
+      "title": "AgentInterfaceSnapshot",
+      "type": "object"
+    },
+    "GatewayMetricsSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_sample_size": {
+          "minimum": 0,
+          "title": "Cost Sample Size",
+          "type": "integer"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "latency_max_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Max Ms"
+        },
+        "latency_median_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Median Ms"
+        },
+        "latency_min_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Min Ms"
+        },
+        "latency_sample_size": {
+          "minimum": 0,
+          "title": "Latency Sample Size",
+          "type": "integer"
+        },
+        "measurement_boundary": {
+          "const": "qveris_gateway",
+          "default": "qveris_gateway",
+          "title": "Measurement Boundary",
+          "type": "string"
+        },
+        "median_credits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Median Credits"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "declared",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "latency_sample_size",
+        "cost_sample_size"
+      ],
+      "title": "GatewayMetricsSnapshot",
+      "type": "object"
+    },
+    "MarketCoverageSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "sv_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Sv Evidence Refs",
+          "type": "array"
+        },
+        "sv_namespace": {
+          "minLength": 1,
+          "title": "Sv Namespace",
+          "type": "string"
+        },
+        "sv_state": {
+          "enum": [
+            "measured",
+            "declared",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "Sv State",
+          "type": "string"
+        },
+        "sv_verified_markets": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Sv Verified Markets",
+          "type": "array"
+        },
+        "tested_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Tested Evidence Refs",
+          "type": "array"
+        },
+        "tested_markets": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tested Markets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "sv_namespace",
+        "sv_state"
+      ],
+      "title": "MarketCoverageSnapshot",
+      "type": "object"
+    },
+    "ObservationWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "ObservationWindow",
+      "type": "object"
+    },
+    "OfficialPricingSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To"
+        },
+        "currencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Currencies",
+          "type": "array"
+        },
+        "disclosure_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disclosure Level"
+        },
+        "extractor_version": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extractor Version"
+        },
+        "free_tier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Free Tier"
+        },
+        "license_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Status"
+        },
+        "paid_plans": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paid Plans"
+        },
+        "pricing_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Id"
+        },
+        "pricing_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Url"
+        },
+        "source_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Digest"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "declared",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "suite_fingerprint": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suite Fingerprint"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified At"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "OfficialPricingSnapshot",
+      "type": "object"
+    },
+    "RunObservationsSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "planned_observations": {
+          "minimum": 0,
+          "title": "Planned Observations",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "declared",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "terminal_observations": {
+          "minimum": 0,
+          "title": "Terminal Observations",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state",
+        "terminal_observations",
+        "planned_observations"
+      ],
+      "title": "RunObservationsSnapshot",
+      "type": "object"
+    },
+    "SelectionObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "passed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Passed"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "declared",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "SelectionObservation",
+      "type": "object"
+    },
+    "SelectionSnapshotRow": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "access_path_type": {
+          "minLength": 1,
+          "title": "Access Path Type",
+          "type": "string"
+        },
+        "agent_interface": {
+          "$ref": "#/$defs/AgentInterfaceSnapshot"
+        },
+        "cap_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "gateway_metrics": {
+          "$ref": "#/$defs/GatewayMetricsSnapshot"
+        },
+        "market_coverage": {
+          "$ref": "#/$defs/MarketCoverageSnapshot"
+        },
+        "observation_window": {
+          "$ref": "#/$defs/ObservationWindow"
+        },
+        "official_pricing": {
+          "$ref": "#/$defs/OfficialPricingSnapshot"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_name": {
+          "minLength": 1,
+          "title": "Provider Name",
+          "type": "string"
+        },
+        "run_observations": {
+          "$ref": "#/$defs/RunObservationsSnapshot"
+        }
+      },
+      "required": [
+        "cap_id",
+        "provider_id",
+        "provider_name",
+        "access_path_id",
+        "access_path_type",
+        "observation_window",
+        "run_observations",
+        "gateway_metrics",
+        "official_pricing",
+        "market_coverage",
+        "agent_interface"
+      ],
+      "title": "SelectionSnapshotRow",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cap_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Cap Id",
+      "type": "string"
+    },
+    "cap_release_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Cap Release Digest",
+      "type": "string"
+    },
+    "edition": {
+      "format": "date",
+      "title": "Edition",
+      "type": "string"
+    },
+    "input_digests": {
+      "additionalProperties": true,
+      "title": "Input Digests",
+      "type": "object"
+    },
+    "limitations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "rows": {
+      "items": {
+        "$ref": "#/$defs/SelectionSnapshotRow"
+      },
+      "minItems": 1,
+      "title": "Rows",
+      "type": "array"
+    },
+    "snapshot_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "version",
+    "edition",
+    "cap_id",
+    "cap_release_digest",
+    "input_digests",
+    "rows"
+  ],
+  "title": "SelectionSnapshot",
+  "type": "object"
+}

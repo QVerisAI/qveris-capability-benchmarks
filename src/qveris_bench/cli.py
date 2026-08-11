@@ -32,6 +32,10 @@ from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
 from qveris_bench.profiles.builder import ProfileBuildError, build_profile
+from qveris_bench.profiles.selection import (
+    SelectionSnapshotBuildError,
+    build_selection_snapshot,
+)
 from qveris_bench.providers.repository import (
     ProviderRegistryRepository,
     ProviderValidationError,
@@ -65,6 +69,7 @@ release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
 profile_app = typer.Typer(help="Build deterministic Task Fit Profiles.")
+selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
@@ -82,6 +87,7 @@ app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
 app.add_typer(profile_app, name="profile")
+app.add_typer(selection_app, name="selection")
 
 
 @app.callback()
@@ -119,6 +125,22 @@ def profile_build(
     (output_dir / "profile.json").write_bytes(built.json_bytes)
     (output_dir / "profile.md").write_bytes(built.markdown_bytes)
     typer.echo(f"Built Task Fit Profile -> {output_dir / 'profile.json'}")
+
+
+@selection_app.command("build")
+def selection_build(
+    input: Annotated[Path, typer.Option(help="Selection snapshot input YAML.")],
+    output: Annotated[Path, typer.Option(help="Immutable snapshot JSON output.")],
+) -> None:
+    """Build a scoped selection snapshot from pinned release facts."""
+    try:
+        built = build_selection_snapshot(input, _REPOSITORY_ROOT)
+    except SelectionSnapshotBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(built.json_bytes)
+    typer.echo(f"Built Selection Snapshot -> {output}")
 
 
 @qveris_app.command("search")

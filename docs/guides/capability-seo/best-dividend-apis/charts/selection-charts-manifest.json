@@ -1,0 +1,64 @@
+{
+  "snapshot_id": "dividend-events-selection-2026-q3-v1",
+  "charts": {
+    "dividend-runtime-tradeoff.png": "sha256:d39ff81a3f2c1d9d8ee7ae03f98851ba49c6bd8b46bf1590c95f28bd46f685e4"
+  },
+  "data": {
+    "rows": [
+      {
+        "provider": "Twelve Data",
+        "access_path": "QVeris",
+        "median_latency_ms": 491.005,
+        "min_latency_ms": 372.38,
+        "max_latency_ms": 560.82,
+        "median_credits": 0.237,
+        "latency_samples": 6,
+        "cost_samples": 3
+      },
+      {
+        "provider": "Alpha Vantage",
+        "access_path": "QVeris",
+        "median_latency_ms": 575.685,
+        "min_latency_ms": 383.85,
+        "max_latency_ms": 1783.63,
+        "median_credits": 0.2,
+        "latency_samples": 6,
+        "cost_samples": 3
+      },
+      {
+        "provider": "恒生聚源",
+        "access_path": "QVeris",
+        "median_latency_ms": 623.01,
+        "min_latency_ms": 497.68,
+        "max_latency_ms": 1708.29,
+        "median_credits": 0.1,
+        "latency_samples": 6,
+        "cost_samples": 3
+      },
+      {
+        "provider": "EODHD",
+        "access_path": "QVeris",
+        "median_latency_ms": 778.74,
+        "min_latency_ms": 687.55,
+        "max_latency_ms": 1555.72,
+        "median_credits": 0.281,
+        "latency_samples": 6,
+        "cost_samples": 3
+      },
+      {
+        "provider": "Massive",
+        "access_path": "QVeris",
+        "median_latency_ms": 860.975,
+        "min_latency_ms": 761.87,
+        "max_latency_ms": 1202.26,
+        "median_credits": 0.1,
+        "latency_samples": 6,
+        "cost_samples": 3
+      }
+    ]
+  },
+  "input_digests": {
+    "selection_snapshot": "sha256:0e1028d8ad303df2ebb619f063682b3b7d8531be014169ac139554c7ed4af66a"
+  },
+  "rendered_at": "2026-08-11"
+}
