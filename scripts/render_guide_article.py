@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -31,16 +32,27 @@ import yaml
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        raise FileNotFoundError(
+            f"证据文件缺失: {path} —— 请先运行 probe runner 生成 evidence"
+        )
     lines = [
         line
         for line in path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
     parsed: list[dict[str, Any]] = []
-    for line in lines:
-        value = json.loads(line)
+    for index, line in enumerate(lines, start=1):
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path}:{index} 非法 JSON 行: {exc}") from exc
         if isinstance(value, dict):
             parsed.append(value)
+    if not parsed:
+        raise ValueError(
+            f"{path} 没有任何有效记录，空证据不应产出空文章"
+        )
     return parsed
 
 
@@ -70,6 +82,43 @@ def _provider_ids(records: list[dict[str, Any]]) -> set[str]:
     return ids
 
 
+def _warn_provider_mismatch(
+    chart: dict[str, Any], data: dict[str, Any]
+) -> None:
+    """Warn when chart suppliers and evidence providers diverge."""
+    chart_ids = {s.get("provider_id") for s in chart.get("suppliers", [])}
+    ev_ids: set[str] = set()
+    for key in ("direct_test", "param_fill", "error_recovery", "self_description"):
+        ev_ids.update(data.get(key, {}).keys())
+    missing = chart_ids - ev_ids
+    extra = ev_ids - chart_ids
+    if missing:
+        print(
+            f"警告: chart 有 {len(missing)} 个供应商无任何证据: {sorted(missing)}",
+            file=sys.stderr,
+        )
+    if extra:
+        print(
+            f"警告: evidence 有 {len(extra)} 个 provider 不在 chart: {sorted(extra)}",
+            file=sys.stderr,
+        )
+
+
+def _latest_batch(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep only the newest recorded_at batch (probe files append over time)."""
+    if not records:
+        return []
+    timestamps: list[str] = []
+    for record in records:
+        recorded_at = record.get("recorded_at")
+        if isinstance(recorded_at, str):
+            timestamps.append(recorded_at)
+    if not timestamps:
+        return records
+    latest = max(timestamps)
+    return [record for record in records if record.get("recorded_at") == latest]
+
+
 def render_main_table(
     data: dict[str, Any], chart: dict[str, Any]
 ) -> str:
@@ -95,17 +144,24 @@ def render_main_table(
         param_tot = param.get(provider, {}).get("total", 0)
         recovery_ok = recovery.get(provider, {}).get("passed", 0)
         recovery_tot = recovery.get(provider, {}).get("total", 0)
-        sd_total = sd.get(provider, {}).get("total", 0)
+        sd_record = sd.get(provider, {})
+        sd_total = sd_record.get("total", 0)
+        sd_denom = sd_record.get("denominator", 6)
 
-        latency_s = f"{latency / 1000:.1f}s" if latency is not None else "—"
-        cost_s = f"{cost:.2f}" if cost is not None else "—"
-        dt_s = f"{dt.get('passed', 0)}/{dt.get('total', 0)}"
+        has_dt = bool(dt)
+        has_param = bool(param.get(provider))
+        has_recovery = bool(recovery.get(provider))
+        latency_s = f"{latency / 1000:.1f}s" if latency is not None else "未测"
+        cost_s = f"{cost:.2f}" if cost is not None else "未测"
+        dt_s = f"{dt.get('passed', 0)}/{dt.get('total', 0)}" if has_dt else "未测"
+        param_s = f"{param_ok}/{param_tot}" if has_param else "未测"
+        recovery_s = f"{recovery_ok}/{recovery_tot}" if has_recovery else "未测"
+        sd_s = f"{sd_total}/{sd_denom}" if sd_record else "未测"
         market = supplier.get("markets", [])
         market_s = market[0] if market else "—"
         rows.append(
             f"| {name} | {latency_s} | {cost_s} | {dt_s} | "
-            f"{param_ok}/{param_tot} | {recovery_ok}/{recovery_tot} | "
-            f"{sd_total}/6 | {market_s} |"
+            f"{param_s} | {recovery_s} | {sd_s} | {market_s} |"
         )
     return "\n".join(rows)
 
@@ -149,6 +205,7 @@ def render_self_description_table(
     for provider, sd in sorted(data["self_description"].items()):
         name = _provider_name(chart, provider)
         total = sd.get("total", 0)
+        denom = sd.get("denominator", 6)
         cells = []
         for e in elements:
             value = sd.get(e)
@@ -157,7 +214,7 @@ def render_self_description_table(
             else:
                 p, t = value.split("/")
                 cells.append("能" if p == t else ("波动" if p != "0" else "不能"))
-        rows.append(f"| {name} | {' | '.join(cells)} | {total}/6 |")
+        rows.append(f"| {name} | {' | '.join(cells)} | {total}/{denom} |")
     return "\n".join(rows)
 
 
@@ -193,22 +250,26 @@ def aggregate_records(
 
 
 def load_probe_data(args: argparse.Namespace) -> dict[str, Any]:
-    """Load and aggregate raw probe jsonl files per provider."""
-    direct = load_jsonl(args.direct)
-    param = load_jsonl(args.param)
-    recovery = load_jsonl(args.recovery)
-    interp = load_jsonl(args.interpret)
-    selfdesc = load_jsonl(args.self_description)
+    """Load and aggregate the newest probe batch per provider."""
+    direct = _latest_batch(load_jsonl(args.direct))
+    param = _latest_batch(load_jsonl(args.param))
+    recovery = _latest_batch(load_jsonl(args.recovery))
+    interp = _latest_batch(load_jsonl(args.interpret))
+    selfdesc = _latest_batch(load_jsonl(args.self_description))
 
-    # Direct Test: average latency/cost per provider (success calls only)
+    # Direct Test: only passed positive calls count toward latency/cost;
+    # negative controls and failed cells are excluded from both metrics.
     dt: dict[str, dict[str, Any]] = {}
     for provider in _provider_ids(direct):
         cells = [r for r in direct if r.get("provider_id") == provider]
-        passed = sum(1 for r in cells if r.get("state") == "passed")
-        lat = [r["latency_ms"] for r in cells if r.get("latency_ms") is not None]
+        passed_cells = [r for r in cells if r.get("state") == "passed"]
+        passed = len(passed_cells)
+        lat = [
+            r["latency_ms"] for r in passed_cells if r.get("latency_ms") is not None
+        ]
         cost = [
             value
-            for r in cells
+            for r in passed_cells
             if isinstance((value := r.get("cost_credits")), (int, float))
             and value > 0
         ]
@@ -232,7 +293,11 @@ def load_probe_data(args: argparse.Namespace) -> dict[str, Any]:
             sub = [r for r in cells if r.get("element") == element]
             p = sum(1 for r in sub if r.get("determined"))
             by_element[element] = f"{p}/{len(sub)}"
-        sd[provider] = {"total": determined, **by_element}
+        sd[provider] = {
+            "total": determined,
+            "denominator": len(cells),
+            **by_element,
+        }
 
     return {
         "direct_test": dt,
@@ -247,11 +312,15 @@ def render_article(
     data: dict[str, Any], chart: dict[str, Any], guide_label: str, edition: str
 ) -> str:
     label = guide_label or chart.get("guide_label", "对比")
+    # guide_label may already carry the API suffix; avoid "分红数据 API API".
+    if label.endswith("API"):
+        label = label[: -len("API")].rstrip()
     edition_date = edition or chart.get("edition_date", "2026-08-10")
     observation = chart.get("observation_date", edition_date)
     market_universe = ", ".join(
         str(item) for item in chart.get("market_universe", [])
     )
+    supplier_count = len(chart.get("suppliers", []))
 
     main_table = render_main_table(data, chart)
     param_table = render_param_fill_table(data, chart)
@@ -273,13 +342,13 @@ def render_article(
 
 <!-- TODO 铰链问题 + 结论卡表（场景 | 首选 | 为什么 | 注意） -->
 
-## 6 家 {label} API 对比总表
+## {supplier_count} 家 {label} API 对比总表
 
 {edition_date} 经 QVeris 网关真实执行，固定用例（正向 + 负向控制）每单元 2 轮。单次费用为成功调用价，负向控制不计费。观察日期 {observation}。
 
 {main_table}
 
-（AI 落参/自愈 = 通过轮数/2；自解释 = 仅凭响应能确定的字段数/6，测试日期 {edition_date}。）
+（AI 落参/自愈 = 通过轮数/总轮数；自解释 = 仅凭响应能确定的字段数/样本数，测试日期 {edition_date}。）
 
 ![{label} API 延迟与单次费用](capability-seo/charts/chart-latency-cost.png)
 
@@ -340,7 +409,7 @@ def render_article(
 - 市场覆盖为 claimed 口径，namespace 探测部分缺失，补跑后以结果为准。
 - 市场覆盖 universe：{market_universe}。
 
-## 在集成前，先验证这 6 家
+## 在集成前，先验证这 {supplier_count} 家
 
 每个数字背后是可复现的固定用例。想深入核验某家供应商的接口表现，可在 QVeris 中直接检查：
 
@@ -387,8 +456,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
 
+    inputs: list[tuple[str, Path]] = [
+        ("--chart-data", args.chart_data),
+        ("--direct", args.direct),
+        ("--param", args.param),
+        ("--recovery", args.recovery),
+        ("--interpret", args.interpret),
+        ("--self-description", args.self_description),
+    ]
+    for flag, path in inputs:
+        if not path.exists():
+            print(
+                f"错误: {flag} 指向的文件不存在: {path}（请先运行 probe runner 生成 evidence）",
+                file=sys.stderr,
+            )
+            return 1
+
     chart = load_chart_data(args.chart_data)
     data = load_probe_data(args)
+    _warn_provider_mismatch(chart, data)
     article = render_article(data, chart, args.guide_label, args.edition)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(article, encoding="utf-8")
