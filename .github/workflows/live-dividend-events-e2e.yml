@@ -2,12 +2,15 @@ name: Live Dividend Events Golden CAP Direct E2E
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
 
 permissions:
   contents: read
 
 jobs:
   direct:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-live-dividend-e2e'
     runs-on: ubuntu-latest
     environment: benchmark-e2e
     strategy:
