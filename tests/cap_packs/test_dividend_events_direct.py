@@ -74,8 +74,7 @@ def test_ac7_negative_control_distinguishes_empty_from_fabricated_rows() -> None
     assert empty.state is CellState.COMPLETED
     assert fabricated.state is CellState.PROVIDER_NEGATIVE
     assert (
-        fabricated.failure_attribution
-        is FailureAttribution.PROVIDER_VALIDATION_ERROR
+        fabricated.failure_attribution is FailureAttribution.PROVIDER_VALIDATION_ERROR
     )
 
 

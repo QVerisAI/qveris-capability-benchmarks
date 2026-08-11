@@ -55,8 +55,7 @@ class DirectBindingRegistry(FrozenModel):
         matches = [
             binding
             for binding in self.bindings
-            if binding.case_id == case_id
-            and binding.access_path_id == access_path_id
+            if binding.case_id == case_id and binding.access_path_id == access_path_id
         ]
         if len(matches) != 1:
             raise DirectBindingRegistryError("cell must resolve to one Direct binding")

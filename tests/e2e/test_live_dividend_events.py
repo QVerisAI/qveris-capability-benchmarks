@@ -135,11 +135,7 @@ def _error_types(error: BaseException) -> tuple[str, ...]:
     if isinstance(error, BaseExceptionGroup):
         return tuple(
             sorted(
-                {
-                    nested
-                    for child in error.exceptions
-                    for nested in _error_types(child)
-                }
+                {nested for child in error.exceptions for nested in _error_types(child)}
             )
         )
     return (type(error).__name__,)
@@ -163,9 +159,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         PACK / "cases.yaml",
         ROOT / "providers",
     )
-    binding = next(
-        item for item in registry.bindings if item.binding_id == binding_id
-    )
+    binding = next(item for item in registry.bindings if item.binding_id == binding_id)
     compiled, case, cell = _selected_cell(binding, int(round_value))
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
     public_store = PublicArtifactStore(public_root)

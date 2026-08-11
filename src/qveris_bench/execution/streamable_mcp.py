@@ -12,9 +12,7 @@ def build_bearer_headers(api_key: str) -> dict[str, str]:
     return build_authorization_headers(api_key, bearer=True)
 
 
-def build_authorization_headers(
-    api_key: str, *, bearer: bool
-) -> dict[str, str]:
+def build_authorization_headers(api_key: str, *, bearer: bool) -> dict[str, str]:
     if not api_key.strip():
         raise ValueError("MCP api key must not be blank")
     value = f"Bearer {api_key}" if bearer else api_key

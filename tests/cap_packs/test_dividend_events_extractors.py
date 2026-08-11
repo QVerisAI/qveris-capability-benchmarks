@@ -133,13 +133,16 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
 def test_ac5_extractors_normalize_latest_dividend_event(
     provider_id: str, document: object, expected: dict[str, object]
 ) -> None:
-    assert extract_dividend_event(
-        provider_id,
-        document,
-        symbol="600519.SH" if provider_id in {"ifind", "hangseng"} else "AAPL",
-        start_date="2024-01-01",
-        end_date="2026-07-31",
-    ) == expected
+    assert (
+        extract_dividend_event(
+            provider_id,
+            document,
+            symbol="600519.SH" if provider_id in {"ifind", "hangseng"} else "AAPL",
+            start_date="2024-01-01",
+            end_date="2026-07-31",
+        )
+        == expected
+    )
 
 
 def test_ac5_missing_optional_currency_stays_unavailable() -> None:

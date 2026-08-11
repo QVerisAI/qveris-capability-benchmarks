@@ -24,9 +24,7 @@ CASE_TO_QUESTION = {
 
 
 def _compiled():
-    return compile_suite(
-        PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers"
-    )
+    return compile_suite(PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers")
 
 
 def test_ac1_suite_freezes_six_providers_and_six_access_paths() -> None:
@@ -38,9 +36,7 @@ def test_ac1_suite_freezes_six_providers_and_six_access_paths() -> None:
     }
     assert paths == EXPECTED_PATHS
     assert "ifind-dividends-qveris" not in paths
-    assert [path for path in paths if path.startswith("ifind-")] == [
-        "ifind-native-mcp"
-    ]
+    assert [path for path in paths if path.startswith("ifind-")] == ["ifind-native-mcp"]
 
 
 def test_ac2_market_applicability_produces_twenty_four_direct_calls() -> None:
