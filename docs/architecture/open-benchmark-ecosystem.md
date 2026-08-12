@@ -34,7 +34,8 @@ run may later add community reproduction evidence.
 A contributor can propose source-backed cases, outcome rules, CAP Packs, adapters,
 tests, or documentation through [CONTRIBUTING.md](../../CONTRIBUTING.md). New methods
 must preserve the single-CAP boundary, licensing provenance, failure attribution,
-and the prohibition on aggregate rankings.
+and the prohibition on provider-total and cross-CAP composite rankings. Versioned,
+evidence-bound per-dimension rankings within one frozen cohort are permitted.
 
 ## Trust layers
 

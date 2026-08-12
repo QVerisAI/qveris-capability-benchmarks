@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from qveris_bench.models.evidence import EvidenceBundle
+from qveris_bench.models.metric import MetricDefinition
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell
 from qveris_bench.releases.canonical import canonical_release_bytes
@@ -13,9 +14,14 @@ def build_release(
     evidence: tuple[EvidenceBundle, ...],
     *,
     require_attribution: bool = True,
+    metric_registry: tuple[MetricDefinition, ...] = (),
 ) -> bytes:
     validate_release_inputs(
-        release, cells, evidence, require_attribution=require_attribution
+        release,
+        cells,
+        evidence,
+        require_attribution=require_attribution,
+        metric_registry=metric_registry,
     )
     payload = {
         "release": release.model_dump(mode="json", exclude_none=True),

@@ -69,6 +69,12 @@ developer can apply the priorities of their own product. Discovery, routing,
 multi-tool planning, and tool-selection metrics remain outside the benchmark; an
 Agent Trial receives one predetermined canonical tool.
 
+Per-dimension scores and rankings are allowed when the CAP owns a versioned method
+and the release carries supporting evidence. A ranking compares one metric across
+the same frozen cohort and keeps Provider and Access Path identities separate. It
+does not authorize a Provider total, an Agent-friendly composite, or a cross-CAP
+ranking.
+
 ## Developer selection dimensions
 
 The following table is the target selection schema. It defines the dimensions that

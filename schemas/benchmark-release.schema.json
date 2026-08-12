@@ -1,5 +1,46 @@
 {
   "$defs": {
+    "DetailScalar": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "DetailValue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DetailScalar"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/DetailValue"
+          },
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/DetailValue"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/MetricDetailKey"
+          },
+          "type": "object"
+        }
+      ]
+    },
     "DimensionState": {
       "enum": [
         "measured",
@@ -9,28 +50,419 @@
       "title": "DimensionState",
       "type": "string"
     },
+    "MetricDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "cap_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "cap_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Cap Version",
+          "type": "string"
+        },
+        "definition_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "dimension_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Dimension Id",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "higher_is_better",
+            "lower_is_better"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "method_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Method Digest",
+          "type": "string"
+        },
+        "method_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Method Version",
+          "type": "string"
+        },
+        "metric_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "scale_max": {
+          "title": "Scale Max",
+          "type": "number"
+        },
+        "scale_min": {
+          "title": "Scale Min",
+          "type": "number"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition_id",
+        "cap_id",
+        "cap_version",
+        "metric_id",
+        "dimension_id",
+        "method_version",
+        "method_digest",
+        "scale_min",
+        "scale_max",
+        "unit",
+        "direction"
+      ],
+      "title": "MetricDefinition",
+      "type": "object"
+    },
+    "MetricDetailKey": {
+      "not": {
+        "anyOf": [
+          {
+            "pattern": "[sS][cC][oO][rR][eE]"
+          },
+          {
+            "pattern": "[rR][aA][tT][iI][nN][gG]"
+          },
+          {
+            "pattern": "[rR][aA][nN][kK]"
+          }
+        ]
+      },
+      "type": "string"
+    },
+    "MetricDetails": {
+      "additionalProperties": {
+        "$ref": "#/$defs/DetailValue"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/MetricDetailKey"
+      },
+      "type": "object"
+    },
+    "MetricRanking": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "cap_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "cap_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Cap Version",
+          "type": "string"
+        },
+        "cohort_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Cohort Digest",
+          "type": "string"
+        },
+        "cohort_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cohort Id",
+          "type": "string"
+        },
+        "definition_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Definition Digest",
+          "type": "string"
+        },
+        "dimension_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Dimension Id",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "higher_is_better",
+            "lower_is_better"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "method_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Method Digest",
+          "type": "string"
+        },
+        "method_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Method Version",
+          "type": "string"
+        },
+        "metric_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "rank": {
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "rank_of": {
+          "minimum": 1,
+          "title": "Rank Of",
+          "type": "integer"
+        },
+        "scale_max": {
+          "title": "Scale Max",
+          "type": "number"
+        },
+        "scale_min": {
+          "title": "Scale Min",
+          "type": "number"
+        },
+        "suite_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Suite Fingerprint",
+          "type": "string"
+        },
+        "tie_method": {
+          "enum": [
+            "competition",
+            "dense",
+            "ordinal"
+          ],
+          "title": "Tie Method",
+          "type": "string"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric_id",
+        "definition_digest",
+        "dimension_id",
+        "cap_id",
+        "cap_version",
+        "provider_id",
+        "access_path_id",
+        "method_version",
+        "method_digest",
+        "suite_fingerprint",
+        "evidence_refs",
+        "cohort_id",
+        "cohort_digest",
+        "rank",
+        "rank_of",
+        "tie_method",
+        "direction",
+        "scale_min",
+        "scale_max",
+        "unit"
+      ],
+      "title": "MetricRanking",
+      "type": "object"
+    },
+    "MetricScore": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "cap_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "cap_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Cap Version",
+          "type": "string"
+        },
+        "definition_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Definition Digest",
+          "type": "string"
+        },
+        "dimension_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Dimension Id",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "higher_is_better",
+            "lower_is_better"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "method_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Method Digest",
+          "type": "string"
+        },
+        "method_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Method Version",
+          "type": "string"
+        },
+        "metric_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "scale_max": {
+          "title": "Scale Max",
+          "type": "number"
+        },
+        "scale_min": {
+          "title": "Scale Min",
+          "type": "number"
+        },
+        "suite_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Suite Fingerprint",
+          "type": "string"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "metric_id",
+        "definition_digest",
+        "dimension_id",
+        "cap_id",
+        "cap_version",
+        "provider_id",
+        "access_path_id",
+        "method_version",
+        "method_digest",
+        "suite_fingerprint",
+        "evidence_refs",
+        "value",
+        "scale_min",
+        "scale_max",
+        "unit",
+        "direction"
+      ],
+      "title": "MetricScore",
+      "type": "object"
+    },
     "ReleaseFact": {
       "additionalProperties": false,
       "properties": {
         "details": {
-          "additionalProperties": true,
+          "$ref": "#/$defs/MetricDetails",
           "propertyNames": {
             "not": {
               "anyOf": [
                 {
-                  "pattern": "[s][c][o][r][e]"
+                  "pattern": "[sS][cC][oO][rR][eE]"
                 },
                 {
-                  "pattern": "[r][a][t][i][n][g]"
+                  "pattern": "[rR][aA][tT][iI][nN][gG]"
                 },
                 {
-                  "pattern": "[a][g][e][n][t][f][r][i][e][n][d][l][y]"
+                  "pattern": "[rR][aA][nN][kK]"
                 }
               ]
             }
-          },
-          "title": "Details",
-          "type": "object"
+          }
+        },
+        "dimension_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dimension Id"
         },
         "dimension_state": {
           "anyOf": [
@@ -54,6 +486,28 @@
         },
         "fact_type": {
           "$ref": "#/$defs/ReleaseFactType"
+        },
+        "metric_ranking": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetricRanking"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "metric_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetricScore"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -76,6 +530,34 @@
   },
   "additionalProperties": false,
   "properties": {
+    "cap_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cap Id"
+    },
+    "cap_version": {
+      "anyOf": [
+        {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cap Version"
+    },
     "developer_selection_facts": {
       "default": [],
       "items": {
@@ -114,6 +596,14 @@
         "type": "string"
       },
       "title": "Limitations",
+      "type": "array"
+    },
+    "metric_definitions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/MetricDefinition"
+      },
+      "title": "Metric Definitions",
       "type": "array"
     },
     "outcome_ids": {

@@ -10,6 +10,7 @@ from pydantic import BaseModel, TypeAdapter, ValidationError
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
+from qveris_bench.models.metric import MetricDefinition
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.releases.builder import build_release
@@ -26,6 +27,7 @@ _REQUIRED_FILES = (
 )
 _CELLS_ADAPTER = TypeAdapter(tuple[RunCell, ...])
 _EVIDENCE_ADAPTER = TypeAdapter(tuple[EvidenceBundle, ...])
+_METRIC_REGISTRY_ADAPTER = TypeAdapter(tuple[MetricDefinition, ...])
 _EXECUTION_FIELDS = {"state", "failure_attribution"}
 _LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION = frozenset(
     {
@@ -72,6 +74,16 @@ def replay_release_dir(
         files["evidence.json"],
         "evidence.json",
     )
+    registry_path = release_dir / "metric-registry.json"
+    metric_registry = (
+        _validate_collection(
+            _METRIC_REGISTRY_ADAPTER,
+            registry_path.read_bytes(),
+            "metric-registry.json",
+        )
+        if registry_path.is_file()
+        else ()
+    )
     _validate_json_object(files["release.json"], "release.json")
 
     if sha256_digest(files["run-plan.json"]) != release.run_plan_digest:
@@ -89,9 +101,15 @@ def replay_release_dir(
             cells,
             evidence,
             require_attribution=False,
+            metric_registry=metric_registry,
         )
         if release_digest(rebuilt) not in _LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION:
-            rebuilt = build_release(release, cells, evidence)
+            rebuilt = build_release(
+                release,
+                cells,
+                evidence,
+                metric_registry=metric_registry,
+            )
     except ReleaseGateError as exc:
         raise ReleaseReplayError(
             f"release replay input validation failed: {exc}"

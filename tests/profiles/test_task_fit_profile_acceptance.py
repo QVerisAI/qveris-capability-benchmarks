@@ -6,9 +6,15 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from qveris_bench.models.enums import CellState, DimensionState, RunMode
+from qveris_bench.models.enums import (
+    CellState,
+    DimensionState,
+    ReleaseFactType,
+    RunMode,
+)
 from qveris_bench.models.evidence import EvidenceBundle
-from qveris_bench.models.release import BenchmarkRelease
+from qveris_bench.models.metric import MetricDefinition, metric_definition_digest
+from qveris_bench.models.release import BenchmarkRelease, ReleaseFact
 from qveris_bench.models.run import RunCell
 from qveris_bench.profiles.builder import build_profile
 from qveris_bench.releases.builder import build_release
@@ -115,6 +121,38 @@ def test_ac5_profile_emits_markdown_with_per_cap_tradeoffs() -> None:
     assert "no provider total" in markdown
 
 
+def test_ac4_profile_preserves_released_dimension_metric(tmp_path: Path) -> None:
+    release_path = _release_with_dimension_metric(tmp_path)
+    profile_input = tmp_path / "metric-profile.yaml"
+    profile_input.write_text(
+        "\n".join(
+            [
+                "profile_id: metric-profile",
+                "version: 1.0.0",
+                "scenario_ref:",
+                "  scenario_id: company-research-agent",
+                "  version: 1.1.0",
+                "cap_releases:",
+                "  stock-quote:",
+                f"    release: {release_path.name}",
+                f"    digest: sha256:{_sha256(release_path.read_bytes())}",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    profile = build_profile(profile_input, tmp_path).profile
+
+    metric_dimension = next(
+        dimension
+        for dimension in profile.cap_dimensions
+        if dimension.dimension == "agent-interface-error-recoverability"
+    )
+    assert metric_dimension.metric_score is not None
+    assert metric_dimension.metric_score.value == 80
+
+
 def test_ac6_profile_build_runs_through_the_installed_cli(tmp_path: Path) -> None:
     executable = shutil.which("qveris-bench")
     assert executable is not None
@@ -207,4 +245,78 @@ def _release_with_gateway_metrics(tmp_path: Path) -> Path:
     )
     path = tmp_path / "release.json"
     path.write_bytes(build_release(release, tuple(cells), tuple(evidence)))
+    return path
+
+
+def _release_with_dimension_metric(tmp_path: Path) -> Path:
+    suite_fingerprint = "8" * 64
+    evidence_ref = "sha256:" + "a" * 64
+    cell = RunCell(
+        run_key="metric-cell",
+        case_id="quote-case",
+        provider_id="finnhub",
+        access_path_id="finnhub-qveris",
+        mode=RunMode.DIRECT,
+        round=1,
+        state=CellState.COMPLETED,
+    )
+    evidence = EvidenceBundle(
+        evidence_id="metric-evidence",
+        run_key="metric-cell",
+        raw_digest="sha256:" + "b" * 64,
+        public_digest=evidence_ref,
+        redaction_status="sanitized",
+        disclosure_level="sanitized_public",
+        license_status="cleared",
+        extractor_version="1.0.0",
+        suite_fingerprint=suite_fingerprint,
+    )
+    definition = MetricDefinition(
+        definition_id="stock-quote-error-recoverability",
+        cap_id="stock-quote",
+        cap_version="2.0.0",
+        metric_id="error-recoverability",
+        dimension_id="agent-interface-error-recoverability",
+        method_version="1.0.0",
+        method_digest="sha256:" + "c" * 64,
+        scale_min=0,
+        scale_max=100,
+        unit="points",
+        direction="higher_is_better",
+    )
+    fact = ReleaseFact(
+        fact_type=ReleaseFactType.OUTCOME,
+        dimension_state=DimensionState.MEASURED,
+        dimension_id="agent-interface-error-recoverability",
+        metric_score={
+            **definition.model_dump(exclude={"definition_id"}),
+            "definition_digest": metric_definition_digest(definition),
+            "provider_id": "finnhub",
+            "access_path_id": "finnhub-qveris",
+            "suite_fingerprint": suite_fingerprint,
+            "evidence_refs": [evidence_ref],
+            "value": 80,
+        },
+        evidence_refs=(evidence_ref,),
+    )
+    release = BenchmarkRelease(
+        release_id="dimension-metric-release",
+        version="1.0.0",
+        suite_fingerprint=suite_fingerprint,
+        run_plan_digest="sha256:" + "d" * 64,
+        evidence_ids=(evidence.evidence_id,),
+        cap_id="stock-quote",
+        cap_version="2.0.0",
+        metric_definitions=(definition,),
+        developer_selection_facts=(fact,),
+    )
+    path = tmp_path / "metric-release.json"
+    path.write_bytes(
+        build_release(
+            release,
+            (cell,),
+            (evidence,),
+            metric_registry=(definition,),
+        )
+    )
     return path
