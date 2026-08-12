@@ -107,8 +107,13 @@ def _snapshot(
     bindings: ProviderBindings,
     outcome_rules: OutcomeRules,
 ) -> dict[str, Any]:
+    suite_exclude = (
+        {"outcome_rules_file"}
+        if suite.outcome_rules_file == "outcome-rules.yaml"
+        else set()
+    )
     return {
-        "suite": suite.model_dump(mode="json"),
+        "suite": suite.model_dump(mode="json", exclude=suite_exclude),
         "cases": [case.model_dump(mode="json") for case in cases],
         "access_paths": [path.model_dump(mode="json") for path in access_paths],
         "provider_cohort": [record.model_dump(mode="json") for record in records],
