@@ -193,6 +193,12 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         bindings_path,
         edition=edition,
     )
+    pricing_supplement_spec = _mapping(config, "official_pricing_supplement")
+    pricing_supplement_path = root / _string(pricing_supplement_spec, "snapshot")
+    pricing_supplements = _load_official_pricing_supplements(
+        pricing_supplement_path,
+        edition=edition,
+    )
     qveris_identities = {
         identity
         for identity in identity_cells
@@ -207,6 +213,19 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         raise SelectionSnapshotBuildError(
             "QVeris list pricing identities do not match selection identities"
         )
+    if not set(pricing_supplements).issubset(identity_cells):
+        raise SelectionSnapshotBuildError(
+            "official pricing supplement contains unknown selection identity"
+        )
+    for provider_id, access_path_id in pricing_supplements:
+        base_pricing = _pricing(
+            registry_by_id[provider_id].provider.official_pricing,
+            access_path_id,
+        )
+        if base_pricing.state != "evidence_insufficient":
+            raise SelectionSnapshotBuildError(
+                "official pricing supplement cannot override registry pricing"
+            )
     rows: list[SelectionSnapshotRow] = []
     provider_digests: dict[str, str] = {}
     for (provider_id, access_path_id), scoped_cells in sorted(identity_cells.items()):
@@ -269,13 +288,26 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                         snapshot_version=list_prices[(provider_id, access_path_id)][
                             "snapshot_version"
                         ],
+                        inspect_response_digest=list_prices[
+                            (provider_id, access_path_id)
+                        ]["inspect_response_digest"],
+                        extractor_version=list_prices[(provider_id, access_path_id)][
+                            "extractor_version"
+                        ],
+                        disclosure_level=list_prices[(provider_id, access_path_id)][
+                            "disclosure_level"
+                        ],
+                        license_status=list_prices[(provider_id, access_path_id)][
+                            "license_status"
+                        ],
                         evidence_ref=list_pricing_digest,
                     )
                     if is_qveris
                     else QVerisListPriceSnapshot(state="not_applicable")
                 ),
-                official_pricing=_pricing(
-                    record.provider.official_pricing, access_path_id
+                official_pricing=pricing_supplements.get(
+                    (provider_id, access_path_id),
+                    _pricing(record.provider.official_pricing, access_path_id),
                 ),
                 market_coverage=_market_coverage(
                     market_identity_cells[(provider_id, access_path_id)],
@@ -308,6 +340,7 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
             "market_coverage_cases": _sha256(market_cases_path),
             "qveris_list_pricing": list_pricing_digest,
             "qveris_direct_bindings": _sha256(bindings_path),
+            "official_pricing_supplement": _sha256(pricing_supplement_path),
         },
         rows=tuple(rows),
         limitations=tuple(str(item) for item in config.get("limitations", [])),
@@ -384,9 +417,19 @@ def _load_qveris_list_prices(
         "bindings_digest"
     ) != _sha256(bindings_path):
         raise SelectionSnapshotBuildError("QVeris list pricing provenance mismatch")
+    extractor_version = snapshot.get("extractor_version")
+    disclosure_level = snapshot.get("disclosure_level")
+    license_status = snapshot.get("license_status")
+    if (
+        not isinstance(extractor_version, str)
+        or not extractor_version
+        or disclosure_level != "sanitized_public"
+        or license_status != "cleared"
+    ):
+        raise SelectionSnapshotBuildError("QVeris list pricing provenance mismatch")
     inspected_at = date.fromisoformat(str(snapshot.get("inspected_at")))
-    if inspected_at > edition:
-        raise SelectionSnapshotBuildError("QVeris list pricing is newer than edition")
+    if inspected_at != edition:
+        raise SelectionSnapshotBuildError("QVeris list pricing must match edition")
     binding_identities: dict[tuple[str, str], str] = {}
     for binding in bindings.get("bindings", []):
         if binding.get("transport") != "qveris_connector":
@@ -407,19 +450,65 @@ def _load_qveris_list_prices(
             raise SelectionSnapshotBuildError("QVeris list price identity mismatch")
         amount = fact.get("amount_credits")
         snapshot_version = fact.get("snapshot_version")
+        inspect_response_digest = fact.get("inspect_response_digest")
         if (
             isinstance(amount, bool)
             or not isinstance(amount, (int, float))
             or amount < 0
-            or not isinstance(snapshot_version, str)
-            or not snapshot_version
+            or (snapshot_version is not None and not isinstance(snapshot_version, str))
+            or not isinstance(inspect_response_digest, str)
+            or not inspect_response_digest.startswith("sha256:")
         ):
             raise SelectionSnapshotBuildError("invalid QVeris list price amount")
         result[identity] = {
             "amount_credits": float(amount),
             "inspected_at": inspected_at,
             "snapshot_version": snapshot_version,
+            "inspect_response_digest": inspect_response_digest,
+            "extractor_version": extractor_version,
+            "disclosure_level": disclosure_level,
+            "license_status": license_status,
         }
+    return result
+
+
+def _load_official_pricing_supplements(
+    snapshot_path: Path,
+    *,
+    edition: date,
+) -> dict[tuple[str, str], OfficialPricingSnapshot]:
+    try:
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SelectionSnapshotBuildError(
+            "invalid official pricing supplement"
+        ) from exc
+    if snapshot.get("source") != "official_provider_page":
+        raise SelectionSnapshotBuildError("invalid official pricing supplement source")
+    result: dict[tuple[str, str], OfficialPricingSnapshot] = {}
+    for fact in snapshot.get("prices", []):
+        if not isinstance(fact, dict):
+            raise SelectionSnapshotBuildError(
+                "invalid official pricing supplement fact"
+            )
+        identity = (str(fact.get("provider_id")), str(fact.get("access_path_id")))
+        if identity in result:
+            raise SelectionSnapshotBuildError("duplicate official pricing supplement")
+        try:
+            pricing = OfficialPricingSnapshot.model_validate(fact.get("pricing"))
+        except ValidationError as exc:
+            raise SelectionSnapshotBuildError(
+                "invalid official pricing supplement fact"
+            ) from exc
+        if (
+            pricing.state != "declared"
+            or pricing.verified_at is None
+            or pricing.verified_at > edition
+            or pricing.applies_to is None
+            or identity[1] not in pricing.applies_to
+        ):
+            raise SelectionSnapshotBuildError("official pricing scope mismatch")
+        result[identity] = pricing
     return result
 
 

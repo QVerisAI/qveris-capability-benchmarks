@@ -49,13 +49,17 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:51cd609a710fa7d1bb56ada153f5ccd3d840607d221426e208d3d70635aaae5f
-  digest: sha256:584e3bed3043da8dc59056a953b209900fd465794a594933c9d98514eae22c21
+  input_digest: sha256:891f71adf5b8f328764f15d9e9024ac24d31ef700fccf0308991e147ce1a58fc
+  digest: sha256:c06745acdef911eef0525d2ef0ca5db1cea51b2378be1a4dfdde3a8114151767
 qveris_list_pricing:
   id: dividend-events-qveris-list-pricing-2026-08-12
   source: qveris_inspect
   inspected_at: "2026-08-12"
-  digest: sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3
+  digest: sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458
+official_pricing_supplement:
+  id: dividend-events-official-pricing-2026-08-12
+  source: official_provider_page
+  digest: sha256:16f970abd0025fc860139022048941edc573d295a6f81bf12b19d495d31a478c
 market_coverage_release:
   directory: releases/dividend-events-market-coverage-2026-q3-v1
   digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
@@ -110,10 +114,11 @@ artifacts:
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
   qveris_list_pricing: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
+  official_pricing_supplement: docs/guides/capability-seo/best-dividend-apis/official-pricing-supplement.json
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:0b403289affd3cc9be05866e856381b32aaa3108ba633992a6896006047d1bf3
+  selection_charts_manifest_digest: sha256:aa4861706b8eae557bb32364bb58c998937c283cf447b17ece3514981fd9d084

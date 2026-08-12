@@ -11,6 +11,8 @@ providers_root: providers
 qveris_list_pricing:
   snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
   bindings: cap_packs/dividend_events/direct-bindings.json
+official_pricing_supplement:
+  snapshot: docs/guides/capability-seo/best-dividend-apis/official-pricing-supplement.json
 observation_window:
   start: "2026-08-11"
   end: "2026-08-11"

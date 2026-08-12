@@ -86,9 +86,9 @@ Twelve Data、Alpha Vantage、EODHD 和 Massive 都进入优先复测名单。�
 
 [![五条 QVeris 分红 Access Path 的延迟与 Inspect 标价取舍](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)
 
-横轴是 QVeris gateway 延迟中位数，横线是本次六次调用的最小—最大值；纵轴是 `qveris inspect` 返回的公开标价，不是当前账号实际扣费。测试账号存在折扣，账号实际扣费不能用于公开选型，因此本文不发布它，也不把它当作价格证据。
+横轴是 QVeris gateway 延迟中位数，横线是本次六次调用的最小—最大值；纵轴是 `qveris inspect` 返回的公开标价，不是当前账号实际扣费。测试账号存在折扣，账号实际扣费不能用于公开选型，因此本文表格和图表不使用账号实际扣费，也不把它当作价格证据。
 
-本次样本中 Twelve Data 延迟中位数最低；恒生聚源和 Massive 的 Inspect 标价最低；EODHD 的标价和观测延迟都更高。六次调用只能用于确定复测顺序，不能预测生产流量下的地域差异、P95/P99 或 Native API SLA。
+本次样本中 Twelve Data 延迟中位数最低；Alpha Vantage 的 Inspect 标价最低（0 credits/call），恒生聚源和 Massive 次低（1 credit/call）；EODHD 的标价和观测延迟都更高。六次调用只能用于确定复测顺序，不能预测生产流量下的地域差异、P95/P99 或 Native API SLA。
 
 ### Native 套餐和 QVeris credits 是两种价格
 

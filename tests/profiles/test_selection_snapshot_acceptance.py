@@ -122,8 +122,11 @@ def test_ac5_pricing_respects_access_path_scope() -> None:
     assert "CNY 40/month" in rows["ifind-native-mcp"].official_pricing.paid_plans
     assert rows["alpha-vantage-dividends-qveris"].official_pricing.state == ("declared")
     assert rows["massive-stocks-dividends-qveris"].official_pricing.state == (
-        "evidence_insufficient"
+        "declared"
     )
+    massive = rows["massive-stocks-dividends-qveris"].official_pricing
+    assert massive.free_tier == "Stocks Basic Free"
+    assert massive.applies_to == ("massive-stocks-dividends-qveris",)
     alpha = rows["alpha-vantage-dividends-qveris"].official_pricing
     assert alpha.applies_to == "provider_wide"
     assert alpha.extractor_version == "1.0.0"
@@ -151,7 +154,10 @@ def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
         assert price.amount_credits == amount
         assert price.unit == "per_call"
         assert price.source == "qveris_inspect"
-        assert price.snapshot_version == "website-default"
+        assert price.inspect_response_digest.startswith("sha256:")
+        assert price.extractor_version == "1.0.0"
+        assert price.disclosure_level == "sanitized_public"
+        assert price.license_status == "cleared"
         assert price.evidence_ref.startswith("sha256:")
 
     native = rows["ifind-native-mcp"].qveris_list_price
@@ -159,7 +165,10 @@ def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
     assert native.amount_credits is None
 
 
-@pytest.mark.parametrize("mutation", ["string_amount", "wrong_tool", "wrong_digest"])
+@pytest.mark.parametrize(
+    "mutation",
+    ["string_amount", "wrong_tool", "wrong_digest", "stale", "missing_provenance"],
+)
 def test_ac5_qveris_list_pricing_fails_closed(tmp_path: Path, mutation: str) -> None:
     pricing = json.loads(
         (INPUT.parent / "qveris-list-pricing.json").read_text(encoding="utf-8")
@@ -168,12 +177,34 @@ def test_ac5_qveris_list_pricing_fails_closed(tmp_path: Path, mutation: str) -> 
         pricing["prices"][0]["amount_credits"] = "1"
     elif mutation == "wrong_tool":
         pricing["prices"][0]["tool_id"] = pricing["prices"][1]["tool_id"]
-    else:
+    elif mutation == "wrong_digest":
         pricing["bindings_digest"] = f"sha256:{'f' * 64}"
+    elif mutation == "stale":
+        pricing["inspected_at"] = "2026-08-11"
+    else:
+        pricing["prices"][0].pop("inspect_response_digest")
     pricing_path = tmp_path / "qveris-list-pricing.json"
     pricing_path.write_text(json.dumps(pricing), encoding="utf-8")
     config = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
     config["qveris_list_pricing"]["snapshot"] = str(pricing_path)
+    input_path = tmp_path / "selection-snapshot.yaml"
+    input_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    with pytest.raises(SelectionSnapshotBuildError):
+        build_selection_snapshot(input_path, ROOT)
+
+
+def test_ac5_official_pricing_supplement_fails_closed_on_wrong_scope(
+    tmp_path: Path,
+) -> None:
+    supplement = json.loads(
+        (INPUT.parent / "official-pricing-supplement.json").read_text(encoding="utf-8")
+    )
+    supplement["prices"][0]["pricing"]["applies_to"] = ["wrong-access-path"]
+    supplement_path = tmp_path / "official-pricing-supplement.json"
+    supplement_path.write_text(json.dumps(supplement), encoding="utf-8")
+    config = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
+    config["official_pricing_supplement"]["snapshot"] = str(supplement_path)
     input_path = tmp_path / "selection-snapshot.yaml"
     input_path.write_text(yaml.safe_dump(config), encoding="utf-8")
 

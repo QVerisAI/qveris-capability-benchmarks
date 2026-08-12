@@ -172,6 +172,10 @@ class QVerisListPriceSnapshot(FrozenModel):
     source: Literal["qveris_inspect"] | None = None
     inspected_at: date | None = None
     snapshot_version: str | None = Field(default=None, min_length=1)
+    inspect_response_digest: EvidenceRef | None = None
+    extractor_version: SemanticVersion | None = None
+    disclosure_level: str | None = None
+    license_status: str | None = None
     evidence_ref: EvidenceRef | None = None
 
     @model_validator(mode="after")
@@ -181,7 +185,10 @@ class QVerisListPriceSnapshot(FrozenModel):
             self.unit,
             self.source,
             self.inspected_at,
-            self.snapshot_version,
+            self.inspect_response_digest,
+            self.extractor_version,
+            self.disclosure_level,
+            self.license_status,
             self.evidence_ref,
         )
         if self.state == "declared" and any(item is None for item in details):

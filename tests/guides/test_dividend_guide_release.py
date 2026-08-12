@@ -408,6 +408,10 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     )
     assert manifest["qveris_list_pricing"]["source"] == "qveris_inspect"
     assert manifest["qveris_list_pricing"]["inspected_at"] == "2026-08-12"
+    supplement = ROOT / manifest["artifacts"]["official_pricing_supplement"]
+    assert manifest["official_pricing_supplement"]["digest"] == (
+        f"sha256:{hashlib.sha256(supplement.read_bytes()).hexdigest()}"
+    )
     market_release = ROOT / manifest["artifacts"]["market_coverage_release"]
     assert manifest["market_coverage_release"]["digest"] == (
         f"sha256:{hashlib.sha256(market_release.read_bytes()).hexdigest()}"
@@ -561,12 +565,9 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             assert pricing["pricing_url"] in pricing_row[0]
             assert pricing["free_tier"] in pricing_row[1]
             assert pricing["paid_plans"] in pricing_row[2]
-        elif provider != "Massive":
+        else:
             assert "Evidence insufficient" in pricing_row[1]
             assert "Evidence insufficient" in pricing_row[2]
-        else:
-            assert "https://massive.com/pricing?product=stocks" in pricing_row[0]
-            assert "Stocks Basic Free" in pricing_row[1]
 
         market_row = _provider_row(market_rows, provider, access_path)
         results = row["market_coverage"]["results"]
@@ -585,6 +586,44 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             expected["provider_negative"],
             expected["not_applicable"],
         ]
+
+    measured = [
+        result
+        for row in snapshot["rows"]
+        for result in row["market_coverage"]["results"]
+        if result["state"] != "not_applicable"
+    ]
+    totals = {result["total_rounds"] for result in measured}
+    assert len(totals) == 1
+    total = totals.pop()
+    assert f"| Provider / Access Path | 通过（{total}/{total}）的代表市场" in article
+    assert f"| 本次代表样本未通过（0/{total}）" in article
+
+
+def test_article_price_ranking_and_billing_scope_come_from_snapshot() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    prices = {
+        row["provider_name"]: row["qveris_list_price"]["amount_credits"]
+        for row in snapshot["rows"]
+        if row["qveris_list_price"]["state"] == "declared"
+    }
+    minimum = min(prices.values())
+    lowest = sorted(name for name, amount in prices.items() if amount == minimum)
+    assert lowest == ["Alpha Vantage"]
+    assert "Alpha Vantage 的 Inspect 标价最低（0 credits/call）" in article
+    assert "恒生聚源和 Massive 次低（1 credit/call）" in article
+    assert "本文表格和图表不使用账号实际扣费" in article
+
+
+def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    market = manifest["market_coverage_release"]
+    assert f"共 {market['public_evidence_records']} 次真实调用" in article
+    assert f"{market['planned_cells']} 个 frozen cells" in article
+    not_applicable = market["planned_cells"] - market["applicable_cells"]
+    assert f"{not_applicable} 个明确不适用单元" in article
 
 
 def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:

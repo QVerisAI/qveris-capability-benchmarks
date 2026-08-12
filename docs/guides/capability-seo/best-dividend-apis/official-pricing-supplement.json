@@ -1,0 +1,26 @@
+{
+  "snapshot_id": "dividend-events-official-pricing-2026-08-12",
+  "version": "1.0.0",
+  "source": "official_provider_page",
+  "prices": [
+    {
+      "provider_id": "massive-stocks",
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "pricing": {
+        "state": "declared",
+        "pricing_id": "massive-stocks-dividends-official-pricing",
+        "pricing_url": "https://massive.com/pricing?product=stocks",
+        "free_tier": "Stocks Basic Free",
+        "paid_plans": "Stocks Starter USD 29/month",
+        "verified_at": "2026-08-12",
+        "source_digest": "74c0b1e200eb072becdfb0463056f7dcb498f7cebae8df65480d46792a2255de",
+        "applies_to": ["massive-stocks-dividends-qveris"],
+        "currencies": ["USD"],
+        "extractor_version": "1.0.0",
+        "suite_fingerprint": "60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741",
+        "disclosure_level": "sanitized_public",
+        "license_status": "cleared"
+      }
+    }
+  ]
+}

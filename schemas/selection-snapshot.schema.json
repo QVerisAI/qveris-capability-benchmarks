@@ -459,6 +459,18 @@
           "default": null,
           "title": "Amount Credits"
         },
+        "disclosure_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disclosure Level"
+        },
         "evidence_ref": {
           "anyOf": [
             {
@@ -472,6 +484,32 @@
           "default": null,
           "title": "Evidence Ref"
         },
+        "extractor_version": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extractor Version"
+        },
+        "inspect_response_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inspect Response Digest"
+        },
         "inspected_at": {
           "anyOf": [
             {
@@ -484,6 +522,18 @@
           ],
           "default": null,
           "title": "Inspected At"
+        },
+        "license_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Status"
         },
         "snapshot_version": {
           "anyOf": [

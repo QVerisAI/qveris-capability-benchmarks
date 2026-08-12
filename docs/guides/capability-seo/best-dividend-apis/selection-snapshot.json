@@ -4,10 +4,11 @@
   "edition": "2026-08-12",
   "input_digests": {
     "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
-    "input": "sha256:51cd609a710fa7d1bb56ada153f5ccd3d840607d221426e208d3d70635aaae5f",
+    "input": "sha256:891f71adf5b8f328764f15d9e9024ac24d31ef700fccf0308991e147ce1a58fc",
     "market_coverage_cases": "sha256:021508b60f456f0c30c698ee06288221c7080d67035320710f5119fc348fb550",
     "market_coverage_release": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
     "market_coverage_suite": "sha256:0b133ae5f3252ace61407e4ba30d52e14d4876c7e8c93e2f44f5f59637833048",
+    "official_pricing_supplement": "sha256:16f970abd0025fc860139022048941edc573d295a6f81bf12b19d495d31a478c",
     "providers": {
       "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
       "eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
@@ -17,7 +18,7 @@
       "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
     },
     "qveris_direct_bindings": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",
-    "qveris_list_pricing": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+    "qveris_list_pricing": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
     "suite": "sha256:fc7c1458026ec030a7be24b1786344f128237160d0012ebb64b774d1ded2b6a9"
   },
@@ -215,8 +216,12 @@
       "provider_name": "Alpha Vantage",
       "qveris_list_price": {
         "amount_credits": 0.0,
-        "evidence_ref": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:427b55d28bab007922b903bbc6a9f4a435cbc60ad006cdc8cb08604df093ead0",
         "inspected_at": "2026-08-12",
+        "license_status": "cleared",
         "snapshot_version": "website-default",
         "source": "qveris_inspect",
         "state": "declared",
@@ -437,8 +442,12 @@
       "provider_name": "EODHD",
       "qveris_list_price": {
         "amount_credits": 2.81,
-        "evidence_ref": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:0d83e13c43be94186a1aeedb15fc61f30c04909d0c0468a5754537f8a142d4f3",
         "inspected_at": "2026-08-12",
+        "license_status": "cleared",
         "snapshot_version": "website-default",
         "source": "qveris_inspect",
         "state": "declared",
@@ -637,9 +646,13 @@
       "provider_name": "\u6052\u751f\u805a\u6e90",
       "qveris_list_price": {
         "amount_credits": 1.0,
-        "evidence_ref": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:62f89f7144d360ecedcf7270e9f040dff5342c6058ed8ef4131c941f75e3defe",
         "inspected_at": "2026-08-12",
-        "snapshot_version": "website-default",
+        "license_status": "cleared",
+        "snapshot_version": null,
         "source": "qveris_inspect",
         "state": "declared",
         "unit": "per_call"
@@ -825,8 +838,12 @@
       "provider_name": "\u540c\u82b1\u987a iFinD",
       "qveris_list_price": {
         "amount_credits": null,
+        "disclosure_level": null,
         "evidence_ref": null,
+        "extractor_version": null,
+        "inspect_response_digest": null,
         "inspected_at": null,
+        "license_status": null,
         "snapshot_version": null,
         "source": null,
         "state": "not_applicable",
@@ -1003,27 +1020,35 @@
         "start": "2026-08-11"
       },
       "official_pricing": {
-        "applies_to": null,
-        "currencies": [],
-        "disclosure_level": null,
-        "extractor_version": null,
-        "free_tier": null,
-        "license_status": null,
-        "paid_plans": null,
-        "pricing_id": null,
-        "pricing_url": null,
-        "source_digest": null,
-        "state": "evidence_insufficient",
-        "suite_fingerprint": null,
-        "verified_at": null
+        "applies_to": [
+          "massive-stocks-dividends-qveris"
+        ],
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Stocks Basic Free",
+        "license_status": "cleared",
+        "paid_plans": "Stocks Starter USD 29/month",
+        "pricing_id": "massive-stocks-dividends-official-pricing",
+        "pricing_url": "https://massive.com/pricing?product=stocks",
+        "source_digest": "74c0b1e200eb072becdfb0463056f7dcb498f7cebae8df65480d46792a2255de",
+        "state": "declared",
+        "suite_fingerprint": "60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741",
+        "verified_at": "2026-08-12"
       },
       "provider_id": "massive-stocks",
       "provider_name": "Massive Stocks",
       "qveris_list_price": {
         "amount_credits": 1.0,
-        "evidence_ref": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:3354f97acf0bc5c31f3d5385b7cd060bea14e9bc44e3eed96e45da3c1949b890",
         "inspected_at": "2026-08-12",
-        "snapshot_version": "website-default",
+        "license_status": "cleared",
+        "snapshot_version": null,
         "source": "qveris_inspect",
         "state": "declared",
         "unit": "per_call"
@@ -1243,8 +1268,12 @@
       "provider_name": "Twelve Data",
       "qveris_list_price": {
         "amount_credits": 2.37,
-        "evidence_ref": "sha256:d918dbee0fc683b1c980ba1648fc8e90deab3011b0e6f8fa11482016eb84f4b3",
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:a18bf0acaa59cb5e2798685ce544d1ac6c0e27075d74f12d021c428a1576f2d1",
         "inspected_at": "2026-08-12",
+        "license_status": "cleared",
         "snapshot_version": "website-default",
         "source": "qveris_inspect",
         "state": "declared",
