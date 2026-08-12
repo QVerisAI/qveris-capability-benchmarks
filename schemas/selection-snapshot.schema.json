@@ -157,72 +157,90 @@
       "title": "GatewayMetricsSnapshot",
       "type": "object"
     },
-    "MarketCoverageSnapshot": {
+    "MarketCoverageResult": {
       "additionalProperties": false,
       "properties": {
-        "sv_evidence_refs": {
-          "default": [],
-          "items": {
-            "pattern": "^sha256:[a-f0-9]{64}$",
-            "type": "string"
-          },
-          "title": "Sv Evidence Refs",
-          "type": "array"
-        },
-        "sv_namespace": {
-          "minLength": 1,
-          "title": "Sv Namespace",
-          "type": "string"
-        },
-        "sv_observation_window": {
+        "applicability_reason": {
           "anyOf": [
             {
-              "$ref": "#/$defs/ObservationWindow"
+              "type": "string"
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Applicability Reason"
         },
-        "sv_state": {
-          "enum": [
-            "measured",
-            "evidence_insufficient",
-            "not_applicable"
-          ],
-          "title": "Sv State",
-          "type": "string"
-        },
-        "sv_verified_markets": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "title": "Sv Verified Markets",
-          "type": "array"
-        },
-        "tested_evidence_refs": {
+        "evidence_refs": {
           "default": [],
           "items": {
             "pattern": "^sha256:[a-f0-9]{64}$",
             "type": "string"
           },
-          "title": "Tested Evidence Refs",
+          "title": "Evidence Refs",
           "type": "array"
         },
-        "tested_markets": {
-          "default": [],
+        "market": {
+          "pattern": "^[A-Z]{2,8}$",
+          "title": "Market",
+          "type": "string"
+        },
+        "passed_rounds": {
+          "minimum": 0,
+          "title": "Passed Rounds",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "verified",
+            "provider_negative",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "total_rounds": {
+          "minimum": 1,
+          "title": "Total Rounds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "market",
+        "state",
+        "passed_rounds",
+        "total_rounds"
+      ],
+      "title": "MarketCoverageResult",
+      "type": "object"
+    },
+    "MarketCoverageSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observation_date": {
+          "format": "date",
+          "title": "Observation Date",
+          "type": "string"
+        },
+        "release_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Release Digest",
+          "type": "string"
+        },
+        "results": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/MarketCoverageResult"
           },
-          "title": "Tested Markets",
+          "minItems": 1,
+          "title": "Results",
           "type": "array"
         }
       },
       "required": [
-        "sv_namespace",
-        "sv_state"
+        "release_digest",
+        "observation_date",
+        "results"
       ],
       "title": "MarketCoverageSnapshot",
       "type": "object"
@@ -619,6 +637,11 @@
       "title": "Limitations",
       "type": "array"
     },
+    "market_coverage_release_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Market Coverage Release Digest",
+      "type": "string"
+    },
     "rows": {
       "items": {
         "$ref": "#/$defs/SelectionSnapshotRow"
@@ -646,6 +669,7 @@
     "edition",
     "cap_id",
     "cap_release_digest",
+    "market_coverage_release_digest",
     "input_digests",
     "rows"
   ],
