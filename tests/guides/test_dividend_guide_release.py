@@ -4,7 +4,6 @@ import hashlib
 import json
 import platform
 import re
-from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -209,53 +208,28 @@ def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
     assert market_chart.is_file(), "AC1 must render the Finlight-style market matrix"
     market_data = generated["data"]["market_coverage"]
     assert market_data["title"] == (
-        "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN"
+        "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果"
     )
-    assert market_data["highlighted_access_paths"] == [
-        ["eodhd", "eodhd-dividends-qveris"]
-    ]
     assert market_data["edition"] == "2026-08-12"
-    assert market_data["observation_window"] == {
-        "start": "2026-07-20",
-        "end": "2026-08-12",
-    }
+    assert market_data["observation_date"] == "2026-08-12"
+    assert market_data["release_digest"].startswith("sha256:")
     assert market_data["markets"] == [
-        "AT",
-        "BE",
-        "BR",
-        "CH",
-        "CL",
-        "CN",
-        "CO",
-        "CZ",
-        "DE",
-        "DK",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
-        "HK",
-        "ID",
-        "IE",
-        "NL",
-        "NO",
-        "PH",
-        "PT",
-        "SE",
-        "TH",
-        "TW",
         "US",
+        "HK",
+        "CN",
+        "JP",
+        "DE",
+        "FR",
+        "BR",
+        "IN",
+        "ES",
     ]
     rows = {row["provider_id"]: row for row in market_data["rows"]}
-    assert rows["eodhd"]["verified_markets"] == [
-        market for market in market_data["markets"] if market != "CN"
-    ]
-    assert rows["hangseng"]["verified_markets"] == ["CN"]
-    assert rows["ifind"]["state"] == "not_applicable"
-    assert all(
-        rows[provider_id]["state"] == "evidence_insufficient"
-        for provider_id in ("alpha-vantage", "massive-stocks", "twelve-data")
-    )
+    assert rows["eodhd"]["results"]["US"]["state"] == "verified"
+    assert rows["eodhd"]["results"]["JP"]["state"] == "provider_negative"
+    assert rows["hangseng"]["results"]["CN"]["state"] == "verified"
+    assert rows["hangseng"]["results"]["US"]["state"] == "not_applicable"
+    assert rows["ifind"]["results"]["US"]["state"] == "provider_negative"
     assert generated["charts"][market_chart.name] == (
         f"sha256:{hashlib.sha256(market_chart.read_bytes()).hexdigest()}"
     )
@@ -317,7 +291,7 @@ def test_article_embeds_market_coverage_chart_next_to_market_section() -> None:
     chart_path = "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png"
 
     assert f"]({chart_path})]({chart_path})" in market_section
-    assert "绿色只表示 SV 正向证据" in market_section
+    assert "绿色表示固定代表 symbol 连续 2 轮" in market_section
 
 
 def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(
@@ -353,35 +327,14 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert manifest["selection_snapshot"]["input_digest"] == (
         f"sha256:{hashlib.sha256(snapshot_input.read_bytes()).hexdigest()}"
     )
-    sv_snapshot = ROOT / manifest["artifacts"]["qveris_sv_snapshot"]
-    assert manifest["qveris_sv"]["digest"] == (
-        f"sha256:{hashlib.sha256(sv_snapshot.read_bytes()).hexdigest()}"
+    market_release = ROOT / manifest["artifacts"]["market_coverage_release"]
+    assert manifest["market_coverage_release"]["digest"] == (
+        f"sha256:{hashlib.sha256(market_release.read_bytes()).hexdigest()}"
     )
-    sv_document = json.loads(sv_snapshot.read_text(encoding="utf-8"))
-    assert sv_document["disclosure_level"] == "sanitized_public"
-    assert sv_document["license_status"] == "cleared"
-    assert len(sv_document["results"]) == 25
-    assert all(result["supported"] is True for result in sv_document["results"])
-    assert "tool_id" not in sv_snapshot.read_text(encoding="utf-8")
-    assert manifest["qveris_sv"]["id"] == sv_document["snapshot_id"]
-    assert (
-        manifest["qveris_sv"]["observation_window"] == sv_document["observation_window"]
-    )
-    assert manifest["qveris_sv"]["verified_results"] == len(sv_document["results"])
-    assert (
-        manifest["qveris_sv"]["source_rows_digest"] == sv_document["source_rows_digest"]
-    )
-    assert manifest["qveris_sv"]["bindings_digest"] == sv_document["bindings_digest"]
-    bindings = ROOT / manifest["artifacts"]["qveris_sv_bindings"]
-    bindings_digest = f"sha256:{hashlib.sha256(bindings.read_bytes()).hexdigest()}"
-    assert manifest["qveris_sv"]["bindings_digest"] == bindings_digest
-    assert sv_document["bindings_digest"] == bindings_digest
-    identity_map = ROOT / manifest["artifacts"]["qveris_sv_identity_map"]
-    identity_map_digest = (
-        f"sha256:{hashlib.sha256(identity_map.read_bytes()).hexdigest()}"
-    )
-    assert manifest["qveris_sv"]["identity_map_digest"] == identity_map_digest
-    assert sv_document["identity_map_digest"] == identity_map_digest
+    assert manifest["market_coverage_release"]["planned_cells"] == 120
+    assert manifest["market_coverage_release"]["applicable_cells"] == 66
+    market_evidence = ROOT / manifest["artifacts"]["market_coverage_public_evidence"]
+    assert len(tuple(market_evidence.glob("*.json"))) == 66
 
 
 def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
@@ -392,7 +345,7 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
         "成功调用 credits 中位数",
         "官方价格",
         "市场覆盖",
-        "MKT.DIVIDENDS",
+        "9 个代表市场",
         "参数清晰度",
         "schema 稳定性",
         "错误恢复",
@@ -406,33 +359,30 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     assert "已验证全球市场覆盖" not in article
 
 
-def test_article_publishes_measured_sv_coverage_near_the_decision_table() -> None:
+def test_article_publishes_released_market_coverage_near_the_decision_table() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
-    market_rows = _markdown_table_rows(article, "本次固定市场样本")
+    market_rows = _markdown_table_rows(article, "2/2 通过的代表市场")
 
-    assert "QVeris SV 市场证据" in article.split("## 为什么分红 API", 1)[0]
-    assert "24 个已验证市场" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
-    assert "CN 已验证" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
+    assert "7/9 通过" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
+    assert "CN 2/2" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
     eodhd = next(row for row in snapshot["rows"] if row["provider_id"] == "eodhd")
-    assert eodhd["market_coverage"]["sv_state"] == "measured"
-    assert len(eodhd["market_coverage"]["sv_verified_markets"]) == 24
+    verified = {
+        result["market"]
+        for result in eodhd["market_coverage"]["results"]
+        if result["state"] == "verified"
+    }
+    assert verified == {"US", "HK", "CN", "DE", "FR", "BR", "ES"}
     eodhd_market_row = _provider_row(market_rows, "EODHD", "QVeris")
     published_markets = {
-        item.strip() for item in eodhd_market_row[2].split(",") if item.strip()
+        item.strip() for item in eodhd_market_row[1].split(",") if item.strip()
     }
-    assert published_markets == set(eodhd["market_coverage"]["sv_verified_markets"])
+    assert published_markets == verified
     hangseng_market_row = _provider_row(market_rows, "恒生聚源", "QVeris")
-    assert hangseng_market_row[2] == "CN"
-    sv_document = json.loads((MANIFEST.parent / "qveris-sv-snapshot.json").read_text())
-    window = sv_document["observation_window"]
-    capture_date = datetime.fromisoformat(
-        sv_document["source_snapshot_captured_at"].replace("Z", "+00:00")
-    ).date()
-    assert f"{window['start']} 至 {window['end']}" in article
-    assert f"抓取于 {capture_date.isoformat()}" in article
-    assert "SV 验证的是这条 Tool × Capability 的市场可达性" in article
+    assert hangseng_market_row[1] == "CN"
+    assert "66 次真实调用" in article
+    assert "54 个 N/A 单元" in article
 
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:
@@ -441,7 +391,7 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
     aliases = {"Massive Stocks": "Massive"}
     runtime_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
     pricing_rows = _markdown_table_rows(article, "| Provider / Access Path |")
-    market_rows = _markdown_table_rows(article, "本次固定市场样本")
+    market_rows = _markdown_table_rows(article, "2/2 通过的代表市场")
 
     for row in snapshot["rows"]:
         provider = aliases.get(row["provider_name"], row["provider_name"])
@@ -470,15 +420,22 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             assert "Evidence insufficient" in pricing_row[2]
 
         market_row = _provider_row(market_rows, provider, access_path)
-        coverage = row["market_coverage"]
-        for market in coverage["tested_markets"]:
-            assert f"{market} ·" in market_row[1]
-        sv_label = {
-            "evidence_insufficient": "**Evidence insufficient**",
-            "not_applicable": "不适用",
-            "measured": ", ".join(coverage["sv_verified_markets"]),
-        }[coverage["sv_state"]]
-        assert market_row[2] == sv_label
+        results = row["market_coverage"]["results"]
+        expected = {
+            state: {result["market"] for result in results if result["state"] == state}
+            for state in ("verified", "provider_negative", "not_applicable")
+        }
+        published = [
+            set()
+            if cell == "—"
+            else set(re.split("[：:]", cell, maxsplit=1)[0].split(", "))
+            for cell in market_row[1:4]
+        ]
+        assert published == [
+            expected["verified"],
+            expected["provider_negative"],
+            expected["not_applicable"],
+        ]
 
 
 def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:

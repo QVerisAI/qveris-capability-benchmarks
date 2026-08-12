@@ -74,9 +74,7 @@ def evaluate_dividend_document(
         request_identity is not None
         and observation.facts.get("identity_verified") is not True
     ):
-        unmet = tuple(
-            dict.fromkeys((*outcome.unmet_conditions, "identity_verified"))
-        )
+        unmet = tuple(dict.fromkeys((*outcome.unmet_conditions, "identity_verified")))
         return DividendDirectResult(
             CellState.PROVIDER_NEGATIVE,
             facts,

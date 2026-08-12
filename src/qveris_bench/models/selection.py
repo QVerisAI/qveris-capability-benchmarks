@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date
 from typing import Literal
 
 from pydantic import Field, HttpUrl, model_validator
@@ -9,13 +9,13 @@ from qveris_bench.models.base import (
     EvidenceRef,
     FrozenModel,
     SemanticVersion,
-    Sha256,
     StableId,
 )
-from qveris_bench.models.enums import AccessPathType, DisclosureLevel, LicenseStatus
+from qveris_bench.models.enums import AccessPathType
 
 MeasurementState = Literal["measured", "evidence_insufficient", "not_applicable"]
 PricingState = Literal["declared", "evidence_insufficient"]
+MarketResultState = Literal["verified", "provider_negative", "not_applicable"]
 
 
 class ObservationWindow(FrozenModel):
@@ -199,29 +199,49 @@ class AgentInterfaceSnapshot(FrozenModel):
     single_tool_completion: SelectionObservation
 
 
-class MarketCoverageSnapshot(FrozenModel):
-    tested_markets: tuple[str, ...] = ()
-    tested_evidence_refs: tuple[EvidenceRef, ...] = ()
-    sv_namespace: str = Field(min_length=1)
-    sv_state: MeasurementState
-    sv_observation_window: ObservationWindow | None = None
-    sv_verified_markets: tuple[str, ...] = ()
-    sv_evidence_refs: tuple[EvidenceRef, ...] = ()
+class MarketCoverageResult(FrozenModel):
+    market: str = Field(pattern=r"^[A-Z]{2,8}$")
+    state: MarketResultState
+    passed_rounds: int = Field(ge=0)
+    total_rounds: int = Field(ge=1)
+    evidence_refs: tuple[EvidenceRef, ...] = ()
+    applicability_reason: str | None = None
 
     @model_validator(mode="after")
-    def validate_evidence(self) -> MarketCoverageSnapshot:
-        if self.tested_markets and not self.tested_evidence_refs:
-            raise ValueError("tested markets require Direct Test evidence")
-        if self.sv_state == "measured" and not self.sv_evidence_refs:
-            raise ValueError("measured SV coverage requires evidence")
-        if self.sv_state == "measured" and self.sv_observation_window is None:
-            raise ValueError("measured SV coverage requires its observation window")
-        if self.sv_state in {"evidence_insufficient", "not_applicable"} and (
-            self.sv_verified_markets or self.sv_evidence_refs
+    def validate_result(self) -> MarketCoverageResult:
+        if self.passed_rounds > self.total_rounds:
+            raise ValueError("market passed rounds cannot exceed total rounds")
+        if self.state == "verified" and (
+            self.passed_rounds != self.total_rounds
+            or len(self.evidence_refs) != self.total_rounds
+            or self.applicability_reason is not None
         ):
-            raise ValueError("unmeasured SV coverage cannot carry verified markets")
-        if self.sv_state == "not_applicable" and self.sv_observation_window is not None:
-            raise ValueError("not-applicable SV coverage cannot carry a window")
+            raise ValueError("verified market requires every round and its evidence")
+        if self.state == "provider_negative" and (
+            self.passed_rounds != 0
+            or len(self.evidence_refs) != self.total_rounds
+            or self.applicability_reason is not None
+        ):
+            raise ValueError("provider-negative market requires complete evidence")
+        if self.state == "not_applicable" and (
+            self.passed_rounds
+            or self.evidence_refs
+            or self.applicability_reason is None
+        ):
+            raise ValueError("not-applicable market requires only its frozen reason")
+        return self
+
+
+class MarketCoverageSnapshot(FrozenModel):
+    release_digest: EvidenceRef
+    observation_date: date
+    results: tuple[MarketCoverageResult, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def require_unique_markets(self) -> MarketCoverageSnapshot:
+        markets = [result.market for result in self.results]
+        if len(markets) != len(set(markets)):
+            raise ValueError("duplicate market coverage result")
         return self
 
 
@@ -245,53 +265,7 @@ class SelectionSnapshot(FrozenModel):
     edition: date
     cap_id: StableId
     cap_release_digest: EvidenceRef
+    market_coverage_release_digest: EvidenceRef
     input_digests: dict[str, object]
     rows: tuple[SelectionSnapshotRow, ...] = Field(min_length=1)
     limitations: tuple[str, ...] = ()
-
-
-class ScopeValidationResult(FrozenModel):
-    provider_id: StableId
-    access_path_id: StableId
-    market: str = Field(pattern=r"^[A-Z]{2,8}$")
-    supported: Literal[True]
-    evidence_ref: EvidenceRef
-
-
-class ScopeValidationSnapshot(FrozenModel):
-    snapshot_id: StableId
-    version: SemanticVersion
-    namespace: str = Field(pattern=r"^[A-Z][A-Z0-9]*(?:\.[A-Z0-9]+)+$")
-    observation_window: ObservationWindow
-    suite_fingerprint: Sha256
-    extractor_version: SemanticVersion
-    source_snapshot_digest: EvidenceRef
-    source_rows_digest: EvidenceRef
-    bindings_digest: EvidenceRef
-    identity_map_digest: EvidenceRef
-    source_snapshot_captured_at: datetime
-    disclosure_level: DisclosureLevel
-    license_status: LicenseStatus
-    results: tuple[ScopeValidationResult, ...]
-
-    @model_validator(mode="after")
-    def require_unique_scopes(self) -> ScopeValidationSnapshot:
-        keys = [
-            (item.provider_id, item.access_path_id, item.market)
-            for item in self.results
-        ]
-        if len(keys) != len(set(keys)):
-            raise ValueError("duplicate QVeris SV scope")
-        if self.source_snapshot_captured_at.utcoffset() is None:
-            raise ValueError("QVeris SV source capture must be timezone-aware")
-        return self
-
-
-class SelectionMarketCase(FrozenModel):
-    case_id: StableId
-    market: str = Field(pattern=r"^[A-Z]{2,8}$")
-
-
-class SelectionMarketScope(FrozenModel):
-    cap_id: StableId
-    cases: tuple[SelectionMarketCase, ...] = Field(min_length=1)

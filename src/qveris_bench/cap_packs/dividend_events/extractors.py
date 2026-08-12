@@ -118,9 +118,7 @@ def _identity_facts(
     }
     facts: dict[str, Any] = {
         "symbol": (
-            request_identity.canonical_symbol
-            if matches
-            else str(returned_symbol)
+            request_identity.canonical_symbol if matches else str(returned_symbol)
         ),
         "identity_verified": matches,
         "identity_basis": (

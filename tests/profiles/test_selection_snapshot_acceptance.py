@@ -6,12 +6,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import yaml
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import (
     GatewayMetricsSnapshot,
-    ObservationWindow,
     OfficialPricingSnapshot,
     RunObservationsSnapshot,
 )
@@ -23,15 +21,6 @@ from qveris_bench.profiles.selection import (
 
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml"
-
-
-def _selection_input_with_sv(tmp_path: Path, sv_path: Path) -> Path:
-    document = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
-    document["qveris_sv"]["snapshot"] = str(sv_path)
-    document["qveris_sv"]["snapshot_digest"] = _digest(sv_path)
-    path = tmp_path / "selection.yaml"
-    path.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
-    return path
 
 
 def test_ac1_snapshot_is_deterministic_scoped_and_digest_bound() -> None:
@@ -54,53 +43,48 @@ def test_ac1_snapshot_is_deterministic_scoped_and_digest_bound() -> None:
         }
 
 
-def test_ac3_snapshot_separates_tested_markets_from_verified_sv() -> None:
+def test_ac3_snapshot_consumes_released_market_results() -> None:
     rows = {
         row.access_path_id: row
         for row in build_selection_snapshot(INPUT, ROOT).snapshot.rows
     }
 
-    assert rows["ifind-native-mcp"].market_coverage.tested_markets == ("CN",)
-    assert rows["twelve-data-dividends-qveris"].market_coverage.tested_markets == (
+    eodhd = {
+        result.market: result.state
+        for result in rows["eodhd-dividends-qveris"].market_coverage.results
+    }
+    assert {market for market, state in eodhd.items() if state == "verified"} == {
         "US",
-    )
-    assert rows["ifind-native-mcp"].market_coverage.sv_state == "not_applicable"
-    assert rows["hangseng-dividends-qveris"].market_coverage.sv_verified_markets == (
-        "CN",
-    )
-    assert rows["eodhd-dividends-qveris"].market_coverage.sv_verified_markets == (
-        "AT",
-        "BE",
-        "BR",
-        "CH",
-        "CL",
-        "CO",
-        "CZ",
-        "DE",
-        "DK",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
         "HK",
-        "ID",
-        "IE",
-        "NL",
-        "NO",
-        "PH",
-        "PT",
-        "SE",
-        "TH",
-        "TW",
-        "US",
+        "CN",
+        "DE",
+        "FR",
+        "BR",
+        "ES",
+    }
+    assert {
+        market for market, state in eodhd.items() if state == "provider_negative"
+    } == {
+        "JP",
+        "IN",
+    }
+    alpha = {
+        result.market: result.state
+        for result in rows["alpha-vantage-dividends-qveris"].market_coverage.results
+    }
+    assert sum(state == "verified" for state in alpha.values()) == 4
+    assert sum(state == "not_applicable" for state in alpha.values()) == 5
+    native = rows["ifind-native-mcp"].market_coverage
+    assert {
+        result.market
+        for result in native.results
+        if result.state == "provider_negative"
+    } == {"US", "HK", "CN"}
+    assert all(
+        row.market_coverage.release_digest
+        == build_selection_snapshot(INPUT, ROOT).snapshot.market_coverage_release_digest
+        for row in rows.values()
     )
-    for access_path_id in (
-        "twelve-data-dividends-qveris",
-        "alpha-vantage-dividends-qveris",
-        "massive-stocks-dividends-qveris",
-    ):
-        assert rows[access_path_id].market_coverage.sv_state == "evidence_insufficient"
-        assert rows[access_path_id].market_coverage.sv_verified_markets == ()
 
 
 def test_ac4_gateway_metrics_never_leak_into_native_path() -> None:
@@ -202,150 +186,18 @@ def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
         build_selection_snapshot(input_path, ROOT)
 
 
-def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
-    tmp_path: Path,
-) -> None:
-    sv_path = tmp_path / "sv.json"
-    sv_document = {
-        "snapshot_id": "dividend-sv-2026-q3-v1",
-        "version": "1.0.0",
-        "namespace": "MKT.DIVIDENDS",
-        "observation_window": {"start": "2026-07-20", "end": "2026-08-11"},
-        "suite_fingerprint": "b" * 64,
-        "extractor_version": "1.0.0",
-        "source_snapshot_digest": "sha256:" + "c" * 64,
-        "source_rows_digest": "sha256:" + "d" * 64,
-        "bindings_digest": "sha256:" + "e" * 64,
-        "identity_map_digest": "sha256:" + "f" * 64,
-        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
-        "disclosure_level": "sanitized_public",
-        "license_status": "cleared",
-        "results": [
-            {
-                "provider_id": "twelve-data",
-                "access_path_id": "twelve-data-dividends-qveris",
-                "market": "US",
-                "supported": True,
-                "evidence_ref": "sha256:" + "a" * 64,
-            }
-        ],
-    }
-    sv_path.write_text(json.dumps(sv_document), encoding="utf-8")
-    sv_digest = _digest(sv_path)
-    input_path = _selection_input_with_sv(tmp_path, sv_path)
-
-    rows = {
-        row.access_path_id: row
-        for row in build_selection_snapshot(input_path, ROOT).snapshot.rows
-    }
-    coverage = rows["twelve-data-dividends-qveris"].market_coverage
-    assert coverage.sv_state == "measured"
-    assert coverage.sv_verified_markets == ("US",)
-    assert coverage.sv_evidence_refs == ("sha256:" + "a" * 64,)
-    assert coverage.sv_observation_window == ObservationWindow(
-        start="2026-07-20", end="2026-08-11"
+def test_ac3_snapshot_rejects_market_release_digest_drift(tmp_path: Path) -> None:
+    input_path = tmp_path / "selection.yaml"
+    text = INPUT.read_text(encoding="utf-8").replace(
+        "sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9",
+        "sha256:" + "0" * 64,
     )
+    input_path.write_text(text, encoding="utf-8")
 
-    sv_path.write_text(
-        sv_path.read_text(encoding="utf-8").replace(
-            "twelve-data-dividends-qveris", "twelve-data-unknown"
-        ),
-        encoding="utf-8",
-    )
-    input_path.write_text(
-        input_path.read_text().replace(sv_digest, _digest(sv_path)),
-        encoding="utf-8",
-    )
-    with pytest.raises(SelectionSnapshotBuildError, match="unknown SV identity"):
-        build_selection_snapshot(input_path, ROOT)
-
-
-@pytest.mark.parametrize(
-    ("mutation", "message"),
-    [
-        (("supported", "false"), "Input should be True"),
-        (
-            ("observation_window", {"start": "2026-08-13", "end": "2026-08-13"}),
-            "after selection edition",
-        ),
-        (
-            ("source_snapshot_captured_at", "2026-08-12T23:30:00-12:00"),
-            "after selection edition",
-        ),
-        (("disclosure_level", "private"), "publishable provenance"),
-    ],
-)
-def test_ac3_snapshot_rejects_untrusted_sv(
-    tmp_path: Path, mutation: tuple[str, object], message: str
-) -> None:
-    document = {
-        "snapshot_id": "dividend-sv-2026-q3-v1",
-        "version": "1.0.0",
-        "namespace": "MKT.DIVIDENDS",
-        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
-        "suite_fingerprint": "b" * 64,
-        "extractor_version": "1.0.0",
-        "source_snapshot_digest": "sha256:" + "c" * 64,
-        "source_rows_digest": "sha256:" + "d" * 64,
-        "bindings_digest": "sha256:" + "e" * 64,
-        "identity_map_digest": "sha256:" + "f" * 64,
-        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
-        "disclosure_level": "sanitized_public",
-        "license_status": "cleared",
-        "results": [
-            {
-                "provider_id": "twelve-data",
-                "access_path_id": "twelve-data-dividends-qveris",
-                "market": "US",
-                "supported": True,
-                "evidence_ref": "sha256:" + "a" * 64,
-            }
-        ],
-    }
-    key, value = mutation
-    if key == "supported":
-        document["results"][0][key] = value
-    else:
-        document[key] = value
-    sv_path = tmp_path / "sv.json"
-    sv_path.write_text(json.dumps(document), encoding="utf-8")
-    input_path = _selection_input_with_sv(tmp_path, sv_path)
-
-    with pytest.raises(SelectionSnapshotBuildError, match=message):
-        build_selection_snapshot(input_path, ROOT)
-
-
-def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
-    document = {
-        "snapshot_id": "dividend-sv-2026-q3-v1",
-        "version": "1.0.0",
-        "namespace": "MKT.DIVIDENDS",
-        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
-        "suite_fingerprint": "b" * 64,
-        "extractor_version": "1.0.0",
-        "source_snapshot_digest": "sha256:" + "c" * 64,
-        "source_rows_digest": "sha256:" + "d" * 64,
-        "bindings_digest": "sha256:" + "e" * 64,
-        "identity_map_digest": "sha256:" + "f" * 64,
-        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
-        "disclosure_level": "sanitized_public",
-        "license_status": "cleared",
-        "results": [
-            {
-                "provider_id": "twelve-data",
-                "access_path_id": "twelve-data-dividends-qveris",
-                "market": "US",
-                "supported": supported,
-                "evidence_ref": "sha256:" + token * 64,
-            }
-            for supported, token in ((True, "a"), (True, "b"))
-        ],
-    }
-    sv_path = tmp_path / "sv.json"
-    sv_path.write_text(json.dumps(document), encoding="utf-8")
-    input_path = _selection_input_with_sv(tmp_path, sv_path)
-
-    with pytest.raises(SelectionSnapshotBuildError, match="duplicate QVeris SV scope"):
+    with pytest.raises(
+        SelectionSnapshotBuildError,
+        match="market coverage release digest mismatch",
+    ):
         build_selection_snapshot(input_path, ROOT)
 
 

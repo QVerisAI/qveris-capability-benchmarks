@@ -33,10 +33,7 @@ def test_ac1_market_suite_freezes_nine_markets_two_rounds_and_66_calls() -> None
     assert len(compiled.run_plan.cells) == 120
     assert len(applicable) == 66
     cases = {case.case_id: case for case in compiled.cases}
-    assert sum(
-        not cases[cell.case_id].negative_control
-        for cell in applicable
-    ) == 54
+    assert sum(not cases[cell.case_id].negative_control for cell in applicable) == 54
 
 
 def test_ac2_only_explicit_contract_or_qveris_unsupported_cells_are_skipped() -> None:
@@ -53,9 +50,9 @@ def test_ac2_only_explicit_contract_or_qveris_unsupported_cells_are_skipped() ->
             ("alpha-vantage-dividends-qveris", market)
             for market in {"HK", "JP", "DE", "BR", "IN"}
         ),
-        *(('hangseng-dividends-qveris', market) for market in MARKETS - {'CN'}),
-        *(('massive-stocks-dividends-qveris', market) for market in MARKETS - {'US'}),
-        *(('ifind-native-mcp', market) for market in MARKETS - {'US', 'HK', 'CN'}),
+        *(("hangseng-dividends-qveris", market) for market in MARKETS - {"CN"}),
+        *(("massive-stocks-dividends-qveris", market) for market in MARKETS - {"US"}),
+        *(("ifind-native-mcp", market) for market in MARKETS - {"US", "HK", "CN"}),
     }
     assert all(
         cell.applicability_reason
@@ -109,17 +106,19 @@ def test_ac3_every_applicable_cell_has_a_reproducible_request_identity() -> None
 
 
 def test_ac4_harbor_sv_is_not_a_market_result_source() -> None:
-    selection = (PACK / "market-selection.yaml").read_text(encoding="utf-8")
+    selection = (
+        ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml"
+    ).read_text(encoding="utf-8")
 
-    assert "market_release" in selection
+    assert "market_coverage_release" in selection
     assert "qveris_sv" not in selection
 
 
 def test_ac5_live_workflow_executes_every_applicable_binding_twice() -> None:
     workflow = yaml.safe_load(
-        (
-            ROOT / ".github/workflows/live-dividend-market-coverage-e2e.yml"
-        ).read_text(encoding="utf-8")
+        (ROOT / ".github/workflows/live-dividend-market-coverage-e2e.yml").read_text(
+            encoding="utf-8"
+        )
     )
     matrix = workflow["jobs"]["direct"]["strategy"]["matrix"]
     registry = load_direct_binding_registry(PACK / "market-direct-bindings.json")

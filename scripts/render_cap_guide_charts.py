@@ -440,11 +440,6 @@ def render_selection_tradeoff(
         access_path_label = (
             "Native MCP" if item["access_path_type"] == "native_mcp" else "QVeris"
         )
-        if (
-            item["access_path_type"] == "native_mcp"
-            and coverage["sv_state"] != "not_applicable"
-        ):
-            raise ValueError("Native market coverage must be not_applicable")
         market_rows.append(
             {
                 "provider_id": provider_id,
@@ -460,153 +455,100 @@ def render_selection_tradeoff(
                     f"{item['provider_name']} · {access_path_label} · "
                     f"{item['access_path_id']}"
                 ),
-                "state": coverage["sv_state"],
-                "verified_markets": coverage["sv_verified_markets"],
+                "results": {result["market"]: result for result in coverage["results"]},
             }
         )
-    markets = sorted(
-        {market for item in market_rows for market in item["verified_markets"]}
-    )
-    measured_rows = [item for item in market_rows if item["verified_markets"]]
-    maximum_evidence_count = max(
-        len(item["verified_markets"]) for item in measured_rows
-    )
-    highlighted_rows = [
-        item
-        for item in measured_rows
-        if len(item["verified_markets"]) == maximum_evidence_count
-    ]
-    summaries = []
-    for item in sorted(
-        measured_rows,
-        key=lambda row: -len(row["verified_markets"]),
-    ):
-        verified = item["verified_markets"]
-        scope = verified[0] if len(verified) == 1 else f"{len(verified)} 个市场"
-        summaries.append(f"{item['provider']} {scope}")
-    market_title = "QVeris SV 市场正向证据：" + "，".join(summaries)
-    windows = {
-        json.dumps(
-            item["market_coverage"]["sv_observation_window"],
-            sort_keys=True,
-        )
-        for item in snapshot_rows
-        if item["market_coverage"]["sv_observation_window"] is not None
+    markets = ["US", "HK", "CN", "JP", "DE", "FR", "BR", "IN", "ES"]
+    if any(set(item["results"]) != set(markets) for item in market_rows):
+        raise ValueError("selection market chart requires the frozen market set")
+    observation_dates = {
+        item["market_coverage"]["observation_date"] for item in snapshot_rows
     }
-    if len(windows) != 1:
-        raise ValueError("selection market chart requires one SV observation window")
-    observation_window = json.loads(next(iter(windows)))
+    release_digests = {
+        item["market_coverage"]["release_digest"] for item in snapshot_rows
+    }
+    if len(observation_dates) != 1 or len(release_digests) != 1:
+        raise ValueError("selection market chart requires one market release")
+    observation_date = next(iter(observation_dates))
+    market_release_digest = next(iter(release_digests))
     selection_digest = _sha256_identity(selection_snapshot_path)
+    market_title = "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果"
     market_data = {
         "title": market_title,
-        "highlighted_access_paths": [
-            [item["provider_id"], item["access_path_id"]] for item in highlighted_rows
-        ],
         "edition": snapshot["edition"],
-        "observation_window": observation_window,
+        "observation_date": observation_date,
+        "release_digest": market_release_digest,
         "markets": markets,
         "rows": market_rows,
     }
     market_chart_name = "dividend-market-coverage.png"
     market_chart_path = output_dir / market_chart_name
-    market_groups = (markets[:13], markets[13:])
-    fig, axes = plt.subplots(
-        2,
-        1,
-        figsize=(14, 9.2),
-        facecolor="#FFFFFF",
-        gridspec_kw={"hspace": 0.34},
-    )
+    fig, ax = plt.subplots(figsize=(14, 7.4), facecolor="#FFFFFF")
     state_colors = {
         "verified": "#12B76A",
-        "evidence_insufficient": "#F1F5F9",
+        "provider_negative": "#F79009",
         "not_applicable": "#E5EEF5",
     }
-    for ax, market_group in zip(axes, market_groups, strict=True):
-        for row_index, item in enumerate(market_rows):
-            for column_index, market in enumerate(market_group):
-                if item["state"] == "not_applicable":
-                    state = "not_applicable"
-                    label = "N/A"
-                elif market in item["verified_markets"]:
-                    state = "verified"
-                    label = ""
-                else:
-                    state = "evidence_insufficient"
-                    label = "—"
-                ax.add_patch(
-                    Rectangle(
-                        (column_index - 0.5, row_index - 0.5),
-                        1,
-                        1,
-                        facecolor=state_colors[state],
-                        edgecolor="#FFFFFF",
-                        linewidth=1.4,
-                    )
-                )
-                ax.text(
-                    column_index,
-                    row_index,
-                    label,
-                    ha="center",
-                    va="center",
-                    color="#0F172A",
-                    fontsize=11,
-                    fontweight=600,
-                )
-        highlighted_identities = {
-            (item["provider_id"], item["access_path_id"]) for item in highlighted_rows
-        }
-        for highlighted_index, row in enumerate(market_rows):
-            if (
-                row["provider_id"],
-                row["access_path_id"],
-            ) not in highlighted_identities:
-                continue
+    for row_index, item in enumerate(market_rows):
+        for column_index, market in enumerate(markets):
+            state = item["results"][market]["state"]
+            label = {
+                "verified": "2/2",
+                "provider_negative": "0/2",
+                "not_applicable": "N/A",
+            }[state]
             ax.add_patch(
                 Rectangle(
-                    (-0.5, highlighted_index - 0.5),
-                    len(market_group),
+                    (column_index - 0.5, row_index - 0.5),
                     1,
-                    fill=False,
-                    edgecolor="#FF8C00",
-                    linewidth=2.2,
+                    1,
+                    facecolor=state_colors[state],
+                    edgecolor="#FFFFFF",
+                    linewidth=1.4,
                 )
             )
-        ax.set_xlim(-0.5, len(market_group) - 0.5)
-        ax.set_ylim(len(market_rows) - 0.5, -0.5)
-        ax.set_xticks(range(len(market_group)))
-        ax.set_xticklabels(market_group, fontsize=10, color="#334155")
-        ax.set_yticks(range(len(market_rows)))
-        ax.set_yticklabels(
-            [item["label"].replace(" · ", "\n", 1) for item in market_rows],
-            fontsize=10,
-            color="#334155",
-        )
-        ax.tick_params(length=0)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
+            ax.text(
+                column_index,
+                row_index,
+                label,
+                ha="center",
+                va="center",
+                color="#FFFFFF" if state != "not_applicable" else "#475569",
+                fontsize=11,
+                fontweight=600,
+            )
+    ax.set_xlim(-0.5, len(markets) - 0.5)
+    ax.set_ylim(len(market_rows) - 0.5, -0.5)
+    ax.set_xticks(range(len(markets)))
+    ax.set_xticklabels(markets, fontsize=11, color="#334155")
+    ax.set_yticks(range(len(market_rows)))
+    ax.set_yticklabels(
+        [item["label"].replace(" · ", "\n", 1) for item in market_rows],
+        fontsize=10,
+        color="#334155",
+    )
+    ax.tick_params(length=0)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
     fig.suptitle(
         market_title,
         color="#143F74",
         fontsize=20,
         fontweight=600,
-        y=0.97,
+        y=0.96,
     )
     fig.legend(
         handles=[
-            Patch(facecolor="#12B76A", label="已验证市场"),
-            Patch(facecolor="#F1F5F9", edgecolor="#E2E8F0", label="无正向证据"),
-            Patch(facecolor="#E5EEF5", edgecolor="#CBD5E1", label="不适用"),
+            Patch(facecolor="#12B76A", label="2/2 通过 Dividend Event 门槛"),
+            Patch(facecolor="#F79009", label="0/2 已实测但未满足门槛"),
             Patch(
-                facecolor="none",
-                edgecolor="#FF8C00",
-                linewidth=2,
-                label="正向证据条目最多（不代表供应商覆盖）",
+                facecolor="#E5EEF5",
+                edgecolor="#CBD5E1",
+                label="N/A 明确不支持或合同不适用",
             ),
         ],
         loc="lower center",
-        ncol=4,
+        ncol=3,
         frameon=False,
         bbox_to_anchor=(0.5, 0.055),
         fontsize=10,
@@ -614,13 +556,13 @@ def render_selection_tradeoff(
     fig.text(
         0.08,
         0.018,
-        f"Selection {snapshot['edition']} · SV {observation_window['start']}—"
-        f"{observation_window['end']} · {selection_digest[:23]}… · "
-        "绿色仅为正向证据；灰色不代表不支持；CAP 结论需另行判断",
+        f"Market Release {observation_date} · 每个适用单元 2 rounds · "
+        f"{market_release_digest[:23]}… · Selection {selection_digest[:23]}… · "
+        "单一代表 symbol，不外推供应商全部市场",
         color="#475569",
         fontsize=9.5,
     )
-    fig.subplots_adjust(left=0.16, right=0.97, top=0.9, bottom=0.14)
+    fig.subplots_adjust(left=0.2, right=0.97, top=0.86, bottom=0.17)
     fig.savefig(market_chart_path, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)
 

@@ -1,10 +1,10 @@
 # 2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南
 
-如果你的应用必须同时拿到**除权除息日**和**每股现金分红金额**，本次实测中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮通过字段门槛与无效代码测试。独立的 QVeris SV 快照还为 EODHD 记录了 24 个已验证市场，为恒生聚源记录了 CN；但后者的 Dividend CAP 响应证券标识与请求标的不一致，因此“市场可达”不能覆盖“事件身份不可信”这一阻断。
+如果你的应用必须同时拿到**除权除息日**和**每股现金分红金额**，本次基础实测中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮通过字段门槛与无效代码测试。我们又用独立的市场套件覆盖 US、HK、CN、JP、DE、FR、BR、IN、ES：每个适用单元真实调用 2 轮，明确不支持或合同不适用的市场不重复探测。
 
 这不是一张“谁家最好”的综合排行榜，而是一份面向开发者的单能力选型指南。我们回答的是一组连在一起的工程问题：**哪条 Access Path 能返回可信的现金分红事件，调用成本与延迟如何，价格从哪里核验，市场范围又被什么证据证明？**
 
-> **快速建议**：想用一个 QVeris key 接入多家美股数据源，可从本次通过门槛的四条 QVeris Access Path 中选择；目标市场超过 US 时，EODHD 是本版唯一同时拥有多市场 SV 正向证据和 Qualified CAP 结果的候选，但仍须用你的 symbol、授权与历史窗口复测。需要响应明确给出 `currency`，优先核验 Twelve Data 和 Massive；已有 iFinD Native MCP 权限，可以自行复测其年度累计单位分红字段，但不要把它当成已经绑定日期的单次 Dividend Event。
+> **快速建议**：想用一个 QVeris key 接入多家美股数据源，可从本次通过门槛的四条 QVeris Access Path 中选择。跨市场时，EODHD 在 9 个代表市场中通过 7 个，Twelve Data 通过 6 个；Alpha Vantage 的 4 个适用市场全部通过，但另外 5 个已被 QVeris 明确标为不支持。需要响应明确给出 `currency`，优先核验 Twelve Data 和 Massive；已有 iFinD Native MCP 权限，可以复测它的年度累计单位分红字段，但不要把它当成已经绑定日期的单次 Dividend Event。
 
 ## 本文目录
 
@@ -22,18 +22,18 @@
 
 ## 实测结果一览
 
-Dividend CAP Direct Test 日期为 2026-08-11；复用的 QVeris SV 证据窗口为 2026-07-20 至 2026-08-12。固定 CAP 测试包含 A 股或美股正向用例，以及一个明确无效的 symbol 负向控制；每条适用 Access Path 各执行 3 轮，共 36 次真实 Direct Test。
+基础 Dividend CAP Direct Test 日期为 2026-08-11，包含 A 股或美股正向用例和无效 symbol 负向控制，每条适用 Access Path 各执行 3 轮，共 36 次真实调用。市场覆盖补充测试日期为 2026-08-12：9 个代表市场中共有 27 个适用正向单元，加上 6 条路径的负向控制，各执行 2 轮，共 66 次真实调用。两份 Release 独立计数，不合并成一个通过率。
 
-| 供应商与 Access Path | 本次 CAP 结论 | QVeris gateway 延迟中位数 / 成功调用 credits 中位数 | 官方价格事实 | QVeris SV 市场证据 |
+| 供应商与 Access Path | 本次 CAP 结论 | QVeris gateway 延迟中位数 / 成功调用 credits 中位数 | 官方价格事实 | 9 市场实测 |
 |---|---|---:|---|---|
-| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **Evidence insufficient**：证券身份未闭环 | 623 ms / 0.100 credits | 未公开标准价，商务询价 | CN 已验证；CAP 身份仍阻断 |
-| [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | **Not qualified**：缺单次事件日期与金额语义 | 不适用，Native MCP 不混入 QVeris 指标 | 个人版 CNY 40/月起，5,000 次请求 | 不适用（Native MCP） |
-| [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Qualified**：核心字段与负向控制 3/3 | 491 ms / 0.237 credits | Grow USD 29/月起；免费层 800 credits/日 | **Evidence insufficient** |
-| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Qualified**：核心字段与负向控制 3/3 | 576 ms / 0.200 credits | Premium USD 49.99/月起；免费层 25 次/日 | **Evidence insufficient** |
-| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Qualified**：核心字段与负向控制 3/3 | 779 ms / 0.281 credits | All-in-One USD 99.99/月 | 24 个已验证市场（完整清单见下） |
-| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Qualified**：核心字段与负向控制 3/3 | 861 ms / 0.100 credits | 当前 registry 价格事实不适用于该 QVeris 路径 | **Evidence insufficient** |
+| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | 基础 Release 保持 **Evidence insufficient**；修正身份提取后的市场套件 CN 2/2 | 623 ms / 0.100 credits | 未公开标准价，商务询价 | CN 2/2；其余 8 个 N/A |
+| [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | **Not qualified**：缺单次事件日期与金额语义 | 不适用，Native MCP 不混入 QVeris 指标 | 个人版 CNY 40/月起，5,000 次请求 | US、HK、CN 均 0/2；其余 6 个 N/A |
+| [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Qualified**：核心字段与负向控制 3/3 | 491 ms / 0.237 credits | Grow USD 29/月起；免费层 800 credits/日 | 6/9 通过；HK、CN、ES 0/2 |
+| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Qualified**：核心字段与负向控制 3/3 | 576 ms / 0.200 credits | Premium USD 49.99/月起；免费层 25 次/日 | 4 个适用市场均 2/2；5 个明确 N/A |
+| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Qualified**：核心字段与负向控制 3/3 | 779 ms / 0.281 credits | All-in-One USD 99.99/月 | 7/9 通过；JP、IN 0/2 |
+| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Qualified**：核心字段与负向控制 3/3 | 861 ms / 0.100 credits | 当前 registry 价格事实不适用于该 QVeris 路径 | US 2/2；其余 8 个 N/A |
 
-`Qualified` 只表示该 Access Path 在本次冻结输入和规则下通过了这一项分红事件能力测试。运行指标、官网套餐和市场证据是独立维度：表中 ms/credits 来自 QVeris gateway 小样本，官网价格是 2026-08-10 核验的供应商声明，SV 是另一观察窗口内的市场探测。任何一项都不能替代持续 SLA、Native API 性能、字段完整性或授权条款。
+`Qualified` 只表示该 Access Path 在基础 Release 的冻结输入和规则下通过了这一项分红事件能力测试。运行指标、官网套餐和市场实测是独立维度：表中 ms/credits 来自 QVeris gateway 小样本，官网价格是 2026-08-10 核验的供应商声明，市场数字来自另一份可离线 replay 的 Release。任何一项都不能替代持续 SLA、Native API 性能、全量证券覆盖或授权条款。
 
 ## 为什么分红 API 比看起来复杂
 
@@ -51,7 +51,7 @@ Dividend CAP Direct Test 日期为 2026-08-11；复用的 QVeris SV 证据窗口
 
 ### 3. 同一证券在不同接口里可能有不同 symbol 方言
 
-`AAPL`、`600519.SH` 和供应商内部证券标识可能指向不同的标识体系。一个响应即使带有日期和金额，只要无法证明返回证券就是请求证券，就不能安全进入数据库、回测或 Agent 上下文。这正是本稿暂不采纳恒生聚源正向结果的原因。
+`AAPL`、`600519.SH` 和供应商内部证券标识可能指向不同的标识体系。一个响应即使带有日期和金额，只要无法证明返回证券就是请求证券，就不能安全进入数据库、回测或 Agent 上下文。基础 Release 因此阻断了恒生聚源旧结果；后续市场套件修正了 `stockcode` 与内部 `stockobject` 的优先级，并用新证据重新验证 CN，但不会改写旧 Release。
 
 ### 4. 空结果、无效代码和系统错误不是一回事
 
@@ -70,8 +70,9 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 - **负向控制**：使用明确无效的 symbol，接受空态或可归因的供应商拒绝，不接受编造的分红记录。
 - **重复性**：每个适用用例连续执行 3 轮；Direct Test 是强制项。
 - **证据处理**：原始响应默认私有，只公开通过脱敏和授权检查的终态事实与 digest。
+- **市场补充套件**：固定 US、HK、CN、JP、DE、FR、BR、IN、ES 各一个代表 symbol，每个适用单元执行 2 轮；只有明确不支持或 Access Path 合同不适用才跳过。
 
-实测事实、QVeris SV、供应商官方说明和我们的编辑判断使用不同口径：表格中的轮次结果来自 Dividend CAP Live Test；SV 行只来自绑定的脱敏市场验证快照；产品能力若来自供应商文档，会链接到官方来源；“适合谁”属于基于本次结果的编辑判断，不会伪装成供应商承诺。
+实测事实、供应商官方说明和我们的编辑判断使用不同口径：基础结论和市场矩阵分别来自两份 immutable Release；明确 N/A 的来源冻结在 market run plan；产品能力若来自供应商文档，会链接到官方来源；“适合谁”属于基于本次结果的编辑判断，不会伪装成供应商承诺。
 
 ## 延迟、credits、价格与市场覆盖
 
@@ -98,34 +99,34 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 价格会变化，正式采购前应点击各供应商官方链接复核调用额度、实时性、交易所费用、缓存和再分发权限。
 
-### 市场覆盖：分开看 CAP 样本与 QVeris SV
+### 市场覆盖：只发布可复现的 Dividend Event 实测
 
-[![6 条 Access Path 的 QVeris SV 市场正向证据矩阵](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)
+[![9 个代表市场、6 条 Access Path 的 Dividend Event 实测矩阵](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)
 
-绿色只表示 SV 正向证据，不表示该市场的 Dividend Event 字段、历史深度、时效、授权或 SLA 已经通过 CAP。灰色表示本快照没有正向证据，不等于供应商不支持；同花顺 iFinD 是 Native MCP，因此该项不适用。橙色边框只标出本快照正向证据条目最多的并列路径，不代表供应商覆盖排名。
+绿色表示固定代表 symbol 连续 2 轮同时返回了可核验的证券身份、`effective_date` 和 `amount`；橙色表示确实调用了 2 轮，但两轮都没有满足同一门槛；灰色 N/A 只用于 QVeris 已明确不支持或 Access Path 合同明确不适用的市场，因此没有重复浪费调用。它不是“未知”，也不是把失败藏起来。
 
-| Provider / Access Path | 本次固定市场样本 | QVeris `MKT.DIVIDENDS` SV 验证范围 | 可以得出的结论 |
+| Provider / Access Path | 2/2 通过的代表市场 | 0/2 已实测未过 | N/A（未重复调用） |
 |---|---|---|---|
-| 恒生聚源 / QVeris | CN · `600519.SH` | CN | SV 验证 CN 可达；CAP 记录身份错配，仍不能用于分红事件生产 |
-| 同花顺 iFinD / Native MCP | CN · `600519.SH` | 不适用 | 只证明 Native MCP 的这个样本被执行 |
-| Twelve Data / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
-| Alpha Vantage / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
-| EODHD / QVeris | US · `AAPL` | AT, BE, BR, CH, CL, CO, CZ, DE, DK, ES, FI, FR, GR, HK, ID, IE, NL, NO, PH, PT, SE, TH, TW, US | 24 个市场有 SV 正向证据；Dividend CAP 只在 `AAPL` 上验证事件语义 |
-| Massive / QVeris | US · `AAPL` | **Evidence insufficient** | 只证明美股单证券样本通过 |
+| 恒生聚源 / QVeris | CN | — | US, HK, JP, DE, FR, BR, IN, ES：合同仅覆盖中国内地交易所 |
+| 同花顺 iFinD / Native MCP | — | US, HK, CN：缺单次事件日期与金额 | JP, DE, FR, BR, IN, ES：合同只声明 US/HK/CN |
+| Twelve Data / QVeris | US, JP, DE, FR, BR, IN | HK, CN, ES | — |
+| Alpha Vantage / QVeris | US, CN, FR, ES | — | HK, JP, DE, BR, IN：QVeris preflight 明确不支持 |
+| EODHD / QVeris | US, HK, CN, DE, FR, BR, ES | JP, IN | — |
+| Massive / QVeris | US | — | HK, CN, JP, DE, FR, BR, IN, ES：Stocks Access Path 仅适用于美国股票 |
 
-SV 验证的是这条 Tool × Capability 的市场可达性，不是供应商所有产品的全球覆盖声明。本版绑定的 `MKT.DIVIDENDS` 脱敏 SV 快照抓取于 2026-08-12，正向探测发生在 2026-07-20；只发布 `verified`，`unresolved` 不会被改写成“不支持”。EODHD 的 24 个代码表示国家或地区市场探测，不承诺每个交易所、每只证券、每段历史都具有相同字段质量、时效、授权或 SLA。
+这里的“市场通过”仍然很克制：每个市场只固定了一只代表证券和一个历史窗口，证明的是这条 Provider / Access Path 在该样本上能完成 Dividend Event，不是供应商所有交易所、所有证券、所有历史深度的全球覆盖承诺。需要进入生产时，应把你自己的 symbol、权限、日期范围和再分发条款带入同一套复测。
 
-这也解释了恒生聚源为什么可以同时出现“CN 已验证”和“Evidence insufficient”：SV 证明这条路径在 CN 市场可达，Dividend CAP 的身份门禁却发现返回证券无法与 `600519.SH` 闭环。选型必须同时满足市场可达与事件语义可信，前者不能覆盖后者。
+市场覆盖 Release 共包含 120 个 frozen cells：66 个适用单元都有公开脱敏 terminal，54 个 N/A 单元保留冻结原因。图表只读取这份 Release，不读取不可公开复放的外部快照，也不把供应商宣传补成绿色。
 
 ## 6 家供应商逐一分析
 
-### 恒生聚源：A 股候选路径，但证券身份必须先闭环
+### 恒生聚源：CN 新证据已闭环，但旧 Release 不改写
 
-**本次观察**：正向响应包含日期、金额和多种事件日期，负向控制也得到稳定处理；但公开事实中的证券标识与请求的 `600519.SH` 无法可靠对应。
+**本次观察**：基础 Release 的提取器误把内部 `stockobject` 当成证券代码，因此按 fail-closed 原则保持 Evidence insufficient。市场补充套件改为优先读取响应 `stockcode`，请求 `600519.SH` 与返回代码完成映射，CN 两轮都满足身份、日期和金额门槛。
 
-**对开发者意味着什么**：字段齐全不等于记录可信。只要请求身份与响应身份没有形成可验证闭环，就可能把另一只证券的事件写入目标证券。对回测、公司行动调整和收益计算来说，这是必须阻断的错误。
+**对开发者意味着什么**：字段齐全不等于记录可信，身份映射必须先于业务入库；同时，更正应通过新证据追加发布，不能悄悄改掉历史结果。
 
-**本次建议**：保持 **Evidence insufficient**，修正标识提取与一致性校验后重新执行 3 轮。供应商资料见[聚源基础数据库](https://www.gildata.com/products/core-data.html)，也可查看其 [QVeris Provider 页面](https://qveris.ai/providers/hangseng_polysource)。
+**本次建议**：可把恒生聚源列为 A 股复测候选；当前市场套件只有 2 轮，若要升级基础榜单结论，仍应对主 suite 生成一个新的 3 轮 successor release。供应商资料见[聚源基础数据库](https://www.gildata.com/products/core-data.html)，也可查看其 [QVeris Provider 页面](https://qveris.ai/providers/hangseng_polysource)。
 
 ### 同花顺 iFinD：只保留 Native MCP，累计分红不能替代单次事件
 
@@ -188,7 +189,7 @@ SV 验证的是这条 Tool × Capability 的市场可达性，不是供应商所
 
 ### 主要处理 A 股分红
 
-当前还没有可直接发布为 Qualified 的 A 股路径：iFinD Native MCP 缺少除权除息日，恒生聚源需要先解决证券身份一致性问题。最稳妥的做法是保留两条候选路径、修复或补充证据后复测，而不是为了凑齐榜单强行选出赢家。
+恒生聚源在新的 CN 代表样本中已 2/2 通过，可作为 A 股优先复测候选；但基础榜单仍绑定旧的 3 轮 Release，不能用补充套件直接改写为 Qualified。iFinD Native MCP 在 CN 两轮仍缺单次事件日期与金额语义。
 
 ### 延迟是第一优先级
 
@@ -200,7 +201,7 @@ SV 验证的是这条 Tool × Capability 的市场可达性，不是供应商所
 
 | Provider 与 Access Path | 必需事件字段 | 证券身份 | 无效 symbol | 响应内币种 | 附加事件日期 |
 |---|---|---|---|---|---|
-| 恒生聚源（QVeris） | 字段存在，但记录不可采信 | **Evidence insufficient** | 3/3 正确处理 | 未观察到 | 公告日、登记日、支付日 |
+| 恒生聚源（QVeris） | 基础 Release 被身份门禁阻断；新 CN 样本 2/2 | 新套件已用响应 `stockcode` 映射验证 | 3/3 正确处理 | 未观察到 | 公告日、登记日、支付日 |
 | 同花顺 iFinD（Native MCP） | 缺单次金额语义与除权除息日 | 身份一致性未独立测量 | 3/3 正确处理 | 未发布 | 未形成单次事件日期组 |
 | Twelve Data（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | `USD` | 本次仅发布除权除息日 |
 | Alpha Vantage（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | 未观察到 | 公告日、登记日、支付日 |
@@ -246,13 +247,16 @@ SV 验证的是这条 Tool × Capability 的市场可达性，不是供应商所
 uv sync --locked --all-groups
 uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
   --expected-digest sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+uv run qveris-bench release replay \
+  releases/dividend-events-market-coverage-2026-q3-v1 \
+  --expected-digest sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9
 ```
 
-你可以检查 [release.json](../../releases/dividend-events-2026-q3-v1/release.json)、[Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json)、[QVeris SV 脱敏快照](capability-seo/best-dividend-apis/qveris-sv-snapshot.json)、[公开脱敏证据](../../evidence/dividend-events-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。当前 release `dividend-events-2026-q3-v1` 的 digest 为 `sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0`。
+你可以检查[基础 release](../../releases/dividend-events-2026-q3-v1/release.json)、[市场覆盖 release](../../releases/dividend-events-market-coverage-2026-q3-v1/release.json)、[Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json)、[基础公开证据](../../evidence/dividend-events-2026-q3-v1/)、[市场公开证据](../../evidence/dividend-events-market-coverage-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。市场图中的每一个绿色或橙色单元都能沿 `evidence.json` 的 digest 找到对应 terminal。
 
 ### 有 key：重新执行真实调用
 
-[Dividend Events live workflow](../../.github/workflows/live-dividend-events-e2e.yml)将适用 binding 分 3 轮执行：
+[Dividend Events live workflow](../../.github/workflows/live-dividend-events-e2e.yml)将基础 binding 分 3 轮执行；[Market coverage workflow](../../.github/workflows/live-dividend-market-coverage-e2e.yml)将 33 个适用 binding 分 2 轮执行：
 
 - 五条 QVeris Access Path 使用 `QVERIS_API_KEY`；
 - 同花顺 iFinD 只使用 `IFIND_MCP_API_KEY`，走 Native MCP；
@@ -269,12 +273,12 @@ uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
 ## 限制、披露与更正
 
 - 本文只测试 Dividend Events 这一项能力，不代表供应商的综合金融数据质量。
-- 测试只覆盖 `AAPL`、`600519.SH` 和无效 symbol；没有证据的市场、字段与接入方式保持 unavailable。
-- QVeris SV 的 25 条正向市场结果来自 2026-07-20 至 2026-08-12 的独立证据窗口；它衡量市场可达性，不衡量 Dividend Event 字段完整率。
+- 基础测试只覆盖 `AAPL`、`600519.SH` 和无效 symbol；市场补充套件在 9 个市场各使用一个代表 symbol，不能外推到全量证券。
+- 明确 N/A 的市场没有重复调用；判断来源冻结在 market run plan。未知、临时失败或缺少证据不能被改写成 N/A。
 - 官网价格来自 2026-08-10 的官方事实快照；没有实测套餐限额、SLA、全市场覆盖、分页、历史修订或企业授权条款。
 - QVeris Access Path 的 latency 和 credits 只描述网关侧观测，不能归因于供应商 Native API。
 - QVeris 运营平台参与部分 Access Path 的接入，但测试规则、终态证据和复测入口公开；本文不接受付费排名。
-- 恒生聚源的证券身份问题修复后必须重跑受影响用例。本稿不会用旧证据维持 Qualified 结论。
+- 恒生聚源身份提取修正后的 CN 新证据为 2/2；基础 3 轮 Release 仍保留原结论，升级需发布 successor release。
 - 历史 release 不原地修改。成立的更正会通过追加式证明或 successor release 发布。
 
 完整规则见[评测方法论](_shared/benchmark-methodology.md)和 [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks)。还可以阅读 [Market data API for AI agents](https://qveris.ai/guides/market-data-api-for-ai-agents/)、[AI stock research agent](https://qveris.ai/guides/ai-stock-research-agent/)与 [Best Free Stock APIs](https://qveris.ai/guides/stock-api-free-comparison/)。
@@ -289,9 +293,9 @@ uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
 
 不代表。它只表示固定样本中的必需字段、数值格式和负向控制连续 3 轮通过。完整市场覆盖、所有历史事件和持续 SLA 都需要独立证据。
 
-### 哪家分红 API 的市场覆盖证据最多？
+### 哪家分红 API 在 9 个代表市场中通过最多？
 
-在本版绑定的 QVeris `MKT.DIVIDENDS` SV 快照中，EODHD 有 24 个已验证市场，是唯一同时拥有多市场 SV 正向证据和 Qualified Dividend CAP 结果的路径。恒生聚源有 CN 可达证据，但 CAP 证券身份未闭环；Twelve Data、Alpha Vantage 和 Massive 在该 SV 快照中保持 Evidence insufficient，不能根据官网宣传补成实测覆盖。
+EODHD 通过 7/9，Twelve Data 通过 6/9。Alpha Vantage 的 4 个适用市场全部通过，另外 5 个因 QVeris 明确不支持而记为 N/A；这不能和 7/9、6/9直接当成同分母排名。恒生聚源和 Massive 的合同范围分别只让 CN、US 进入实测，iFind 的 US/HK/CN 都没有满足单次 Dividend Event 门槛。
 
 ### 为什么 iFind 返回了年度累计单位分红仍然没有通过？
 

@@ -59,9 +59,12 @@ input file list, and a license note marking it private operator data.
   notes.
 - The snapshot is not a runtime dependency: benchmark runs and releases never query
   Harbor and never depend on its availability or cache state.
-- Harbor conclusions (scope snapshots, identifier verification results) enter the
-  profile only as `declared` facts. The release gate (`DimensionState`) already
-  forbids declaring them `measured`.
+- Harbor conclusions may choose representative symbols or mark a scope as a
+  preflight candidate. Only an explicit unsupported result or a public Access Path
+  contract may create a frozen `not_applicable` cell; unknown, missing, or failed
+  preflight results still require Direct Test.
+- Harbor rows never become publication facts. Coverage profiles and charts consume
+  the benchmark's own immutable release and sanitized terminal evidence.
 - Snapshot freshness is operator-driven: refresh when Harbor releases new symbol or
   coverage data, review the diff, and pin the new digest in the affected release.
 

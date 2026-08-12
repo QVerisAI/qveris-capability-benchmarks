@@ -1,6 +1,0 @@
-cap_id: dividend-events
-cases:
-  - case_id: aapl-dividends-fixed-window
-    market: US
-  - case_id: cn-600519-dividends-fixed-window
-    market: CN

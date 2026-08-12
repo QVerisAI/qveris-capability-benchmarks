@@ -1,4 +1,0 @@
-cap_id: dividend-events
-market_release:
-  release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
-  digest: pending

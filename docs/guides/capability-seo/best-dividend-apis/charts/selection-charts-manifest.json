@@ -1,8 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:ce9c240c4760005f309f4052ec2940c6146dccd79cfb09f6ef2219f766e59b96",
-    "dividend-market-coverage.png": "sha256:3d754af266aa7fd9e21fbcc7d67b5f5c3743d9af450c8ab8e4087f197f0ad0db"
+    "dividend-runtime-tradeoff.png": "sha256:ef35a3650ced8fa0dc140a73aa5f0c1cbb0f9df48fe7d99b07eb45a59cff93d7",
+    "dividend-market-coverage.png": "sha256:36f3c4811ed314fc8a00d3dccb2c6f57fa72661374593824f37babc0f636dfc5"
   },
   "data": {
     "rows": [
@@ -58,44 +58,20 @@
       }
     ],
     "market_coverage": {
-      "title": "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN",
-      "highlighted_access_paths": [
-        [
-          "eodhd",
-          "eodhd-dividends-qveris"
-        ]
-      ],
+      "title": "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果",
       "edition": "2026-08-12",
-      "observation_window": {
-        "end": "2026-08-12",
-        "start": "2026-07-20"
-      },
+      "observation_date": "2026-08-12",
+      "release_digest": "sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9",
       "markets": [
-        "AT",
-        "BE",
-        "BR",
-        "CH",
-        "CL",
-        "CN",
-        "CO",
-        "CZ",
-        "DE",
-        "DK",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
+        "US",
         "HK",
-        "ID",
-        "IE",
-        "NL",
-        "NO",
-        "PH",
-        "PT",
-        "SE",
-        "TH",
-        "TW",
-        "US"
+        "CN",
+        "JP",
+        "DE",
+        "FR",
+        "BR",
+        "IN",
+        "ES"
       ],
       "rows": [
         {
@@ -105,10 +81,83 @@
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "label": "恒生聚源 · QVeris · hangseng-dividends-qveris",
-          "state": "measured",
-          "verified_markets": [
-            "CN"
-          ]
+          "results": {
+            "BR": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "BR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:5cfccb0a727ad8d6c7aa4d91dd9276abbe8735ccab2db723ac3053c200eae3df",
+                "sha256:61e585c3af761bff6c18f2516786e3e6a94e8f4bc92a79a28a08344095ff35ca"
+              ],
+              "market": "CN",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "DE",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "ES",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "FR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+              "evidence_refs": [],
+              "market": "US",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            }
+          }
         },
         {
           "provider_id": "ifind",
@@ -117,8 +166,89 @@
           "access_path_type": "native_mcp",
           "access_path": "Native MCP",
           "label": "同花顺 iFinD · Native MCP · ifind-native-mcp",
-          "state": "not_applicable",
-          "verified_markets": []
+          "results": {
+            "BR": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "BR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:2856af267f4baeb674622aa52a138802ff8f7928bdba557de51045ece99a596f",
+                "sha256:7138fc2faf40acd0349e192f46229478554c79dcdf6bc1a0d76b46d535b7d50e"
+              ],
+              "market": "CN",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "DE",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "ES",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "FR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:107d554c7b33c79b8b7fc34ac203f2175701bc9c67f065561bfaa84ee0c4860b",
+                "sha256:17e89ac4e162e98c558251a6cab1c4de163e647e4fae6d8f08887eadb2b19d37"
+              ],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+              "evidence_refs": [],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:df37f28eace9aec1d8d3e405146d7237f330292c1f0c920c5efa371113037ec0",
+                "sha256:e685f0dc37167acf8d7373f4456e43a2feb27cf094acba89e80274b89a6e669e"
+              ],
+              "market": "US",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            }
+          }
         },
         {
           "provider_id": "twelve-data",
@@ -127,8 +257,107 @@
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "label": "Twelve Data · QVeris · twelve-data-dividends-qveris",
-          "state": "evidence_insufficient",
-          "verified_markets": []
+          "results": {
+            "BR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:2771ed80fb7ee9f61f097a949bc244a49eb0f20815151255af18418955b81661",
+                "sha256:4c6cba63d446d06ca3da47e7294d1b810b66a37497a5aff8a2ee216bc6c58d7a"
+              ],
+              "market": "BR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:378078e32f6d69904ba3aecdb3a14c81e7ac2ccba3f16d0d54fa33ce5ea4c883",
+                "sha256:b78e4cc6e447eb5a7c96755b6fb2aedfce1c90f5d0d9d46d58857b903a6128ab"
+              ],
+              "market": "CN",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:43cf80bb7c7e8f86cff7adc87c125d47fb1fad7c314dab0568c87f905a46131f",
+                "sha256:973281440c98d2cc5b31d04e974d0ad33b8387321b5d0576a9493d43350f04df"
+              ],
+              "market": "DE",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:a9c23f7a692f704153ea425002e2dad9e368776694f6bf9f7ffd6d20331a03d1",
+                "sha256:e8e363ab9309e82e8ff7d0acc4588edc264a86796b64fab92ebdc89856593628"
+              ],
+              "market": "ES",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:527e230d9f0ad2532e4da78cfe34f75b2d011c6c20728f5981de4dafabb9be23",
+                "sha256:c4f853db84c4f7c0d872da5b8becd3cccbe3568e3117c2566b8119551035e337"
+              ],
+              "market": "FR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:01bfdd99b8cdb0ba8cf4dea7222f490bba44d8d1cb038a3f724fece636ec0463",
+                "sha256:bdbde5cd8af7aadb608a8a85ca184bdd757bad14a2365cad3fd82b9620f4741b"
+              ],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:0e070b73d62c6eaba6b8c53eaa82d0c8238211865b4166468e81e021bed58523",
+                "sha256:a3a8cf301908bfd183971a078ada5c7078ac3fcb309a2ab0bbd3972c844b8ee1"
+              ],
+              "market": "IN",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:12c7d24c8daeea9cc3cdab6fa48d3e8ee26852d20143ef565dc0fa567078eb68",
+                "sha256:f571d49332634aeafc89c401a005950385ea5d062fc82046746d05989891c120"
+              ],
+              "market": "JP",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:a549dac8062b4aa9c469db335f6ef06c3dc0688c70f27386d93147ed79028615",
+                "sha256:cbb71a704b05d3abd870963bb1f89d5419990c6660cb5c30d4862711aa34f8dd"
+              ],
+              "market": "US",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            }
+          }
         },
         {
           "provider_id": "alpha-vantage",
@@ -137,8 +366,92 @@
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "label": "Alpha Vantage · QVeris · alpha-vantage-dividends-qveris",
-          "state": "evidence_insufficient",
-          "verified_markets": []
+          "results": {
+            "BR": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "BR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:1fbf997ed2844189dca18038376fb04dcbc134ee3df79e9896066508094ff55a",
+                "sha256:fdd7dd71ac20dc02bfe785d8dc268310bb7755ad641715860521275bf3cb5055"
+              ],
+              "market": "CN",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "DE",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:91ebb3d203c783d4a1cfbfe3b6353079232b808b013b50b11d35ebbab03ee37e",
+                "sha256:f11f96146b820b34fc788cf229c48b36184b2764c22c85b003cc32841c010383"
+              ],
+              "market": "ES",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:2db9b65520417a7a096ea666707adc42e378828a893a272d1017603e6d0ae82e",
+                "sha256:459fa9c5d2f2df5d2ab805b7287f73b1219207612f62789c8ca0b047c13ed297"
+              ],
+              "market": "FR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:9f1e5b5e1752753c3ca041ffdf9c54795a380f7c9f55c9b96a4166b066f5b2f3",
+                "sha256:f259031dd801cb443412de9b6e48fb7f0c0c8cabfdfdd4e82834a7b58592a5d7"
+              ],
+              "market": "US",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            }
+          }
         },
         {
           "provider_id": "eodhd",
@@ -147,33 +460,107 @@
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "label": "EODHD · QVeris · eodhd-dividends-qveris",
-          "state": "measured",
-          "verified_markets": [
-            "AT",
-            "BE",
-            "BR",
-            "CH",
-            "CL",
-            "CO",
-            "CZ",
-            "DE",
-            "DK",
-            "ES",
-            "FI",
-            "FR",
-            "GR",
-            "HK",
-            "ID",
-            "IE",
-            "NL",
-            "NO",
-            "PH",
-            "PT",
-            "SE",
-            "TH",
-            "TW",
-            "US"
-          ]
+          "results": {
+            "BR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:042dfbe6c0ca1888fb4900d833474b00cc506259d62ea254f1f21b1545e92ccc",
+                "sha256:0b1648510e3b6246bcd779d77970d1d442b065b0d1bf81b985145ebcf7a8adf1"
+              ],
+              "market": "BR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:84ecb2706ad4b48bda318536dec2e7c48b6fa730f0d3773e5534d905d4a9152c",
+                "sha256:f4c4120c838d3171b9477b1f62078f94b8f69a9dd05648b2c0b3b80659d55aea"
+              ],
+              "market": "CN",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:4079e01364441411ae4c4c08d1b28a22cd912ec69b9a9fad17d891459d25aae8",
+                "sha256:b585a90345895e71b541240b0414f15531ea550cc4359da45cfd4ddc360dcbd1"
+              ],
+              "market": "DE",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:926ce6b3f0819e8e525aaffa2d488603e4e4d33062b9f3536d00a4084d67ac90",
+                "sha256:f280bf4f586cea735ef5161cb05025d2230f3537ae2372b11e016d71921e8d43"
+              ],
+              "market": "ES",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:0b6be96abfee9fe9fc08f790d663e9c7b7bfcd624632d9b3f6a56f3f1d05d8c2",
+                "sha256:7d93476223c600e531215ff1c958733128133da492bea55bc27345a786257979"
+              ],
+              "market": "FR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:87ec878d8a710c192e038b7271b48344e69ec6b3251202b9b4b3d9f1f90d1c71",
+                "sha256:da2d78ae5ff2bcd93aecd55a233417e9f0d7a650e18e0f2fff5e113750a9972d"
+              ],
+              "market": "HK",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:368b91c4204e15e8ec65bfd0bc5ac64ed537fd929a7f587f315c834a9dcdee79",
+                "sha256:66f6a73ec08105da5dd7e1d4a98c14d55832cbe44134683cc0c3bfe01c42c583"
+              ],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:1e3f54e7b7196639c5610a71e45450d966cd589e02f0fb0fc985a6c060059010",
+                "sha256:99965beb23b2c30bfab12129ebb8ac71261f82124ff6d7a36658dfc17cb74ef3"
+              ],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "provider_negative",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:0707338b36397a8e8b172e24a98398146b610c30e1128a7947f87bb1ed0539c9",
+                "sha256:5cc176983b9942351f72cfa142a7a0712c40336a4011f5bed33ee6a8fd19e294"
+              ],
+              "market": "US",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            }
+          }
         },
         {
           "provider_id": "massive-stocks",
@@ -182,14 +569,89 @@
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "label": "Massive Stocks · QVeris · massive-stocks-dividends-qveris",
-          "state": "evidence_insufficient",
-          "verified_markets": []
+          "results": {
+            "BR": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "BR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "CN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "DE",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "ES",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "FR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+              "evidence_refs": [],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:34f94d44c9054ef7d597314cd05fa37456dc8383f2e7d7c73789d31c1afbc422",
+                "sha256:7b699605d75258f12112c0872e6fd64a76ea51aa8e55d49de36d12fd1f56ea6c"
+              ],
+              "market": "US",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            }
+          }
         }
       ]
     }
   },
   "input_digests": {
-    "selection_snapshot": "sha256:37b4814456dce8eaefda066c940a8a23e683537c18ff829cc79293fc970ff326"
+    "selection_snapshot": "sha256:f9f45f77a1ffcbd2be2b4d830ed9b01dcc84ff1d5f113001b0c68ee1bf36f6a9"
   },
   "rendered_at": "2026-08-12"
 }

@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, time
+from datetime import date
 from pathlib import Path
 from statistics import median
 from typing import Any
@@ -13,20 +13,17 @@ from pydantic import ValidationError
 from qveris_bench.models.enums import (
     AccessPathType,
     CellState,
-    DisclosureLevel,
-    LicenseStatus,
     RunMode,
 )
 from qveris_bench.models.selection import (
     AgentInterfaceSnapshot,
     GatewayMetricsSnapshot,
+    MarketCoverageResult,
     MarketCoverageSnapshot,
-    MeasurementState,
+    MarketResultState,
     ObservationWindow,
     OfficialPricingSnapshot,
     RunObservationsSnapshot,
-    ScopeValidationSnapshot,
-    SelectionMarketScope,
     SelectionObservation,
     SelectionSnapshot,
     SelectionSnapshotRow,
@@ -66,7 +63,6 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         providers_root = root / _string(config, "providers_root")
         suite_path = root / _string(config, "suite")
         cases_path = root / _string(config, "cases")
-        case_markets_path = root / _string(config, "case_markets")
         compiled = compile_suite(
             suite_path,
             cases_path,
@@ -75,9 +71,6 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         )
         suite = compiled.suite
         cases = compiled.cases
-        case_markets = SelectionMarketScope.model_validate(
-            load_yaml_mapping(case_markets_path)
-        )
     except (
         OSError,
         json.JSONDecodeError,
@@ -101,18 +94,6 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     if any(case.cap_id != cap_id for case in cases):
         raise SelectionSnapshotBuildError("selection case belongs to another CAP")
     case_roles = {case.case_id: case.negative_control for case in cases}
-    if case_markets.cap_id != cap_id:
-        raise SelectionSnapshotBuildError("market metadata belongs to another CAP")
-    market_by_case = {item.case_id: item.market for item in case_markets.cases}
-    expected_market_cases = {
-        case.case_id for case in cases if not case.negative_control
-    }
-    if len(market_by_case) != len(case_markets.cases) or (
-        set(market_by_case) != expected_market_cases
-    ):
-        raise SelectionSnapshotBuildError(
-            "market metadata does not match positive cases"
-        )
     cells = [item for item in release.get("cells", []) if isinstance(item, dict)]
     evidence = [item for item in release.get("evidence", []) if isinstance(item, dict)]
     release_metadata = release.get("release")
@@ -136,8 +117,6 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         identity = (str(cell["provider_id"]), str(cell["access_path_id"]))
         identity_cells.setdefault(identity, []).append(cell)
 
-    sv_spec = _mapping(config, "qveris_sv")
-    sv_namespace = _string(sv_spec, "namespace")
     window = ObservationWindow.model_validate(_mapping(config, "observation_window"))
     edition = date.fromisoformat(_string(config, "edition"))
     if suite.environment.get("as_of") != window.start.isoformat() or (
@@ -146,15 +125,64 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         raise SelectionSnapshotBuildError(
             "observation window does not match suite as_of"
         )
-    sv_results, sv_digest, sv_window = _load_sv_results(
-        sv_spec, root, sv_namespace, edition
+    market_spec = _mapping(config, "market_coverage_release")
+    market_release_path = root / _string(market_spec, "release")
+    market_release_bytes = market_release_path.read_bytes()
+    market_release_digest = release_digest(market_release_bytes)
+    if market_release_digest != _string(market_spec, "digest"):
+        raise SelectionSnapshotBuildError("market coverage release digest mismatch")
+    market_suite_path = root / _string(market_spec, "suite")
+    market_cases_path = root / _string(market_spec, "cases")
+    market_compiled = compile_suite(
+        market_suite_path,
+        market_cases_path,
+        providers_root,
+        market_suite_path.with_name("cap.yaml"),
     )
-    unknown_sv_identities = set(sv_results) - set(identity_cells)
-    if unknown_sv_identities:
-        provider_id, access_path_id = sorted(unknown_sv_identities)[0]
-        raise SelectionSnapshotBuildError(
-            f"unknown SV identity: {provider_id}/{access_path_id}"
+    market_release = json.loads(market_release_bytes)
+    market_release_metadata = market_release.get("release")
+    if not isinstance(market_release_metadata, dict) or (
+        market_release_metadata.get("suite_fingerprint") != market_compiled.fingerprint
+    ):
+        raise SelectionSnapshotBuildError("market suite fingerprint mismatch")
+    market_cells = [
+        item
+        for item in market_release.get("cells", [])
+        if isinstance(item, dict) and str(item.get("mode")) == RunMode.DIRECT.value
+    ]
+    market_evidence = [
+        item for item in market_release.get("evidence", []) if isinstance(item, dict)
+    ]
+    _validate_release_projection(
+        market_release,
+        market_cells,
+        market_evidence,
+        market_compiled.suite.suite_id,
+    )
+    try:
+        replay_release_dir(
+            market_release_path.parent,
+            expected_digest=market_release_digest,
         )
+    except ReleaseReplayError as exc:
+        raise SelectionSnapshotBuildError(
+            f"market coverage release replay failed: {exc}"
+        ) from exc
+    market_cases = {case.case_id: case for case in market_compiled.cases}
+    market_evidence_by_run_key = {
+        str(item["run_key"]): item for item in market_evidence
+    }
+    market_identity_cells: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for cell in market_cells:
+        identity = (str(cell["provider_id"]), str(cell["access_path_id"]))
+        market_identity_cells.setdefault(identity, []).append(cell)
+    if market_identity_cells.keys() != identity_cells.keys():
+        raise SelectionSnapshotBuildError(
+            "market coverage identities do not match selection identities"
+        )
+    market_observation_date = date.fromisoformat(
+        str(market_compiled.suite.environment.get("as_of"))
+    )
     rows: list[SelectionSnapshotRow] = []
     provider_digests: dict[str, str] = {}
     for (provider_id, access_path_id), scoped_cells in sorted(identity_cells.items()):
@@ -207,14 +235,11 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                     record.provider.official_pricing, access_path_id
                 ),
                 market_coverage=_market_coverage(
-                    scoped_cells,
-                    case_roles,
-                    market_by_case,
-                    evidence_by_run_key,
-                    sv_namespace,
-                    sv_results.get((provider_id, access_path_id), []),
-                    sv_window,
-                    sv_applicable=is_qveris,
+                    market_identity_cells[(provider_id, access_path_id)],
+                    market_cases,
+                    market_evidence_by_run_key,
+                    market_release_digest,
+                    market_observation_date,
                 ),
                 agent_interface=_agent_interface(
                     scoped_cells, case_roles, evidence_by_run_key
@@ -228,14 +253,16 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
         edition=edition,
         cap_id=cap_id,
         cap_release_digest=actual_release_digest,
+        market_coverage_release_digest=market_release_digest,
         input_digests={
             "input": _sha256(input_path),
             "release": actual_release_digest,
             "cases": _sha256(cases_path),
-            "case_markets": _sha256(case_markets_path),
             "suite": _sha256(suite_path),
             "providers": provider_digests,
-            "qveris_sv": sv_digest,
+            "market_coverage_release": market_release_digest,
+            "market_coverage_suite": _sha256(market_suite_path),
+            "market_coverage_cases": _sha256(market_cases_path),
         },
         rows=tuple(rows),
         limitations=tuple(str(item) for item in config.get("limitations", [])),
@@ -382,88 +409,75 @@ def _agent_interface(
 
 def _market_coverage(
     cells: list[dict[str, Any]],
-    case_roles: dict[str, bool],
-    market_by_case: dict[str, Any],
+    cases: dict[str, Any],
     evidence_by_run_key: dict[str, dict[str, Any]],
-    namespace: str,
-    sv_results: list[dict[str, Any]],
-    sv_window: ObservationWindow | None,
-    *,
-    sv_applicable: bool,
+    release_digest_value: str,
+    observation_date: date,
 ) -> MarketCoverageSnapshot:
-    tested: set[str] = set()
-    refs: set[str] = set()
+    by_market: dict[str, list[dict[str, Any]]] = {}
     for cell in cells:
         case_id = str(cell["case_id"])
-        if case_roles.get(case_id, False) or case_id not in market_by_case:
+        case = cases.get(case_id)
+        if case is None:
+            raise SelectionSnapshotBuildError("market release references unknown case")
+        if case.negative_control:
             continue
-        tested.add(str(market_by_case[case_id]))
-        evidence = evidence_by_run_key.get(str(cell["run_key"]))
-        if evidence and evidence.get("public_digest"):
-            refs.add(str(evidence["public_digest"]))
-    if not sv_applicable:
-        sv_state: MeasurementState = "not_applicable"
-    elif sv_results:
-        sv_state = "measured"
-    else:
-        sv_state = "evidence_insufficient"
+        market = case.input.get("market")
+        if not isinstance(market, str):
+            raise SelectionSnapshotBuildError("market case is missing market identity")
+        by_market.setdefault(market, []).append(cell)
+    results = []
+    for market, scoped in sorted(by_market.items()):
+        total = len(scoped)
+        if all(not cell.get("applicable") for cell in scoped):
+            reasons = {str(cell.get("applicability_reason")) for cell in scoped}
+            if len(reasons) != 1 or None in reasons:
+                raise SelectionSnapshotBuildError(
+                    "not-applicable market requires one frozen reason"
+                )
+            results.append(
+                MarketCoverageResult(
+                    market=market,
+                    state="not_applicable",
+                    passed_rounds=0,
+                    total_rounds=total,
+                    applicability_reason=next(iter(reasons)),
+                )
+            )
+            continue
+        if any(not cell.get("applicable") for cell in scoped):
+            raise SelectionSnapshotBuildError("market applicability differs by round")
+        refs = tuple(
+            sorted(
+                str(evidence_by_run_key[str(cell["run_key"])]["public_digest"])
+                for cell in scoped
+            )
+        )
+        states = {str(cell.get("state")) for cell in scoped}
+        if states == {CellState.COMPLETED.value}:
+            state: MarketResultState = "verified"
+            passed = total
+        elif states == {CellState.PROVIDER_NEGATIVE.value}:
+            state = "provider_negative"
+            passed = 0
+        else:
+            raise SelectionSnapshotBuildError(
+                f"market rounds disagree for {market}: {sorted(states)}"
+            )
+        results.append(
+            MarketCoverageResult(
+                market=market,
+                state=state,
+                passed_rounds=passed,
+                total_rounds=total,
+                evidence_refs=refs,
+            )
+        )
     return MarketCoverageSnapshot(
-        tested_markets=tuple(sorted(tested)),
-        tested_evidence_refs=tuple(sorted(refs)),
-        sv_namespace=namespace,
-        sv_state=sv_state,
-        sv_observation_window=sv_window if sv_applicable else None,
-        sv_verified_markets=tuple(
-            sorted(str(item["market"]) for item in sv_results if item.get("supported"))
-        ),
-        sv_evidence_refs=tuple(
-            sorted(str(item["evidence_ref"]) for item in sv_results)
-        ),
+        release_digest=release_digest_value,
+        observation_date=observation_date,
+        results=tuple(results),
     )
-
-
-def _load_sv_results(
-    spec: dict[str, Any],
-    root: Path,
-    expected_namespace: str,
-    selection_edition: date,
-) -> tuple[
-    dict[tuple[str, str], list[dict[str, Any]]],
-    str | None,
-    ObservationWindow | None,
-]:
-    relative = spec.get("snapshot")
-    if relative is None:
-        if spec.get("snapshot_digest") is not None:
-            raise SelectionSnapshotBuildError("QVeris SV digest requires a snapshot")
-        return {}, None, None
-    if not isinstance(relative, str) or not relative:
-        raise SelectionSnapshotBuildError("qveris_sv.snapshot must be a path or null")
-    path = root / relative
-    try:
-        actual_digest = _sha256(path)
-        if actual_digest != spec.get("snapshot_digest"):
-            raise SelectionSnapshotBuildError("QVeris SV snapshot digest mismatch")
-        snapshot = ScopeValidationSnapshot.model_validate_json(path.read_bytes())
-    except (OSError, ValidationError) as exc:
-        raise SelectionSnapshotBuildError(f"invalid QVeris SV snapshot: {exc}") from exc
-    if snapshot.namespace != expected_namespace:
-        raise SelectionSnapshotBuildError("QVeris SV namespace mismatch")
-    edition_cutoff = datetime.combine(selection_edition, time.max, UTC)
-    if snapshot.observation_window.end > selection_edition or (
-        snapshot.source_snapshot_captured_at.astimezone(UTC) > edition_cutoff
-    ):
-        raise SelectionSnapshotBuildError("QVeris SV occurs after selection edition")
-    if (
-        snapshot.disclosure_level is not DisclosureLevel.SANITIZED_PUBLIC
-        or snapshot.license_status is not LicenseStatus.CLEARED
-    ):
-        raise SelectionSnapshotBuildError("QVeris SV requires publishable provenance")
-    results: dict[tuple[str, str], list[dict[str, Any]]] = {}
-    for result in snapshot.results:
-        identity = (result.provider_id, result.access_path_id)
-        results.setdefault(identity, []).append(result.model_dump(mode="json"))
-    return results, actual_digest, snapshot.observation_window
 
 
 def _validate_release_projection(

@@ -117,9 +117,8 @@ def validate_direct_binding_registry(
             raise DirectBindingRegistryError(
                 "market Direct binding requires request identity"
             )
-        if (
-            identity.market != market
-            or identity.canonical_symbol != case.input.get("symbol")
+        if identity.market != market or identity.canonical_symbol != case.input.get(
+            "symbol"
         ):
             raise DirectBindingRegistryError(
                 "binding request identity does not match frozen case"

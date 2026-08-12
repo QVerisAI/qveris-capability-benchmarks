@@ -38,16 +38,16 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:143b64f27a3765887ff7e7f0c8984005da854a9d688647edf1e3a7b645d5b51f
-  digest: sha256:37b4814456dce8eaefda066c940a8a23e683537c18ff829cc79293fc970ff326
-qveris_sv:
-  id: qveris-dividend-sv-2026-q3-v1
-  digest: sha256:0b9fb5b782e26052b710e308619a3c52b88b8009625194417839827886e09b49
-  observation_window: {start: "2026-07-20", end: "2026-08-12"}
-  verified_results: 25
-  source_rows_digest: sha256:21596f08d6e9ebbe1d1dff9651a2e3587c28aae7ad817713c213d19556b002a6
-  bindings_digest: sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5
-  identity_map_digest: sha256:b9c043c7a2e133e543f896fd76fa56d64bbf2b743c7f8ecfb16704017e366fe0
+  input_digest: sha256:ad22e1cf168b58cb32135e50161c109ae903174445d9cbf9f4cf3df35a34243e
+  digest: sha256:f9f45f77a1ffcbd2be2b4d830ed9b01dcc84ff1d5f113001b0c68ee1bf36f6a9
+market_coverage_release:
+  directory: releases/dividend-events-market-coverage-2026-q3-v1
+  digest: sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9
+  suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
+  planned_cells: 120
+  applicable_cells: 66
+  public_evidence_records: 66
+  rounds_per_cell: 2
 seo:
   title: "2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南"
   meta_description: "2026 年实测 6 家分红数据 API：对比事件字段、无效代码、QVeris 延迟与 credits、官方价格、市场证据及 Agent 接入风险，附公开证据与复测方法。"
@@ -78,18 +78,20 @@ seo:
 artifacts:
   article: docs/guides/best-dividend-apis.md
   cases: cap_packs/dividend_events/cases.yaml
-  case_markets: cap_packs/dividend_events/selection-markets.yaml
   release: releases/dividend-events-2026-q3-v1/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
+  market_coverage_suite: cap_packs/dividend_events/market-suite.yaml
+  market_coverage_cases: cap_packs/dividend_events/market-cases.yaml
+  market_coverage_bindings: cap_packs/dividend_events/market-direct-bindings.json
+  market_coverage_preflight: cap_packs/dividend_events/market-preflight.yaml
+  market_coverage_release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
+  market_coverage_public_evidence: evidence/dividend-events-market-coverage-2026-q3-v1
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
-  qveris_sv_snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-sv-snapshot.json
-  qveris_sv_identity_map: docs/guides/capability-seo/best-dividend-apis/qveris-sv-identities.yaml
-  qveris_sv_bindings: cap_packs/dividend_events/direct-bindings.json
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:5bc4ea014b33d77a8f66b30765f82c6bff8ae63b5c0b5b1095cf06e32d752178
+  selection_charts_manifest_digest: sha256:96e3659bb72ebd583a34c1e71bcbf14814d479fb8ac80553b5d1916429585591

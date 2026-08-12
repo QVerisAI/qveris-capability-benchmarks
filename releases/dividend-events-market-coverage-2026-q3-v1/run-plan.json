@@ -1,0 +1,2130 @@
+{
+  "cells": [
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "US",
+        "start_date": "2024-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "HK",
+        "start_date": "2024-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "CN",
+        "start_date": "2024-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "JP",
+        "start_date": "2024-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "DE",
+        "start_date": "2024-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "FR",
+        "start_date": "2024-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "BR",
+        "start_date": "2024-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "IN",
+        "start_date": "2024-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:ifind:ifind-native-mcp:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:ifind:ifind-native-mcp:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "es-san-dividend-market",
+      "case_input": {
+        "end_date": "2026-07-31",
+        "market": "ES",
+        "start_date": "2024-01-01",
+        "symbol": "SAN.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:ifind:ifind-native-mcp:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "ifind",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:ifind:ifind-native-mcp:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:hangseng:hangseng-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "hangseng",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:hangseng:hangseng-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:twelve-data:twelve-data-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:twelve-data:twelve-data-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:eodhd:eodhd-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:eodhd:eodhd-dividends-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-dividend-market-symbol",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:2",
+      "state": "planned"
+    }
+  ],
+  "suite_fingerprint": "226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf",
+  "suite_id": "dividend-events-market-coverage-v1"
+}
