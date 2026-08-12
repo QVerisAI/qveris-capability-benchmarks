@@ -15,7 +15,7 @@ observation_window:
 qveris_sv:
   namespace: MKT.DIVIDENDS
   snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-sv-snapshot.json
-  snapshot_digest: sha256:4167c545fb2aa4bea55c92cf0c2761d62b2bf86ab4ca0e259de199a41deae90d
+  snapshot_digest: sha256:631ee16dde5bc2faefa0c2b47e41fb825c17321b31e8a071e2076acbce800410
 limitations:
   - Tested markets are fixed Direct Test samples, not comprehensive market coverage.
   - QVeris SV verified markets measure Tool-by-Capability reachability, not field completeness, history depth, licensing, or SLA.

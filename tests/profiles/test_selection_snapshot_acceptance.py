@@ -214,6 +214,9 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
         "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_rows_digest": "sha256:" + "d" * 64,
+        "bindings_digest": "sha256:" + "e" * 64,
+        "identity_map_digest": "sha256:" + "f" * 64,
         "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
@@ -260,9 +263,13 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (("supported", "false"), "valid boolean"),
+        (("supported", "false"), "Input should be True"),
         (
             ("observation_window", {"start": "2026-08-13", "end": "2026-08-13"}),
+            "after selection edition",
+        ),
+        (
+            ("source_snapshot_captured_at", "2026-08-12T23:30:00-12:00"),
             "after selection edition",
         ),
         (("disclosure_level", "private"), "publishable provenance"),
@@ -279,6 +286,9 @@ def test_ac3_snapshot_rejects_untrusted_sv(
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
         "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_rows_digest": "sha256:" + "d" * 64,
+        "bindings_digest": "sha256:" + "e" * 64,
+        "identity_map_digest": "sha256:" + "f" * 64,
         "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
@@ -314,6 +324,9 @@ def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
         "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_rows_digest": "sha256:" + "d" * 64,
+        "bindings_digest": "sha256:" + "e" * 64,
+        "identity_map_digest": "sha256:" + "f" * 64,
         "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
@@ -325,7 +338,7 @@ def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
                 "supported": supported,
                 "evidence_ref": "sha256:" + token * 64,
             }
-            for supported, token in ((True, "a"), (False, "b"))
+            for supported, token in ((True, "a"), (True, "b"))
         ],
     }
     sv_path = tmp_path / "sv.json"

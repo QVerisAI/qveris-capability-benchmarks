@@ -234,6 +234,21 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert len(sv_document["results"]) == 25
     assert all(result["supported"] is True for result in sv_document["results"])
     assert "tool_id" not in sv_snapshot.read_text(encoding="utf-8")
+    assert manifest["qveris_sv"]["id"] == sv_document["snapshot_id"]
+    assert (
+        manifest["qveris_sv"]["observation_window"] == sv_document["observation_window"]
+    )
+    assert manifest["qveris_sv"]["verified_results"] == len(sv_document["results"])
+    assert (
+        manifest["qveris_sv"]["source_rows_digest"] == sv_document["source_rows_digest"]
+    )
+    assert manifest["qveris_sv"]["bindings_digest"] == sv_document["bindings_digest"]
+    identity_map = ROOT / manifest["artifacts"]["qveris_sv_identity_map"]
+    identity_map_digest = (
+        f"sha256:{hashlib.sha256(identity_map.read_bytes()).hexdigest()}"
+    )
+    assert manifest["qveris_sv"]["identity_map_digest"] == identity_map_digest
+    assert sv_document["identity_map_digest"] == identity_map_digest
 
 
 def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
@@ -271,8 +286,14 @@ def test_article_publishes_measured_sv_coverage_near_the_decision_table() -> Non
     assert eodhd["market_coverage"]["sv_state"] == "measured"
     assert len(eodhd["market_coverage"]["sv_verified_markets"]) == 24
     eodhd_market_row = _provider_row(market_rows, "EODHD", "QVeris")
-    for market in eodhd["market_coverage"]["sv_verified_markets"]:
-        assert market in eodhd_market_row[2]
+    published_markets = {
+        item.strip() for item in eodhd_market_row[2].split(",") if item.strip()
+    }
+    assert published_markets == set(eodhd["market_coverage"]["sv_verified_markets"])
+    hangseng_market_row = _provider_row(market_rows, "恒生聚源", "QVeris")
+    assert hangseng_market_row[2] == "CN"
+    assert "2026-07-20 至 2026-08-12" in article
+    assert "抓取于 2026-08-12" in article
     assert "SV 验证的是这条 Tool × Capability 的市场可达性" in article
 
 

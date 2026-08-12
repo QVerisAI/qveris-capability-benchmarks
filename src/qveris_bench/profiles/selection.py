@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import date
+from datetime import UTC, date, datetime, time
 from pathlib import Path
 from statistics import median
 from typing import Any
@@ -449,8 +449,9 @@ def _load_sv_results(
         raise SelectionSnapshotBuildError(f"invalid QVeris SV snapshot: {exc}") from exc
     if snapshot.namespace != expected_namespace:
         raise SelectionSnapshotBuildError("QVeris SV namespace mismatch")
+    edition_cutoff = datetime.combine(selection_edition, time.max, UTC)
     if snapshot.observation_window.end > selection_edition or (
-        snapshot.source_snapshot_captured_at.date() > selection_edition
+        snapshot.source_snapshot_captured_at.astimezone(UTC) > edition_cutoff
     ):
         raise SelectionSnapshotBuildError("QVeris SV occurs after selection edition")
     if (

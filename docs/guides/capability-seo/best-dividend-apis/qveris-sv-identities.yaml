@@ -1,0 +1,9 @@
+schema_version: 1
+namespace: MKT.DIVIDENDS
+source_timezone: UTC
+source_provider_ids:
+  alpha-vantage: alphavantage
+  eodhd: eodhd
+  hangseng: hangseng_polysource
+  massive-stocks: massive_stocks
+  twelve-data: twelvedata

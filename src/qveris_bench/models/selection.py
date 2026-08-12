@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import Field, HttpUrl, StrictBool, model_validator
+from pydantic import Field, HttpUrl, model_validator
 
 from qveris_bench.models.base import (
     EvidenceRef,
@@ -254,7 +254,7 @@ class ScopeValidationResult(FrozenModel):
     provider_id: StableId
     access_path_id: StableId
     market: str = Field(pattern=r"^[A-Z]{2,8}$")
-    supported: StrictBool
+    supported: Literal[True]
     evidence_ref: EvidenceRef
 
 
@@ -266,6 +266,9 @@ class ScopeValidationSnapshot(FrozenModel):
     suite_fingerprint: Sha256
     extractor_version: SemanticVersion
     source_snapshot_digest: EvidenceRef
+    source_rows_digest: EvidenceRef
+    bindings_digest: EvidenceRef
+    identity_map_digest: EvidenceRef
     source_snapshot_captured_at: datetime
     disclosure_level: DisclosureLevel
     license_status: LicenseStatus
@@ -279,6 +282,8 @@ class ScopeValidationSnapshot(FrozenModel):
         ]
         if len(keys) != len(set(keys)):
             raise ValueError("duplicate QVeris SV scope")
+        if self.source_snapshot_captured_at.utcoffset() is None:
+            raise ValueError("QVeris SV source capture must be timezone-aware")
         return self
 
 
