@@ -7,8 +7,8 @@ primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
 comparison_shortlist:
   - 恒生聚源
-  - Twelve Data
   - Alpha Vantage
+  - Twelve Data
   - EODHD
   - Massive
 native_supplements:
@@ -25,6 +25,13 @@ scenarios:
   - {id: cn_positive_dividend_event, article_label: 600519.SH Dividend Event, minimum_rounds: 3}
   - {id: invalid_symbol_control, article_label: invalid-symbol control, minimum_rounds: 3}
 publication_policy:
+  display_order:
+    - hangseng-dividends-qveris
+    - ifind-native-mcp
+    - alpha-vantage-dividends-qveris
+    - twelve-data-dividends-qveris
+    - eodhd-dividends-qveris
+    - massive-stocks-dividends-qveris
   one_canonical_tool_per_access_path: true
   direct_test_required: true
   freeze_shortlist_after_baseline: true

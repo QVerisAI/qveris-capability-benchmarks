@@ -117,14 +117,17 @@ def test_article_uses_reader_facing_outcomes_and_one_decision_flow() -> None:
 
 def test_article_keeps_one_provider_order_across_comparisons() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
-    expected = [
-        "Hang Seng",
-        "iFinD",
-        "Alpha Vantage",
-        "Twelve Data",
-        "EODHD",
-        "Massive",
-    ]
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    names = {
+        "hangseng-dividends-qveris": "Hang Seng",
+        "ifind-native-mcp": "iFinD",
+        "alpha-vantage-dividends-qveris": "Alpha Vantage",
+        "twelve-data-dividends-qveris": "Twelve Data",
+        "eodhd-dividends-qveris": "EODHD",
+        "massive-stocks-dividends-qveris": "Massive",
+    }
+    display_order = manifest["publication_policy"]["display_order"]
+    expected = [names[access_path_id] for access_path_id in display_order]
     tables = [
         _markdown_table_rows(article, "| Provider and Access Path |"),
         _markdown_table_rows(article, "| Provider / Access Path | Free or trial"),
@@ -337,6 +340,10 @@ def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
 
     assert market_chart.is_file(), "AC1 must render the Finlight-style market matrix"
     market_data = generated["data"]["market_coverage"]
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    assert [row["access_path_id"] for row in market_data["rows"]] == (
+        manifest["publication_policy"]["display_order"]
+    )
     assert market_data["title"] == (
         "Dividend Event results: 9 representative markets × 6 Access Paths"
     )
