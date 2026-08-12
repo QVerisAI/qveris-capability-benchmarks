@@ -8,6 +8,9 @@ field_types:
   declaration_date: string
   record_date: string
   event_count: number
+  identity_verified: boolean
+  identity_basis: string
+  returned_symbol: string
 field_constraints:
   symbol: {non_empty: true}
   effective_date: {non_empty: true}
@@ -17,6 +20,8 @@ field_constraints:
   declaration_date: {non_empty: true}
   record_date: {non_empty: true}
   event_count: {finite: true, positive: true}
+  identity_basis: {non_empty: true}
+  returned_symbol: {non_empty: true}
 additional_fields: false
 negative_control:
   required_fields: [validation_error]

@@ -10,6 +10,7 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
     extract_dividend_event,
 )
 from qveris_bench.models.enums import CellState, FailureAttribution, OutcomeStatus
+from qveris_bench.models.run import RequestIdentity
 from qveris_bench.models.suite import BenchmarkCase
 from qveris_bench.outcomes.evaluator import evaluate_outcome
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
@@ -33,6 +34,8 @@ def evaluate_dividend_document(
     case: BenchmarkCase,
     schema_path: Path,
     evidence_ref: str,
+    *,
+    request_identity: RequestIdentity | None = None,
 ) -> DividendDirectResult:
     try:
         facts = extract_dividend_event(
@@ -42,6 +45,7 @@ def evaluate_dividend_document(
             start_date=_optional_string(case.input.get("start_date")),
             end_date=_optional_string(case.input.get("end_date")),
             negative_control=case.negative_control,
+            request_identity=request_identity,
         )
     except DividendNegativeControlError:
         return DividendDirectResult(
@@ -66,6 +70,19 @@ def evaluate_dividend_document(
     outcome = evaluate_outcome(
         case.completion_conditions, observation.facts, evidence_ref
     )
+    if (
+        request_identity is not None
+        and observation.facts.get("identity_verified") is not True
+    ):
+        unmet = tuple(
+            dict.fromkeys((*outcome.unmet_conditions, "identity_verified"))
+        )
+        return DividendDirectResult(
+            CellState.PROVIDER_NEGATIVE,
+            facts,
+            unmet,
+            FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+        )
     if outcome.status is OutcomeStatus.COMPLETED:
         return DividendDirectResult(CellState.COMPLETED, facts, (), None)
     return DividendDirectResult(

@@ -37,9 +37,24 @@ PACK = ROOT / "cap_packs/dividend_events"
 REGISTRY_PATH = PACK / "direct-bindings.json"
 
 
-def _selected_cell(binding: DirectBinding, round_number: int):
+def _suite_inputs() -> tuple[Path, Path, Path]:
+    if os.environ.get("DIVIDEND_SUITE") == "market_coverage":
+        return (
+            PACK / "market-suite.yaml",
+            PACK / "market-cases.yaml",
+            PACK / "market-direct-bindings.json",
+        )
+    return PACK / "suite.yaml", PACK / "cases.yaml", PACK / "direct-bindings.json"
+
+
+def _selected_cell(
+    binding: DirectBinding,
+    round_number: int,
+    suite_path: Path,
+    cases_path: Path,
+):
     compiled = compile_suite(
-        PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers"
+        suite_path, cases_path, ROOT / "providers", PACK / "cap.yaml"
     )
     matches = [
         cell
@@ -258,15 +273,19 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
     round_value = os.environ.get("DIVIDEND_ROUND")
     if not binding_id or not round_value:
         pytest.skip("live dividend binding environment is incomplete")
-    registry = load_direct_binding_registry(REGISTRY_PATH)
+    suite_path, cases_path, registry_path = _suite_inputs()
+    registry = load_direct_binding_registry(registry_path)
     validate_direct_binding_registry(
         registry,
-        PACK / "suite.yaml",
-        PACK / "cases.yaml",
+        suite_path,
+        cases_path,
         ROOT / "providers",
+        cap_path=PACK / "cap.yaml",
     )
     binding = next(item for item in registry.bindings if item.binding_id == binding_id)
-    compiled, case, cell = _selected_cell(binding, int(round_value))
+    compiled, case, cell = _selected_cell(
+        binding, int(round_value), suite_path, cases_path
+    )
     public_root = Path(os.environ.get("LIVE_PUBLIC_EVIDENCE_ROOT", tmp_path / "public"))
     public_store = PublicArtifactStore(public_root)
     raw_store = RawArtifactStore(tmp_path / "raw", ROOT)
@@ -336,6 +355,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         case,
         PACK / "observation-schema.yaml",
         adapter_result.raw_digest,
+        request_identity=binding.request_identity,
     )
     content = _public_terminal_payload(
         binding,
@@ -343,7 +363,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         adapter_result.raw_digest,
         terminal,
         compiled.fingerprint,
-        direct_binding_registry_digest(REGISTRY_PATH),
+        direct_binding_registry_digest(registry_path),
         latency_ms,
         cost_credits,
     )

@@ -178,6 +178,29 @@ def test_ac5_missing_optional_currency_stays_unavailable() -> None:
     assert "currency" not in facts
 
 
+def test_ac5_hangseng_uses_returned_stockcode_not_internal_stockobject() -> None:
+    facts = extract_dividend_event(
+        "hangseng",
+        {
+            "data": {
+                "rows": [
+                    {
+                        "stockobject": "1679",
+                        "stockcode": "600519",
+                        "exdivdate": "2026-06-26",
+                        "dividendpretax": 28.02423,
+                    }
+                ]
+            }
+        },
+        symbol="600519.SH",
+        start_date="2024-01-01",
+        end_date="2026-07-31",
+    )
+
+    assert facts["symbol"] == "600519.SH"
+
+
 def test_ac5_missing_required_date_produces_partial_facts() -> None:
     facts = extract_dividend_event(
         "ifind",

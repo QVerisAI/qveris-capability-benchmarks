@@ -1,0 +1,57 @@
+suite_id: dividend-events-market-coverage-v1
+version: 1.0.0
+cap_id: dividend-events
+cap_version: 1.0.0
+case_ids:
+  - us-aapl-dividend-market
+  - hk-0700-dividend-market
+  - cn-600519-dividend-market
+  - jp-7203-dividend-market
+  - de-sap-dividend-market
+  - fr-mc-dividend-market
+  - br-petr4-dividend-market
+  - in-reliance-dividend-market
+  - es-san-dividend-market
+  - invalid-dividend-market-symbol
+access_path_ids:
+  - ifind-native-mcp
+  - hangseng-dividends-qveris
+  - twelve-data-dividends-qveris
+  - alpha-vantage-dividends-qveris
+  - eodhd-dividends-qveris
+  - massive-stocks-dividends-qveris
+modes: [direct]
+rounds: 2
+environment:
+  as_of: "2026-08-12"
+  preflight_digest: "sha256:29c0206bde17b076a3d792526dcf6626fbb87bbd8b4b8019b5e621a6871d703c"
+outcome_rules_file: market-outcome-rules.yaml
+agent_protocol: null
+not_applicable:
+  - {case_id: hk-0700-dividend-market, access_path_id: alpha-vantage-dividends-qveris, reason: "QVeris preflight explicitly marks this market unsupported."}
+  - {case_id: jp-7203-dividend-market, access_path_id: alpha-vantage-dividends-qveris, reason: "QVeris preflight explicitly marks this market unsupported."}
+  - {case_id: de-sap-dividend-market, access_path_id: alpha-vantage-dividends-qveris, reason: "QVeris preflight explicitly marks this market unsupported."}
+  - {case_id: br-petr4-dividend-market, access_path_id: alpha-vantage-dividends-qveris, reason: "QVeris preflight explicitly marks this market unsupported."}
+  - {case_id: in-reliance-dividend-market, access_path_id: alpha-vantage-dividends-qveris, reason: "QVeris preflight explicitly marks this market unsupported."}
+  - {case_id: us-aapl-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: hk-0700-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: jp-7203-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: de-sap-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: fr-mc-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: br-petr4-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: in-reliance-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: es-san-dividend-market, access_path_id: hangseng-dividends-qveris, reason: "Access Path contract limits this Tool to mainland China exchanges."}
+  - {case_id: hk-0700-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: cn-600519-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: jp-7203-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: de-sap-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: fr-mc-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: br-petr4-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: in-reliance-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: es-san-dividend-market, access_path_id: massive-stocks-dividends-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: jp-7203-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}
+  - {case_id: de-sap-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}
+  - {case_id: fr-mc-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}
+  - {case_id: br-petr4-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}
+  - {case_id: in-reliance-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}
+  - {case_id: es-san-dividend-market, access_path_id: ifind-native-mcp, reason: "Access Path contract declares only CN, HK, and US market coverage."}

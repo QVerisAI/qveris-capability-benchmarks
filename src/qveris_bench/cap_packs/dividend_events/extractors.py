@@ -5,6 +5,8 @@ import json
 from io import StringIO
 from typing import Any
 
+from qveris_bench.models.run import RequestIdentity
+
 
 class DividendExtractionError(ValueError):
     pass
@@ -14,7 +16,13 @@ class DividendNegativeControlError(DividendExtractionError):
     pass
 
 
-_SYMBOL_FIELDS = ("symbol", "ticker", "stockobject", "stock_code")
+_SYMBOL_FIELDS = (
+    "symbol",
+    "ticker",
+    "stockcode",
+    "stock_code",
+    "stockobject",
+)
 _DATE_FIELDS = (
     "effective_date",
     "ex_date",
@@ -41,6 +49,7 @@ def extract_dividend_event(
     start_date: str | None,
     end_date: str | None,
     negative_control: bool = False,
+    request_identity: RequestIdentity | None = None,
 ) -> dict[str, Any]:
     normalized = _unwrap_gateway(document)
     if negative_control and _is_explicit_provider_rejection(
@@ -57,12 +66,13 @@ def extract_dividend_event(
 
     selected_rows = _within_window(rows, start_date, end_date)
     if not selected_rows:
-        return {"symbol": symbol}
+        return _identity_facts(symbol, None, request_identity)
     selected = max(selected_rows, key=lambda row: _date_value(row) or "")
-    facts: dict[str, Any] = {
-        "symbol": _string_field(selected, _SYMBOL_FIELDS) or symbol,
-        "event_count": len(selected_rows),
-    }
+    returned_symbol = _string_field(selected, _SYMBOL_FIELDS) or _string_field(
+        metadata, _SYMBOL_FIELDS
+    )
+    facts = _identity_facts(symbol, returned_symbol, request_identity)
+    facts["event_count"] = len(selected_rows)
     effective_date = _date_value(selected)
     if effective_date is not None:
         facts["effective_date"] = effective_date
@@ -83,6 +93,47 @@ def extract_dividend_event(
         if value is not None:
             facts[output] = value
     return facts
+
+
+def _canonical_symbol(returned_symbol: str | None, requested_symbol: str) -> str:
+    if returned_symbol is None:
+        return requested_symbol
+    returned = returned_symbol.strip().upper()
+    requested = requested_symbol.strip().upper()
+    if returned == requested or returned.split(".", 1)[0] == requested.split(".", 1)[0]:
+        return requested_symbol
+    return returned_symbol
+
+
+def _identity_facts(
+    requested_symbol: str,
+    returned_symbol: str | None,
+    request_identity: RequestIdentity | None,
+) -> dict[str, Any]:
+    if request_identity is None:
+        return {"symbol": _canonical_symbol(returned_symbol, requested_symbol)}
+    matches = returned_symbol is None or _symbol_base(returned_symbol) in {
+        _symbol_base(request_identity.vendor_symbol),
+        _symbol_base(request_identity.canonical_symbol),
+    }
+    facts: dict[str, Any] = {
+        "symbol": (
+            request_identity.canonical_symbol
+            if matches
+            else str(returned_symbol)
+        ),
+        "identity_verified": matches,
+        "identity_basis": (
+            "request_bound" if returned_symbol is None else "response_field"
+        ),
+    }
+    if returned_symbol is not None:
+        facts["returned_symbol"] = returned_symbol
+    return facts
+
+
+def _symbol_base(value: str) -> str:
+    return value.strip().upper().split(":", 1)[0].split(".", 1)[0]
 
 
 def _unwrap_gateway(document: object) -> object:

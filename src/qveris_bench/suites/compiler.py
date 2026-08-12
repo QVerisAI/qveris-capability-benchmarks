@@ -139,7 +139,9 @@ def compile_suite(
         bindings = load_provider_bindings(
             suite_path.with_name("provider-bindings.yaml")
         )
-        outcome_rules = load_outcome_rules(suite_path.with_name("outcome-rules.yaml"))
+        outcome_rules = load_outcome_rules(
+            suite_path.with_name(suite.outcome_rules_file)
+        )
         validate_outcome_rules(outcome_rules, cases)
     except ValueError as exc:
         raise SuiteCompilationError(str(exc)) from exc

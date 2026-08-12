@@ -14,6 +14,12 @@ from qveris_bench.models.enums import (
 )
 
 
+class RequestIdentity(FrozenModel):
+    market: str = Field(pattern=r"^[A-Z]{2,8}$")
+    canonical_symbol: str = Field(min_length=1)
+    vendor_symbol: str = Field(min_length=1)
+
+
 class RunCell(FrozenModel):
     run_key: str = Field(min_length=1)
     case_id: StableId

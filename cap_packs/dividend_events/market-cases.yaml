@@ -1,0 +1,72 @@
+cases:
+  - case_id: us-aapl-dividend-market
+    cap_id: dividend-events
+    question: Return AAPL dividend events for the fixed United States market sample.
+    input: {market: US, symbol: AAPL, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: hk-0700-dividend-market
+    cap_id: dividend-events
+    question: Return Tencent dividend events for the fixed Hong Kong market sample.
+    input: {market: HK, symbol: 0700.HK, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: cn-600519-dividend-market
+    cap_id: dividend-events
+    question: Return Kweichow Moutai dividend events for the fixed China market sample.
+    input: {market: CN, symbol: 600519.SH, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: jp-7203-dividend-market
+    cap_id: dividend-events
+    question: Return Toyota dividend events for the fixed Japan market sample.
+    input: {market: JP, symbol: 7203.T, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: de-sap-dividend-market
+    cap_id: dividend-events
+    question: Return SAP dividend events for the fixed Germany market sample.
+    input: {market: DE, symbol: SAP.DE, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: fr-mc-dividend-market
+    cap_id: dividend-events
+    question: Return LVMH dividend events for the fixed France market sample.
+    input: {market: FR, symbol: MC.PA, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: br-petr4-dividend-market
+    cap_id: dividend-events
+    question: Return Petrobras dividend events for the fixed Brazil market sample.
+    input: {market: BR, symbol: PETR4.SA, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: in-reliance-dividend-market
+    cap_id: dividend-events
+    question: Return Reliance dividend events for the fixed India market sample.
+    input: {market: IN, symbol: RELIANCE.NS, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: es-san-dividend-market
+    cap_id: dividend-events
+    question: Return Banco Santander dividend events for the fixed Spain market sample.
+    input: {market: ES, symbol: SAN.MC, start_date: 2024-01-01, end_date: 2026-07-31}
+    expected_observations: [symbol, identity_verified, identity_basis, effective_date, amount]
+    completion_conditions: [symbol, identity_verified, effective_date, amount]
+    disclosure_limits: []
+  - case_id: invalid-dividend-market-symbol
+    cap_id: dividend-events
+    question: Reject an invalid dividend symbol without inventing an event.
+    input: {symbol: NOTASTOCK}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: []

@@ -1,0 +1,29 @@
+schema_version: 1
+source_snapshot:
+  captured_at: "2026-08-12T01:53:36Z"
+  digest: sha256:daf493c91d27002edde7f02eb509c2c3610edac0f50ba94bbfd9ff34e1a38328
+decisions:
+  - access_path_id: alpha-vantage-dividends-qveris
+    disposition: not_applicable
+    basis: qveris_preflight
+    markets:
+      HK: sha256:db517a288ed62de9098e0dcd745ef767f91b7d5e1a94c091906afee4caa97157
+      JP: sha256:06ea54e4b06dbbebc265f3a1a9e8866f33558a140855545803a98a1f314d5330
+      DE: sha256:8adf87eb7ce0f973531bf8c5c26003289ef41aa44e358fa179ff5162ee54f5f3
+      BR: sha256:8e6e3f768300c735b05df82fba8ea51808aa01a699a00bda9e191c9921776d53
+      IN: sha256:da4f1e1726b27133b507b738660ed5b6b080342a4ac14704efdcb3feae226f2c
+  - access_path_id: hangseng-dividends-qveris
+    disposition: not_applicable
+    basis: access_path_contract
+    markets: [US, HK, JP, DE, FR, BR, IN, ES]
+    official_source: https://www.gildata.com/products/core-data.html
+  - access_path_id: massive-stocks-dividends-qveris
+    disposition: not_applicable
+    basis: access_path_contract
+    markets: [HK, CN, JP, DE, FR, BR, IN, ES]
+    official_source: https://massive.com/stocks
+  - access_path_id: ifind-native-mcp
+    disposition: not_applicable
+    basis: access_path_contract
+    markets: [JP, DE, FR, BR, IN, ES]
+    official_source: https://mcp.51ifind.com/

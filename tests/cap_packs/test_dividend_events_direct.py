@@ -8,6 +8,7 @@ from qveris_bench.cap_packs.dividend_events.direct import (
     evaluate_dividend_document,
 )
 from qveris_bench.models.enums import CellState, FailureAttribution
+from qveris_bench.models.run import RequestIdentity
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,6 +18,16 @@ PACK = ROOT / "cap_packs/dividend_events"
 def _case(case_id: str):
     compiled = compile_suite(
         PACK / "suite.yaml", PACK / "cases.yaml", ROOT / "providers"
+    )
+    return next(case for case in compiled.cases if case.case_id == case_id)
+
+
+def _market_case(case_id: str):
+    compiled = compile_suite(
+        PACK / "market-suite.yaml",
+        PACK / "market-cases.yaml",
+        ROOT / "providers",
+        PACK / "cap.yaml",
     )
     return next(case for case in compiled.cases if case.case_id == case_id)
 
@@ -145,3 +156,50 @@ def test_ac7_malformed_response_stays_a_benchmark_error() -> None:
             PACK / "observation-schema.yaml",
             "sha256:" + "a" * 64,
         )
+
+
+def test_ac7_market_case_keeps_request_bound_identity_separate() -> None:
+    result = evaluate_dividend_document(
+        "eodhd",
+        "Date,Dividends\n2026-05-11,0.27\n",
+        _market_case("us-aapl-dividend-market"),
+        PACK / "observation-schema.yaml",
+        "sha256:" + "a" * 64,
+        request_identity=RequestIdentity(
+            market="US", canonical_symbol="AAPL", vendor_symbol="AAPL.US"
+        ),
+    )
+
+    assert result.state is CellState.COMPLETED
+    assert result.facts["identity_verified"] is True
+    assert result.facts["identity_basis"] == "request_bound"
+    assert "returned_symbol" not in result.facts
+
+
+def test_ac7_market_case_fails_a_conflicting_returned_symbol() -> None:
+    result = evaluate_dividend_document(
+        "hangseng",
+        {
+            "data": {
+                "rows": [
+                    {
+                        "stockobject": "1679",
+                        "stockcode": "000001",
+                        "exdivdate": "2026-06-26",
+                        "dividendpretax": 28.02423,
+                    }
+                ]
+            }
+        },
+        _market_case("cn-600519-dividend-market"),
+        PACK / "observation-schema.yaml",
+        "sha256:" + "a" * 64,
+        request_identity=RequestIdentity(
+            market="CN", canonical_symbol="600519.SH", vendor_symbol="600519"
+        ),
+    )
+
+    assert result.state is CellState.PROVIDER_NEGATIVE
+    assert result.facts["identity_verified"] is False
+    assert result.facts["returned_symbol"] == "000001"
+    assert result.unmet_conditions == ("identity_verified",)
