@@ -203,3 +203,46 @@ def test_ac7_market_case_fails_a_conflicting_returned_symbol() -> None:
     assert result.facts["identity_verified"] is False
     assert result.facts["returned_symbol"] == "000001"
     assert result.unmet_conditions == ("identity_verified",)
+
+
+@pytest.mark.parametrize(
+    ("provider_id", "document"),
+    [
+        (
+            "eodhd",
+            {
+                "result": {"status_code": 404, "data": "Symbol not found"},
+                "success": False,
+            },
+        ),
+        (
+            "twelve-data",
+            {
+                "result": {
+                    "status_code": 4042,
+                    "data": {
+                        "status": "error",
+                        "message": "instrument requires another plan",
+                    },
+                }
+            },
+        ),
+    ],
+)
+def test_ac7_positive_provider_rejection_is_terminal_negative_evidence(
+    provider_id: str, document: object
+) -> None:
+    result = evaluate_dividend_document(
+        provider_id,
+        document,
+        _market_case("jp-7203-dividend-market"),
+        PACK / "observation-schema.yaml",
+        "sha256:" + "a" * 64,
+        request_identity=RequestIdentity(
+            market="JP", canonical_symbol="7203.T", vendor_symbol="7203.T"
+        ),
+    )
+
+    assert result.state is CellState.PROVIDER_NEGATIVE
+    assert result.facts["identity_basis"] == "request_bound"
+    assert result.unmet_conditions == ("effective_date", "amount")

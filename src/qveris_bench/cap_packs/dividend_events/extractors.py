@@ -52,10 +52,10 @@ def extract_dividend_event(
     request_identity: RequestIdentity | None = None,
 ) -> dict[str, Any]:
     normalized = _unwrap_gateway(document)
-    if negative_control and _is_explicit_provider_rejection(
-        provider_id, document, normalized
-    ):
-        return {"validation_error": "invalid symbol or no dividend events"}
+    if _is_explicit_provider_rejection(provider_id, document, normalized):
+        if negative_control:
+            return {"validation_error": "invalid symbol or no dividend events"}
+        return _identity_facts(symbol, None, request_identity)
     rows, metadata = _provider_rows(provider_id, normalized)
     if negative_control:
         if rows:
