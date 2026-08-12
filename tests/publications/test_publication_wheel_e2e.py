@@ -45,6 +45,8 @@ def test_ac6_wheel_cli_reproduces_from_outside_the_repository(tmp_path: Path) ->
 
     outside = tmp_path / "outside"
     outside.mkdir()
+    isolated_home = tmp_path / "home"
+    isolated_home.mkdir()
     executable = environment / "bin/qveris-bench"
     result = subprocess.run(
         [str(executable), "publication", "reproduce", "--package", str(PACKAGE)],
@@ -52,10 +54,15 @@ def test_ac6_wheel_cli_reproduces_from_outside_the_repository(tmp_path: Path) ->
         check=False,
         capture_output=True,
         text=True,
-        env={"PATH": str(environment / "bin"), "NO_PROXY": "*"},
+        env={
+            "PATH": str(environment / "bin"),
+            "HOME": str(isolated_home),
+            "NO_PROXY": "*",
+        },
     )
 
     assert result.returncode == 0, result.stderr
     report = json.loads(result.stdout)
     assert report["status"] == "verified"
     assert "QVERIS_API_KEY" not in os.environ
+    assert list(isolated_home.iterdir()) == []

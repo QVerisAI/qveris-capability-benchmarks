@@ -28,7 +28,6 @@ def _copy_publication_repository(tmp_path: Path) -> Path:
     copied.mkdir()
     shutil.copy2(ROOT / "pyproject.toml", copied / "pyproject.toml")
     for relative in (
-        "assets/fonts",
         "cap_packs/dividend_events",
         "docs/guides/capability-seo/best-dividend-apis",
         "evidence/dividend-events-2026-q3-v1",
@@ -36,7 +35,6 @@ def _copy_publication_repository(tmp_path: Path) -> Path:
         "providers",
         "releases/dividend-events-2026-q3-v1",
         "releases/dividend-events-market-coverage-2026-q3-v1",
-        "scripts",
     ):
         source = ROOT / relative
         target = copied / relative
@@ -167,10 +165,58 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
             "publication adapter must resolve exactly once",
         ),
         (
+            "docs/guides/capability-seo/best-dividend-apis/manifest.yaml",
+            (
+                b"digest: sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac"
+                b"2ca0b5e61d7cef23"
+            ),
+            b"digest: sha256:" + b"0" * 64,
+            "qveris_list_pricing digest mismatch",
+        ),
+        (
+            "docs/guides/capability-seo/best-dividend-apis/manifest.yaml",
+            (
+                b"    - docs/guides/capability-seo/best-dividend-apis/charts/"
+                b"dividend-market-coverage.png\n"
+            ),
+            b"",
+            "declared, committed, and generated chart sets must match",
+        ),
+        (
             "docs/guides/best-dividend-apis.md",
             b"We made 102 live calls",
             b"We made 999 live calls",
             "article call total drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"**Sample passed:** both the AAPL sample",
+            b"**Sample did not pass:** both the AAPL sample",
+            "baseline outcome drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"EODHD passed 7 markets",
+            b"EODHD passed 99 markets",
+            "quick recommendation market count drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"https://qveris.ai/providers/hangseng_polysource",
+            b"https://qveris.ai/providers/alphavantage",
+            "QVeris CTA drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"| Alpha Vantage (QVeris) | 3/3 |",
+            b"| Alpha Vantage (QVeris) | 0/3 |",
+            "Agent facts drifted",
+        ),
+        (
+            "docs/guides/capability-seo/best-dividend-apis/manifest.yaml",
+            b"planned_cells: 120",
+            b"planned_cells: 999",
+            "market_coverage_release planned cell count mismatch",
         ),
     ],
 )
@@ -201,3 +247,22 @@ def test_ac5_external_package_digest_detects_manifest_drift() -> None:
             PACKAGE,
             expected_package_digest="sha256:" + "0" * 64,
         )
+
+
+def test_ac5_release_sections_must_be_unique(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    package = repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+    content = package.read_text(encoding="utf-8")
+    package.write_text(
+        content.replace(
+            "release_sections: [release, market_coverage_release]",
+            "release_sections: [release, release, market_coverage_release]",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="publication release sections must be unique",
+    ):
+        reproduce_publication_package(package)

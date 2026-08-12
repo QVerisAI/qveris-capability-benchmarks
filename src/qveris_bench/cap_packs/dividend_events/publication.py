@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import hashlib
-import importlib
 import json
+import os
 import platform
 import re
-import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -16,10 +15,19 @@ from qveris_bench.publications.service import (
     PublicationReproductionError,
     resolve_repository_path,
 )
+from qveris_bench.yaml_io import load_yaml_mapping
 
 _PROVIDER_NAMES = {
     "hangseng": "Hang Seng",
     "ifind": "iFinD",
+    "alpha-vantage": "Alpha Vantage",
+    "twelve-data": "Twelve Data",
+    "eodhd": "EODHD",
+    "massive-stocks": "Massive",
+}
+_MANIFEST_PROVIDER_NAMES = {
+    "hangseng": "恒生聚源",
+    "ifind": "同花顺 iFinD",
     "alpha-vantage": "Alpha Vantage",
     "twelve-data": "Twelve Data",
     "eodhd": "EODHD",
@@ -30,7 +38,7 @@ _PROVIDER_NAMES = {
 class DividendEventsPublicationAdapter:
     adapter_id = "dividend-events-v1"
     adapter_version = "1.0.0"
-    cap_id = "MKT.DIVIDENDS"
+    cap_id = "dividend-events"
 
     def reproduce(
         self,
@@ -41,21 +49,26 @@ class DividendEventsPublicationAdapter:
         document: Mapping[str, Any],
         output_dir: Path,
     ) -> tuple[str, ...]:
-        del package_path, package
+        del package_path
         artifacts = _mapping(document, "artifacts")
         snapshot_input = _artifact(
             repository_root, artifacts, "selection_snapshot_input"
         )
         committed_snapshot = _artifact(repository_root, artifacts, "selection_snapshot")
+        selection_input_document = load_yaml_mapping(snapshot_input)
+        _validate_selection_release_refs(selection_input_document, document)
         fresh_snapshot = build_selection_snapshot(snapshot_input, repository_root)
         if fresh_snapshot.json_bytes != committed_snapshot.read_bytes():
             raise PublicationReproductionError(
                 "selection snapshot differs from a fresh release-derived build"
             )
 
-        render_selection_tradeoff = _selection_renderer(repository_root)
         chart_dir = output_dir / "charts"
-        generated = render_selection_tradeoff(committed_snapshot, chart_dir)
+        generated = _render_selection_tradeoff(
+            committed_snapshot,
+            chart_dir,
+            output_dir,
+        )
         committed_chart_manifest = _artifact(
             repository_root, artifacts, "selection_charts_manifest"
         )
@@ -73,11 +86,25 @@ class DividendEventsPublicationAdapter:
         charts = artifacts.get("charts")
         if not isinstance(charts, list) or not charts:
             raise PublicationReproductionError("publication charts must be declared")
+        declared_chart_names = {
+            Path(value).name for value in charts if isinstance(value, str)
+        }
+        committed_charts = _mapping(committed, "charts")
+        generated_charts = _mapping(generated, "charts")
+        committed_chart_names = set(committed_charts)
+        generated_chart_names = set(generated_charts)
+        if not (
+            declared_chart_names == committed_chart_names == generated_chart_names
+            and len(declared_chart_names) == len(charts)
+        ):
+            raise PublicationReproductionError(
+                "declared, committed, and generated chart sets must match"
+            )
         for chart_value in charts:
             if not isinstance(chart_value, str):
                 raise PublicationReproductionError("invalid publication chart path")
             committed_chart = resolve_repository_path(repository_root, chart_value)
-            expected = committed["charts"].get(committed_chart.name)
+            expected = committed_charts.get(committed_chart.name)
             if expected != _digest(committed_chart.read_bytes()):
                 raise PublicationReproductionError(
                     f"committed chart digest mismatch: {committed_chart.name}"
@@ -91,6 +118,17 @@ class DividendEventsPublicationAdapter:
                 )
 
         snapshot = json.loads(committed_snapshot.read_text(encoding="utf-8"))
+        if snapshot.get("cap_id") != package.cap_id:
+            raise PublicationReproductionError(
+                "publication package CAP does not match the Selection Snapshot"
+            )
+        _validate_manifest_metadata(
+            document,
+            artifacts,
+            snapshot_input,
+            committed_snapshot,
+            repository_root,
+        )
         article = _artifact(repository_root, artifacts, "article")
         article_text = article.read_text(encoding="utf-8")
         _validate_article_facts(article_text, snapshot, document, repository_root)
@@ -98,17 +136,105 @@ class DividendEventsPublicationAdapter:
         return ("selection_snapshot", "charts", "article_facts", "links")
 
 
-def _selection_renderer(repository_root: Path) -> Any:
-    root_value = str(repository_root)
-    added = root_value not in sys.path
-    if added:
-        sys.path.insert(0, root_value)
+def _render_selection_tradeoff(
+    snapshot: Path,
+    chart_dir: Path,
+    output_dir: Path,
+) -> dict[str, object]:
+    cache_dir = output_dir / "matplotlib-cache"
+    cache_dir.mkdir()
+    previous = {
+        name: os.environ.get(name) for name in ("MPLCONFIGDIR", "XDG_CACHE_HOME")
+    }
+    os.environ["MPLCONFIGDIR"] = str(cache_dir)
+    os.environ["XDG_CACHE_HOME"] = str(cache_dir)
     try:
-        module = importlib.import_module("scripts.render_cap_guide_charts")
+        from qveris_bench.cap_packs.dividend_events.selection_charts import (
+            render_selection_tradeoff,
+        )
+
+        return render_selection_tradeoff(snapshot, chart_dir)
     finally:
-        if added:
-            sys.path.remove(root_value)
-    return module.render_selection_tradeoff
+        for name, value in previous.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
+
+
+def _validate_selection_release_refs(
+    selection_input: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+) -> None:
+    expected = (
+        ("cap_release", "release"),
+        ("market_coverage_release", "market_coverage_release"),
+    )
+    for input_key, manifest_key in expected:
+        selection_ref = _mapping(selection_input, input_key)
+        manifest_ref = _mapping(manifest, manifest_key)
+        expected_release = f"{manifest_ref['directory']}/release.json"
+        if selection_ref.get("release") != expected_release or (
+            selection_ref.get("digest") != manifest_ref.get("digest")
+        ):
+            raise PublicationReproductionError(
+                f"selection input release differs from {manifest_key}"
+            )
+
+
+def _validate_manifest_metadata(
+    manifest: Mapping[str, Any],
+    artifacts: Mapping[str, Any],
+    snapshot_input: Path,
+    snapshot: Path,
+    repository_root: Path,
+) -> None:
+    snapshot_metadata = _mapping(manifest, "selection_snapshot")
+    _require(
+        snapshot_metadata.get("input_digest") == _digest(snapshot_input.read_bytes()),
+        "selection snapshot input digest mismatch",
+    )
+    _require(
+        snapshot_metadata.get("digest") == _digest(snapshot.read_bytes()),
+        "selection snapshot digest mismatch",
+    )
+    for section_key, artifact_key in (
+        ("qveris_list_pricing", "qveris_list_pricing"),
+        ("official_pricing_supplement", "official_pricing_supplement"),
+    ):
+        metadata = _mapping(manifest, section_key)
+        artifact = _artifact(repository_root, artifacts, artifact_key)
+        _require(
+            metadata.get("digest") == _digest(artifact.read_bytes()),
+            f"{section_key} digest mismatch",
+        )
+    for section_key in ("release", "market_coverage_release"):
+        metadata = _mapping(manifest, section_key)
+        release_path = resolve_repository_path(
+            repository_root,
+            f"{metadata['directory']}/release.json",
+        )
+        release = json.loads(release_path.read_text(encoding="utf-8"))
+        release_metadata = release["release"]
+        cells = release["cells"]
+        _require(
+            metadata.get("suite_fingerprint")
+            == release_metadata.get("suite_fingerprint"),
+            f"{section_key} suite fingerprint mismatch",
+        )
+        _require(
+            metadata.get("planned_cells") == len(cells),
+            f"{section_key} planned cell count mismatch",
+        )
+        _require(
+            metadata.get("applicable_cells")
+            == sum(bool(cell["applicable"]) for cell in cells),
+            f"{section_key} applicable cell count mismatch",
+        )
+        _require(
+            metadata.get("public_evidence_records") == len(release["evidence"]),
+            f"{section_key} public evidence count mismatch",
+        )
 
 
 def _validate_article_facts(
@@ -138,8 +264,12 @@ def _validate_article_facts(
     overview = _markdown_table_rows(article, "| Provider and Access Path |")
     pricing = _markdown_table_rows(article, "| Provider / Access Path |")
     market = _markdown_table_rows(article, "Representative markets passed (")
+    agent = _markdown_table_rows(
+        article,
+        "| Provider and Access Path | Required event fields |",
+    )
     expected_names = [_PROVIDER_NAMES[str(row["provider_id"])] for row in ordered_rows]
-    for table in (overview, pricing, market):
+    for table in (overview, pricing, market, agent):
         try:
             published_names = [
                 next(name for name in expected_names if name in table_row[0])
@@ -156,6 +286,19 @@ def _validate_article_facts(
         provider = _PROVIDER_NAMES[str(row["provider_id"])]
         access = "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
         overview_row = _provider_row(overview, provider, access)
+        expected_outcome = (
+            "**CN sample passed:**"
+            if row["provider_id"] == "hangseng"
+            else (
+                "**Sample did not pass:**"
+                if row["provider_id"] == "ifind"
+                else "**Sample passed:**"
+            )
+        )
+        _require(
+            overview_row[1].startswith(expected_outcome),
+            f"baseline outcome drifted: {provider}",
+        )
         metrics = row["gateway_metrics"]
         if metrics["state"] == "measured":
             amount = row["qveris_list_price"]["amount_credits"]
@@ -197,6 +340,26 @@ def _validate_article_facts(
         published_sets = [_market_set(cell) for cell in market_row[1:4]]
         _require(published_sets == expected_sets, f"market facts drifted: {provider}")
 
+        agent_row = _provider_row(agent, provider, access)
+        expected_agent = _agent_expected_cells(
+            row,
+            manifest,
+            repository_root,
+        )
+        invalid = row["agent_interface"]["invalid_input_handling"]
+        expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
+        _require(
+            agent_row[1:]
+            == [
+                expected_agent[0],
+                expected_agent[1],
+                expected_invalid,
+                expected_agent[2],
+                expected_agent[3],
+            ],
+            f"Agent facts drifted: {provider}",
+        )
+
     release_sections = manifest["publication_package"]["release_sections"]
     releases = [
         json.loads(
@@ -216,6 +379,33 @@ def _validate_article_facts(
         == f"# Best Dividend APIs for Developers in 2026: {len(rows)} Providers",
         "article title Provider count drifted",
     )
+    by_provider = {row["provider_id"]: row for row in rows}
+    quick_advice = article.split("> **Quick recommendation:**", 1)[1].split("\n", 1)[0]
+    for provider_id, label in (
+        ("eodhd", "EODHD passed"),
+        ("twelve-data", "Twelve Data passed"),
+    ):
+        verified = sum(
+            result["state"] == "verified"
+            for result in by_provider[provider_id]["market_coverage"]["results"]
+        )
+        _require(
+            f"{label} {verified}" in quick_advice,
+            f"quick recommendation market count drifted: {provider_id}",
+        )
+    alpha_results = by_provider["alpha-vantage"]["market_coverage"]["results"]
+    alpha_verified = sum(result["state"] == "verified" for result in alpha_results)
+    alpha_not_applicable = sum(
+        result["state"] == "not_applicable" for result in alpha_results
+    )
+    _require(
+        f"Alpha Vantage passed all {alpha_verified} markets" in quick_advice
+        and (
+            f"other {alpha_not_applicable} explicitly unsupported markets"
+            in quick_advice
+        ),
+        "quick recommendation market count drifted: alpha-vantage",
+    )
 
 
 def _validate_links(
@@ -225,11 +415,65 @@ def _validate_links(
     repository_root: Path,
 ) -> None:
     seo = _mapping(manifest, "seo")
-    allowed = seo.get("github_links")
+    allowed_github = seo.get("github_links")
     actual = re.findall(r"\]\((https://github\.com/[^)]+)\)", article)
-    _require(actual == allowed, "article GitHub links differ from the allowlist")
+    _require(
+        actual == allowed_github,
+        "article GitHub links differ from the allowlist",
+    )
+    allowed_external = set(actual)
+    for key in ("supplier_sites", "provider_pages", "official_sources"):
+        values = seo.get(key, {})
+        if isinstance(values, Mapping):
+            allowed_external.update(
+                value for value in values.values() if isinstance(value, str)
+            )
+    related = seo.get("related_guides", [])
+    if isinstance(related, list):
+        allowed_external.update(
+            item["url"]
+            for item in related
+            if isinstance(item, Mapping) and isinstance(item.get("url"), str)
+        )
+        for item in related:
+            if isinstance(item, Mapping):
+                _require(
+                    f"[{item.get('anchor')}]({item.get('url')})" in article,
+                    "related guide anchor or URL drifted",
+                )
+    artifacts = _mapping(manifest, "artifacts")
+    snapshot_path = _artifact(repository_root, artifacts, "selection_snapshot")
+    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    allowed_external.update(
+        row["official_pricing"]["pricing_url"]
+        for row in snapshot["rows"]
+        if row["official_pricing"]["state"] == "declared"
+    )
+    overview = _markdown_table_rows(article, "| Provider and Access Path |")
+    supplier_sites = _mapping(seo, "supplier_sites")
+    provider_pages = _mapping(seo, "provider_pages")
+    for row in snapshot["rows"]:
+        provider_id = row["provider_id"]
+        provider = _PROVIDER_NAMES[provider_id]
+        access = "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
+        article_row = _provider_row(overview, provider, access)
+        manifest_name = _MANIFEST_PROVIDER_NAMES[provider_id]
+        _require(
+            f"]({supplier_sites[manifest_name]})" in article_row[0],
+            f"supplier link drifted: {provider}",
+        )
+        if access == "QVeris":
+            _require(
+                f"]({provider_pages[manifest_name]})" in article_row[0],
+                f"QVeris CTA drifted: {provider}",
+            )
     for target in re.findall(r"\]\(([^)]+)\)", article):
-        if target.startswith(("https://", "http://", "mailto:", "#")):
+        if target.startswith(("https://", "http://")):
+            _require(
+                target in allowed_external, f"external link is not allowed: {target}"
+            )
+            continue
+        if target.startswith(("mailto:", "#")):
             continue
         resolved = (article_path.parent / target.split("#", 1)[0]).resolve()
         try:
@@ -239,6 +483,80 @@ def _validate_links(
                 "article link must stay inside the repository"
             ) from exc
         resolve_repository_path(repository_root, str(relative))
+
+
+def _agent_expected_cells(
+    row: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    repository_root: Path,
+) -> tuple[str, str, str, str]:
+    provider_id = str(row["provider_id"])
+    artifacts = _mapping(manifest, "artifacts")
+    evidence_key = (
+        "market_coverage_public_evidence"
+        if provider_id == "hangseng"
+        else "public_evidence"
+    )
+    evidence_dir = _artifact(repository_root, artifacts, evidence_key)
+    terminals = []
+    for path in evidence_dir.glob("*.json"):
+        terminal = json.loads(path.read_text(encoding="utf-8"))
+        run_key = terminal.get("run_key")
+        if not isinstance(run_key, str):
+            continue
+        is_cn_market_sample = ":cn-600519-dividend-market:" in run_key
+        if (
+            terminal.get("provider_id") == provider_id
+            and "invalid" not in run_key
+            and (provider_id != "hangseng" or is_cn_market_sample)
+        ):
+            terminals.append(terminal)
+    if not terminals:
+        raise PublicationReproductionError(
+            f"no public terminal facts for {provider_id}"
+        )
+    completed = sum(item["state"] == "completed" for item in terminals)
+    total = len(terminals)
+    facts = [item["facts"] for item in terminals]
+    required = (
+        f"CN sample {completed}/{total}"
+        if provider_id == "hangseng"
+        else (
+            "Missing single-event amount meaning and ex-dividend date"
+            if completed == 0
+            else f"{completed}/{total}"
+        )
+    )
+    if all(item.get("identity_verified") is True for item in facts):
+        identity = "Returned security code matched the requested symbol"
+    elif provider_id == "ifind":
+        identity = "No response security code was available to cross-check"
+    else:
+        identity = (
+            "Published sample does not prove the response identified "
+            f"`{facts[0]['symbol']}`"
+        )
+    currencies = {item.get("currency") for item in facts} - {None}
+    if currencies:
+        if len(currencies) != 1:
+            raise PublicationReproductionError(
+                f"inconsistent response currencies for {provider_id}"
+            )
+        currency = f"`{currencies.pop()}`"
+    else:
+        currency = (
+            "Not published in this sample"
+            if provider_id == "ifind"
+            else "Not returned in this sample"
+        )
+    extra_fields = {"declaration_date", "record_date", "payment_date"}
+    if all(extra_fields <= item.keys() for item in facts):
+        dates = "Declaration, record, and payment dates"
+    elif completed == 0:
+        dates = "No single-event date set"
+    else:
+        dates = "Only ex-dividend date in this sample"
+    return required, identity, currency, dates
 
 
 def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:

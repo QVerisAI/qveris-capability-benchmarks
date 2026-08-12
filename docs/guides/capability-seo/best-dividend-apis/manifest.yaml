@@ -6,7 +6,7 @@ publication_package:
   package_id: best-dividend-apis-2026-08-12
   adapter_id: dividend-events-v1
   adapter_version: 1.0.0
-  cap_id: MKT.DIVIDENDS
+  cap_id: dividend-events
   release_sections: [release, market_coverage_release]
 search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
 primary_capability_ids: [MKT.DIVIDENDS]

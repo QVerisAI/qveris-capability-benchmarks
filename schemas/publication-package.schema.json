@@ -17,7 +17,8 @@
         },
         "cap_id": {
           "maxLength": 128,
-          "pattern": "^[A-Z][A-Z0-9]*(?:\\.[A-Z0-9]+)+$",
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
           "title": "Cap Id",
           "type": "string"
         },
@@ -75,7 +76,7 @@
       "$ref": "#/$defs/PublicationPackageSpec"
     },
     "schema_version": {
-      "minimum": 1,
+      "const": 1,
       "title": "Schema Version",
       "type": "integer"
     }

@@ -47,16 +47,8 @@ def reproduce_publication_package(
             f"invalid publication package: {exc}"
         ) from exc
 
-    package_digest = _digest(resolved_package.read_bytes())
-    if (
-        expected_package_digest is not None
-        and package_digest != expected_package_digest
-    ):
-        raise PublicationReproductionError(
-            "publication package digest does not match expected digest"
-        )
-
-    release_count = 0
+    release_dirs: list[Path] = []
+    release_ids: set[str] = set()
     for section_name in manifest.publication_package.release_sections:
         section = document.get(section_name)
         if not isinstance(section, dict):
@@ -71,12 +63,34 @@ def reproduce_publication_package(
             ) from exc
         release_dir = resolve_repository_path(repository_root, release_ref.directory)
         try:
-            replay_release_dir(release_dir, expected_digest=release_ref.digest)
+            replayed = replay_release_dir(
+                release_dir,
+                expected_digest=release_ref.digest,
+            )
         except ReleaseReplayError as exc:
             raise PublicationReproductionError(
                 f"release reproduction failed for {section_name}: {exc}"
             ) from exc
-        release_count += 1
+        if replayed.release_id in release_ids:
+            raise PublicationReproductionError(
+                "publication release identities must be unique"
+            )
+        release_ids.add(replayed.release_id)
+        release_dirs.append(release_dir)
+
+    package_digest = _package_digest(
+        resolved_package,
+        repository_root,
+        document,
+        release_dirs,
+    )
+    if (
+        expected_package_digest is not None
+        and package_digest != expected_package_digest
+    ):
+        raise PublicationReproductionError(
+            "publication package digest does not match expected digest"
+        )
 
     adapter = _load_adapter(manifest.publication_package.adapter_id)
     if (
@@ -102,7 +116,7 @@ def reproduce_publication_package(
         package_id=manifest.publication_package.package_id,
         package_digest=package_digest,
         status="verified",
-        release_count=release_count,
+        release_count=len(release_dirs),
         checks=("releases", *checks),
         canonical_chart_bytes_verified=platform.system() == "Linux",
     )
@@ -158,3 +172,39 @@ def report_json(report: PublicationReproductionReport) -> str:
 
 def _digest(content: bytes) -> str:
     return f"sha256:{hashlib.sha256(content).hexdigest()}"
+
+
+def _package_digest(
+    package_path: Path,
+    repository_root: Path,
+    document: dict[str, object],
+    release_dirs: list[Path],
+) -> str:
+    artifacts = document.get("artifacts")
+    if not isinstance(artifacts, dict):
+        raise PublicationReproductionError("publication artifacts must be a mapping")
+    targets = {package_path, *release_dirs}
+    for value in artifacts.values():
+        values = value if isinstance(value, list) else [value]
+        for path_value in values:
+            if isinstance(path_value, str) and not path_value.startswith("sha256:"):
+                targets.add(resolve_repository_path(repository_root, path_value))
+    files: set[Path] = set()
+    for target in targets:
+        if target.is_dir():
+            files.update(item for item in target.rglob("*") if item.is_file())
+        else:
+            files.add(target)
+    digest = hashlib.sha256()
+    for item in sorted(files):
+        resolved = item.resolve(strict=True)
+        try:
+            relative = resolved.relative_to(repository_root.resolve(strict=True))
+        except ValueError as exc:
+            raise PublicationReproductionError(
+                "publication path must stay inside the repository"
+            ) from exc
+        digest.update(str(relative).encode())
+        digest.update(b"\0")
+        digest.update(resolved.read_bytes())
+    return f"sha256:{digest.hexdigest()}"
