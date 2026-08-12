@@ -443,6 +443,102 @@
       "title": "OfficialPricingSnapshot",
       "type": "object"
     },
+    "QVerisListPriceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "amount_credits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amount Credits"
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Ref"
+        },
+        "inspected_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inspected At"
+        },
+        "snapshot_version": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Version"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "const": "qveris_inspect",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "state": {
+          "enum": [
+            "declared",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "const": "per_call",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "QVerisListPriceSnapshot",
+      "type": "object"
+    },
     "RunObservationsSnapshot": {
       "additionalProperties": false,
       "properties": {
@@ -584,6 +680,9 @@
           "title": "Provider Name",
           "type": "string"
         },
+        "qveris_list_price": {
+          "$ref": "#/$defs/QVerisListPriceSnapshot"
+        },
         "run_observations": {
           "$ref": "#/$defs/RunObservationsSnapshot"
         }
@@ -597,6 +696,7 @@
         "observation_window",
         "run_observations",
         "gateway_metrics",
+        "qveris_list_price",
         "official_pricing",
         "market_coverage",
         "agent_interface"
