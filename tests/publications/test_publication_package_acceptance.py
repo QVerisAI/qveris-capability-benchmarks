@@ -198,7 +198,19 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
             "docs/guides/best-dividend-apis.md",
             b"EODHD passed 7 markets",
             b"EODHD passed 99 markets",
-            "quick recommendation market count drifted",
+            "quick recommendation drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"start by reproducing Alpha Vantage, Twelve Data, EODHD, or Massive",
+            b"start by reproducing iFinD",
+            "quick recommendation drifted",
+        ),
+        (
+            "docs/guides/best-dividend-apis.md",
+            b"Twelve Data had the lowest median latency",
+            b"EODHD had the lowest median latency",
+            "latency ranking drifted",
         ),
         (
             "docs/guides/best-dividend-apis.md",
@@ -217,6 +229,18 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
             b"planned_cells: 120",
             b"planned_cells: 999",
             "market_coverage_release planned cell count mismatch",
+        ),
+        (
+            "docs/guides/capability-seo/best-dividend-apis/manifest.yaml",
+            b'edition: "2026-08-12"',
+            b'edition: "2025-01-01"',
+            "publication edition mismatch",
+        ),
+        (
+            "docs/guides/capability-seo/best-dividend-apis/manifest.yaml",
+            b"  rounds_per_cell: 2",
+            b"  rounds_per_cell: 999",
+            "market_coverage_release round count mismatch",
         ),
     ],
 )
@@ -264,5 +288,53 @@ def test_ac5_release_sections_must_be_unique(tmp_path: Path) -> None:
     with pytest.raises(
         PublicationReproductionError,
         match="publication release sections must be unique",
+    ):
+        reproduce_publication_package(package)
+
+
+def test_ac5_dividend_adapter_rejects_an_extra_release(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    package = repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+    content = package.read_text(encoding="utf-8")
+    package.write_text(
+        content.replace(
+            "release_sections: [release, market_coverage_release]",
+            (
+                "release_sections: [release, market_coverage_release, extra_release]"
+                "\nextra_release:"
+                "\n  directory: releases/dividend-events-2026-q3-v1"
+                "\n  digest: "
+                "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+            ),
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="publication release identities must be unique",
+    ):
+        reproduce_publication_package(package)
+
+
+def test_ac5_selection_input_rejects_a_nested_path_escape(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    selection_input = (
+        repository
+        / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml"
+    )
+    content = selection_input.read_text(encoding="utf-8")
+    selection_input.write_text(
+        content.replace(
+            "suite: cap_packs/dividend_events/suite.yaml",
+            "suite: ../../outside.yaml",
+        ),
+        encoding="utf-8",
+    )
+    package = repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="path must stay inside the repository",
     ):
         reproduce_publication_package(package)

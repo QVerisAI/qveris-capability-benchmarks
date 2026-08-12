@@ -50,12 +50,17 @@ class DividendEventsPublicationAdapter:
         output_dir: Path,
     ) -> tuple[str, ...]:
         del package_path
+        if package.release_sections != ("release", "market_coverage_release"):
+            raise PublicationReproductionError(
+                "Dividend publication requires baseline and market Releases exactly"
+            )
         artifacts = _mapping(document, "artifacts")
         snapshot_input = _artifact(
             repository_root, artifacts, "selection_snapshot_input"
         )
         committed_snapshot = _artifact(repository_root, artifacts, "selection_snapshot")
         selection_input_document = load_yaml_mapping(snapshot_input)
+        _validate_selection_paths(selection_input_document, repository_root)
         _validate_selection_release_refs(selection_input_document, document)
         fresh_snapshot = build_selection_snapshot(snapshot_input, repository_root)
         if fresh_snapshot.json_bytes != committed_snapshot.read_bytes():
@@ -182,6 +187,36 @@ def _validate_selection_release_refs(
             )
 
 
+def _validate_selection_paths(
+    selection_input: Mapping[str, Any],
+    repository_root: Path,
+) -> None:
+    direct_paths = ("suite", "cases", "providers_root")
+    nested_paths = (
+        ("cap_release", "release"),
+        ("qveris_list_pricing", "snapshot"),
+        ("qveris_list_pricing", "bindings"),
+        ("official_pricing_supplement", "snapshot"),
+        ("market_coverage_release", "release"),
+        ("market_coverage_release", "suite"),
+        ("market_coverage_release", "cases"),
+    )
+    for key in direct_paths:
+        value = selection_input.get(key)
+        if not isinstance(value, str):
+            raise PublicationReproductionError(
+                f"selection input path is missing: {key}"
+            )
+        resolve_repository_path(repository_root, value)
+    for section, key in nested_paths:
+        value = _mapping(selection_input, section).get(key)
+        if not isinstance(value, str):
+            raise PublicationReproductionError(
+                f"selection input path is missing: {section}.{key}"
+            )
+        resolve_repository_path(repository_root, value)
+
+
 def _validate_manifest_metadata(
     manifest: Mapping[str, Any],
     artifacts: Mapping[str, Any],
@@ -189,7 +224,16 @@ def _validate_manifest_metadata(
     snapshot: Path,
     repository_root: Path,
 ) -> None:
+    snapshot_document = json.loads(snapshot.read_text(encoding="utf-8"))
+    _require(
+        str(manifest.get("edition")) == snapshot_document.get("edition"),
+        "publication edition mismatch",
+    )
     snapshot_metadata = _mapping(manifest, "selection_snapshot")
+    _require(
+        snapshot_metadata.get("id") == snapshot_document.get("snapshot_id"),
+        "selection snapshot identity mismatch",
+    )
     _require(
         snapshot_metadata.get("input_digest") == _digest(snapshot_input.read_bytes()),
         "selection snapshot input digest mismatch",
@@ -204,10 +248,21 @@ def _validate_manifest_metadata(
     ):
         metadata = _mapping(manifest, section_key)
         artifact = _artifact(repository_root, artifacts, artifact_key)
+        artifact_document = json.loads(artifact.read_text(encoding="utf-8"))
         _require(
             metadata.get("digest") == _digest(artifact.read_bytes()),
             f"{section_key} digest mismatch",
         )
+        _require(
+            metadata.get("id") == artifact_document.get("snapshot_id")
+            and metadata.get("source") == artifact_document.get("source"),
+            f"{section_key} identity or source mismatch",
+        )
+        if section_key == "qveris_list_pricing":
+            _require(
+                metadata.get("inspected_at") == artifact_document.get("inspected_at"),
+                "qveris_list_pricing inspection date mismatch",
+            )
     for section_key in ("release", "market_coverage_release"):
         metadata = _mapping(manifest, section_key)
         release_path = resolve_repository_path(
@@ -235,6 +290,13 @@ def _validate_manifest_metadata(
             metadata.get("public_evidence_records") == len(release["evidence"]),
             f"{section_key} public evidence count mismatch",
         )
+        if section_key == "market_coverage_release":
+            applicable = [cell for cell in cells if cell["applicable"]]
+            rounds = {cell["round"] for cell in applicable}
+            _require(
+                metadata.get("rounds_per_cell") == len(rounds),
+                "market_coverage_release round count mismatch",
+            )
 
 
 def _validate_article_facts(
@@ -286,17 +348,8 @@ def _validate_article_facts(
         provider = _PROVIDER_NAMES[str(row["provider_id"])]
         access = "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
         overview_row = _provider_row(overview, provider, access)
-        expected_outcome = (
-            "**CN sample passed:**"
-            if row["provider_id"] == "hangseng"
-            else (
-                "**Sample did not pass:**"
-                if row["provider_id"] == "ifind"
-                else "**Sample passed:**"
-            )
-        )
         _require(
-            overview_row[1].startswith(expected_outcome),
+            overview_row[1] == _expected_overview_outcome(row),
             f"baseline outcome drifted: {provider}",
         )
         metrics = row["gateway_metrics"]
@@ -380,31 +433,47 @@ def _validate_article_facts(
         "article title Provider count drifted",
     )
     by_provider = {row["provider_id"]: row for row in rows}
-    quick_advice = article.split("> **Quick recommendation:**", 1)[1].split("\n", 1)[0]
-    for provider_id, label in (
-        ("eodhd", "EODHD passed"),
-        ("twelve-data", "Twelve Data passed"),
-    ):
-        verified = sum(
-            result["state"] == "verified"
-            for result in by_provider[provider_id]["market_coverage"]["results"]
-        )
-        _require(
-            f"{label} {verified}" in quick_advice,
-            f"quick recommendation market count drifted: {provider_id}",
-        )
+    quick_advice = article.split("> **Quick recommendation:** ", 1)[1].split("\n", 1)[0]
+    eodhd_verified = _verified_markets(by_provider["eodhd"])
+    twelve_verified = _verified_markets(by_provider["twelve-data"])
     alpha_results = by_provider["alpha-vantage"]["market_coverage"]["results"]
-    alpha_verified = sum(result["state"] == "verified" for result in alpha_results)
+    alpha_verified = _verified_markets(by_provider["alpha-vantage"])
     alpha_not_applicable = sum(
         result["state"] == "not_applicable" for result in alpha_results
     )
+    expected_quick_advice = (
+        "Through the tested QVeris Access Paths, start by reproducing Alpha "
+        "Vantage, Twelve Data, EODHD, or Massive for basic US Dividend Events. "
+        "For broader representative-market results, "
+        f"EODHD passed {eodhd_verified} markets and Twelve Data passed "
+        f"{twelve_verified}. Alpha Vantage passed all {alpha_verified} markets "
+        "that QVeris marked applicable; we did not spend calls retesting the "
+        f"other {alpha_not_applicable} explicitly unsupported markets."
+    )
     _require(
-        f"Alpha Vantage passed all {alpha_verified} markets" in quick_advice
-        and (
-            f"other {alpha_not_applicable} explicitly unsupported markets"
-            in quick_advice
-        ),
-        "quick recommendation market count drifted: alpha-vantage",
+        quick_advice == expected_quick_advice,
+        "quick recommendation drifted",
+    )
+    measured = [row for row in rows if row["gateway_metrics"]["state"] == "measured"]
+    fastest = min(
+        measured,
+        key=lambda row: row["gateway_metrics"]["latency_median_ms"],
+    )
+    _require(
+        f"{_PROVIDER_NAMES[fastest['provider_id']]} had the lowest median latency"
+        in article,
+        "latency ranking drifted",
+    )
+    minimum_price = min(row["qveris_list_price"]["amount_credits"] for row in measured)
+    lowest_price_names = sorted(
+        _PROVIDER_NAMES[row["provider_id"]]
+        for row in measured
+        if row["qveris_list_price"]["amount_credits"] == minimum_price
+    )
+    _require(
+        f"{_english_list(lowest_price_names)} shared the lowest Inspect price at "
+        f"{minimum_price:g} credit/call" in article,
+        "price ranking drifted",
     )
 
 
@@ -483,6 +552,44 @@ def _validate_links(
                 "article link must stay inside the repository"
             ) from exc
         resolve_repository_path(repository_root, str(relative))
+
+
+def _expected_overview_outcome(row: Mapping[str, Any]) -> str:
+    provider_id = row["provider_id"]
+    if provider_id == "hangseng":
+        return (
+            "**CN sample passed:** both rounds returned a verifiable security "
+            "identity, ex-dividend date, and single-event amount"
+        )
+    if provider_id == "ifind":
+        return (
+            "**Sample did not pass:** no single-event date, and the annual "
+            "cumulative value cannot establish the amount for one event"
+        )
+    if provider_id == "twelve-data":
+        return (
+            "**Sample passed:** AAPL returned an ex-dividend date and single-event "
+            "amount in all three rounds; the invalid symbol produced no fabricated "
+            "event"
+        )
+    return (
+        "**Sample passed:** both the AAPL sample and invalid-symbol control met "
+        "the contract in all three rounds"
+    )
+
+
+def _verified_markets(row: Mapping[str, Any]) -> int:
+    return sum(
+        result["state"] == "verified" for result in row["market_coverage"]["results"]
+    )
+
+
+def _english_list(values: list[str]) -> str:
+    if len(values) == 1:
+        return values[0]
+    if len(values) == 2:
+        return " and ".join(values)
+    return f"{', '.join(values[:-1])}, and {values[-1]}"
 
 
 def _agent_expected_cells(
