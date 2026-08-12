@@ -52,11 +52,11 @@ For US workflows, reproduce the tested QVeris Access Paths for Alpha Vantage and
 
 ### Currency must be explicit in the response
 
-Start with Twelve Data and Massive. Both explicitly returned `currency` in this sample. When another path omits it, leave it null or enrich it from a separately sourced dataset—do not silently infer it from the exchange.
+Start with the tested QVeris Access Paths for Twelve Data and Massive. Both explicitly returned `currency` in this sample. When another path omits it, leave it null or enrich it from a separately sourced dataset—do not silently infer it from the exchange.
 
 ### Your primary use case is mainland China dividends
 
-Hang Seng's representative CN sample passed both rounds and is the first candidate to reproduce. The iFinD Native MCP still lacked a single-event date and amount meaning in both CN rounds.
+Hang Seng's tested QVeris Access Path passed both representative CN rounds and is the first candidate to reproduce. The iFinD Native MCP still lacked a single-event date and amount meaning in both CN rounds.
 
 ### You want one key for several data sources
 
@@ -221,7 +221,7 @@ The public evidence, test rules, and reproduction entry points are available in 
 
 ### Which dividend API is best for developers?
 
-There is no context-free winner. For a US ex-dividend date and single-event amount, reproduce the tested QVeris Access Paths for Twelve Data, Alpha Vantage, EODHD, and Massive first. Among the US samples, Alpha Vantage and Massive exposed the fuller date sets. For explicit currency, start with Twelve Data or Massive.
+There is no context-free winner. For a US ex-dividend date and single-event amount, reproduce the tested QVeris Access Paths for Twelve Data, Alpha Vantage, EODHD, and Massive first. Among the US samples, Alpha Vantage and Massive exposed the fuller date sets. For explicit currency, start with the tested QVeris Access Paths for Twelve Data or Massive.
 
 ### Does “sample passed” mean the data is completely reliable?
 

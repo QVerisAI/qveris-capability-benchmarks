@@ -229,44 +229,6 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
         assert signal in article
     assert "AI-friendly rating" not in article
     assert "Agent total score" not in article
-    identity_text = {
-        "hangseng": "Returned security code matched the requested symbol",
-        "ifind": "No response security code was available to cross-check",
-        "twelve-data": (
-            "Published sample does not prove the response identified `AAPL`"
-        ),
-        "alpha-vantage": (
-            "Published sample does not prove the response identified `AAPL`"
-        ),
-        "eodhd": "Published sample does not prove the response identified `AAPL`",
-        "massive-stocks": (
-            "Published sample does not prove the response identified `AAPL`"
-        ),
-    }
-    required_fields = {
-        "hangseng": "CN sample 2/2",
-        "ifind": "Missing single-event amount meaning and ex-dividend date",
-        "twelve-data": "3/3",
-        "alpha-vantage": "3/3",
-        "eodhd": "3/3",
-        "massive-stocks": "3/3",
-    }
-    currency_text = {
-        "hangseng": "Not returned in this sample",
-        "ifind": "Not published in this sample",
-        "twelve-data": "`USD`",
-        "alpha-vantage": "Not returned in this sample",
-        "eodhd": "Not returned in this sample",
-        "massive-stocks": "`USD`",
-    }
-    additional_dates = {
-        "hangseng": "Declaration, record, and payment dates",
-        "ifind": "No single-event date set",
-        "twelve-data": "Only ex-dividend date in this sample",
-        "alpha-vantage": "Declaration, record, and payment dates",
-        "eodhd": "Only ex-dividend date in this sample",
-        "massive-stocks": "Declaration, record, and payment dates",
-    }
     for snapshot_row in snapshot["rows"]:
         provider = _article_provider_name(snapshot_row)
         access_path = (
@@ -275,14 +237,14 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
             else "QVeris"
         )
         article_row = _provider_row(agent_rows, provider, access_path)
-        provider_id = snapshot_row["provider_id"]
+        expected = _agent_expected_cells(snapshot_row)
         invalid = snapshot_row["agent_interface"]["invalid_input_handling"]
-        assert article_row[1] == required_fields[provider_id]
-        assert article_row[2] == identity_text[provider_id]
+        assert article_row[1] == expected[0]
+        assert article_row[2] == expected[1]
         expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
         assert article_row[3] == expected_invalid
-        assert article_row[4] == currency_text[provider_id]
-        assert article_row[5] == additional_dates[provider_id]
+        assert article_row[4] == expected[2]
+        assert article_row[5] == expected[3]
 
 
 def test_article_evidence_charts_are_declared_and_valid_image() -> None:
@@ -716,10 +678,15 @@ def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     provider_count = len({row["provider_id"] for row in snapshot["rows"]})
     access_path_count = len(snapshot["rows"])
-    total_calls = (
-        manifest["release"]["public_evidence_records"]
-        + market["public_evidence_records"]
+    base_release = json.loads((ROOT / manifest["artifacts"]["release"]).read_text())
+    market_release = json.loads(
+        (ROOT / manifest["artifacts"]["market_coverage_release"]).read_text()
     )
+    assert manifest["release"]["public_evidence_records"] == len(
+        base_release["evidence"]
+    )
+    assert market["public_evidence_records"] == len(market_release["evidence"])
+    total_calls = len(base_release["evidence"]) + len(market_release["evidence"])
     assert article.splitlines()[0] == (
         f"# Best Dividend APIs for Developers in 2026: {provider_count} Providers"
     )
@@ -763,6 +730,68 @@ def _article_provider_name(row: dict[str, object]) -> str:
         "massive-stocks": "Massive",
     }
     return aliases.get(str(row["provider_id"]), str(row["provider_name"]))
+
+
+def _agent_expected_cells(row: dict[str, object]) -> tuple[str, str, str, str]:
+    provider_id = str(row["provider_id"])
+    evidence_dir = (
+        ROOT / "evidence/dividend-events-market-coverage-2026-q3-v1"
+        if provider_id == "hangseng"
+        else ROOT / "evidence/dividend-events-2026-q3-v1"
+    )
+    terminals = []
+    for path in evidence_dir.glob("*.json"):
+        terminal = json.loads(path.read_text())
+        if "run_key" not in terminal:
+            continue
+        is_cn_market_sample = ":cn-600519-dividend-market:" in terminal["run_key"]
+        if (
+            terminal["provider_id"] == provider_id
+            and "invalid" not in terminal["run_key"]
+            and (provider_id != "hangseng" or is_cn_market_sample)
+        ):
+            terminals.append(terminal)
+    assert terminals
+    completed = sum(item["state"] == "completed" for item in terminals)
+    total = len(terminals)
+    facts = [item["facts"] for item in terminals]
+
+    required = (
+        f"CN sample {completed}/{total}"
+        if provider_id == "hangseng"
+        else (
+            "Missing single-event amount meaning and ex-dividend date"
+            if completed == 0
+            else f"{completed}/{total}"
+        )
+    )
+    if all(item.get("identity_verified") is True for item in facts):
+        identity = "Returned security code matched the requested symbol"
+    elif provider_id == "ifind":
+        identity = "No response security code was available to cross-check"
+    else:
+        symbol = str(facts[0]["symbol"])
+        identity = f"Published sample does not prove the response identified `{symbol}`"
+
+    currencies = {item.get("currency") for item in facts} - {None}
+    if currencies:
+        assert len(currencies) == 1
+        currency = f"`{currencies.pop()}`"
+    else:
+        currency = (
+            "Not published in this sample"
+            if provider_id == "ifind"
+            else "Not returned in this sample"
+        )
+
+    extra_fields = {"declaration_date", "record_date", "payment_date"}
+    if all(extra_fields <= item.keys() for item in facts):
+        dates = "Declaration, record, and payment dates"
+    elif completed == 0:
+        dates = "No single-event date set"
+    else:
+        dates = "Only ex-dividend date in this sample"
+    return required, identity, currency, dates
 
 
 def test_article_embeds_only_decision_useful_snapshot_chart() -> None:
