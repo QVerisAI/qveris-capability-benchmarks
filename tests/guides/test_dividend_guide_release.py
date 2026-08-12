@@ -30,6 +30,7 @@ RELEASE_DIGEST = (
 EVIDENCE_CHARTS = (
     "capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png",
     "capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png",
+    "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png",
 )
 MANIFEST_EVIDENCE_CHARTS = tuple(f"docs/guides/{target}" for target in EVIDENCE_CHARTS)
 
@@ -101,7 +102,6 @@ def test_article_evidence_charts_are_declared_and_valid_image() -> None:
     assert "完整事件日期组" not in article
     assert "date-timeline.svg" not in article
     assert "dividend-api-evidence-matrix.svg" not in article
-    assert all("market-coverage" not in target for target in EVIDENCE_CHARTS)
 
 
 def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
@@ -190,6 +190,75 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     )
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
+
+
+def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
+    tmp_path: Path,
+) -> None:
+    snapshot = MANIFEST.parent / "selection-snapshot.json"
+    generated = render_selection_tradeoff(snapshot, tmp_path)
+    market_chart = tmp_path / "dividend-market-coverage.png"
+
+    assert market_chart.is_file(), "AC1 must render the Finlight-style market matrix"
+    market_data = generated["data"]["market_coverage"]
+    assert market_data["title"] == (
+        "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN"
+    )
+    assert market_data["highlighted_provider_id"] == "eodhd"
+    assert market_data["markets"] == [
+        "AT",
+        "BE",
+        "BR",
+        "CH",
+        "CL",
+        "CN",
+        "CO",
+        "CZ",
+        "DE",
+        "DK",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HK",
+        "ID",
+        "IE",
+        "NL",
+        "NO",
+        "PH",
+        "PT",
+        "SE",
+        "TH",
+        "TW",
+        "US",
+    ]
+    rows = {row["provider_id"]: row for row in market_data["rows"]}
+    assert rows["eodhd"]["verified_markets"] == [
+        market for market in market_data["markets"] if market != "CN"
+    ]
+    assert rows["hangseng"]["verified_markets"] == ["CN"]
+    assert rows["ifind"]["state"] == "not_applicable"
+    assert all(
+        rows[provider_id]["state"] == "evidence_insufficient"
+        for provider_id in ("alpha-vantage", "massive-stocks", "twelve-data")
+    )
+    assert generated["charts"][market_chart.name] == (
+        f"sha256:{hashlib.sha256(market_chart.read_bytes()).hexdigest()}"
+    )
+    if platform.system() == "Linux":
+        assert (
+            market_chart.read_bytes()
+            == (MANIFEST.parent / "charts" / market_chart.name).read_bytes()
+        )
+
+
+def test_article_embeds_market_coverage_chart_next_to_market_section() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    market_section = article.split("### 市场覆盖：", 1)[1].split("## 6 家供应商", 1)[0]
+    chart_path = "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png"
+
+    assert f"]({chart_path})]({chart_path})" in market_section
+    assert "绿色只表示 SV 正向证据" in market_section
 
 
 def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(

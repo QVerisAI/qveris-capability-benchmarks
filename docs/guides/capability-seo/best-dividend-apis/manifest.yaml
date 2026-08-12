@@ -89,5 +89,6 @@ artifacts:
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
+    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json

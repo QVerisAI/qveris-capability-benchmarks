@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import yaml
 from matplotlib import font_manager
 from matplotlib.colors import ListedColormap
-from matplotlib.patches import Patch
+from matplotlib.patches import Patch, Rectangle
 
 try:
     from chart_metrics import direct_metrics_by_access_path
@@ -422,10 +422,168 @@ def render_selection_tradeoff(
     fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)
 
+    market_rows = []
+    for provider_id in _DIVIDEND_PROVIDERS:
+        item = next(
+            row for row in snapshot["rows"] if row["provider_id"] == provider_id
+        )
+        coverage = item["market_coverage"]
+        market_rows.append(
+            {
+                "provider_id": provider_id,
+                "provider": (
+                    "Massive"
+                    if provider_id == "massive-stocks"
+                    else item["provider_name"]
+                ),
+                "access_path": (
+                    "Native MCP"
+                    if item["access_path_type"] == "native_mcp"
+                    else "QVeris"
+                ),
+                "state": coverage["sv_state"],
+                "verified_markets": coverage["sv_verified_markets"],
+            }
+        )
+    markets = sorted(
+        {market for item in market_rows for market in item["verified_markets"]}
+    )
+    measured_rows = [item for item in market_rows if item["verified_markets"]]
+    highlighted_row = max(measured_rows, key=lambda item: len(item["verified_markets"]))
+    summaries = []
+    for item in sorted(
+        measured_rows,
+        key=lambda row: -len(row["verified_markets"]),
+    ):
+        verified = item["verified_markets"]
+        scope = verified[0] if len(verified) == 1 else f"{len(verified)} 个市场"
+        summaries.append(f"{item['provider']} {scope}")
+    market_title = "QVeris SV 市场正向证据：" + "，".join(summaries)
+    market_data = {
+        "title": market_title,
+        "highlighted_provider_id": highlighted_row["provider_id"],
+        "markets": markets,
+        "rows": market_rows,
+    }
+    market_chart_name = "dividend-market-coverage.png"
+    market_chart_path = output_dir / market_chart_name
+    market_groups = (markets[:13], markets[13:])
+    fig, axes = plt.subplots(
+        2,
+        1,
+        figsize=(14, 9.2),
+        facecolor="#FFFFFF",
+        gridspec_kw={"hspace": 0.34},
+    )
+    state_colors = {
+        "verified": "#12B76A",
+        "evidence_insufficient": "#F1F5F9",
+        "not_applicable": "#E5EEF5",
+    }
+    for ax, market_group in zip(axes, market_groups, strict=True):
+        for row_index, item in enumerate(market_rows):
+            for column_index, market in enumerate(market_group):
+                if item["state"] == "not_applicable":
+                    state = "not_applicable"
+                    label = "N/A"
+                elif market in item["verified_markets"]:
+                    state = "verified"
+                    label = ""
+                else:
+                    state = "evidence_insufficient"
+                    label = "—"
+                ax.add_patch(
+                    Rectangle(
+                        (column_index - 0.5, row_index - 0.5),
+                        1,
+                        1,
+                        facecolor=state_colors[state],
+                        edgecolor="#FFFFFF",
+                        linewidth=1.4,
+                    )
+                )
+                ax.text(
+                    column_index,
+                    row_index,
+                    label,
+                    ha="center",
+                    va="center",
+                    color="#0F172A",
+                    fontsize=11,
+                    fontweight=600,
+                )
+        highlighted_index = next(
+            index
+            for index, row in enumerate(market_rows)
+            if row["provider_id"] == highlighted_row["provider_id"]
+        )
+        ax.add_patch(
+            Rectangle(
+                (-0.5, highlighted_index - 0.5),
+                len(market_group),
+                1,
+                fill=False,
+                edgecolor="#FF8C00",
+                linewidth=2.2,
+            )
+        )
+        ax.set_xlim(-0.5, len(market_group) - 0.5)
+        ax.set_ylim(len(market_rows) - 0.5, -0.5)
+        ax.set_xticks(range(len(market_group)))
+        ax.set_xticklabels(market_group, fontsize=10, color="#334155")
+        ax.set_yticks(range(len(market_rows)))
+        ax.set_yticklabels(
+            [f"{item['provider']}\n{item['access_path']}" for item in market_rows],
+            fontsize=10,
+            color="#334155",
+        )
+        ax.tick_params(length=0)
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+    fig.suptitle(
+        market_title,
+        color="#143F74",
+        fontsize=20,
+        fontweight=600,
+        y=0.97,
+    )
+    fig.legend(
+        handles=[
+            Patch(facecolor="#12B76A", label="已验证市场"),
+            Patch(facecolor="#F1F5F9", edgecolor="#E2E8F0", label="无正向证据"),
+            Patch(facecolor="#E5EEF5", edgecolor="#CBD5E1", label="不适用"),
+            Patch(
+                facecolor="none",
+                edgecolor="#FF8C00",
+                linewidth=2,
+                label="本快照覆盖最多",
+            ),
+        ],
+        loc="lower center",
+        ncol=4,
+        frameon=False,
+        bbox_to_anchor=(0.5, 0.055),
+        fontsize=10,
+    )
+    fig.text(
+        0.08,
+        0.018,
+        "绿色只表示 QVeris MKT.DIVIDENDS SV 正向证据；"
+        "灰色不代表供应商不支持；Dividend CAP 结论需另行判断",
+        color="#475569",
+        fontsize=9.5,
+    )
+    fig.subplots_adjust(left=0.16, right=0.97, top=0.9, bottom=0.14)
+    fig.savefig(market_chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
     manifest: dict[str, object] = {
         "snapshot_id": snapshot["snapshot_id"],
-        "charts": {chart_name: _sha256_identity(chart_path)},
-        "data": {"rows": rows},
+        "charts": {
+            chart_name: _sha256_identity(chart_path),
+            market_chart_name: _sha256_identity(market_chart_path),
+        },
+        "data": {"rows": rows, "market_coverage": market_data},
         "input_digests": {
             "selection_snapshot": _sha256_identity(selection_snapshot_path),
         },

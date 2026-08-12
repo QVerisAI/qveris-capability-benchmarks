@@ -1,7 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:ce9c240c4760005f309f4052ec2940c6146dccd79cfb09f6ef2219f766e59b96"
+    "dividend-runtime-tradeoff.png": "sha256:ce9c240c4760005f309f4052ec2940c6146dccd79cfb09f6ef2219f766e59b96",
+    "dividend-market-coverage.png": "sha256:becf17c83325f13012fa28cbb259d9974336f58280604ff2d524aac77d162c23"
   },
   "data": {
     "rows": [
@@ -55,7 +56,109 @@
         "latency_samples": 6,
         "cost_samples": 3
       }
-    ]
+    ],
+    "market_coverage": {
+      "title": "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN",
+      "highlighted_provider_id": "eodhd",
+      "markets": [
+        "AT",
+        "BE",
+        "BR",
+        "CH",
+        "CL",
+        "CN",
+        "CO",
+        "CZ",
+        "DE",
+        "DK",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HK",
+        "ID",
+        "IE",
+        "NL",
+        "NO",
+        "PH",
+        "PT",
+        "SE",
+        "TH",
+        "TW",
+        "US"
+      ],
+      "rows": [
+        {
+          "provider_id": "hangseng",
+          "provider": "恒生聚源",
+          "access_path": "QVeris",
+          "state": "measured",
+          "verified_markets": [
+            "CN"
+          ]
+        },
+        {
+          "provider_id": "ifind",
+          "provider": "同花顺 iFinD",
+          "access_path": "Native MCP",
+          "state": "not_applicable",
+          "verified_markets": []
+        },
+        {
+          "provider_id": "twelve-data",
+          "provider": "Twelve Data",
+          "access_path": "QVeris",
+          "state": "evidence_insufficient",
+          "verified_markets": []
+        },
+        {
+          "provider_id": "alpha-vantage",
+          "provider": "Alpha Vantage",
+          "access_path": "QVeris",
+          "state": "evidence_insufficient",
+          "verified_markets": []
+        },
+        {
+          "provider_id": "eodhd",
+          "provider": "EODHD",
+          "access_path": "QVeris",
+          "state": "measured",
+          "verified_markets": [
+            "AT",
+            "BE",
+            "BR",
+            "CH",
+            "CL",
+            "CO",
+            "CZ",
+            "DE",
+            "DK",
+            "ES",
+            "FI",
+            "FR",
+            "GR",
+            "HK",
+            "ID",
+            "IE",
+            "NL",
+            "NO",
+            "PH",
+            "PT",
+            "SE",
+            "TH",
+            "TW",
+            "US"
+          ]
+        },
+        {
+          "provider_id": "massive-stocks",
+          "provider": "Massive",
+          "access_path": "QVeris",
+          "state": "evidence_insufficient",
+          "verified_markets": []
+        }
+      ]
+    }
   },
   "input_digests": {
     "selection_snapshot": "sha256:37b4814456dce8eaefda066c940a8a23e683537c18ff829cc79293fc970ff326"
