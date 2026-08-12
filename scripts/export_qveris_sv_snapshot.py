@@ -146,7 +146,7 @@ def build_scope_validation_snapshot(
         tool_id = str(row.get("tool_id", ""))
         if tool_id not in identities:
             continue
-        if row.get("is_current") is False:
+        if row.get("is_current") is not True:
             raise ValueError("QVeris SV source row is not current")
         provider_id, _, expected_source_provider_id = identities[tool_id]
         if row.get("provider_id") != expected_source_provider_id:

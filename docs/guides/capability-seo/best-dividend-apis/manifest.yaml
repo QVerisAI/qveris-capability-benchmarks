@@ -38,14 +38,14 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:00172e220caee9abf938c4797886e836099fbf4d372af970c71538d2b51b6723
-  digest: sha256:697faabbb2110551b7f71f7a8a7d7d927d71818d4befd1968781a3afa156b601
+  input_digest: sha256:143b64f27a3765887ff7e7f0c8984005da854a9d688647edf1e3a7b645d5b51f
+  digest: sha256:37b4814456dce8eaefda066c940a8a23e683537c18ff829cc79293fc970ff326
 qveris_sv:
   id: qveris-dividend-sv-2026-q3-v1
-  digest: sha256:631ee16dde5bc2faefa0c2b47e41fb825c17321b31e8a071e2076acbce800410
+  digest: sha256:0b9fb5b782e26052b710e308619a3c52b88b8009625194417839827886e09b49
   observation_window: {start: "2026-07-20", end: "2026-08-12"}
   verified_results: 25
-  source_rows_digest: sha256:3a98df7b96ac31b3b55c4ed38d502e48fff74a0d835da8aaf210a5df1343b86f
+  source_rows_digest: sha256:21596f08d6e9ebbe1d1dff9651a2e3587c28aae7ad817713c213d19556b002a6
   bindings_digest: sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5
   identity_map_digest: sha256:b9c043c7a2e133e543f896fd76fa56d64bbf2b743c7f8ecfb16704017e366fe0
 seo:
@@ -85,6 +85,7 @@ artifacts:
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
   qveris_sv_snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-sv-snapshot.json
   qveris_sv_identity_map: docs/guides/capability-seo/best-dividend-apis/qveris-sv-identities.yaml
+  qveris_sv_bindings: cap_packs/dividend_events/direct-bindings.json
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png

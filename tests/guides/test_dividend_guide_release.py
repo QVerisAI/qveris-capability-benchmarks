@@ -4,6 +4,7 @@ import hashlib
 import json
 import platform
 import re
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -243,6 +244,10 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
         manifest["qveris_sv"]["source_rows_digest"] == sv_document["source_rows_digest"]
     )
     assert manifest["qveris_sv"]["bindings_digest"] == sv_document["bindings_digest"]
+    bindings = ROOT / manifest["artifacts"]["qveris_sv_bindings"]
+    bindings_digest = f"sha256:{hashlib.sha256(bindings.read_bytes()).hexdigest()}"
+    assert manifest["qveris_sv"]["bindings_digest"] == bindings_digest
+    assert sv_document["bindings_digest"] == bindings_digest
     identity_map = ROOT / manifest["artifacts"]["qveris_sv_identity_map"]
     identity_map_digest = (
         f"sha256:{hashlib.sha256(identity_map.read_bytes()).hexdigest()}"
@@ -292,8 +297,13 @@ def test_article_publishes_measured_sv_coverage_near_the_decision_table() -> Non
     assert published_markets == set(eodhd["market_coverage"]["sv_verified_markets"])
     hangseng_market_row = _provider_row(market_rows, "恒生聚源", "QVeris")
     assert hangseng_market_row[2] == "CN"
-    assert "2026-07-20 至 2026-08-12" in article
-    assert "抓取于 2026-08-12" in article
+    sv_document = json.loads((MANIFEST.parent / "qveris-sv-snapshot.json").read_text())
+    window = sv_document["observation_window"]
+    capture_date = datetime.fromisoformat(
+        sv_document["source_snapshot_captured_at"].replace("Z", "+00:00")
+    ).date()
+    assert f"{window['start']} 至 {window['end']}" in article
+    assert f"抓取于 {capture_date.isoformat()}" in article
     assert "SV 验证的是这条 Tool × Capability 的市场可达性" in article
 
 
@@ -336,11 +346,11 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
         for market in coverage["tested_markets"]:
             assert f"{market} ·" in market_row[1]
         sv_label = {
-            "evidence_insufficient": "Evidence insufficient",
+            "evidence_insufficient": "**Evidence insufficient**",
             "not_applicable": "不适用",
             "measured": ", ".join(coverage["sv_verified_markets"]),
         }[coverage["sv_state"]]
-        assert sv_label in market_row[2]
+        assert market_row[2] == sv_label
 
 
 def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:

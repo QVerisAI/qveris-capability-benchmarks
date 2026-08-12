@@ -33,6 +33,7 @@ def test_ac1_export_keeps_only_verified_markets_for_bound_qveris_tools() -> None
                 "provider_id": "eodhd",
                 "capability_id": "MKT.DIVIDENDS",
                 "tool_id": "eodhd.dividends",
+                "is_current": True,
                 "evaluated_at": "2026-07-20T11:19:25+00:00",
                 "scope_snapshot": {
                     "probe_contract_fingerprint": "b" * 64,
@@ -162,6 +163,8 @@ def test_ac2_export_is_deterministic() -> None:
         ({"provider_id": "hangseng_polysource"}, "source Provider"),
         ({"capability_id": "MKT.UNRELATED"}, "source Capability"),
         ({"is_current": False}, "current"),
+        ({"is_current": "false"}, "current"),
+        ({"is_current": None}, "current"),
     ],
 )
 def test_ac3_export_rejects_wrong_or_stale_source_identity(
@@ -171,6 +174,7 @@ def test_ac3_export_rejects_wrong_or_stale_source_identity(
         "provider_id": "eodhd",
         "capability_id": "MKT.DIVIDENDS",
         "tool_id": "eodhd.dividends",
+        "is_current": True,
         "evaluated_at": "2026-07-20T11:19:25+00:00",
         "scope_snapshot": {
             "markets": {"US": {"status": "verified", "verified_at": "2026-07-20"}}
@@ -215,6 +219,7 @@ def test_ac4_export_rejects_false_verified_and_forged_rows_digest() -> None:
         "provider_id": "eodhd",
         "capability_id": "MKT.DIVIDENDS",
         "tool_id": "eodhd.dividends",
+        "is_current": True,
         "evaluated_at": "2026-07-20T11:19:25+00:00",
         "scope_snapshot": {
             "markets": {
