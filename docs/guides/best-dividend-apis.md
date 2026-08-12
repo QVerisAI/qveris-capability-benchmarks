@@ -183,13 +183,13 @@ uv run qveris-bench release replay \
   --expected-digest sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
 ```
 
-Inspect the [baseline Release](../../releases/dividend-events-2026-q3-v1/release.json), [market Release](../../releases/dividend-events-market-coverage-2026-q3-v1/release.json), [Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json), [baseline public evidence](../../evidence/dividend-events-2026-q3-v1/), [market public evidence](../../evidence/dividend-events-market-coverage-2026-q3-v1/), and [offline replay guide](../release-replay.md). Every green or orange market cell can be traced by digest to its public terminal.
+Open the [public benchmark repository on GitHub](https://github.com/QVerisAI/qveris-capability-benchmarks) only if you want to audit or reproduce the results. It contains the immutable Releases, Selection Snapshot, sanitized evidence, and replay instructions behind this article. Ordinary API selection does not require reading those files; every green or orange market cell is already digest-bound to a public terminal.
 
 If you are integrating these results into an Agent workflow, read [Capability Discovery for AI Agents](https://qveris.ai/guides/capability-discovery-ai-agents/) before choosing a Tool. For command-line reproduction, use the [QVeris CLI guide](https://qveris.ai/guides/qveris-cli/).
 
 ### With a key: rerun the live calls
 
-The [Dividend Events live workflow](../../.github/workflows/live-dividend-events-e2e.yml) runs three baseline rounds. The [Market workflow](../../.github/workflows/live-dividend-market-coverage-e2e.yml) runs two rounds for each applicable market binding:
+The [Dividend Events live workflow](https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/.github/workflows/live-dividend-events-e2e.yml) runs three baseline rounds. The [Market workflow](https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/.github/workflows/live-dividend-market-coverage-e2e.yml) runs two rounds for each applicable market binding:
 
 - five QVeris Access Paths use `QVERIS_API_KEY`;
 - iFinD uses only `IFIND_MCP_API_KEY` through its Native MCP;

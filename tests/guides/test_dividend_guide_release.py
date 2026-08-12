@@ -866,13 +866,31 @@ def test_article_relative_links_resolve_in_repository() -> None:
     relative_targets = [
         target
         for target in re.findall(r"\]\(([^)]+)\)", article)
-        if not target.startswith(("https://", "http://", "mailto:"))
+        if not target.startswith(("https://", "http://", "mailto:", "#"))
     ]
 
-    assert relative_targets
+    assert relative_targets == [target for target in EVIDENCE_CHARTS for _ in range(2)]
     for target in relative_targets:
         path = target.split("#", 1)[0]
         assert (ARTICLE.parent / path).resolve().exists(), target
+
+
+def test_article_uses_one_public_github_entry_for_reproduction_artifacts() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    repository_url = "https://github.com/QVerisAI/qveris-capability-benchmarks"
+
+    assert (
+        article.count(f"[public benchmark repository on GitHub]({repository_url})") == 1
+    )
+    for noisy_anchor in (
+        "baseline Release",
+        "market Release",
+        "Selection Snapshot",
+        "baseline public evidence",
+        "market public evidence",
+        "offline replay guide",
+    ):
+        assert f"[{noisy_anchor}]" not in article
 
 
 def test_legacy_dividend_probe_artifacts_are_not_publication_inputs() -> None:
