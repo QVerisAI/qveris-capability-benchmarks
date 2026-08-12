@@ -68,6 +68,7 @@
     "twelve-data-us-aapl-dividend-market-round-1",
     "twelve-data-us-aapl-dividend-market-round-2"
   ],
+  "github_artifacts_manifest_digest": "sha256:bbfc4384057424cb61522df4f8246026e2f0a482d1954cde4f32be99bd81da32",
   "limitations": [
     "Coverage is measured per Provider and Access Path using one fixed representative symbol per market over 2024-01-01 through 2026-07-31; it is not a provider-wide market guarantee.",
     "Each applicable Direct cell ran twice. A market is supported only when both rounds completed with the required dividend-event fields and verified request identity.",
@@ -143,7 +144,7 @@
     "twelve-data-us-aapl-dividend-market-round-2-completed"
   ],
   "provider_feedback_facts": {},
-  "public_evidence_manifest_digest": "sha256:c69928d8fd0cef3eb447cd5b7f2bb31079f3d4d55e5899c7a7f7b799b2a754c8",
+  "public_evidence_manifest_digest": "sha256:fb4f40fc77ce9ef739fe54b053f15e9e4b29daad471d59917cc0d524681ff670",
   "release_id": "dividend-events-market-coverage-2026-q3-v1",
   "run_plan_digest": "sha256:35178c55eac23f1b0cf945fd711d8c707709631074f759e571da14851b6dcbee",
   "suite_fingerprint": "226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf",

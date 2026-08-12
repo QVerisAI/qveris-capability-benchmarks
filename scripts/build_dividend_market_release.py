@@ -56,7 +56,9 @@ def main() -> None:
         cap_path=PACK / "cap.yaml",
     )
     validate_dividend_request_identities(registry, compiled)
-    attestation = json.loads((OUTPUT / "github-artifacts.json").read_text())
+    attestation_path = OUTPUT / "github-artifacts.json"
+    attestation_bytes = attestation_path.read_bytes()
+    attestation = json.loads(attestation_bytes)
     expected_artifacts = {
         path.stem: (
             sha256_digest(path.read_bytes()),
@@ -81,12 +83,13 @@ def main() -> None:
         release_id=RELEASE_ID,
         version="1.0.0",
         limitations=LIMITATIONS,
-        outcome_validator=lambda case, facts: validate_public_dividend_outcome(
-            case, facts, PACK / "observation-schema.yaml"
+        outcome_validator=lambda case, binding, facts: validate_public_dividend_outcome(
+            case, binding, facts, PACK / "observation-schema.yaml"
         ),
         expected_github_run_id=attestation["github_run_id"],
         expected_github_sha=attestation["github_sha"],
         expected_provenance=observed_artifacts,
+        github_artifacts_manifest_bytes=attestation_bytes,
     )
     artifacts.write(OUTPUT)
     print(release_digest(artifacts.release_bytes))

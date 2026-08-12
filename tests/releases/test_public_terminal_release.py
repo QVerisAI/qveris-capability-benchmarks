@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -25,9 +26,10 @@ PACK = ROOT / "cap_packs/dividend_events"
 PUBLIC_EVIDENCE = ROOT / "evidence/dividend-events-market-coverage-2026-q3-v1"
 RELEASE = ROOT / "releases/dividend-events-market-coverage-2026-q3-v1"
 EXPECTED_DIGEST = (
-    "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3"
+    "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e"
 )
 ATTESTATION = json.loads((RELEASE / "github-artifacts.json").read_text())
+ATTESTATION_BYTES = (RELEASE / "github-artifacts.json").read_bytes()
 PROVENANCE = {
     item["name"].removeprefix("dividend-market-"): (
         item["public_digest"],
@@ -37,7 +39,11 @@ PROVENANCE = {
 }
 
 
-def _assemble(paths: tuple[Path, ...] | None = None):
+def _assemble(
+    paths: tuple[Path, ...] | None = None,
+    *,
+    provenance: dict[str, tuple[str, str]] | None = None,
+):
     compiled = compile_suite(
         PACK / "market-suite.yaml",
         PACK / "market-cases.yaml",
@@ -53,12 +59,13 @@ def _assemble(paths: tuple[Path, ...] | None = None):
         release_id="dividend-events-market-coverage-2026-q3-v1",
         version="1.0.0",
         limitations=LIMITATIONS,
-        outcome_validator=lambda case, facts: validate_public_dividend_outcome(
-            case, facts, PACK / "observation-schema.yaml"
+        outcome_validator=lambda case, binding, facts: validate_public_dividend_outcome(
+            case, binding, facts, PACK / "observation-schema.yaml"
         ),
         expected_github_run_id=ATTESTATION["github_run_id"],
         expected_github_sha=ATTESTATION["github_sha"],
-        expected_provenance=PROVENANCE,
+        expected_provenance=provenance or PROVENANCE,
+        github_artifacts_manifest_bytes=ATTESTATION_BYTES,
     )
 
 
@@ -129,6 +136,27 @@ def test_rejects_provider_negative_relabelled_as_completed(tmp_path: Path) -> No
 
     with pytest.raises(PublicTerminalReleaseError, match="CAP-owned evaluation"):
         _assemble(tuple(paths))
+
+
+def test_rejects_completed_terminal_with_wrong_canonical_symbol(
+    tmp_path: Path,
+) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    target = next(path for path in paths if "hangseng-cn-600519" in path.name)
+    document = json.loads(target.read_text())
+    document["facts"]["symbol"] = "WRONG"
+    document["facts"]["returned_symbol"] = "WRONG"
+    changed = tmp_path / target.name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[paths.index(target)] = changed
+    provenance = dict(PROVENANCE)
+    provenance[target.stem] = (
+        f"sha256:{hashlib.sha256(changed.read_bytes()).hexdigest()}",
+        document["raw_digest"],
+    )
+
+    with pytest.raises(PublicTerminalReleaseError, match="CAP-owned evaluation"):
+        _assemble(tuple(paths), provenance=provenance)
 
 
 def test_rejects_terminal_github_provenance_drift(tmp_path: Path) -> None:

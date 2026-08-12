@@ -38,11 +38,11 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:3d293232592e1fcd3c972e0ce624cf57be6372908854d312cda30ca78b7fd839
-  digest: sha256:7dc0606febaea557450e822ce7fd4839c1f3d6abd17a13ce8a56bb137f1f1dba
+  input_digest: sha256:b430fdd0abd458f3003e0cf91243b6573b1181f7f67d6de6b198913174edf9da
+  digest: sha256:b35a3b9773f9541bcbf63d2f3908de706af48f79035d9ec077e210e02de1e790
 market_coverage_release:
   directory: releases/dividend-events-market-coverage-2026-q3-v1
-  digest: sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3
+  digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
   suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
   planned_cells: 120
   applicable_cells: 66
@@ -96,4 +96,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:2bf578d54768f2729723f2ad1c79ca3b4b16cceed11874f6346a0d79b201f178
+  selection_charts_manifest_digest: sha256:01eba05b83a27ed4bcaf27e3ee8cb94ec533f2f3b0fa938dc109a02d08ceeb3c

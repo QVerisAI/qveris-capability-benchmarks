@@ -446,6 +446,26 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     assert "当前市场套件只有 2 轮" in article
     assert "仍应对主 suite 生成一个新的 3 轮 successor release" in article
 
+    quick_advice = article.split("> **快速建议**：", 1)[1].split("\n", 1)[0]
+    by_provider = {row["provider_id"]: row for row in snapshot["rows"]}
+    eodhd_verified = sum(
+        result["state"] == "verified"
+        for result in by_provider["eodhd"]["market_coverage"]["results"]
+    )
+    twelve_verified = sum(
+        result["state"] == "verified"
+        for result in by_provider["twelve-data"]["market_coverage"]["results"]
+    )
+    alpha_results = by_provider["alpha-vantage"]["market_coverage"]["results"]
+    alpha_verified = sum(result["state"] == "verified" for result in alpha_results)
+    alpha_not_applicable = sum(
+        result["state"] == "not_applicable" for result in alpha_results
+    )
+    assert f"EODHD 在 9 个代表市场中通过 {eodhd_verified} 个" in quick_advice
+    assert f"Twelve Data 通过 {twelve_verified} 个" in quick_advice
+    assert f"Alpha Vantage 的 {alpha_verified} 个适用市场全部通过" in quick_advice
+    assert f"另外 {alpha_not_applicable} 个已被 QVeris 明确标为不支持" in quick_advice
+
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:
     article = ARTICLE.read_text(encoding="utf-8")

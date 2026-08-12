@@ -10,6 +10,7 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
     extract_dividend_event,
 )
 from qveris_bench.cap_packs.dividend_events.models import DividendRequestIdentity
+from qveris_bench.execution.direct_binding import DirectBinding
 from qveris_bench.models.enums import CellState, FailureAttribution, OutcomeStatus
 from qveris_bench.models.suite import BenchmarkCase
 from qveris_bench.outcomes.evaluator import evaluate_outcome
@@ -97,7 +98,10 @@ def _optional_string(value: object) -> str | None:
 
 
 def validate_public_dividend_outcome(
-    case: BenchmarkCase, facts: dict[str, Any], schema_path: Path
+    case: BenchmarkCase,
+    binding: DirectBinding,
+    facts: dict[str, Any],
+    schema_path: Path,
 ) -> ValidatedTerminalOutcome:
     try:
         observation = extract_observation(
@@ -113,11 +117,28 @@ def validate_public_dividend_outcome(
         case.completion_conditions, observation.facts, "sha256:" + "0" * 64
     )
     unmet = outcome.unmet_conditions
-    if (
-        not case.negative_control
-        and observation.facts.get("identity_verified") is not True
-    ):
-        unmet = tuple(dict.fromkeys((*unmet, "identity_verified")))
+    if not case.negative_control:
+        identity = DividendRequestIdentity.model_validate(binding.request_identity)
+        basis = observation.facts.get("identity_basis")
+        returned = observation.facts.get("returned_symbol")
+        identity_valid = (
+            observation.facts.get("symbol") == case.input.get("symbol")
+            and identity.canonical_symbol == case.input.get("symbol")
+            and (
+                (basis == "request_bound" and returned is None)
+                or (
+                    basis == "response_field"
+                    and isinstance(returned, str)
+                    and _symbol_base(returned)
+                    in {
+                        _symbol_base(identity.vendor_symbol),
+                        _symbol_base(identity.canonical_symbol),
+                    }
+                )
+            )
+        )
+        if not identity_valid:
+            unmet = tuple(dict.fromkeys((*unmet, "identity_verified")))
     if unmet:
         return ValidatedTerminalOutcome(
             CellState.PROVIDER_NEGATIVE,
@@ -125,3 +146,7 @@ def validate_public_dividend_outcome(
             FailureAttribution.EMPTY_OR_PARTIAL_DATA,
         )
     return ValidatedTerminalOutcome(CellState.COMPLETED, (), None)
+
+
+def _symbol_base(value: str) -> str:
+    return value.strip().upper().split(":", 1)[0].split(".", 1)[0]

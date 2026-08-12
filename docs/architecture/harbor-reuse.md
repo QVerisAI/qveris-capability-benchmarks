@@ -65,6 +65,10 @@ input file list, and a license note marking it private operator data.
   preflight results still require Direct Test.
 - Harbor rows never become publication facts. Coverage profiles and charts consume
   the benchmark's own immutable release and sanitized terminal evidence.
+- A publishable market release binds the successful workflow run, downloaded
+  GitHub artifact bytes, sanitized terminal bytes, and replay manifest by digest.
+  Locally regenerated attestations or terminal self-reported states are not
+  sufficient provenance.
 - Snapshot freshness is operator-driven: refresh when Harbor releases new symbol or
   coverage data, review the diff, and pin the new digest in the affected release.
 

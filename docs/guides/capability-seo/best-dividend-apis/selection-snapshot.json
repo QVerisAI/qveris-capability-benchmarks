@@ -4,9 +4,9 @@
   "edition": "2026-08-12",
   "input_digests": {
     "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
-    "input": "sha256:3d293232592e1fcd3c972e0ce624cf57be6372908854d312cda30ca78b7fd839",
+    "input": "sha256:b430fdd0abd458f3003e0cf91243b6573b1181f7f67d6de6b198913174edf9da",
     "market_coverage_cases": "sha256:021508b60f456f0c30c698ee06288221c7080d67035320710f5119fc348fb550",
-    "market_coverage_release": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+    "market_coverage_release": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
     "market_coverage_suite": "sha256:0b133ae5f3252ace61407e4ba30d52e14d4876c7e8c93e2f44f5f59637833048",
     "providers": {
       "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
@@ -25,7 +25,7 @@
     "Explicitly unsupported or contract-inapplicable markets are not called again and remain not_applicable.",
     "QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing."
   ],
-  "market_coverage_release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+  "market_coverage_release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
   "rows": [
     {
       "access_path_id": "alpha-vantage-dividends-qveris",
@@ -100,7 +100,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
@@ -298,7 +298,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": null,
@@ -511,7 +511,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
@@ -684,7 +684,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
@@ -881,7 +881,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
@@ -1068,7 +1068,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-12",
-        "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "results": [
           {
             "applicability_reason": null,

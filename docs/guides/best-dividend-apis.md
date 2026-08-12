@@ -249,7 +249,7 @@ uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
   --expected-digest sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
 uv run qveris-bench release replay \
   releases/dividend-events-market-coverage-2026-q3-v1 \
-  --expected-digest sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3
+  --expected-digest sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
 ```
 
 你可以检查[基础 release](../../releases/dividend-events-2026-q3-v1/release.json)、[市场覆盖 release](../../releases/dividend-events-market-coverage-2026-q3-v1/release.json)、[Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json)、[基础公开证据](../../evidence/dividend-events-2026-q3-v1/)、[市场公开证据](../../evidence/dividend-events-market-coverage-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。市场图中的每一个绿色或橙色单元都能沿 `evidence.json` 的 digest 找到对应 terminal。

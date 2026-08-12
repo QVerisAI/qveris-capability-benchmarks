@@ -72,6 +72,7 @@ class BenchmarkRelease(FrozenModel):
     suite_fingerprint: Sha256
     run_plan_digest: EvidenceRef
     public_evidence_manifest_digest: EvidenceRef | None = None
+    github_artifacts_manifest_digest: EvidenceRef | None = None
     evidence_ids: tuple[StableId, ...] = ()
     outcome_ids: tuple[StableId, ...] = ()
     developer_selection_facts: tuple[ReleaseFact, ...] = ()

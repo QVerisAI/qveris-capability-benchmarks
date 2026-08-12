@@ -8,7 +8,7 @@ from typing import Any
 from pydantic import Field, ValidationError
 
 from qveris_bench.evidence.hashing import sha256_digest
-from qveris_bench.execution.direct_binding import DirectBindingRegistry
+from qveris_bench.execution.direct_binding import DirectBinding, DirectBindingRegistry
 from qveris_bench.models.base import (
     EvidenceRef,
     FrozenModel,
@@ -116,11 +116,12 @@ def assemble_public_terminal_release(
     version: str,
     limitations: tuple[str, ...],
     outcome_validator: Callable[
-        [BenchmarkCase, dict[str, Any]], ValidatedTerminalOutcome
+        [BenchmarkCase, DirectBinding, dict[str, Any]], ValidatedTerminalOutcome
     ],
     expected_github_run_id: str,
     expected_github_sha: str,
     expected_provenance: dict[str, tuple[str, str]],
+    github_artifacts_manifest_bytes: bytes,
 ) -> PublicTerminalReleaseArtifacts:
     planned = {cell.run_key: cell for cell in compiled.run_plan.cells}
     applicable = {key: cell for key, cell in planned.items() if cell.applicable}
@@ -174,7 +175,7 @@ def assemble_public_terminal_release(
                 "terminal filename does not match cell identity"
             )
         expected_outcome = outcome_validator(
-            cases[planned_cell.case_id], terminal.facts
+            cases[planned_cell.case_id], binding, terminal.facts
         )
         if (
             terminal.state is not expected_outcome.state
@@ -223,6 +224,9 @@ def assemble_public_terminal_release(
         {
             "github_run_id": expected_github_run_id,
             "github_sha": expected_github_sha,
+            "github_artifacts_manifest_digest": sha256_digest(
+                github_artifacts_manifest_bytes
+            ),
             "entries": [
                 {
                     "evidence_id": item.evidence_id,
@@ -240,6 +244,7 @@ def assemble_public_terminal_release(
         suite_fingerprint=compiled.fingerprint,
         run_plan_digest=sha256_digest(run_plan_bytes),
         public_evidence_manifest_digest=sha256_digest(public_manifest_bytes),
+        github_artifacts_manifest_digest=sha256_digest(github_artifacts_manifest_bytes),
         evidence_ids=tuple(sorted(item.evidence_id for item in evidence)),
         outcome_ids=tuple(sorted(outcome_ids)),
         limitations=limitations,

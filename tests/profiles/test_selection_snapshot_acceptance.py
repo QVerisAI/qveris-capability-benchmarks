@@ -189,7 +189,7 @@ def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
 def test_ac3_snapshot_rejects_market_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
-        "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
+        "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
         "sha256:" + "0" * 64,
     )
     input_path.write_text(text, encoding="utf-8")

@@ -397,6 +397,7 @@
       "raw_digest": "sha256:a9eb55d1e602b4463185839730cf4aaab5a03eb35e2baa4533bb27387b809ca4"
     }
   ],
+  "github_artifacts_manifest_digest": "sha256:bbfc4384057424cb61522df4f8246026e2f0a482d1954cde4f32be99bd81da32",
   "github_run_id": "31572117228",
   "github_sha": "8df6c53388b1aac119f51236f243b93699128a50"
 }

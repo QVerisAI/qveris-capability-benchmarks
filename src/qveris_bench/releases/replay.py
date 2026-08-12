@@ -107,6 +107,10 @@ def replay_release_dir(
             release.public_evidence_manifest_digest,
             evidence,
         )
+    if release.github_artifacts_manifest_digest is not None:
+        github_manifest = _read_required_file(release_dir, "github-artifacts.json")
+        if sha256_digest(github_manifest) != release.github_artifacts_manifest_digest:
+            raise ReleaseReplayError("GitHub artifacts manifest digest mismatch")
 
     published_digest = release_digest(published)
     if release_dir.name != release.release_id:
