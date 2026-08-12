@@ -50,12 +50,12 @@ release:
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
   input_digest: sha256:891f71adf5b8f328764f15d9e9024ac24d31ef700fccf0308991e147ce1a58fc
-  digest: sha256:238986b05028422bf5f2609946fb9a4e43f8974f10616406a92c6a92c6e20223
+  digest: sha256:2bafe1519a1efa250e34da3872c4a2ccad46cc3e6c8bf64adec884d652b640c8
 qveris_list_pricing:
   id: dividend-events-qveris-list-pricing-2026-08-12
   source: qveris_inspect
   inspected_at: "2026-08-12"
-  digest: sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458
+  digest: sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23
 official_pricing_supplement:
   id: dividend-events-official-pricing-2026-08-12
   source: official_provider_page
@@ -120,4 +120,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:80c079cac1ad651ea3167cd4620bf903bcb9e2adb4794e5eb39bc1d0848a643b
+  selection_charts_manifest_digest: sha256:11421318f19b353a4cb2df849776a972dfd33bfc74f8412864fd12b885ab7a70

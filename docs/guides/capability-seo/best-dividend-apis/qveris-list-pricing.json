@@ -29,7 +29,7 @@
       "tool_id": "alphavantage.dividends.list.v1.467a92c0",
       "snapshot_version": "website-default",
       "inspect_response_digest": "sha256:427b55d28bab007922b903bbc6a9f4a435cbc60ad006cdc8cb08604df093ead0",
-      "amount_credits": 0
+      "amount_credits": 1
     },
     {
       "provider_id": "eodhd",

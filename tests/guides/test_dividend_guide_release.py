@@ -121,7 +121,7 @@ def test_article_publishes_inspect_list_prices_not_discounted_account_costs() ->
     expected = {
         "Hang Seng": "1 credit/call",
         "Twelve Data": "2.37 credits/call",
-        "Alpha Vantage": "0 credits/call",
+        "Alpha Vantage": "1 credit/call",
         "EODHD": "2.81 credits/call",
         "Massive": "1 credit/call",
     }
@@ -478,7 +478,7 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     ):
         assert phrase in article
     assert "491 ms / 2.37 credits/call" in article
-    assert "576 ms / 0 credits/call" in article
+    assert "576 ms / 1 credit/call" in article
     assert "779 ms / 2.81 credits/call" in article
     assert "861 ms / 1 credit/call" in article
     assert "aggregate AI-friendly rating" not in article
@@ -659,15 +659,17 @@ def test_article_price_ranking_and_billing_scope_come_from_snapshot() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     prices = {
-        row["provider_name"]: row["qveris_list_price"]["amount_credits"]
+        _article_provider_name(row): row["qveris_list_price"]["amount_credits"]
         for row in snapshot["rows"]
         if row["qveris_list_price"]["state"] == "declared"
     }
     minimum = min(prices.values())
     lowest = sorted(name for name, amount in prices.items() if amount == minimum)
-    assert lowest == ["Alpha Vantage"]
-    assert "Alpha Vantage had the lowest Inspect price at 0 credits/call" in article
-    assert "followed by Hang Seng and Massive at 1 credit/call" in article
+    assert lowest == ["Alpha Vantage", "Hang Seng", "Massive"]
+    assert (
+        "Alpha Vantage, Hang Seng, and Massive shared the lowest Inspect price at "
+        "1 credit/call"
+    ) in article
     assert "does not use account billing in its tables or charts" in article
 
 

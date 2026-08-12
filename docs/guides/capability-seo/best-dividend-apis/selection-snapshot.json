@@ -18,7 +18,7 @@
       "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
     },
     "qveris_direct_bindings": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",
-    "qveris_list_pricing": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+    "qveris_list_pricing": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
     "suite": "sha256:fc7c1458026ec030a7be24b1786344f128237160d0012ebb64b774d1ded2b6a9"
   },
@@ -215,9 +215,9 @@
       "provider_id": "alpha-vantage",
       "provider_name": "Alpha Vantage",
       "qveris_list_price": {
-        "amount_credits": 0.0,
+        "amount_credits": 1.0,
         "disclosure_level": "sanitized_public",
-        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "evidence_ref": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
         "extractor_version": "1.0.0",
         "inspect_response_digest": "sha256:427b55d28bab007922b903bbc6a9f4a435cbc60ad006cdc8cb08604df093ead0",
         "inspected_at": "2026-08-12",
@@ -443,7 +443,7 @@
       "qveris_list_price": {
         "amount_credits": 2.81,
         "disclosure_level": "sanitized_public",
-        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "evidence_ref": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
         "extractor_version": "1.0.0",
         "inspect_response_digest": "sha256:0d83e13c43be94186a1aeedb15fc61f30c04909d0c0468a5754537f8a142d4f3",
         "inspected_at": "2026-08-12",
@@ -647,7 +647,7 @@
       "qveris_list_price": {
         "amount_credits": 1.0,
         "disclosure_level": "sanitized_public",
-        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "evidence_ref": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
         "extractor_version": "1.0.0",
         "inspect_response_digest": "sha256:62f89f7144d360ecedcf7270e9f040dff5342c6058ed8ef4131c941f75e3defe",
         "inspected_at": "2026-08-12",
@@ -1043,7 +1043,7 @@
       "qveris_list_price": {
         "amount_credits": 1.0,
         "disclosure_level": "sanitized_public",
-        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "evidence_ref": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
         "extractor_version": "1.0.0",
         "inspect_response_digest": "sha256:3354f97acf0bc5c31f3d5385b7cd060bea14e9bc44e3eed96e45da3c1949b890",
         "inspected_at": "2026-08-12",
@@ -1269,7 +1269,7 @@
       "qveris_list_price": {
         "amount_credits": 2.37,
         "disclosure_level": "sanitized_public",
-        "evidence_ref": "sha256:02668fea330753411ca3a2ccd11918476aef663f7171867d3544b731c2001458",
+        "evidence_ref": "sha256:7be689447caf0574b03e8ed6f9e31a7e3d607856d5780eac2ca0b5e61d7cef23",
         "extractor_version": "1.0.0",
         "inspect_response_digest": "sha256:a18bf0acaa59cb5e2798685ce544d1ac6c0e27075d74f12d021c428a1576f2d1",
         "inspected_at": "2026-08-12",

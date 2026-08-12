@@ -1,8 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:865dc53f68a063a40fea96dac699d6ab0c9172c92e26e128596be935c0a2a5ca",
-    "dividend-market-coverage.png": "sha256:da1f20b48d96a9a19af39ecaff7957991f4202f58e7649f71a3e0f058a4e7201"
+    "dividend-runtime-tradeoff.png": "sha256:6d6dcb0ed7010281c463909d705ff92fd00831fbf9c18b1dd89230bb93e64d81",
+    "dividend-market-coverage.png": "sha256:296b8b485839d7836f9ee6a116d7e8129ee888877e19a18b7afc4dac2c1ff12e"
   },
   "data": {
     "rows": [
@@ -22,7 +22,7 @@
         "median_latency_ms": 575.685,
         "min_latency_ms": 383.85,
         "max_latency_ms": 1783.63,
-        "list_price_credits": 0.0,
+        "list_price_credits": 1.0,
         "price_inspected_at": "2026-08-12",
         "latency_samples": 6
       },
@@ -651,7 +651,7 @@
     }
   },
   "input_digests": {
-    "selection_snapshot": "sha256:238986b05028422bf5f2609946fb9a4e43f8974f10616406a92c6a92c6e20223"
+    "selection_snapshot": "sha256:2bafe1519a1efa250e34da3872c4a2ccad46cc3e6c8bf64adec884d652b640c8"
   },
   "rendered_at": "2026-08-12"
 }
