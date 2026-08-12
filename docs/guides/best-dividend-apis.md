@@ -215,7 +215,7 @@ Developers can propose [CAP methods and cases](https://github.com/QVerisAI/qveri
 - QVeris operates some tested Access Paths, but the rules, terminal evidence, and reproduction entry points are public. This article does not accept paid ranking.
 - Hang Seng's representative CN sample was 2/2. This does not establish support for every mainland China security or historical interval.
 
-The public evidence, test rules, and reproduction entry points are available in [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks).
+The public evidence, test rules, and reproduction entry points are available from the GitHub repository linked in the reproduction section above.
 
 ## FAQ
 
@@ -241,4 +241,4 @@ Use them only to prioritize reproduction within the same QVeris gateway boundary
 
 ### Can I reproduce the test with my own API key?
 
-Yes. QVeris-integrated providers use one `QVERIS_API_KEY`; iFinD uses its own Native MCP key. Keep the same inputs, rules, and round counts, and publish a new Release if results change instead of overwriting old evidence. Start with the [public repository](https://github.com/QVerisAI/qveris-capability-benchmarks), replay the Releases offline, then rerun the live workflow before committing to a provider.
+Yes. QVeris-integrated providers use one `QVERIS_API_KEY`; iFinD uses its own Native MCP key. Keep the same inputs, rules, and round counts, and publish a new Release if results change instead of overwriting old evidence. Start from the reproduction section above, replay the Releases offline, then rerun the live workflow before committing to a provider.

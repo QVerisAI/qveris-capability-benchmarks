@@ -83,6 +83,13 @@ seo:
       url: https://qveris.ai/guides/capability-discovery-ai-agents/
     - anchor: QVeris CLI guide
       url: https://qveris.ai/guides/qveris-cli/
+  github_links:
+    - https://github.com/QVerisAI/qveris-capability-benchmarks
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/.github/workflows/live-dividend-events-e2e.yml
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/.github/workflows/live-dividend-market-coverage-e2e.yml
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=provider-submission.yml
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=cap-method-proposal.yml
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=result-challenge.yml
   supplier_sites:
     恒生聚源: https://www.gildata.com/products/core-data.html
     同花顺 iFinD: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md

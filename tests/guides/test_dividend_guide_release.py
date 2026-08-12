@@ -879,11 +879,14 @@ def test_article_relative_links_resolve_in_repository() -> None:
 
 def test_article_uses_one_public_github_entry_for_reproduction_artifacts() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     repository_url = "https://github.com/QVerisAI/qveris-capability-benchmarks"
 
     assert (
         article.count(f"[public benchmark repository on GitHub]({repository_url})") == 1
     )
+    github_urls = re.findall(r"\]\((https://github\.com/[^)]+)\)", article)
+    assert github_urls == manifest["seo"]["github_links"]
     for noisy_anchor in (
         "baseline Release",
         "market Release",
