@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import Field, HttpUrl, StrictBool, model_validator
@@ -204,6 +204,7 @@ class MarketCoverageSnapshot(FrozenModel):
     tested_evidence_refs: tuple[EvidenceRef, ...] = ()
     sv_namespace: str = Field(min_length=1)
     sv_state: MeasurementState
+    sv_observation_window: ObservationWindow | None = None
     sv_verified_markets: tuple[str, ...] = ()
     sv_evidence_refs: tuple[EvidenceRef, ...] = ()
 
@@ -213,10 +214,14 @@ class MarketCoverageSnapshot(FrozenModel):
             raise ValueError("tested markets require Direct Test evidence")
         if self.sv_state == "measured" and not self.sv_evidence_refs:
             raise ValueError("measured SV coverage requires evidence")
+        if self.sv_state == "measured" and self.sv_observation_window is None:
+            raise ValueError("measured SV coverage requires its observation window")
         if self.sv_state in {"evidence_insufficient", "not_applicable"} and (
             self.sv_verified_markets or self.sv_evidence_refs
         ):
             raise ValueError("unmeasured SV coverage cannot carry verified markets")
+        if self.sv_state == "not_applicable" and self.sv_observation_window is not None:
+            raise ValueError("not-applicable SV coverage cannot carry a window")
         return self
 
 
@@ -260,6 +265,8 @@ class ScopeValidationSnapshot(FrozenModel):
     observation_window: ObservationWindow
     suite_fingerprint: Sha256
     extractor_version: SemanticVersion
+    source_snapshot_digest: EvidenceRef
+    source_snapshot_captured_at: datetime
     disclosure_level: DisclosureLevel
     license_status: LicenseStatus
     results: tuple[ScopeValidationResult, ...]

@@ -1,11 +1,11 @@
 {
   "cap_id": "dividend-events",
   "cap_release_digest": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
-  "edition": "2026-08-11",
+  "edition": "2026-08-12",
   "input_digests": {
     "case_markets": "sha256:0e25f158fcb64f80603be4ad9b3843ee994c6af79bbe03521bccbe9d421060a0",
     "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
-    "input": "sha256:ced4a77c8647e67a6cd901f780ec138c47c6b146e992ac55581d9ee0260da297",
+    "input": "sha256:fc49e651241ca7e6d29c1902c3c873633ae0984b25ac0799a1aaaebd4802a812",
     "providers": {
       "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
       "eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
@@ -14,13 +14,14 @@
       "massive-stocks": "sha256:64b50bc3ec8fff193b4ef7a6f5f35d9a2f5f908760ff0d7b30579b3436e7a221",
       "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
     },
-    "qveris_sv": null,
+    "qveris_sv": "sha256:4167c545fb2aa4bea55c92cf0c2761d62b2bf86ab4ca0e259de199a41deae90d",
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
     "suite": "sha256:fc7c1458026ec030a7be24b1786344f128237160d0012ebb64b774d1ded2b6a9"
   },
   "limitations": [
     "Tested markets are fixed Direct Test samples, not comprehensive market coverage.",
-    "No publishable MKT.DIVIDENDS QVeris SV snapshot is bound to this edition.",
+    "QVeris SV verified markets measure Tool-by-Capability reachability, not field completeness, history depth, licensing, or SLA.",
+    "Paths without a positive verified market in the bound QVeris SV snapshot remain evidence-insufficient, not unsupported.",
     "QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing."
   ],
   "rows": [
@@ -98,6 +99,10 @@
       "market_coverage": {
         "sv_evidence_refs": [],
         "sv_namespace": "MKT.DIVIDENDS",
+        "sv_observation_window": {
+          "end": "2026-08-12",
+          "start": "2026-07-20"
+        },
         "sv_state": "evidence_insufficient",
         "sv_verified_markets": [],
         "tested_evidence_refs": [
@@ -218,10 +223,64 @@
         "state": "measured"
       },
       "market_coverage": {
-        "sv_evidence_refs": [],
+        "sv_evidence_refs": [
+          "sha256:032b2b3ccaaec1448a0fc60ab1734de36e66430615c000a79c288c47a163a31a",
+          "sha256:0e5f0aef725364a3858a75a04210c89fe7521e677f8b8ab62a1ef9d3d3587de6",
+          "sha256:22db6342e6cb293b01c39235601dd4075e32d38a14356e6ee16f6ad7a84ad77a",
+          "sha256:22ebd00052658fdf988366b01e8dc9b52f7717e252f19d1b0ebfe59e2632b189",
+          "sha256:25cb2d0f5e39cec4d6ba03ad9cb47c6131dd552da54053787b6af400d6bbe4b4",
+          "sha256:3e8cc0a31ab049c48373dd35d777057443c036d2a3cc82eb06428a540ba1d88b",
+          "sha256:447a990b60feaacc7eacabf62b7268bc11c0e645c07f45a01eae8637c415df9d",
+          "sha256:49f124a88bc48bab2bdf349ff57e5d071a2eba6fbdde9b41a5715a13c8acba12",
+          "sha256:5a3503e81b81fea4c86052428288489c98c794ede9bd2794c2c1f3ab76ac082b",
+          "sha256:7e0955871a28e0ff0ac2fdba85ae32fc9ea5ccc5cf72b15932271a07de46785a",
+          "sha256:84991b64ce6edeb57469df18acd2ba815cb8e9898b1893155954f2ca5d829d36",
+          "sha256:a4589ed18180f477d65217e7babfda9214e0e18af99829422fc9d553f236117d",
+          "sha256:b962a8cd2ddb3485ef228871bd652d574e7da82991caf6556ba94ca004aed462",
+          "sha256:d1ad58d50c7a1a823e37201504b9b9871998ab35c13b83e0fac5750eb86d9444",
+          "sha256:d2082313a0ea02d4ab8d89f0d9f4d8099046de2dbd398752952b9613ac6d71d8",
+          "sha256:e4c407a6f99984f1413f05453a185c68f59fbdc96328fd51063e9bc9faf0623a",
+          "sha256:e59c91e76cdaba7f6dc3e1ccf07a9fb0843b655260bd2aaa394280d3847cfeb7",
+          "sha256:e7a964856ac670f3c74809fba33ada457914fb20f831c42d8254adf8b9a0bcb5",
+          "sha256:ea19cd670e70e62e01e94351929b3f1565d55136c35f9cb3d6b0a164f15faa93",
+          "sha256:ea8969fc079935d2420d81b89c0eaa1343ad8b512ff945c2c7121e5e2410ce09",
+          "sha256:ec1a32c690c80ec7da94d165cd5d0a86b573f499e2ce16d3673f4b25408acb7f",
+          "sha256:f0dd98466a391dca8ea642775d9140e626316423ded1044acf66bcd93a797298",
+          "sha256:f87663807cedcd3f6c423e80ea0f85f7de4ae73e38508911f6452296738f6e0d",
+          "sha256:fb1fd23cca8050a5555fe81574329cf98e7fc00d6d8e8fa6811c3d33c5954863"
+        ],
         "sv_namespace": "MKT.DIVIDENDS",
-        "sv_state": "evidence_insufficient",
-        "sv_verified_markets": [],
+        "sv_observation_window": {
+          "end": "2026-08-12",
+          "start": "2026-07-20"
+        },
+        "sv_state": "measured",
+        "sv_verified_markets": [
+          "AT",
+          "BE",
+          "BR",
+          "CH",
+          "CL",
+          "CO",
+          "CZ",
+          "DE",
+          "DK",
+          "ES",
+          "FI",
+          "FR",
+          "GR",
+          "HK",
+          "ID",
+          "IE",
+          "NL",
+          "NO",
+          "PH",
+          "PT",
+          "SE",
+          "TH",
+          "TW",
+          "US"
+        ],
         "tested_evidence_refs": [
           "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
           "sha256:71f353bfe03fc39905511e6a4b97a93cdd2955779443f1cd136e8291bbfb84dd",
@@ -340,10 +399,18 @@
         "state": "measured"
       },
       "market_coverage": {
-        "sv_evidence_refs": [],
+        "sv_evidence_refs": [
+          "sha256:a6fea05dc648767b271488599c2cca2555d045f370b3113b696e0effa3c18d7c"
+        ],
         "sv_namespace": "MKT.DIVIDENDS",
-        "sv_state": "evidence_insufficient",
-        "sv_verified_markets": [],
+        "sv_observation_window": {
+          "end": "2026-08-12",
+          "start": "2026-07-20"
+        },
+        "sv_state": "measured",
+        "sv_verified_markets": [
+          "CN"
+        ],
         "tested_evidence_refs": [
           "sha256:4eb6ed2fe0163e5bed8bc5bd0ce4df5a074c83c1288d61d4e9fafdfbd6fbd109",
           "sha256:4f2bbbca398abf2c1db79e85a586b43c5362cd81d223ae09cdbdc504b950ffc2",
@@ -448,6 +515,7 @@
       "market_coverage": {
         "sv_evidence_refs": [],
         "sv_namespace": "MKT.DIVIDENDS",
+        "sv_observation_window": null,
         "sv_state": "not_applicable",
         "sv_verified_markets": [],
         "tested_evidence_refs": [
@@ -572,6 +640,10 @@
       "market_coverage": {
         "sv_evidence_refs": [],
         "sv_namespace": "MKT.DIVIDENDS",
+        "sv_observation_window": {
+          "end": "2026-08-12",
+          "start": "2026-07-20"
+        },
         "sv_state": "evidence_insufficient",
         "sv_verified_markets": [],
         "tested_evidence_refs": [
@@ -692,6 +764,10 @@
       "market_coverage": {
         "sv_evidence_refs": [],
         "sv_namespace": "MKT.DIVIDENDS",
+        "sv_observation_window": {
+          "end": "2026-08-12",
+          "start": "2026-07-20"
+        },
         "sv_state": "evidence_insufficient",
         "sv_verified_markets": [],
         "tested_evidence_refs": [

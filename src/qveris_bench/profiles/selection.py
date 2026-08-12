@@ -139,13 +139,16 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     sv_spec = _mapping(config, "qveris_sv")
     sv_namespace = _string(sv_spec, "namespace")
     window = ObservationWindow.model_validate(_mapping(config, "observation_window"))
+    edition = date.fromisoformat(_string(config, "edition"))
     if suite.environment.get("as_of") != window.start.isoformat() or (
         window.start != window.end
     ):
         raise SelectionSnapshotBuildError(
             "observation window does not match suite as_of"
         )
-    sv_results, sv_digest = _load_sv_results(sv_spec, root, sv_namespace, window)
+    sv_results, sv_digest, sv_window = _load_sv_results(
+        sv_spec, root, sv_namespace, edition
+    )
     unknown_sv_identities = set(sv_results) - set(identity_cells)
     if unknown_sv_identities:
         provider_id, access_path_id = sorted(unknown_sv_identities)[0]
@@ -210,6 +213,7 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                     evidence_by_run_key,
                     sv_namespace,
                     sv_results.get((provider_id, access_path_id), []),
+                    sv_window,
                     sv_applicable=is_qveris,
                 ),
                 agent_interface=_agent_interface(
@@ -221,7 +225,7 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     snapshot = SelectionSnapshot(
         snapshot_id=_string(config, "snapshot_id"),
         version=_string(config, "version"),
-        edition=date.fromisoformat(_string(config, "edition")),
+        edition=edition,
         cap_id=cap_id,
         cap_release_digest=actual_release_digest,
         input_digests={
@@ -383,6 +387,7 @@ def _market_coverage(
     evidence_by_run_key: dict[str, dict[str, Any]],
     namespace: str,
     sv_results: list[dict[str, Any]],
+    sv_window: ObservationWindow | None,
     *,
     sv_applicable: bool,
 ) -> MarketCoverageSnapshot:
@@ -407,6 +412,7 @@ def _market_coverage(
         tested_evidence_refs=tuple(sorted(refs)),
         sv_namespace=namespace,
         sv_state=sv_state,
+        sv_observation_window=sv_window if sv_applicable else None,
         sv_verified_markets=tuple(
             sorted(str(item["market"]) for item in sv_results if item.get("supported"))
         ),
@@ -420,13 +426,17 @@ def _load_sv_results(
     spec: dict[str, Any],
     root: Path,
     expected_namespace: str,
-    expected_window: ObservationWindow,
-) -> tuple[dict[tuple[str, str], list[dict[str, Any]]], str | None]:
+    selection_edition: date,
+) -> tuple[
+    dict[tuple[str, str], list[dict[str, Any]]],
+    str | None,
+    ObservationWindow | None,
+]:
     relative = spec.get("snapshot")
     if relative is None:
         if spec.get("snapshot_digest") is not None:
             raise SelectionSnapshotBuildError("QVeris SV digest requires a snapshot")
-        return {}, None
+        return {}, None, None
     if not isinstance(relative, str) or not relative:
         raise SelectionSnapshotBuildError("qveris_sv.snapshot must be a path or null")
     path = root / relative
@@ -439,8 +449,10 @@ def _load_sv_results(
         raise SelectionSnapshotBuildError(f"invalid QVeris SV snapshot: {exc}") from exc
     if snapshot.namespace != expected_namespace:
         raise SelectionSnapshotBuildError("QVeris SV namespace mismatch")
-    if snapshot.observation_window != expected_window:
-        raise SelectionSnapshotBuildError("QVeris SV observation window mismatch")
+    if snapshot.observation_window.end > selection_edition or (
+        snapshot.source_snapshot_captured_at.date() > selection_edition
+    ):
+        raise SelectionSnapshotBuildError("QVeris SV occurs after selection edition")
     if (
         snapshot.disclosure_level is not DisclosureLevel.SANITIZED_PUBLIC
         or snapshot.license_status is not LicenseStatus.CLEARED
@@ -450,7 +462,7 @@ def _load_sv_results(
     for result in snapshot.results:
         identity = (result.provider_id, result.access_path_id)
         results.setdefault(identity, []).append(result.model_dump(mode="json"))
-    return results, actual_digest
+    return results, actual_digest, snapshot.observation_window
 
 
 def _validate_release_projection(

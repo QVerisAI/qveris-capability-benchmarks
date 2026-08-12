@@ -1,6 +1,6 @@
 snapshot_id: dividend-events-selection-2026-q3-v1
 version: 1.0.0
-edition: "2026-08-11"
+edition: "2026-08-12"
 cap_id: dividend-events
 cap_release:
   release: releases/dividend-events-2026-q3-v1/release.json
@@ -14,9 +14,10 @@ observation_window:
   end: "2026-08-11"
 qveris_sv:
   namespace: MKT.DIVIDENDS
-  snapshot: null
-  snapshot_digest: null
+  snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-sv-snapshot.json
+  snapshot_digest: sha256:4167c545fb2aa4bea55c92cf0c2761d62b2bf86ab4ca0e259de199a41deae90d
 limitations:
   - Tested markets are fixed Direct Test samples, not comprehensive market coverage.
-  - No publishable MKT.DIVIDENDS QVeris SV snapshot is bound to this edition.
+  - QVeris SV verified markets measure Tool-by-Capability reachability, not field completeness, history depth, licensing, or SLA.
+  - Paths without a positive verified market in the bound QVeris SV snapshot remain evidence-insufficient, not unsupported.
   - QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing.

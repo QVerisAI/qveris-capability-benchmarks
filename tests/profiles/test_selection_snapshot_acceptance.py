@@ -6,10 +6,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import yaml
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import (
     GatewayMetricsSnapshot,
+    ObservationWindow,
     OfficialPricingSnapshot,
     RunObservationsSnapshot,
 )
@@ -21,6 +23,15 @@ from qveris_bench.profiles.selection import (
 
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml"
+
+
+def _selection_input_with_sv(tmp_path: Path, sv_path: Path) -> Path:
+    document = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
+    document["qveris_sv"]["snapshot"] = str(sv_path)
+    document["qveris_sv"]["snapshot_digest"] = _digest(sv_path)
+    path = tmp_path / "selection.yaml"
+    path.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
+    return path
 
 
 def test_ac1_snapshot_is_deterministic_scoped_and_digest_bound() -> None:
@@ -53,12 +64,43 @@ def test_ac3_snapshot_separates_tested_markets_from_verified_sv() -> None:
     assert rows["twelve-data-dividends-qveris"].market_coverage.tested_markets == (
         "US",
     )
-    for access_path_id, row in rows.items():
-        if access_path_id == "ifind-native-mcp":
-            assert row.market_coverage.sv_state == "not_applicable"
-        else:
-            assert row.market_coverage.sv_state == "evidence_insufficient"
-            assert row.market_coverage.sv_verified_markets == ()
+    assert rows["ifind-native-mcp"].market_coverage.sv_state == "not_applicable"
+    assert rows["hangseng-dividends-qveris"].market_coverage.sv_verified_markets == (
+        "CN",
+    )
+    assert rows["eodhd-dividends-qveris"].market_coverage.sv_verified_markets == (
+        "AT",
+        "BE",
+        "BR",
+        "CH",
+        "CL",
+        "CO",
+        "CZ",
+        "DE",
+        "DK",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HK",
+        "ID",
+        "IE",
+        "NL",
+        "NO",
+        "PH",
+        "PT",
+        "SE",
+        "TH",
+        "TW",
+        "US",
+    )
+    for access_path_id in (
+        "twelve-data-dividends-qveris",
+        "alpha-vantage-dividends-qveris",
+        "massive-stocks-dividends-qveris",
+    ):
+        assert rows[access_path_id].market_coverage.sv_state == "evidence_insufficient"
+        assert rows[access_path_id].market_coverage.sv_verified_markets == ()
 
 
 def test_ac4_gateway_metrics_never_leak_into_native_path() -> None:
@@ -168,9 +210,11 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
         "snapshot_id": "dividend-sv-2026-q3-v1",
         "version": "1.0.0",
         "namespace": "MKT.DIVIDENDS",
-        "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
+        "observation_window": {"start": "2026-07-20", "end": "2026-08-11"},
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
+        "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
         "results": [
@@ -185,14 +229,7 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
     }
     sv_path.write_text(json.dumps(sv_document), encoding="utf-8")
     sv_digest = _digest(sv_path)
-    input_path = tmp_path / "selection.yaml"
-    input_path.write_text(
-        INPUT.read_text(encoding="utf-8").replace(
-            "snapshot: null\n  snapshot_digest: null",
-            f"snapshot: {sv_path}\n  snapshot_digest: {sv_digest}",
-        ),
-        encoding="utf-8",
-    )
+    input_path = _selection_input_with_sv(tmp_path, sv_path)
 
     rows = {
         row.access_path_id: row
@@ -202,6 +239,9 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
     assert coverage.sv_state == "measured"
     assert coverage.sv_verified_markets == ("US",)
     assert coverage.sv_evidence_refs == ("sha256:" + "a" * 64,)
+    assert coverage.sv_observation_window == ObservationWindow(
+        start="2026-07-20", end="2026-08-11"
+    )
 
     sv_path.write_text(
         sv_path.read_text(encoding="utf-8").replace(
@@ -222,8 +262,8 @@ def test_ac3_snapshot_consumes_only_identity_matched_sv_results(
     [
         (("supported", "false"), "valid boolean"),
         (
-            ("observation_window", {"start": "2026-08-10", "end": "2026-08-10"}),
-            "window mismatch",
+            ("observation_window", {"start": "2026-08-13", "end": "2026-08-13"}),
+            "after selection edition",
         ),
         (("disclosure_level", "private"), "publishable provenance"),
     ],
@@ -238,6 +278,8 @@ def test_ac3_snapshot_rejects_untrusted_sv(
         "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
+        "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
         "results": [
@@ -257,14 +299,7 @@ def test_ac3_snapshot_rejects_untrusted_sv(
         document[key] = value
     sv_path = tmp_path / "sv.json"
     sv_path.write_text(json.dumps(document), encoding="utf-8")
-    input_path = tmp_path / "selection.yaml"
-    input_path.write_text(
-        INPUT.read_text().replace(
-            "snapshot: null\n  snapshot_digest: null",
-            f"snapshot: {sv_path}\n  snapshot_digest: {_digest(sv_path)}",
-        ),
-        encoding="utf-8",
-    )
+    input_path = _selection_input_with_sv(tmp_path, sv_path)
 
     with pytest.raises(SelectionSnapshotBuildError, match=message):
         build_selection_snapshot(input_path, ROOT)
@@ -278,6 +313,8 @@ def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
         "observation_window": {"start": "2026-08-11", "end": "2026-08-11"},
         "suite_fingerprint": "b" * 64,
         "extractor_version": "1.0.0",
+        "source_snapshot_digest": "sha256:" + "c" * 64,
+        "source_snapshot_captured_at": "2026-08-11T00:00:00+00:00",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared",
         "results": [
@@ -293,14 +330,7 @@ def test_ac3_snapshot_rejects_duplicate_sv_scope(tmp_path: Path) -> None:
     }
     sv_path = tmp_path / "sv.json"
     sv_path.write_text(json.dumps(document), encoding="utf-8")
-    input_path = tmp_path / "selection.yaml"
-    input_path.write_text(
-        INPUT.read_text().replace(
-            "snapshot: null\n  snapshot_digest: null",
-            f"snapshot: {sv_path}\n  snapshot_digest: {_digest(sv_path)}",
-        ),
-        encoding="utf-8",
-    )
+    input_path = _selection_input_with_sv(tmp_path, sv_path)
 
     with pytest.raises(SelectionSnapshotBuildError, match="duplicate QVeris SV scope"):
         build_selection_snapshot(input_path, ROOT)

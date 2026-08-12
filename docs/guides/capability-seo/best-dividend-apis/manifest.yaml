@@ -1,7 +1,7 @@
 schema_version: 1
 benchmark_id: dividend-events-2026-q3-v1
 article_slug: best-dividend-apis
-edition: "2026-08-11"
+edition: "2026-08-12"
 search_intent: 对比分红数据 API 的事件语义、实测运行成本、价格与市场证据，帮助开发者完成单能力选型
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
@@ -38,8 +38,13 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:ced4a77c8647e67a6cd901f780ec138c47c6b146e992ac55581d9ee0260da297
-  digest: sha256:11d169f1565b4e72d49c4e06f2a4dcde6ffebd3fd8be17b7b2d7707d1baa62e6
+  input_digest: sha256:fc49e651241ca7e6d29c1902c3c873633ae0984b25ac0799a1aaaebd4802a812
+  digest: sha256:aa725ea1633eda3387a75d931db80adb976e9dc307cb9e0e42e2c990b1ac17b3
+qveris_sv:
+  id: qveris-dividend-sv-2026-q3-v1
+  digest: sha256:4167c545fb2aa4bea55c92cf0c2761d62b2bf86ab4ca0e259de199a41deae90d
+  observation_window: {start: "2026-07-20", end: "2026-08-12"}
+  verified_results: 25
 seo:
   title: "2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南"
   meta_description: "2026 年实测 6 家分红数据 API：对比事件字段、无效代码、QVeris 延迟与 credits、官方价格、市场证据及 Agent 接入风险，附公开证据与复测方法。"
@@ -75,6 +80,7 @@ artifacts:
   public_evidence: evidence/dividend-events-2026-q3-v1
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
+  qveris_sv_snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-sv-snapshot.json
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png

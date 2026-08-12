@@ -224,6 +224,16 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert manifest["selection_snapshot"]["input_digest"] == (
         f"sha256:{hashlib.sha256(snapshot_input.read_bytes()).hexdigest()}"
     )
+    sv_snapshot = ROOT / manifest["artifacts"]["qveris_sv_snapshot"]
+    assert manifest["qveris_sv"]["digest"] == (
+        f"sha256:{hashlib.sha256(sv_snapshot.read_bytes()).hexdigest()}"
+    )
+    sv_document = json.loads(sv_snapshot.read_text(encoding="utf-8"))
+    assert sv_document["disclosure_level"] == "sanitized_public"
+    assert sv_document["license_status"] == "cleared"
+    assert len(sv_document["results"]) == 25
+    assert all(result["supported"] is True for result in sv_document["results"])
+    assert "tool_id" not in sv_snapshot.read_text(encoding="utf-8")
 
 
 def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
@@ -246,6 +256,24 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     assert "861 ms / 0.100 credits" in article
     assert "综合 AI 友好度" not in article
     assert "已验证全球市场覆盖" not in article
+
+
+def test_article_publishes_measured_sv_coverage_near_the_decision_table() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    market_rows = _markdown_table_rows(article, "本次固定市场样本")
+
+    assert "QVeris SV 市场证据" in article.split("## 为什么分红 API", 1)[0]
+    assert "24 个已验证市场" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
+    assert "CN 已验证" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
+    eodhd = next(row for row in snapshot["rows"] if row["provider_id"] == "eodhd")
+    assert eodhd["market_coverage"]["sv_state"] == "measured"
+    assert len(eodhd["market_coverage"]["sv_verified_markets"]) == 24
+    eodhd_market_row = _provider_row(market_rows, "EODHD", "QVeris")
+    for market in eodhd["market_coverage"]["sv_verified_markets"]:
+        assert market in eodhd_market_row[2]
+    assert "SV 验证的是这条 Tool × Capability 的市场可达性" in article
 
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:

@@ -1,0 +1,192 @@
+{
+  "disclosure_level": "sanitized_public",
+  "extractor_version": "1.0.0",
+  "license_status": "cleared",
+  "namespace": "MKT.DIVIDENDS",
+  "observation_window": {
+    "end": "2026-08-12",
+    "start": "2026-07-20"
+  },
+  "results": [
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:f0dd98466a391dca8ea642775d9140e626316423ded1044acf66bcd93a797298",
+      "market": "AT",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:0e5f0aef725364a3858a75a04210c89fe7521e677f8b8ab62a1ef9d3d3587de6",
+      "market": "BE",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:a4589ed18180f477d65217e7babfda9214e0e18af99829422fc9d553f236117d",
+      "market": "BR",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:ea8969fc079935d2420d81b89c0eaa1343ad8b512ff945c2c7121e5e2410ce09",
+      "market": "CH",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:d1ad58d50c7a1a823e37201504b9b9871998ab35c13b83e0fac5750eb86d9444",
+      "market": "CL",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:84991b64ce6edeb57469df18acd2ba815cb8e9898b1893155954f2ca5d829d36",
+      "market": "CO",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:fb1fd23cca8050a5555fe81574329cf98e7fc00d6d8e8fa6811c3d33c5954863",
+      "market": "CZ",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:e59c91e76cdaba7f6dc3e1ccf07a9fb0843b655260bd2aaa394280d3847cfeb7",
+      "market": "DE",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:3e8cc0a31ab049c48373dd35d777057443c036d2a3cc82eb06428a540ba1d88b",
+      "market": "DK",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:7e0955871a28e0ff0ac2fdba85ae32fc9ea5ccc5cf72b15932271a07de46785a",
+      "market": "ES",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:447a990b60feaacc7eacabf62b7268bc11c0e645c07f45a01eae8637c415df9d",
+      "market": "FI",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:49f124a88bc48bab2bdf349ff57e5d071a2eba6fbdde9b41a5715a13c8acba12",
+      "market": "FR",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:032b2b3ccaaec1448a0fc60ab1734de36e66430615c000a79c288c47a163a31a",
+      "market": "GR",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:5a3503e81b81fea4c86052428288489c98c794ede9bd2794c2c1f3ab76ac082b",
+      "market": "HK",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:22ebd00052658fdf988366b01e8dc9b52f7717e252f19d1b0ebfe59e2632b189",
+      "market": "ID",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:b962a8cd2ddb3485ef228871bd652d574e7da82991caf6556ba94ca004aed462",
+      "market": "IE",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:25cb2d0f5e39cec4d6ba03ad9cb47c6131dd552da54053787b6af400d6bbe4b4",
+      "market": "NL",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:22db6342e6cb293b01c39235601dd4075e32d38a14356e6ee16f6ad7a84ad77a",
+      "market": "NO",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:f87663807cedcd3f6c423e80ea0f85f7de4ae73e38508911f6452296738f6e0d",
+      "market": "PH",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:d2082313a0ea02d4ab8d89f0d9f4d8099046de2dbd398752952b9613ac6d71d8",
+      "market": "PT",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:e7a964856ac670f3c74809fba33ada457914fb20f831c42d8254adf8b9a0bcb5",
+      "market": "SE",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:ec1a32c690c80ec7da94d165cd5d0a86b573f499e2ce16d3673f4b25408acb7f",
+      "market": "TH",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:e4c407a6f99984f1413f05453a185c68f59fbdc96328fd51063e9bc9faf0623a",
+      "market": "TW",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "evidence_ref": "sha256:ea19cd670e70e62e01e94351929b3f1565d55136c35f9cb3d6b0a164f15faa93",
+      "market": "US",
+      "provider_id": "eodhd",
+      "supported": true
+    },
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "evidence_ref": "sha256:a6fea05dc648767b271488599c2cca2555d045f370b3113b696e0effa3c18d7c",
+      "market": "CN",
+      "provider_id": "hangseng",
+      "supported": true
+    }
+  ],
+  "snapshot_id": "qveris-dividend-sv-2026-q3-v1",
+  "source_snapshot_captured_at": "2026-08-12T01:53:36.162588Z",
+  "source_snapshot_digest": "sha256:daf493c91d27002edde7f02eb509c2c3610edac0f50ba94bbfd9ff34e1a38328",
+  "suite_fingerprint": "86b128a3c73a12250b69efdb8fccf325d494e488e4fb436d651e9a18ac1feb77",
+  "version": "1.0.0"
+}
