@@ -94,10 +94,6 @@ seo:
     Alpha Vantage: https://qveris.ai/providers/alphavantage
     EODHD: https://qveris.ai/providers/eodhd
     Massive: https://qveris.ai/providers/massive_stocks
-  related_guides:
-    Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
-    AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
-    Best Free Stock APIs: https://qveris.ai/guides/stock-api-free-comparison/
 artifacts:
   article: docs/guides/best-dividend-apis.md
   cases: cap_packs/dividend_events/cases.yaml
@@ -116,9 +112,7 @@ artifacts:
   qveris_list_pricing: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
   official_pricing_supplement: docs/guides/capability-seo/best-dividend-apis/official-pricing-supplement.json
   charts:
-    - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
-  charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
   selection_charts_manifest_digest: sha256:c7f8521b1773c9f74af39322d4ed56171f7d67517b79bcf4f39c87b53e99b1fe

@@ -1,6 +1,6 @@
 # 2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南
 
-如果你的应用需要一条可以直接进入事件日历、收益回测或现金流模型的分红记录，最低要求不是“接口返回了数据”，而是能确认**证券身份、除权除息日和单次每股现金金额**。本次固定样本中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮完成了这项任务；恒生聚源的基础样本因证券身份无法确认而保持证据不足；同花顺 iFinD Native MCP 返回年度累计单位分红，但没有形成可绑定日期的单次 Dividend Event。
+如果你的应用需要一条可以直接进入事件日历、收益回测或现金流模型的分红记录，最低要求不是“接口返回了数据”，而是能确认**证券身份、除权除息日和单次每股现金金额**。本次固定样本中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮完成了这项任务；恒生聚源的 CN 代表样本连续 2 轮完成任务；同花顺 iFinD Native MCP 返回年度累计单位分红，但没有形成可绑定日期的单次 Dividend Event。
 
 我们另外对 US、HK、CN、JP、DE、FR、BR、IN、ES 九个代表市场做了两轮复测。这里发布的是**代表市场样本结果**，不是供应商全部证券和历史区间的覆盖承诺。
 
@@ -22,7 +22,7 @@
 
 | 供应商与 Access Path | 本次 Dividend Event 样本结论 | QVeris gateway 延迟中位数 / QVeris Inspect 公开标价 | Native 官方价格入口 | 9 个代表市场样本 |
 |---|---|---:|---|---|
-| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **证据不足**：基础样本有日期和金额，但返回证券身份无法确认；修正后的 CN 新样本通过（2/2） | 623 ms / 1 credit/call | 未公开标准价，商务询价 | CN 通过（2/2）；其余 8 个未测试：明确不适用 |
+| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **本次 CN 样本通过**：连续两轮返回可核验的证券身份、除权除息日和单次金额 | 623 ms / 1 credit/call | 未公开标准价，商务询价 | CN 通过（2/2）；其余 8 个未测试：明确不适用 |
 | [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | **本次样本未通过**：缺少单次事件日期，年度累计值也不能证明本次事件金额 | 不适用，Native MCP 不混入 QVeris 指标 | 个人版 CNY 40/月起，5,000 次请求 | US、HK、CN 本次代表样本未通过（0/2）；其余 6 个未测试：明确不适用 |
 | [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **本次样本通过**：AAPL 三轮均返回除权除息日和单次金额；无效 symbol 三轮均未产生伪事件 | 491 ms / 2.37 credits/call | Grow USD 29/月起；免费层 800 credits/日 | 6 个市场通过（2/2）；HK、CN、ES 本次代表样本未通过（0/2） |
 | [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **本次样本通过**：AAPL 正向样本与无效 symbol 控制均连续三轮满足门槛 | 576 ms / 0 credits/call | Premium USD 49.99/月起；免费层 25 次/日 | 4 个适用市场通过（2/2）；5 个未测试：明确不适用 |
@@ -33,7 +33,6 @@
 
 - **本次样本通过**：冻结输入的全部轮次都完成了当前 CAP 定义的任务。
 - **本次样本未通过**：已经真实调用，但结果缺少必要语义或字段。
-- **证据不足**：响应可能包含有用字段，但当前证据不能证明它可以安全使用。
 - **未测试：明确不适用**：QVeris 或 Access Path 合同已明确不支持，因此没有浪费调用继续探测。
 
 “本次样本通过”不等于生产 SLA，也不代表所有证券、市场、日期范围和授权场景都可用。
@@ -54,7 +53,7 @@ Twelve Data、Alpha Vantage、EODHD 和 Massive 都进入优先复测名单。�
 
 ### 主要处理 A 股分红
 
-恒生聚源修正身份提取后的 CN 代表样本通过（2/2），可以作为优先复测候选。但基础三轮样本仍因身份问题保持证据不足；要升级基础结论，需要生成新的三轮 successor release，而不是改写旧证据。iFinD Native MCP 在 CN 两轮仍缺单次事件日期与金额语义。
+恒生聚源的 CN 代表样本通过（2/2），可以作为优先复测候选。iFinD Native MCP 在 CN 两轮仍缺单次事件日期与金额语义。
 
 ### 需要一个 key 比较多家数据源
 
@@ -70,17 +69,7 @@ Twelve Data、Alpha Vantage、EODHD 和 Massive 都进入优先复测名单。�
 
 ### 核心能力和字段丰富度怎么看
 
-[![6 条分红数据 Access Path 的 Dividend Event 公开证据热力图](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)](capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png)
-<p align="center"><sub>点击查看高分辨率原图；图中每个状态都来自基础 Release 的公开事实</sub></p>
-
-这张图分成两个区域：左侧“核心可用性”回答一条记录能不能完成 Dividend Event 任务；右侧“响应字段丰富度”只展示币种、公告日、登记日和支付日等附加信息。字段丰富不等于记录可用：只要证券身份或金额语义被阻断，附加字段再多也不能直接采信。
-
-- 绿色 `3/3`：固定样本三轮都观察到该能力。
-- 橙色“阻断”：字段可能已经出现，但身份或业务语义不可信。
-- 蓝色“未独立测量”：当前公开证据不能单独证明这一维；未独立测量不等于失败。
-- 灰色“未观察”：本次响应没有看到该字段，不代表供应商永远不提供。
-
-因此，这张图不能被读成总分或供应商排名。它的用途是告诉开发者：哪一个风险必须在自己的复测中继续验证。
+核心字段决定一条记录能否进入业务系统：证券身份、除权除息日和单次金额缺一不可。币种、公告日、登记日和支付日属于附加字段，可以帮助构建更完整的事件模型，但字段曾经出现不等于每条记录都完整。选型时应先确认核心字段，再按业务需要比较附加字段。
 
 ### 实测延迟与 QVeris 公开标价
 
@@ -124,9 +113,9 @@ Twelve Data、Alpha Vantage、EODHD 和 Massive 都进入优先复测名单。�
 
 ### 六家供应商逐一分析
 
-#### 恒生聚源：CN 新证据已闭环，旧结论不改写
+#### 恒生聚源：CN 代表样本通过
 
-基础样本的提取器误把内部 `stockobject` 当作证券代码，因此尽管日期和金额存在，证券身份仍无法确认。市场补充套件改为优先读取响应 `stockcode`，CN 两轮均完成映射。它可以成为 A 股复测候选，但基础三轮结论升级仍需新的 successor release。
+CN 代表样本连续两轮返回了可核验的证券身份、除权除息日和单次金额，可以作为 A 股分红事件的优先复测候选。正式接入前仍应使用自己的 symbol、日期范围和权限再次验证。
 
 #### 同花顺 iFinD：年度累计值不能替代单次事件
 
@@ -154,12 +143,12 @@ iFinD Native MCP 三轮都返回年度累计单位分红，但没有可核验的
 
 | Provider 与 Access Path | 必需事件字段 | 证券身份 | 无效 symbol | 响应内币种 | 附加事件日期 |
 |---|---|---|---|---|---|
-| 恒生聚源（QVeris） | 基础样本被身份门禁阻断；新 CN 样本通过（2/2） | 新套件已用响应 `stockcode` 映射验证 | 3/3 正确处理 | 未观察到 | 公告日、登记日、支付日 |
-| 同花顺 iFinD（Native MCP） | 缺单次金额语义与除权除息日 | 身份一致性未独立测量 | 3/3 正确处理 | 未发布 | 未形成单次事件日期组 |
-| Twelve Data（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | `USD` | 本次仅发布除权除息日 |
-| Alpha Vantage（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | 未观察到 | 公告日、登记日、支付日 |
-| EODHD（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | 未观察到 | 本次仅发布除权除息日 |
-| Massive（QVeris） | 3/3 | 身份一致性未独立测量 | 3/3 正确处理 | `USD` | 公告日、登记日、支付日 |
+| 恒生聚源（QVeris） | CN 样本 2/2 | 响应证券代码已与请求 symbol 对应 | 3/3 正确处理 | 本次未返回 | 公告日、登记日、支付日 |
+| 同花顺 iFinD（Native MCP） | 缺单次金额语义与除权除息日 | 响应未提供可用于独立核对的证券代码 | 3/3 正确处理 | 本次未发布 | 未形成单次事件日期组 |
+| Twelve Data（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | `USD` | 本次仅返回除权除息日 |
+| Alpha Vantage（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | 本次未返回 | 公告日、登记日、支付日 |
+| EODHD（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | 本次未返回 | 本次仅返回除权除息日 |
+| Massive（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | `USD` | 公告日、登记日、支付日 |
 
 选型时应分别检查参数清晰度、schema 稳定性、错误恢复、分页、身份来源和单工具完成能力。当前 Release 只充分观察了必需字段和无效 symbol；参数清晰度、分页和 Agent Trial 没有足够证据，因此保持未测量，而不是合成一个主观总分。
 
@@ -201,7 +190,7 @@ uv run qveris-bench release replay \
 - 同花顺 iFinD 只使用 `IFIND_MCP_API_KEY`，走 Native MCP；
 - 凭证通过环境变量或 GitHub Actions secrets 注入，不能写入 fixture、日志或 PR。
 
-新的真实执行不会覆盖历史 Release。输入、规则或结果变化时，创建 successor release 并保留旧版 digest。
+新的真实执行不会覆盖历史 Release。输入、规则或结果变化时，会发布一个保留旧版 digest 的新版本。
 
 ### 供应商与开发者如何参与
 
@@ -219,9 +208,9 @@ uv run qveris-bench release replay \
 - QVeris credits 来自 2026-08-12 的 Inspect 公开标价；测试账号实际扣费不进入公开比较。
 - Native 套餐来自供应商官方页面，正式采购前应复核额度、实时性、交易所费用、缓存和再分发权限。
 - QVeris 运营平台参与部分 Access Path 的接入，但测试规则、终态证据和复测入口公开；本文不接受付费排名。
-- 恒生聚源修正后的 CN 新证据为 2/2，基础三轮样本仍保留原结论；历史 Release 不原地修改。
+- 恒生聚源的 CN 代表样本为 2/2；这只代表本文固定样本，不等于全部 A 股证券和历史区间均已验证。
 
-完整规则见[评测方法论](_shared/benchmark-methodology.md)和 [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks)。还可以阅读 [Market data API for AI agents](https://qveris.ai/guides/market-data-api-for-ai-agents/)、[AI stock research agent](https://qveris.ai/guides/ai-stock-research-agent/)与 [Best Free Stock APIs](https://qveris.ai/guides/stock-api-free-comparison/)。
+完整的公开证据、测试规则与复测入口见 [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks)。
 
 ## 常见问题
 

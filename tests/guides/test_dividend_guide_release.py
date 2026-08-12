@@ -11,7 +11,6 @@ from PIL import Image
 
 from qveris_bench.profiles.selection import build_selection_snapshot
 from scripts.render_cap_guide_charts import (
-    render_dividend_evidence_heatmap,
     render_release_outcomes,
     render_selection_tradeoff,
 )
@@ -26,7 +25,6 @@ RELEASE_DIGEST = (
     "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
 )
 EVIDENCE_CHARTS = (
-    "capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png",
     "capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png",
     "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png",
 )
@@ -55,7 +53,6 @@ def test_article_uses_reader_facing_outcomes_and_one_decision_flow() -> None:
     for public_state in (
         "本次样本通过",
         "本次样本未通过",
-        "证据不足",
         "未测试：明确不适用",
     ):
         assert public_state in article
@@ -110,12 +107,33 @@ def test_article_explains_market_samples_and_evidence_heatmap() -> None:
         "本次代表样本未通过（0/2）",
         "未测试：明确不适用",
         "不能据此断言供应商完全不支持该市场",
-        "核心可用性",
-        "响应字段丰富度",
-        "未独立测量不等于失败",
-        "字段丰富不等于记录可用",
+        "字段曾经出现不等于每条记录都完整",
     ):
         assert phrase in article
+    for confusing_term in (
+        "身份阻断",
+        "未独立测量",
+        "stockobject",
+        "stockcode",
+        "successor release",
+        "提取器",
+    ):
+        assert confusing_term not in article
+    assert "dividend-evidence-heatmap.png" not in article
+
+
+def test_article_omits_unpublished_local_and_related_guide_links() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+
+    for target in (
+        "_shared/benchmark-methodology.md",
+        "market-data-api-for-ai-agents",
+        "ai-stock-research-agent",
+        "stock-api-free-comparison",
+    ):
+        assert target not in article
+    assert "related_guides" not in manifest["seo"]
 
 
 def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
@@ -149,7 +167,8 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     assert "AI 友好度" not in article
     assert "Agent 总分" not in article
     assert "与 `AAPL` 对应" not in article
-    assert article.count("身份一致性未独立测量") == 5
+    assert article.count("本次未验证响应自身返回的证券代码") == 4
+    assert "响应未提供可用于独立核对的证券代码" in article
 
 
 def test_article_evidence_charts_are_declared_and_valid_image() -> None:
@@ -157,9 +176,6 @@ def test_article_evidence_charts_are_declared_and_valid_image() -> None:
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
     assert manifest["artifacts"]["charts"] == list(MANIFEST_EVIDENCE_CHARTS)
-    assert manifest["artifacts"]["charts_manifest"].endswith(
-        "evidence-matrix-manifest.json"
-    )
     for target in EVIDENCE_CHARTS:
         assert target in article
         path = ARTICLE.parent / target
@@ -171,63 +187,6 @@ def test_article_evidence_charts_are_declared_and_valid_image() -> None:
     assert "完整事件日期组" not in article
     assert "date-timeline.svg" not in article
     assert "dividend-api-evidence-matrix.svg" not in article
-
-
-def test_evidence_charts_encode_access_path_identity_and_scenarios() -> None:
-    chart_manifest = json.loads(
-        (MANIFEST.parent / "charts/evidence-matrix-manifest.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    matrix = json.dumps(chart_manifest["data"], ensure_ascii=False)
-    rows = chart_manifest["data"]["rows"]
-    for provider in (
-        "恒生聚源",
-        "同花顺 iFinD",
-        "Twelve Data",
-        "Alpha Vantage",
-        "EODHD",
-        "Massive",
-    ):
-        assert provider in matrix
-    assert "Native MCP" in matrix
-    assert sum(row["meta"].startswith("QVeris") for row in rows) == 5
-    assert "不代表全市场能力" in matrix
-    assert matrix.count("A 股 · 600519.SH") == 2
-    assert matrix.count("美股 · AAPL") == 4
-
-
-def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
-    chart_dir = MANIFEST.parent / "charts"
-    generated = render_dividend_evidence_heatmap(
-        RELEASE_DIR,
-        ROOT / "evidence/dividend-events-2026-q3-v1",
-        tmp_path,
-        edition_date="2026-08-11",
-    )
-
-    committed = json.loads(
-        (chart_dir / "evidence-matrix-manifest.json").read_text(encoding="utf-8")
-    )
-    assert generated["data"] == committed["data"]
-    assert generated["input_digests"] == committed["input_digests"]
-    assert generated["rendered_at"] == committed["rendered_at"]
-    assert generated["input_digests"]["release"] == RELEASE_DIGEST
-    chart_name = "dividend-evidence-heatmap.png"
-    assert committed["charts"][chart_name] == (
-        f"sha256:{hashlib.sha256((chart_dir / chart_name).read_bytes()).hexdigest()}"
-    )
-
-
-def test_evidence_chart_footer_uses_requested_edition_date(tmp_path: Path) -> None:
-    manifest = render_dividend_evidence_heatmap(
-        RELEASE_DIR,
-        ROOT / "evidence/dividend-events-2026-q3-v1",
-        tmp_path,
-        edition_date="2026-11-01",
-    )
-
-    assert "2026-11-01" in manifest["data"]["footer"]
 
 
 def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
@@ -475,7 +434,7 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
     expected_base = {
-        "恒生聚源": "**证据不足**",
+        "恒生聚源": "**本次 CN 样本通过**",
         "同花顺 iFinD": "**本次样本未通过**",
         "Twelve Data": "**本次样本通过**",
         "Alpha Vantage": "**本次样本通过**",
@@ -512,8 +471,8 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
             )
             == 9
         )
-    assert "市场补充套件改为优先读取响应 `stockcode`" in article
-    assert "需要生成新的三轮 successor release" in article
+    for internal_detail in ("stockobject", "stockcode", "successor release", "提取器"):
+        assert internal_detail not in article
 
     quick_advice = article.split("> **快速建议**：", 1)[1].split("\n", 1)[0]
     by_provider = {row["provider_id"]: row for row in snapshot["rows"]}
