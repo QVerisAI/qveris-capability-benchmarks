@@ -39,9 +39,11 @@ def test_english_publication_contract(tmp_path: Path) -> None:
 
     assert re.search(r"[\u4e00-\u9fff]", article) is None
     assert article.splitlines()[0] == f"# {seo['title']}"
-    assert 45 <= len(seo["title"]) <= 65
+    assert 40 <= len(seo["title"]) <= 60
     assert 120 <= len(seo["meta_description"]) <= 160
     assert seo["primary_keyword"].lower() in seo["title"].lower()
+    for keyword in seo["secondary_keywords"]:
+        assert keyword.lower() in article.lower()
     assert manifest["publication_policy"]["required_sections"] == [
         "Results at a glance",
         "How developers should choose",
@@ -166,7 +168,7 @@ def test_article_explains_market_samples_and_evidence_heatmap() -> None:
     assert not (retired / "evidence-matrix-manifest.json").exists()
 
 
-def test_article_omits_unpublished_local_and_related_guide_links() -> None:
+def test_article_uses_only_approved_published_related_guides() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
@@ -177,7 +179,19 @@ def test_article_omits_unpublished_local_and_related_guide_links() -> None:
         "stock-api-free-comparison",
     ):
         assert target not in article
-    assert "related_guides" not in manifest["seo"]
+    related_guides = manifest["seo"]["related_guides"]
+    assert related_guides == [
+        {
+            "anchor": "Capability Discovery for AI Agents",
+            "url": "https://qveris.ai/guides/capability-discovery-ai-agents/",
+        },
+        {
+            "anchor": "QVeris CLI guide",
+            "url": "https://qveris.ai/guides/qveris-cli/",
+        },
+    ]
+    for guide in related_guides:
+        assert f"[{guide['anchor']}]({guide['url']})" in article
 
 
 def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
@@ -197,6 +211,10 @@ def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
 
 def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    agent_rows = _markdown_table_rows(
+        article, "| Provider and Access Path | Required event fields |"
+    )
 
     assert "## What AI Agent builders should verify" in article
     for signal in (
@@ -210,11 +228,32 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
         assert signal in article
     assert "AI-friendly rating" not in article
     assert "Agent total score" not in article
-    assert (
-        article.count("Published sample does not prove the response identified `AAPL`")
-        == 4
-    )
-    assert "No response security code was available to cross-check" in article
+    identity_text = {
+        "hangseng": "Returned security code matched the requested symbol",
+        "ifind": "No response security code was available to cross-check",
+        "twelve-data": (
+            "Published sample does not prove the response identified `AAPL`"
+        ),
+        "alpha-vantage": (
+            "Published sample does not prove the response identified `AAPL`"
+        ),
+        "eodhd": "Published sample does not prove the response identified `AAPL`",
+        "massive-stocks": (
+            "Published sample does not prove the response identified `AAPL`"
+        ),
+    }
+    for snapshot_row in snapshot["rows"]:
+        provider = _article_provider_name(snapshot_row)
+        access_path = (
+            "Native MCP"
+            if snapshot_row["access_path_type"] == "native_mcp"
+            else "QVeris"
+        )
+        article_row = _provider_row(agent_rows, provider, access_path)
+        invalid = snapshot_row["agent_interface"]["invalid_input_handling"]
+        assert article_row[2] == identity_text[snapshot_row["provider_id"]]
+        expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
+        assert article_row[3] == expected_invalid
 
 
 def test_article_evidence_charts_are_declared_and_valid_image() -> None:
@@ -246,6 +285,7 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
+    assert generated["charts"] == committed["charts"]
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
         "sha256:"
@@ -261,6 +301,9 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
             "sha256:"
             + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
         )
+        assert (tmp_path / chart_name).read_bytes() == (
+            committed_dir / chart_name
+        ).read_bytes()
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 
@@ -527,6 +570,7 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
         assert internal_detail not in article
 
     quick_advice = article.split("> **Quick recommendation:**", 1)[1].split("\n", 1)[0]
+    assert "through the tested qveris access paths" in quick_advice.lower()
     by_provider = {row["provider_id"]: row for row in snapshot["rows"]}
     eodhd_verified = sum(
         result["state"] == "verified"
@@ -577,6 +621,9 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             assert pricing["pricing_url"] in pricing_row[0]
             assert pricing["free_tier"] in pricing_row[1]
             assert pricing["paid_plans"] in pricing_row[2]
+            if row["provider_id"] == "ifind":
+                overview_plan = pricing["paid_plans"].split(";", 1)[0]
+                assert overview_plan in runtime_row[3]
         else:
             assert "Evidence insufficient" in pricing_row[1]
             assert "Evidence insufficient" in pricing_row[2]
@@ -635,6 +682,20 @@ def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     market = manifest["market_coverage_release"]
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    provider_count = len({row["provider_id"] for row in snapshot["rows"]})
+    total_calls = (
+        manifest["release"]["public_evidence_records"]
+        + market["public_evidence_records"]
+    )
+    assert article.splitlines()[0] == (
+        f"# Best Dividend APIs for Developers in 2026: {provider_count} Providers"
+    )
+    assert f"{total_calls} live calls" in manifest["seo"]["meta_description"]
+    assert f"We made {total_calls} live calls" in article
+    lead = "\n".join(article.splitlines()[2:9])
+    assert "Through the tested QVeris Access Paths" in lead
+    assert "produced usable US Dividend Events" not in lead
     assert f"{market['public_evidence_records']} live calls" in article
     assert f"{market['planned_cells']} planned test cells" in article
     not_applicable = market["planned_cells"] - market["applicable_cells"]

@@ -69,15 +69,20 @@ market_coverage_release:
   public_evidence_records: 66
   rounds_per_cell: 2
 seo:
-  title: "Best Dividend APIs for Developers in 2026: 6 Providers Tested"
-  meta_description: "Compare six dividend APIs using 102 live calls: event fields, invalid-symbol handling, QVeris latency and pricing, nine markets, and reproducible evidence."
+  title: "Best Dividend APIs for Developers in 2026: 6 Providers"
+  meta_description: "Compare six dividend API Access Paths using 102 live calls: event fields, invalid-symbol handling, QVeris pricing, nine markets, and reproducible evidence."
   primary_keyword: dividend API
-  secondary_keywords: [dividend data API, stock dividend API, ex-dividend date API, dividend API comparison]
+  secondary_keywords: [dividend data API, dividend API comparison]
   publication_action: new_page
   inventory_checked_at: "2026-08-11"
   target_slug: best-dividend-apis
   provider_inventory_checked_at: "2026-08-11"
   competing_urls: []
+  related_guides:
+    - anchor: Capability Discovery for AI Agents
+      url: https://qveris.ai/guides/capability-discovery-ai-agents/
+    - anchor: QVeris CLI guide
+      url: https://qveris.ai/guides/qveris-cli/
   supplier_sites:
     恒生聚源: https://www.gildata.com/products/core-data.html
     同花顺 iFinD: https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md
