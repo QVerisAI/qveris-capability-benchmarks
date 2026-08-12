@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -26,6 +27,7 @@ from qveris_bench.models.enums import (
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
+from qveris_bench.models.suite import BenchmarkCase
 from qveris_bench.releases.builder import build_release
 from qveris_bench.suites.compiler import CompiledSuite
 from qveris_bench.suites.fingerprint import canonical_json_bytes
@@ -59,12 +61,20 @@ class PublicTerminal(FrozenModel):
 
 
 @dataclass(frozen=True)
+class ValidatedTerminalOutcome:
+    state: CellState
+    unmet_conditions: tuple[str, ...]
+    failure_attribution: FailureAttribution | None
+
+
+@dataclass(frozen=True)
 class PublicTerminalReleaseArtifacts:
     run_plan: RunPlan
     cells: tuple[RunCell, ...]
     evidence: tuple[EvidenceBundle, ...]
     release: BenchmarkRelease
     release_bytes: bytes
+    public_evidence_manifest_bytes: bytes
 
     def rebuild(self) -> bytes:
         return build_release(self.release, self.cells, self.evidence)
@@ -84,9 +94,10 @@ class PublicTerminalReleaseArtifacts:
                 ]
             ),
             "release-input.json": canonical_json_bytes(
-                self.release.model_dump(mode="json")
+                self.release.model_dump(mode="json", exclude_none=True)
             ),
             "release.json": self.release_bytes,
+            "public-evidence-manifest.json": self.public_evidence_manifest_bytes,
         }
 
     def write(self, output_dir: Path) -> None:
@@ -104,10 +115,17 @@ def assemble_public_terminal_release(
     release_id: str,
     version: str,
     limitations: tuple[str, ...],
+    outcome_validator: Callable[
+        [BenchmarkCase, dict[str, Any]], ValidatedTerminalOutcome
+    ],
+    expected_github_run_id: str,
+    expected_github_sha: str,
+    expected_provenance: dict[str, tuple[str, str]],
 ) -> PublicTerminalReleaseArtifacts:
     planned = {cell.run_key: cell for cell in compiled.run_plan.cells}
     applicable = {key: cell for key, cell in planned.items() if cell.applicable}
     bindings = {binding.binding_id: binding for binding in binding_registry.bindings}
+    cases = {case.case_id: case for case in compiled.cases}
     terminals: dict[str, tuple[PublicTerminal, Path]] = {}
     for path in terminal_paths:
         try:
@@ -127,7 +145,6 @@ def assemble_public_terminal_release(
     cells = []
     evidence = []
     outcome_ids = []
-    github_run_ids = set()
     for run_key, planned_cell in planned.items():
         if not planned_cell.applicable:
             cells.append(planned_cell)
@@ -156,20 +173,27 @@ def assemble_public_terminal_release(
             raise PublicTerminalReleaseError(
                 "terminal filename does not match cell identity"
             )
-        if terminal.state not in {CellState.COMPLETED, CellState.PROVIDER_NEGATIVE}:
-            raise PublicTerminalReleaseError(
-                "public terminal is not in a releaseable state"
-            )
+        expected_outcome = outcome_validator(
+            cases[planned_cell.case_id], terminal.facts
+        )
         if (
-            terminal.state is CellState.PROVIDER_NEGATIVE
-            and terminal.failure_attribution is None
+            terminal.state is not expected_outcome.state
+            or terminal.unmet_conditions != expected_outcome.unmet_conditions
+            or terminal.failure_attribution is not expected_outcome.failure_attribution
         ):
             raise PublicTerminalReleaseError(
-                "provider-negative terminal requires failure attribution"
+                "terminal outcome does not match CAP-owned evaluation"
             )
-        if terminal.state is CellState.COMPLETED and terminal.unmet_conditions:
-            raise PublicTerminalReleaseError("completed terminal has unmet conditions")
-        github_run_ids.add(terminal.github_run_id)
+        if (
+            terminal.github_run_id != expected_github_run_id
+            or terminal.github_sha != expected_github_sha
+        ):
+            raise PublicTerminalReleaseError("terminal GitHub provenance mismatch")
+        if expected_provenance.get(evidence_id) != (
+            sha256_digest(path.read_bytes()),
+            terminal.raw_digest,
+        ):
+            raise PublicTerminalReleaseError("terminal artifact provenance mismatch")
         cells.append(
             planned_cell.model_copy(
                 update={
@@ -194,17 +218,28 @@ def assemble_public_terminal_release(
             )
         )
         outcome_ids.append(f"{evidence_id}-{terminal.state.value.replace('_', '-')}")
-    if len(github_run_ids) != 1:
-        raise PublicTerminalReleaseError(
-            "public terminals must come from one GitHub run"
-        )
-
     run_plan_bytes = canonical_json_bytes(compiled.run_plan.model_dump(mode="json"))
+    public_manifest_bytes = canonical_json_bytes(
+        {
+            "github_run_id": expected_github_run_id,
+            "github_sha": expected_github_sha,
+            "entries": [
+                {
+                    "evidence_id": item.evidence_id,
+                    "path": f"../../evidence/{release_id}/{item.evidence_id}.json",
+                    "public_digest": item.public_digest,
+                    "raw_digest": item.raw_digest,
+                }
+                for item in sorted(evidence, key=lambda item: item.evidence_id)
+            ],
+        }
+    )
     release = BenchmarkRelease(
         release_id=release_id,
         version=version,
         suite_fingerprint=compiled.fingerprint,
         run_plan_digest=sha256_digest(run_plan_bytes),
+        public_evidence_manifest_digest=sha256_digest(public_manifest_bytes),
         evidence_ids=tuple(sorted(item.evidence_id for item in evidence)),
         outcome_ids=tuple(sorted(outcome_ids)),
         limitations=limitations,
@@ -217,4 +252,5 @@ def assemble_public_terminal_release(
         evidence=ordered_evidence,
         release=release,
         release_bytes=build_release(release, ordered_cells, ordered_evidence),
+        public_evidence_manifest_bytes=public_manifest_bytes,
     )

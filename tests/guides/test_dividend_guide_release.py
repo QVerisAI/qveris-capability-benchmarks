@@ -266,6 +266,22 @@ def test_selection_market_chart_preserves_every_access_path_identity(
     }
     labels = [row["label"] for row in rendered["data"]["market_coverage"]["rows"]]
     assert len(labels) == len(set(labels))
+    assert "× 7 条 Access Path" in rendered["data"]["market_coverage"]["title"]
+
+
+def test_selection_market_chart_derives_round_labels(tmp_path: Path) -> None:
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    for row in snapshot["rows"]:
+        for result in row["market_coverage"]["results"]:
+            result["total_rounds"] = 3
+            if result["state"] == "verified":
+                result["passed_rounds"] = 3
+    path = tmp_path / "selection.json"
+    path.write_text(json.dumps(snapshot), encoding="utf-8")
+
+    rendered = render_selection_tradeoff(path, tmp_path / "charts")
+    result = rendered["data"]["market_coverage"]["rows"][0]["results"]["CN"]
+    assert result["passed_rounds"] == result["total_rounds"] == 3
 
 
 def test_selection_market_chart_changes_with_edition(tmp_path: Path) -> None:
@@ -383,6 +399,52 @@ def test_article_publishes_released_market_coverage_near_the_decision_table() ->
     assert hangseng_market_row[1] == "CN"
     assert "66 次真实调用" in article
     assert "54 个 N/A 单元" in article
+
+
+def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    expected_base = {
+        "恒生聚源": "基础 Release 保持 **Evidence insufficient**",
+        "同花顺 iFinD": "**Not qualified**",
+        "Twelve Data": "**Qualified**",
+        "Alpha Vantage": "**Qualified**",
+        "EODHD": "**Qualified**",
+        "Massive": "**Qualified**",
+    }
+    aliases = {"Massive Stocks": "Massive"}
+    for row in snapshot["rows"]:
+        provider = aliases.get(row["provider_name"], row["provider_name"])
+        access_path = (
+            "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
+        )
+        overview = _provider_row(overview_rows, provider, access_path)
+        assert expected_base[provider] in overview[1]
+        verified = sum(
+            result["state"] == "verified"
+            for result in row["market_coverage"]["results"]
+        )
+        applicable = sum(
+            result["state"] != "not_applicable"
+            for result in row["market_coverage"]["results"]
+        )
+        if provider == "Alpha Vantage":
+            assert f"{verified} 个适用市场均 2/2" in overview[4]
+        elif provider in {"EODHD", "Twelve Data"}:
+            assert f"{verified}/9 通过" in overview[4]
+        elif provider == "恒生聚源":
+            assert "CN 2/2" in overview[4]
+        assert (
+            applicable
+            + sum(
+                result["state"] == "not_applicable"
+                for result in row["market_coverage"]["results"]
+            )
+            == 9
+        )
+    assert "当前市场套件只有 2 轮" in article
+    assert "仍应对主 suite 生成一个新的 3 轮 successor release" in article
 
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:

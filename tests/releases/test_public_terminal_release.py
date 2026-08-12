@@ -5,6 +5,9 @@ from pathlib import Path
 
 import pytest
 
+from qveris_bench.cap_packs.dividend_events.direct import (
+    validate_public_dividend_outcome,
+)
 from qveris_bench.execution.direct_binding import (
     direct_binding_registry_digest,
     load_direct_binding_registry,
@@ -13,7 +16,7 @@ from qveris_bench.releases.public_terminal import (
     PublicTerminalReleaseError,
     assemble_public_terminal_release,
 )
-from qveris_bench.releases.replay import replay_release_dir
+from qveris_bench.releases.replay import ReleaseReplayError, replay_release_dir
 from qveris_bench.suites.compiler import compile_suite
 from scripts.build_dividend_market_release import LIMITATIONS
 
@@ -22,8 +25,16 @@ PACK = ROOT / "cap_packs/dividend_events"
 PUBLIC_EVIDENCE = ROOT / "evidence/dividend-events-market-coverage-2026-q3-v1"
 RELEASE = ROOT / "releases/dividend-events-market-coverage-2026-q3-v1"
 EXPECTED_DIGEST = (
-    "sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9"
+    "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3"
 )
+ATTESTATION = json.loads((RELEASE / "github-artifacts.json").read_text())
+PROVENANCE = {
+    item["name"].removeprefix("dividend-market-"): (
+        item["public_digest"],
+        item["raw_digest"],
+    )
+    for item in ATTESTATION["artifacts"]
+}
 
 
 def _assemble(paths: tuple[Path, ...] | None = None):
@@ -42,6 +53,12 @@ def _assemble(paths: tuple[Path, ...] | None = None):
         release_id="dividend-events-market-coverage-2026-q3-v1",
         version="1.0.0",
         limitations=LIMITATIONS,
+        outcome_validator=lambda case, facts: validate_public_dividend_outcome(
+            case, facts, PACK / "observation-schema.yaml"
+        ),
+        expected_github_run_id=ATTESTATION["github_run_id"],
+        expected_github_sha=ATTESTATION["github_sha"],
+        expected_provenance=PROVENANCE,
     )
 
 
@@ -97,3 +114,61 @@ def test_rejects_tampered_binding_registry_digest(tmp_path: Path) -> None:
 
     with pytest.raises(PublicTerminalReleaseError, match="binding registry digest"):
         _assemble(tuple(paths))
+
+
+def test_rejects_provider_negative_relabelled_as_completed(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    target = next(path for path in paths if "eodhd-jp-7203" in path.name)
+    document = json.loads(target.read_text())
+    document.update(
+        {"state": "completed", "unmet_conditions": [], "failure_attribution": None}
+    )
+    changed = tmp_path / target.name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[paths.index(target)] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="CAP-owned evaluation"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_terminal_github_provenance_drift(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["github_sha"] = "f" * 40
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="GitHub provenance"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_terminal_raw_digest_drift(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["raw_digest"] = "sha256:" + "f" * 64
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="artifact provenance"):
+        _assemble(tuple(paths))
+
+
+def test_replay_rejects_tampered_public_terminal(tmp_path: Path) -> None:
+    release_dir = tmp_path / "releases" / RELEASE.name
+    release_dir.mkdir(parents=True)
+    for item in RELEASE.iterdir():
+        if item.is_file():
+            (release_dir / item.name).write_bytes(item.read_bytes())
+    evidence_dir = tmp_path / "evidence" / RELEASE.name
+    evidence_dir.mkdir(parents=True)
+    for item in PUBLIC_EVIDENCE.glob("*.json"):
+        (evidence_dir / item.name).write_bytes(item.read_bytes())
+    target = next(evidence_dir.glob("*.json"))
+    target.write_text("{}\n", encoding="utf-8")
+
+    with pytest.raises(
+        ReleaseReplayError, match="public evidence bytes digest mismatch"
+    ):
+        replay_release_dir(release_dir)

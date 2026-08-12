@@ -13,7 +13,7 @@ observation_window:
   end: "2026-08-11"
 market_coverage_release:
   release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
-  digest: sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9
+  digest: sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3
   suite: cap_packs/dividend_events/market-suite.yaml
   cases: cap_packs/dividend_events/market-cases.yaml
 limitations:

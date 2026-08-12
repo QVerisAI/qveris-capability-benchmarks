@@ -3,6 +3,7 @@ from pathlib import Path
 
 import yaml
 
+from qveris_bench.cap_packs.dividend_events.models import dividend_request_identity
 from qveris_bench.execution.direct_binding import (
     load_direct_binding_registry,
     validate_direct_binding_registry,
@@ -100,9 +101,10 @@ def test_ac3_every_applicable_cell_has_a_reproducible_request_identity() -> None
     for binding in registry.bindings:
         if "invalid" in str(binding.case_id):
             continue
-        assert binding.request_identity is not None
-        assert binding.request_identity.market in MARKETS
-        assert binding.request_identity.vendor_symbol
+        identity = dividend_request_identity(binding.request_identity)
+        assert identity is not None
+        assert identity.market in MARKETS
+        assert identity.vendor_symbol
 
 
 def test_ac4_harbor_sv_is_not_a_market_result_source() -> None:

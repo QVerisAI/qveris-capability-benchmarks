@@ -101,6 +101,12 @@ def replay_release_dir(
     published = files["release.json"]
     if rebuilt != published:
         raise ReleaseReplayError("rebuilt release does not match release.json")
+    if release.public_evidence_manifest_digest is not None:
+        _validate_public_evidence_manifest(
+            release_dir,
+            release.public_evidence_manifest_digest,
+            evidence,
+        )
 
     published_digest = release_digest(published)
     if release_dir.name != release.release_id:
@@ -114,6 +120,44 @@ def replay_release_dir(
         published_digest=published_digest,
         expected_digest_verified=expected_digest is not None,
     )
+
+
+def _validate_public_evidence_manifest(
+    release_dir: Path,
+    expected_digest: str,
+    evidence: tuple[EvidenceBundle, ...],
+) -> None:
+    content = _read_required_file(release_dir, "public-evidence-manifest.json")
+    if sha256_digest(content) != expected_digest:
+        raise ReleaseReplayError("public evidence manifest digest mismatch")
+    document = _validate_json_object(content, "public-evidence-manifest.json")
+    entries = document.get("entries")
+    if not isinstance(entries, list):
+        raise ReleaseReplayError("invalid public evidence manifest entries")
+    expected = {item.evidence_id: item for item in evidence}
+    if {item.get("evidence_id") for item in entries if isinstance(item, dict)} != set(
+        expected
+    ):
+        raise ReleaseReplayError("public evidence manifest topology mismatch")
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ReleaseReplayError("invalid public evidence manifest entry")
+        evidence_id = entry["evidence_id"]
+        item = expected[evidence_id]
+        if (
+            entry.get("public_digest") != item.public_digest
+            or entry.get("raw_digest") != item.raw_digest
+        ):
+            raise ReleaseReplayError("public evidence manifest facts mismatch")
+        path = (release_dir / str(entry.get("path"))).resolve()
+        if not path.is_relative_to(release_dir.parents[1].resolve()):
+            raise ReleaseReplayError("public evidence path escapes repository")
+        try:
+            public_bytes = path.read_bytes()
+        except OSError as exc:
+            raise ReleaseReplayError("missing public evidence bytes") from exc
+        if sha256_digest(public_bytes) != item.public_digest:
+            raise ReleaseReplayError("public evidence bytes digest mismatch")
 
 
 def _read_required_file(release_dir: Path, filename: str) -> bytes:

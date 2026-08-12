@@ -38,11 +38,11 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:ad22e1cf168b58cb32135e50161c109ae903174445d9cbf9f4cf3df35a34243e
-  digest: sha256:f9f45f77a1ffcbd2be2b4d830ed9b01dcc84ff1d5f113001b0c68ee1bf36f6a9
+  input_digest: sha256:3d293232592e1fcd3c972e0ce624cf57be6372908854d312cda30ca78b7fd839
+  digest: sha256:7dc0606febaea557450e822ce7fd4839c1f3d6abd17a13ce8a56bb137f1f1dba
 market_coverage_release:
   directory: releases/dividend-events-market-coverage-2026-q3-v1
-  digest: sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9
+  digest: sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3
   suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
   planned_cells: 120
   applicable_cells: 66
@@ -86,6 +86,8 @@ artifacts:
   market_coverage_preflight: cap_packs/dividend_events/market-preflight.yaml
   market_coverage_release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
   market_coverage_public_evidence: evidence/dividend-events-market-coverage-2026-q3-v1
+  market_coverage_public_evidence_manifest: releases/dividend-events-market-coverage-2026-q3-v1/public-evidence-manifest.json
+  market_coverage_github_artifacts: releases/dividend-events-market-coverage-2026-q3-v1/github-artifacts.json
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
   charts:
@@ -94,4 +96,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:96e3659bb72ebd583a34c1e71bcbf14814d479fb8ac80553b5d1916429585591
+  selection_charts_manifest_digest: sha256:2bf578d54768f2729723f2ad1c79ca3b4b16cceed11874f6346a0d79b201f178

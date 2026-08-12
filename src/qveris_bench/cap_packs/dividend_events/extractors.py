@@ -5,7 +5,7 @@ import json
 from io import StringIO
 from typing import Any
 
-from qveris_bench.models.run import RequestIdentity
+from qveris_bench.cap_packs.dividend_events.models import DividendRequestIdentity
 
 
 class DividendExtractionError(ValueError):
@@ -49,7 +49,7 @@ def extract_dividend_event(
     start_date: str | None,
     end_date: str | None,
     negative_control: bool = False,
-    request_identity: RequestIdentity | None = None,
+    request_identity: DividendRequestIdentity | None = None,
 ) -> dict[str, Any]:
     normalized = _unwrap_gateway(document)
     if _is_explicit_provider_rejection(provider_id, document, normalized):
@@ -108,7 +108,7 @@ def _canonical_symbol(returned_symbol: str | None, requested_symbol: str) -> str
 def _identity_facts(
     requested_symbol: str,
     returned_symbol: str | None,
-    request_identity: RequestIdentity | None,
+    request_identity: DividendRequestIdentity | None,
 ) -> dict[str, Any]:
     if request_identity is None:
         return {"symbol": _canonical_symbol(returned_symbol, requested_symbol)}

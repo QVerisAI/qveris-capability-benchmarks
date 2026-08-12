@@ -2,7 +2,7 @@
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
     "dividend-runtime-tradeoff.png": "sha256:ef35a3650ced8fa0dc140a73aa5f0c1cbb0f9df48fe7d99b07eb45a59cff93d7",
-    "dividend-market-coverage.png": "sha256:36f3c4811ed314fc8a00d3dccb2c6f57fa72661374593824f37babc0f636dfc5"
+    "dividend-market-coverage.png": "sha256:5f716cbe85c3cb1deb29bfcb4f9476391d47abc12d4bccf1b6d7feebf0837bee"
   },
   "data": {
     "rows": [
@@ -61,7 +61,7 @@
       "title": "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果",
       "edition": "2026-08-12",
       "observation_date": "2026-08-12",
-      "release_digest": "sha256:7d1d5c0f19e2f1ae7571d57fcc52dbdb24e670317cf3a6f19816df2b1688dde9",
+      "release_digest": "sha256:215baff9eaca5b990d3505550ba2a0fb5c3b5ef5fcb28108812c507d1d1522d3",
       "markets": [
         "US",
         "HK",
@@ -651,7 +651,7 @@
     }
   },
   "input_digests": {
-    "selection_snapshot": "sha256:f9f45f77a1ffcbd2be2b4d830ed9b01dcc84ff1d5f113001b0c68ee1bf36f6a9"
+    "selection_snapshot": "sha256:7dc0606febaea557450e822ce7fd4839c1f3d6abd17a13ce8a56bb137f1f1dba"
   },
   "rendered_at": "2026-08-12"
 }

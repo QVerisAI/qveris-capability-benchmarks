@@ -8,7 +8,6 @@ from pydantic import Field, ValidationError, model_validator
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.models.base import EvidenceRef, FrozenModel, SemanticVersion, StableId
 from qveris_bench.models.enums import AccessPathType
-from qveris_bench.models.run import RequestIdentity
 from qveris_bench.suites.compiler import compile_suite
 
 
@@ -28,7 +27,7 @@ class DirectBinding(FrozenModel):
     tool_id: str = Field(min_length=1)
     parameters: dict[str, object]
     discovery_query: str | None = Field(default=None, min_length=1)
-    request_identity: RequestIdentity | None = None
+    request_identity: dict[str, object] | None = None
 
     @model_validator(mode="after")
     def validate_transport_contract(self) -> DirectBinding:
@@ -85,7 +84,6 @@ def validate_direct_binding_registry(
 ) -> None:
     compiled = compile_suite(suite_path, cases_path, providers_root, cap_path)
     paths = {path.access_path_id: path for path in compiled.access_paths}
-    cases = {case.case_id: case for case in compiled.cases}
     expected = {
         (cell.case_id, cell.access_path_id)
         for cell in compiled.run_plan.cells
@@ -108,35 +106,6 @@ def validate_direct_binding_registry(
             raise DirectBindingRegistryError(
                 "binding transport does not match Access Path"
             )
-        case = cases[binding.case_id]
-        market = case.input.get("market")
-        if market is None:
-            continue
-        identity = binding.request_identity
-        if identity is None:
-            raise DirectBindingRegistryError(
-                "market Direct binding requires request identity"
-            )
-        if identity.market != market or identity.canonical_symbol != case.input.get(
-            "symbol"
-        ):
-            raise DirectBindingRegistryError(
-                "binding request identity does not match frozen case"
-            )
-        if not _contains_value(binding.parameters, identity.vendor_symbol):
-            raise DirectBindingRegistryError(
-                "binding parameters do not contain the vendor symbol"
-            )
-
-
-def _contains_value(value: object, expected: str) -> bool:
-    if isinstance(value, dict):
-        return any(_contains_value(item, expected) for item in value.values())
-    if isinstance(value, list):
-        return any(_contains_value(item, expected) for item in value)
-    if isinstance(value, str):
-        return expected in value
-    return False
 
 
 def direct_binding_registry_digest(path: Path) -> str:

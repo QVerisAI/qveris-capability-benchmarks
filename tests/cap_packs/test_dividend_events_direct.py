@@ -7,8 +7,8 @@ from qveris_bench.cap_packs.dividend_events.direct import (
     DividendDirectError,
     evaluate_dividend_document,
 )
+from qveris_bench.cap_packs.dividend_events.models import DividendRequestIdentity
 from qveris_bench.models.enums import CellState, FailureAttribution
-from qveris_bench.models.run import RequestIdentity
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -165,7 +165,7 @@ def test_ac7_market_case_keeps_request_bound_identity_separate() -> None:
         _market_case("us-aapl-dividend-market"),
         PACK / "observation-schema.yaml",
         "sha256:" + "a" * 64,
-        request_identity=RequestIdentity(
+        request_identity=DividendRequestIdentity(
             market="US", canonical_symbol="AAPL", vendor_symbol="AAPL.US"
         ),
     )
@@ -194,7 +194,7 @@ def test_ac7_market_case_fails_a_conflicting_returned_symbol() -> None:
         _market_case("cn-600519-dividend-market"),
         PACK / "observation-schema.yaml",
         "sha256:" + "a" * 64,
-        request_identity=RequestIdentity(
+        request_identity=DividendRequestIdentity(
             market="CN", canonical_symbol="600519.SH", vendor_symbol="600519"
         ),
     )
@@ -238,7 +238,7 @@ def test_ac7_positive_provider_rejection_is_terminal_negative_evidence(
         _market_case("jp-7203-dividend-market"),
         PACK / "observation-schema.yaml",
         "sha256:" + "a" * 64,
-        request_identity=RequestIdentity(
+        request_identity=DividendRequestIdentity(
             market="JP", canonical_symbol="7203.T", vendor_symbol="7203.T"
         ),
     )

@@ -1,10 +1,19 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
+from qveris_bench.cap_packs.dividend_events.direct import (
+    validate_public_dividend_outcome,
+)
+from qveris_bench.cap_packs.dividend_events.models import (
+    validate_dividend_request_identities,
+)
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.execution.direct_binding import (
     direct_binding_registry_digest,
     load_direct_binding_registry,
+    validate_direct_binding_registry,
 )
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.public_terminal import assemble_public_terminal_release
@@ -38,14 +47,46 @@ def main() -> None:
         ROOT / "providers",
         PACK / "cap.yaml",
     )
+    registry = load_direct_binding_registry(registry_path)
+    validate_direct_binding_registry(
+        registry,
+        PACK / "market-suite.yaml",
+        PACK / "market-cases.yaml",
+        ROOT / "providers",
+        cap_path=PACK / "cap.yaml",
+    )
+    validate_dividend_request_identities(registry, compiled)
+    attestation = json.loads((OUTPUT / "github-artifacts.json").read_text())
+    expected_artifacts = {
+        path.stem: (
+            sha256_digest(path.read_bytes()),
+            json.loads(path.read_text())["raw_digest"],
+        )
+        for path in PUBLIC_EVIDENCE.glob("*.json")
+    }
+    observed_artifacts = {
+        item["name"].removeprefix("dividend-market-"): (
+            item["public_digest"],
+            item["raw_digest"],
+        )
+        for item in attestation["artifacts"]
+    }
+    if observed_artifacts != expected_artifacts:
+        raise ValueError("GitHub artifact attestation does not match public evidence")
     artifacts = assemble_public_terminal_release(
         compiled=compiled,
-        binding_registry=load_direct_binding_registry(registry_path),
+        binding_registry=registry,
         binding_registry_digest=direct_binding_registry_digest(registry_path),
         terminal_paths=tuple(sorted(PUBLIC_EVIDENCE.glob("*.json"))),
         release_id=RELEASE_ID,
         version="1.0.0",
         limitations=LIMITATIONS,
+        outcome_validator=lambda case, facts: validate_public_dividend_outcome(
+            case, facts, PACK / "observation-schema.yaml"
+        ),
+        expected_github_run_id=attestation["github_run_id"],
+        expected_github_sha=attestation["github_sha"],
+        expected_provenance=observed_artifacts,
     )
     artifacts.write(OUTPUT)
     print(release_digest(artifacts.release_bytes))

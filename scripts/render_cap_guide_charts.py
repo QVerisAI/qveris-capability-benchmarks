@@ -472,7 +472,18 @@ def render_selection_tradeoff(
     observation_date = next(iter(observation_dates))
     market_release_digest = next(iter(release_digests))
     selection_digest = _sha256_identity(selection_snapshot_path)
-    market_title = "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果"
+    total_rounds = {
+        result["total_rounds"]
+        for item in market_rows
+        for result in item["results"].values()
+    }
+    if len(total_rounds) != 1:
+        raise ValueError("selection market chart requires one round count")
+    round_count = next(iter(total_rounds))
+    market_title = (
+        f"{len(markets)} 个代表市场 × {len(market_rows)} 条 Access Path："
+        "Dividend Event 实测结果"
+    )
     market_data = {
         "title": market_title,
         "edition": snapshot["edition"],
@@ -492,11 +503,12 @@ def render_selection_tradeoff(
     for row_index, item in enumerate(market_rows):
         for column_index, market in enumerate(markets):
             state = item["results"][market]["state"]
-            label = {
-                "verified": "2/2",
-                "provider_negative": "0/2",
-                "not_applicable": "N/A",
-            }[state]
+            result = item["results"][market]
+            label = (
+                "N/A"
+                if state == "not_applicable"
+                else f"{result['passed_rounds']}/{result['total_rounds']}"
+            )
             ax.add_patch(
                 Rectangle(
                     (column_index - 0.5, row_index - 0.5),
@@ -539,8 +551,14 @@ def render_selection_tradeoff(
     )
     fig.legend(
         handles=[
-            Patch(facecolor="#12B76A", label="2/2 通过 Dividend Event 门槛"),
-            Patch(facecolor="#F79009", label="0/2 已实测但未满足门槛"),
+            Patch(
+                facecolor="#12B76A",
+                label=f"{round_count}/{round_count} 通过 Dividend Event 门槛",
+            ),
+            Patch(
+                facecolor="#F79009",
+                label=f"0/{round_count} 已实测但未满足门槛",
+            ),
             Patch(
                 facecolor="#E5EEF5",
                 edgecolor="#CBD5E1",
@@ -556,7 +574,7 @@ def render_selection_tradeoff(
     fig.text(
         0.08,
         0.018,
-        f"Market Release {observation_date} · 每个适用单元 2 rounds · "
+        f"Market Release {observation_date} · 每个适用单元 {round_count} rounds · "
         f"{market_release_digest[:23]}… · Selection {selection_digest[:23]}… · "
         "单一代表 symbol，不外推供应商全部市场",
         color="#475569",

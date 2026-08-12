@@ -2990,6 +2990,7 @@
       "twelve-data-us-aapl-dividend-market-round-2-completed"
     ],
     "provider_feedback_facts": {},
+    "public_evidence_manifest_digest": "sha256:c69928d8fd0cef3eb447cd5b7f2bb31079f3d4d55e5899c7a7f7b799b2a754c8",
     "release_id": "dividend-events-market-coverage-2026-q3-v1",
     "run_plan_digest": "sha256:35178c55eac23f1b0cf945fd711d8c707709631074f759e571da14851b6dcbee",
     "suite_fingerprint": "226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf",

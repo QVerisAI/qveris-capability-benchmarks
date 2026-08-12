@@ -9,11 +9,12 @@ from qveris_bench.cap_packs.dividend_events.extractors import (
     DividendNegativeControlError,
     extract_dividend_event,
 )
+from qveris_bench.cap_packs.dividend_events.models import DividendRequestIdentity
 from qveris_bench.models.enums import CellState, FailureAttribution, OutcomeStatus
-from qveris_bench.models.run import RequestIdentity
 from qveris_bench.models.suite import BenchmarkCase
 from qveris_bench.outcomes.evaluator import evaluate_outcome
 from qveris_bench.outcomes.extractor import ExtractionError, extract_observation
+from qveris_bench.releases.public_terminal import ValidatedTerminalOutcome
 
 
 class DividendDirectError(ValueError):
@@ -35,7 +36,7 @@ def evaluate_dividend_document(
     schema_path: Path,
     evidence_ref: str,
     *,
-    request_identity: RequestIdentity | None = None,
+    request_identity: DividendRequestIdentity | None = None,
 ) -> DividendDirectResult:
     try:
         facts = extract_dividend_event(
@@ -93,3 +94,34 @@ def evaluate_dividend_document(
 
 def _optional_string(value: object) -> str | None:
     return str(value) if value is not None else None
+
+
+def validate_public_dividend_outcome(
+    case: BenchmarkCase, facts: dict[str, Any], schema_path: Path
+) -> ValidatedTerminalOutcome:
+    try:
+        observation = extract_observation(
+            schema_path,
+            facts,
+            "sha256:" + "0" * 64,
+            "1.0.0",
+            negative_control=case.negative_control,
+        )
+    except ExtractionError as exc:
+        raise DividendDirectError("public dividend facts failed schema") from exc
+    outcome = evaluate_outcome(
+        case.completion_conditions, observation.facts, "sha256:" + "0" * 64
+    )
+    unmet = outcome.unmet_conditions
+    if (
+        not case.negative_control
+        and observation.facts.get("identity_verified") is not True
+    ):
+        unmet = tuple(dict.fromkeys((*unmet, "identity_verified")))
+    if unmet:
+        return ValidatedTerminalOutcome(
+            CellState.PROVIDER_NEGATIVE,
+            unmet,
+            FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+        )
+    return ValidatedTerminalOutcome(CellState.COMPLETED, (), None)

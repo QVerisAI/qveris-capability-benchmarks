@@ -13,6 +13,7 @@ from qveris_bench.cap_packs.dividend_events.direct import (
     DividendDirectResult,
     evaluate_dividend_document,
 )
+from qveris_bench.cap_packs.dividend_events.models import dividend_request_identity
 from qveris_bench.evidence.store import PublicArtifactStore, RawArtifactStore
 from qveris_bench.execution.direct_binding import (
     DirectBinding,
@@ -355,7 +356,7 @@ def test_ac8_live_mixed_direct_path_produces_safe_terminal_evidence(
         case,
         PACK / "observation-schema.yaml",
         adapter_result.raw_digest,
-        request_identity=binding.request_identity,
+        request_identity=dividend_request_identity(binding.request_identity),
     )
     content = _public_terminal_payload(
         binding,
