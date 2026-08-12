@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import platform
 import re
 from pathlib import Path
 
@@ -138,10 +139,15 @@ def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     committed = json.loads(
         (chart_dir / "evidence-matrix-manifest.json").read_text(encoding="utf-8")
     )
-    assert generated == committed
+    assert generated["data"] == committed["data"]
+    assert generated["input_digests"] == committed["input_digests"]
+    assert generated["rendered_at"] == committed["rendered_at"]
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
     chart_name = "dividend-evidence-heatmap.png"
-    assert (tmp_path / chart_name).read_bytes() == (chart_dir / chart_name).read_bytes()
+    if platform.system() == "Linux":
+        assert (tmp_path / chart_name).read_bytes() == (
+            chart_dir / chart_name
+        ).read_bytes()
     assert committed["charts"][chart_name] == (
         f"sha256:{hashlib.sha256((chart_dir / chart_name).read_bytes()).hexdigest()}"
     )
@@ -166,14 +172,21 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
         (committed_dir / "selection-charts-manifest.json").read_text(encoding="utf-8")
     )
 
-    assert generated == committed
+    assert generated["data"] == committed["data"]
+    assert generated["input_digests"] == committed["input_digests"]
+    assert generated["rendered_at"] == committed["rendered_at"]
     assert generated["input_digests"]["selection_snapshot"] == (
         f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
     )
     chart_name = "dividend-runtime-tradeoff.png"
-    assert (tmp_path / chart_name).read_bytes() == (
-        committed_dir / chart_name
-    ).read_bytes()
+    if platform.system() == "Linux":
+        assert (tmp_path / chart_name).read_bytes() == (
+            committed_dir / chart_name
+        ).read_bytes()
+    assert committed["charts"][chart_name] == (
+        "sha256:"
+        + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
+    )
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 

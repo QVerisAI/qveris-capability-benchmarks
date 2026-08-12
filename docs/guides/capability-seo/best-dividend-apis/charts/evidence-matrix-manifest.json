@@ -1,7 +1,7 @@
 {
   "release_id": "dividend-events-2026-q3-v1",
   "charts": {
-    "dividend-evidence-heatmap.png": "sha256:d31be4723b8e1ec5137b01b38f1a822a0ce89cb305b1bf8813d3a18f642d287c"
+    "dividend-evidence-heatmap.png": "sha256:71634b61b79eb4b285df865c6d1005ad10dfb78f0ddb24f28172cc412e62d9ad"
   },
   "data": {
     "scope": "固定样本证据，不代表全市场能力",
