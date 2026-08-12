@@ -92,4 +92,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:f09feea13eded2f9cba6d5d5338144c878a93357091b897c66246d45475ebb85
+  selection_charts_manifest_digest: sha256:5bc4ea014b33d77a8f66b30765f82c6bff8ae63b5c0b5b1095cf06e32d752178

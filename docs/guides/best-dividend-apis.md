@@ -102,7 +102,7 @@ Native API 让你直接管理供应商账户、认证和原始协议；QVeris Ac
 
 [![6 条 Access Path 的 QVeris SV 市场正向证据矩阵](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)
 
-绿色只表示 SV 正向证据，不表示该市场的 Dividend Event 字段、历史深度、时效、授权或 SLA 已经通过 CAP。灰色表示本快照没有正向证据，不等于供应商不支持；同花顺 iFinD 是 Native MCP，因此该项不适用。橙色边框只标出本快照覆盖市场最多的路径。
+绿色只表示 SV 正向证据，不表示该市场的 Dividend Event 字段、历史深度、时效、授权或 SLA 已经通过 CAP。灰色表示本快照没有正向证据，不等于供应商不支持；同花顺 iFinD 是 Native MCP，因此该项不适用。橙色边框只标出本快照正向证据条目最多的并列路径，不代表供应商覆盖排名。
 
 | Provider / Access Path | 本次固定市场样本 | QVeris `MKT.DIVIDENDS` SV 验证范围 | 可以得出的结论 |
 |---|---|---|---|

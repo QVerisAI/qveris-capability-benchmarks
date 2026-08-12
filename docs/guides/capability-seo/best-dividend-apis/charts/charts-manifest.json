@@ -1,7 +1,7 @@
 {
   "release_id": "dividend-events-2026-q3-v1",
   "charts": {
-    "chart-direct-outcomes.png": "sha256:d5a87c11dc55d3629971600eb24f38ec84f55627780e6b0049859ff7b323cce5"
+    "chart-direct-outcomes.png": "sha256:6885636eb8886693c7060bdeae211a048815a9429137d6297217324ff75ac719"
   },
   "input_digests": {
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",

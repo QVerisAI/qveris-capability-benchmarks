@@ -437,6 +437,9 @@ def render_selection_tradeoff(
     for item in snapshot_rows:
         provider_id = item["provider_id"]
         coverage = item["market_coverage"]
+        access_path_label = (
+            "Native MCP" if item["access_path_type"] == "native_mcp" else "QVeris"
+        )
         if (
             item["access_path_type"] == "native_mcp"
             and coverage["sv_state"] != "not_applicable"
@@ -452,10 +455,10 @@ def render_selection_tradeoff(
                     else item["provider_name"]
                 ),
                 "access_path_type": item["access_path_type"],
-                "access_path": (
-                    "Native MCP"
-                    if item["access_path_type"] == "native_mcp"
-                    else "QVeris"
+                "access_path": access_path_label,
+                "label": (
+                    f"{item['provider_name']} · {access_path_label} · "
+                    f"{item['access_path_id']}"
                 ),
                 "state": coverage["sv_state"],
                 "verified_markets": coverage["sv_verified_markets"],
@@ -576,7 +579,7 @@ def render_selection_tradeoff(
         ax.set_xticklabels(market_group, fontsize=10, color="#334155")
         ax.set_yticks(range(len(market_rows)))
         ax.set_yticklabels(
-            [f"{item['provider']}\n{item['access_path']}" for item in market_rows],
+            [item["label"].replace(" · ", "\n", 1) for item in market_rows],
             fontsize=10,
             color="#334155",
         )

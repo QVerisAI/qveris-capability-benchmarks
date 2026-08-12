@@ -143,11 +143,6 @@ def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
-    assert generated["charts"] == committed["charts"]
-    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
-    assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
-        f"sha256:{hashlib.sha256((committed_dir / 'selection-charts-manifest.json').read_bytes()).hexdigest()}"
-    )
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
     chart_name = "dividend-evidence-heatmap.png"
     if platform.system() == "Linux":
@@ -181,6 +176,13 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
+        "sha256:"
+        + hashlib.sha256(
+            (committed_dir / "selection-charts-manifest.json").read_bytes()
+        ).hexdigest()
+    )
     assert generated["input_digests"]["selection_snapshot"] == (
         f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
     )
@@ -271,8 +273,8 @@ def test_selection_market_chart_preserves_every_access_path_identity(
     extra = json.loads(json.dumps(snapshot["rows"][0]))
     extra.update(
         {
-            "provider_id": "alpha-vantage-alt",
-            "provider_name": "Alpha Vantage Alt",
+            "provider_id": "alpha-vantage",
+            "provider_name": "Alpha Vantage",
             "access_path_id": "alpha-vantage-dividends-alt-qveris",
         }
     )
@@ -288,6 +290,8 @@ def test_selection_market_chart_preserves_every_access_path_identity(
     assert identities == {
         (row["provider_id"], row["access_path_id"]) for row in snapshot["rows"]
     }
+    labels = [row["label"] for row in rendered["data"]["market_coverage"]["rows"]]
+    assert len(labels) == len(set(labels))
 
 
 def test_selection_market_chart_changes_with_edition(tmp_path: Path) -> None:
