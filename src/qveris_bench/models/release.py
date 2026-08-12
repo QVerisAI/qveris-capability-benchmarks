@@ -12,6 +12,7 @@ from qveris_bench.models.base import (
 from qveris_bench.models.enums import DimensionState, ReleaseFactType
 from qveris_bench.models.metric import (
     UNSTRUCTURED_METRIC_PROPERTY_NAMES_SCHEMA,
+    MetricDefinition,
     MetricDetails,
     MetricRanking,
     MetricScore,
@@ -89,6 +90,7 @@ class ReleaseFact(FrozenModel):
                     "and Access Path"
                 )
             score_method = (
+                self.metric_score.definition_digest,
                 self.metric_score.cap_version,
                 self.metric_score.method_digest,
                 self.metric_score.suite_fingerprint,
@@ -98,6 +100,7 @@ class ReleaseFact(FrozenModel):
                 self.metric_score.direction,
             )
             ranking_method = (
+                self.metric_ranking.definition_digest,
                 self.metric_ranking.cap_version,
                 self.metric_ranking.method_digest,
                 self.metric_ranking.suite_fingerprint,
@@ -128,6 +131,15 @@ class BenchmarkRelease(FrozenModel):
     run_plan_digest: EvidenceRef
     evidence_ids: tuple[StableId, ...] = ()
     outcome_ids: tuple[StableId, ...] = ()
+    cap_id: StableId | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    cap_version: SemanticVersion | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    metric_definitions: tuple[MetricDefinition, ...] = Field(
+        default=(), exclude_if=lambda value: not value
+    )
     developer_selection_facts: tuple[ReleaseFact, ...] = ()
     provider_feedback_facts: dict[StableId, tuple[ReleaseFact, ...]] = Field(
         default_factory=dict

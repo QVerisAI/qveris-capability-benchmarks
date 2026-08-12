@@ -26,9 +26,18 @@
         },
         {
           "items": {
-            "$ref": "#/$defs/DetailScalar"
+            "$ref": "#/$defs/DetailValue"
           },
           "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/DetailValue"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/MetricDetailKey"
+          },
+          "type": "object"
         }
       ]
     },
@@ -41,9 +50,28 @@
       "title": "DimensionState",
       "type": "string"
     },
+    "MetricDetailKey": {
+      "not": {
+        "anyOf": [
+          {
+            "pattern": "[sS][cC][oO][rR][eE]"
+          },
+          {
+            "pattern": "[rR][aA][tT][iI][nN][gG]"
+          },
+          {
+            "pattern": "[rR][aA][nN][kK]"
+          }
+        ]
+      },
+      "type": "string"
+    },
     "MetricDetails": {
       "additionalProperties": {
         "$ref": "#/$defs/DetailValue"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/MetricDetailKey"
       },
       "type": "object"
     },
@@ -79,6 +107,11 @@
           "minLength": 1,
           "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
           "title": "Cohort Id",
+          "type": "string"
+        },
+        "definition_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Definition Digest",
           "type": "string"
         },
         "dimension_id": {
@@ -169,6 +202,7 @@
       },
       "required": [
         "metric_id",
+        "definition_digest",
         "dimension_id",
         "cap_id",
         "cap_version",
@@ -211,6 +245,11 @@
         "cap_version": {
           "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
           "title": "Cap Version",
+          "type": "string"
+        },
+        "definition_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Definition Digest",
           "type": "string"
         },
         "dimension_id": {
@@ -286,6 +325,7 @@
       },
       "required": [
         "metric_id",
+        "definition_digest",
         "dimension_id",
         "cap_id",
         "cap_version",

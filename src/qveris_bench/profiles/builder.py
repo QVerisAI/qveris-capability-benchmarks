@@ -10,6 +10,7 @@ from pydantic import ValidationError
 
 from qveris_bench.models.enums import DimensionState
 from qveris_bench.models.profile import ProfileDimension, TaskFitProfile
+from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.scenario import ScenarioRef
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.suites.fingerprint import canonical_json_bytes
@@ -63,6 +64,7 @@ def build_profile(input_path: Path, root: Path) -> ProfileBuild:
                 f"release digest mismatch for {cap_id}: {actual_digest}"
             )
         document_release = json.loads(release_bytes)
+        release = BenchmarkRelease.model_validate(document_release.get("release", {}))
         cells = document_release.get("cells", [])
         evidence = document_release.get("evidence", [])
         limitations.extend(
@@ -71,6 +73,7 @@ def build_profile(input_path: Path, root: Path) -> ProfileBuild:
         )
         dimensions.extend(_case_dimensions(cap_id, cells, evidence))
         dimensions.extend(_gateway_dimensions(cap_id, evidence))
+        dimensions.extend(_released_metric_dimensions(cap_id, release))
         dimensions.extend(_cap_level_insufficient(cap_id))
 
     profile = TaskFitProfile(
@@ -195,6 +198,31 @@ def _gateway_insufficient(cap_id: str) -> tuple[ProfileDimension, ...]:
             details={},
         )
         for name in ("latency", "cost")
+    )
+
+
+def _released_metric_dimensions(
+    cap_id: str, release: BenchmarkRelease
+) -> tuple[ProfileDimension, ...]:
+    facts = release.developer_selection_facts + tuple(
+        fact
+        for provider_facts in release.provider_feedback_facts.values()
+        for fact in provider_facts
+    )
+    return tuple(
+        ProfileDimension(
+            cap_id=cap_id,
+            dimension=str(fact.dimension_id),
+            dimension_state=fact.dimension_state,
+            details=fact.details,
+            metric_score=fact.metric_score,
+            metric_ranking=fact.metric_ranking,
+            evidence_refs=fact.evidence_refs,
+        )
+        for fact in facts
+        if fact.dimension_id is not None
+        and fact.dimension_state is not None
+        and (fact.metric_score is not None or fact.metric_ranking is not None)
     )
 
 

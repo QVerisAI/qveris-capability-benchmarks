@@ -17,6 +17,7 @@ SUITE_FINGERPRINT = "b" * 64
 def _metric_score() -> dict[str, object]:
     return {
         "metric_id": "error-recoverability",
+        "definition_digest": "sha256:" + "f" * 64,
         "dimension_id": "agent-interface-error-recoverability",
         "cap_id": "stock-quote",
         "cap_version": "2.0.0",
@@ -37,6 +38,7 @@ def _metric_score() -> dict[str, object]:
 def _metric_ranking() -> dict[str, object]:
     return {
         "metric_id": "error-recoverability",
+        "definition_digest": "sha256:" + "f" * 64,
         "dimension_id": "agent-interface-error-recoverability",
         "cap_id": "stock-quote",
         "cap_version": "2.0.0",
@@ -308,3 +310,28 @@ def test_ac3_exported_schema_rejects_nested_ad_hoc_scores() -> None:
 
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate(invalid, schema)
+
+
+def test_ac4_nested_non_metric_details_remain_backward_compatible() -> None:
+    fact = ReleaseFact(
+        fact_type=ReleaseFactType.OUTCOME,
+        details={
+            "provenance": {
+                "source": "https://example.com",
+                "percentiles": [1, 2],
+            }
+        },
+    )
+
+    assert fact.details["provenance"]["source"] == "https://example.com"
+    schema = BenchmarkRelease.model_json_schema(mode="validation")
+    jsonschema.validate(
+        {
+            "release_id": "legacy-nested-details",
+            "version": "1.0.0",
+            "suite_fingerprint": "b" * 64,
+            "run_plan_digest": "sha256:" + "c" * 64,
+            "developer_selection_facts": [fact.model_dump(mode="json")],
+        },
+        schema,
+    )

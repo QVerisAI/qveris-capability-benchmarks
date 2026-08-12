@@ -76,6 +76,7 @@ class ProfileDimension(FrozenModel):
                     "and Access Path"
                 )
             score_method = (
+                metrics[0].definition_digest,
                 metrics[0].cap_version,
                 metrics[0].method_version,
                 metrics[0].method_digest,
@@ -86,6 +87,7 @@ class ProfileDimension(FrozenModel):
                 metrics[0].direction,
             )
             ranking_method = (
+                metrics[1].definition_digest,
                 metrics[1].cap_version,
                 metrics[1].method_version,
                 metrics[1].method_digest,

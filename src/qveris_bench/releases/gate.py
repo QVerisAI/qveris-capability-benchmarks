@@ -3,7 +3,12 @@ from __future__ import annotations
 from qveris_bench.evidence.policy import PublicationPolicyError, validate_publication
 from qveris_bench.models.enums import CellState, DimensionState
 from qveris_bench.models.evidence import EvidenceBundle
-from qveris_bench.models.metric import MetricRanking, MetricScore
+from qveris_bench.models.metric import (
+    MetricRanking,
+    MetricScore,
+    metric_definition_digest,
+    metric_ranking_cohort_digest,
+)
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell
 from qveris_bench.outcomes.attribution import (
@@ -106,6 +111,50 @@ def _validate_metrics(
     )
     if any(metric.suite_fingerprint != release.suite_fingerprint for metric in metrics):
         raise ReleaseGateError("metric suite fingerprint mismatch")
+    if metrics and (release.cap_id is None or release.cap_version is None):
+        raise ReleaseGateError("release metrics require one CAP identity")
+    definitions = {
+        metric_definition_digest(definition): definition
+        for definition in release.metric_definitions
+    }
+    if len(definitions) != len(release.metric_definitions):
+        raise ReleaseGateError("duplicate registered CAP metric definition")
+    for metric in metrics:
+        definition = definitions.get(str(metric.definition_digest))
+        if definition is None:
+            raise ReleaseGateError("metric requires a registered CAP metric definition")
+        expected = (
+            release.cap_id,
+            release.cap_version,
+            definition.cap_id,
+            definition.cap_version,
+            definition.metric_id,
+            definition.dimension_id,
+            definition.method_version,
+            definition.method_digest,
+            definition.scale_min,
+            definition.scale_max,
+            definition.unit,
+            definition.direction,
+        )
+        actual = (
+            metric.cap_id,
+            metric.cap_version,
+            metric.cap_id,
+            metric.cap_version,
+            metric.metric_id,
+            metric.dimension_id,
+            metric.method_version,
+            metric.method_digest,
+            metric.scale_min,
+            metric.scale_max,
+            metric.unit,
+            metric.direction,
+        )
+        if actual != expected:
+            raise ReleaseGateError(
+                "metric does not match its registered CAP definition"
+            )
 
     cells_by_run_key = {cell.run_key: cell for cell in cells}
     metric_scopes_by_digest: dict[str, set[tuple[str, str]]] = {}
@@ -119,8 +168,8 @@ def _validate_metrics(
                 metric_scopes_by_digest.setdefault(str(digest), set()).add(scope)
     for metric in metrics:
         metric_scope = (str(metric.provider_id), str(metric.access_path_id))
-        if not any(
-            metric_scope in metric_scopes_by_digest.get(str(reference), set())
+        if any(
+            metric_scopes_by_digest.get(str(reference)) != {metric_scope}
             for reference in metric.evidence_refs
         ):
             raise ReleaseGateError(
@@ -130,7 +179,7 @@ def _validate_metrics(
     rankings_by_cohort: dict[str, list[MetricRanking]] = {}
     for metric in metrics:
         if isinstance(metric, MetricRanking):
-            rankings_by_cohort.setdefault(str(metric.cohort_digest), []).append(metric)
+            rankings_by_cohort.setdefault(str(metric.cohort_id), []).append(metric)
     for rankings in rankings_by_cohort.values():
         _validate_ranking_cohort(rankings)
 
@@ -140,6 +189,7 @@ def _validate_ranking_cohort(rankings: list[MetricRanking]) -> None:
     signature = (
         first.cohort_id,
         first.metric_id,
+        first.definition_digest,
         first.dimension_id,
         first.cap_id,
         first.cap_version,
@@ -157,6 +207,7 @@ def _validate_ranking_cohort(rankings: list[MetricRanking]) -> None:
         candidate = (
             ranking.cohort_id,
             ranking.metric_id,
+            ranking.definition_digest,
             ranking.dimension_id,
             ranking.cap_id,
             ranking.cap_version,
@@ -177,6 +228,10 @@ def _validate_ranking_cohort(rankings: list[MetricRanking]) -> None:
     }
     if len(members) != first.rank_of or len(rankings) != first.rank_of:
         raise ReleaseGateError("metric ranking requires a complete frozen cohort")
+    if any(ranking.cohort_digest != first.cohort_digest for ranking in rankings):
+        raise ReleaseGateError("metric ranking cohort digest mismatch")
+    if str(first.cohort_digest) != metric_ranking_cohort_digest(rankings):
+        raise ReleaseGateError("metric ranking cohort digest mismatch")
     if first.tie_method == "ordinal" and {ranking.rank for ranking in rankings} != set(
         range(1, first.rank_of + 1)
     ):
@@ -185,6 +240,20 @@ def _validate_ranking_cohort(rankings: list[MetricRanking]) -> None:
         )
     if min(ranking.rank for ranking in rankings) != 1:
         raise ReleaseGateError("metric ranking must start at rank 1")
+    ordered_counts: dict[int, int] = {}
+    for ranking in rankings:
+        ordered_counts[ranking.rank] = ordered_counts.get(ranking.rank, 0) + 1
+    ranks = sorted(ordered_counts)
+    if first.tie_method == "dense" and ranks != list(range(1, len(ranks) + 1)):
+        raise ReleaseGateError("dense metric ranking requires contiguous rank levels")
+    if first.tie_method == "competition":
+        expected: list[int] = []
+        position = 1
+        for rank in ranks:
+            expected.append(position)
+            position += ordered_counts[rank]
+        if ranks != expected:
+            raise ReleaseGateError("competition metric ranking has invalid tie gaps")
 
 
 def _validate_provider_negative_attribution(
