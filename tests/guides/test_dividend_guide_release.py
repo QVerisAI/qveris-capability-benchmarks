@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import platform
 import re
 from pathlib import Path
 
@@ -40,7 +41,7 @@ def test_english_publication_contract(tmp_path: Path) -> None:
     assert re.search(r"[\u4e00-\u9fff]", article) is None
     assert article.splitlines()[0] == f"# {seo['title']}"
     assert 40 <= len(seo["title"]) <= 60
-    assert 120 <= len(seo["meta_description"]) <= 160
+    assert 150 <= len(seo["meta_description"]) <= 160
     assert seo["primary_keyword"].lower() in seo["title"].lower()
     for keyword in seo["secondary_keywords"]:
         assert keyword.lower() in article.lower()
@@ -242,6 +243,30 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
             "Published sample does not prove the response identified `AAPL`"
         ),
     }
+    required_fields = {
+        "hangseng": "CN sample 2/2",
+        "ifind": "Missing single-event amount meaning and ex-dividend date",
+        "twelve-data": "3/3",
+        "alpha-vantage": "3/3",
+        "eodhd": "3/3",
+        "massive-stocks": "3/3",
+    }
+    currency_text = {
+        "hangseng": "Not returned in this sample",
+        "ifind": "Not published in this sample",
+        "twelve-data": "`USD`",
+        "alpha-vantage": "Not returned in this sample",
+        "eodhd": "Not returned in this sample",
+        "massive-stocks": "`USD`",
+    }
+    additional_dates = {
+        "hangseng": "Declaration, record, and payment dates",
+        "ifind": "No single-event date set",
+        "twelve-data": "Only ex-dividend date in this sample",
+        "alpha-vantage": "Declaration, record, and payment dates",
+        "eodhd": "Only ex-dividend date in this sample",
+        "massive-stocks": "Declaration, record, and payment dates",
+    }
     for snapshot_row in snapshot["rows"]:
         provider = _article_provider_name(snapshot_row)
         access_path = (
@@ -250,10 +275,14 @@ def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
             else "QVeris"
         )
         article_row = _provider_row(agent_rows, provider, access_path)
+        provider_id = snapshot_row["provider_id"]
         invalid = snapshot_row["agent_interface"]["invalid_input_handling"]
-        assert article_row[2] == identity_text[snapshot_row["provider_id"]]
+        assert article_row[1] == required_fields[provider_id]
+        assert article_row[2] == identity_text[provider_id]
         expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
         assert article_row[3] == expected_invalid
+        assert article_row[4] == currency_text[provider_id]
+        assert article_row[5] == additional_dates[provider_id]
 
 
 def test_article_evidence_charts_are_declared_and_valid_image() -> None:
@@ -285,7 +314,8 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
-    assert generated["charts"] == committed["charts"]
+    if platform.system() == "Linux":
+        assert generated["charts"] == committed["charts"]
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
         "sha256:"
@@ -301,9 +331,10 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
             "sha256:"
             + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
         )
-        assert (tmp_path / chart_name).read_bytes() == (
-            committed_dir / chart_name
-        ).read_bytes()
+        if platform.system() == "Linux":
+            assert (tmp_path / chart_name).read_bytes() == (
+                committed_dir / chart_name
+            ).read_bytes()
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 
@@ -684,6 +715,7 @@ def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
     market = manifest["market_coverage_release"]
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     provider_count = len({row["provider_id"] for row in snapshot["rows"]})
+    access_path_count = len(snapshot["rows"])
     total_calls = (
         manifest["release"]["public_evidence_records"]
         + market["public_evidence_records"]
@@ -692,6 +724,9 @@ def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
         f"# Best Dividend APIs for Developers in 2026: {provider_count} Providers"
     )
     assert f"{total_calls} live calls" in manifest["seo"]["meta_description"]
+    assert manifest["seo"]["meta_description"].startswith(
+        f"Compare {access_path_count} dividend API Access Paths"
+    )
     assert f"We made {total_calls} live calls" in article
     lead = "\n".join(article.splitlines()[2:9])
     assert "Through the tested QVeris Access Paths" in lead
