@@ -266,6 +266,9 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                         inspected_at=list_prices[(provider_id, access_path_id)][
                             "inspected_at"
                         ],
+                        snapshot_version=list_prices[(provider_id, access_path_id)][
+                            "snapshot_version"
+                        ],
                         evidence_ref=list_pricing_digest,
                     )
                     if is_qveris
@@ -398,14 +401,25 @@ def _load_qveris_list_prices(
         if not isinstance(fact, dict):
             raise SelectionSnapshotBuildError("invalid QVeris list price fact")
         identity = (str(fact.get("provider_id")), str(fact.get("access_path_id")))
-        if identity in result or binding_identities.get(identity) != fact.get("tool_id"):
+        if (
+            identity in result
+            or binding_identities.get(identity) != fact.get("tool_id")
+        ):
             raise SelectionSnapshotBuildError("QVeris list price identity mismatch")
         amount = fact.get("amount_credits")
-        if isinstance(amount, bool) or not isinstance(amount, (int, float)) or amount <= 0:
+        snapshot_version = fact.get("snapshot_version")
+        if (
+            isinstance(amount, bool)
+            or not isinstance(amount, (int, float))
+            or amount < 0
+            or not isinstance(snapshot_version, str)
+            or not snapshot_version
+        ):
             raise SelectionSnapshotBuildError("invalid QVeris list price amount")
         result[identity] = {
             "amount_credits": float(amount),
             "inspected_at": inspected_at,
+            "snapshot_version": snapshot_version,
         }
     return result
 

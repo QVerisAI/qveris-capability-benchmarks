@@ -80,7 +80,7 @@ def test_article_publishes_inspect_list_prices_not_discounted_account_costs() ->
     expected = {
         "恒生聚源": "1 credit/call",
         "Twelve Data": "2.37 credits/call",
-        "Alpha Vantage": "2 credits/call",
+        "Alpha Vantage": "0 credits/call",
         "EODHD": "2.81 credits/call",
         "Massive": "1 credit/call",
     }
@@ -433,7 +433,7 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     ):
         assert phrase in article
     assert "491 ms / 2.37 credits/call" in article
-    assert "576 ms / 2 credits/call" in article
+    assert "576 ms / 0 credits/call" in article
     assert "779 ms / 2.81 credits/call" in article
     assert "861 ms / 1 credit/call" in article
     assert "综合 AI 友好度" not in article

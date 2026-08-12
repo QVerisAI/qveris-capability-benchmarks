@@ -140,7 +140,7 @@ def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
     expected = {
         "hangseng-dividends-qveris": 1.0,
         "massive-stocks-dividends-qveris": 1.0,
-        "alpha-vantage-dividends-qveris": 2.0,
+        "alpha-vantage-dividends-qveris": 0.0,
         "twelve-data-dividends-qveris": 2.37,
         "eodhd-dividends-qveris": 2.81,
     }
@@ -151,6 +151,7 @@ def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
         assert price.amount_credits == amount
         assert price.unit == "per_call"
         assert price.source == "qveris_inspect"
+        assert price.snapshot_version == "website-default"
         assert price.evidence_ref.startswith("sha256:")
 
     native = rows["ifind-native-mcp"].qveris_list_price
