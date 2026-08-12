@@ -13,6 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
+from matplotlib import font_manager
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import Patch
 
@@ -21,16 +22,17 @@ try:
 except ModuleNotFoundError:
     from scripts.chart_metrics import direct_metrics_by_access_path
 
-try:
-    from matplotlib import font_manager
-
-    for font_name in ("PingFang SC", "Arial Unicode MS", "Heiti SC"):
-        if any(f.name == font_name for f in font_manager.fontManager.ttflist):
-            plt.rcParams["font.sans-serif"] = [font_name]
-            break
-    plt.rcParams["axes.unicode_minus"] = False
-except Exception:
-    pass
+_FONT_ROOT = Path(__file__).resolve().parents[1] / "assets/fonts"
+_FONT_PATHS = (
+    _FONT_ROOT / "QVerisCharts-Regular.otf",
+    _FONT_ROOT / "QVerisCharts-Bold.otf",
+)
+for _font_path in _FONT_PATHS:
+    font_manager.fontManager.addfont(_font_path)
+_CHART_FONT_FAMILY = font_manager.FontProperties(fname=_FONT_PATHS[0]).get_name()
+plt.rcParams["font.family"] = ["sans-serif"]
+plt.rcParams["font.sans-serif"] = [_CHART_FONT_FAMILY]
+plt.rcParams["axes.unicode_minus"] = False
 
 
 def _latest_batch(path: Path) -> list[dict]:

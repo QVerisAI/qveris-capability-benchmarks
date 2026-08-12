@@ -1,7 +1,7 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:d39ff81a3f2c1d9d8ee7ae03f98851ba49c6bd8b46bf1590c95f28bd46f685e4"
+    "dividend-runtime-tradeoff.png": "sha256:feb25fbd0bcaa3692e0e44c8bb4134b28526119495ccb18b02f28cebebc93429"
   },
   "data": {
     "rows": [
