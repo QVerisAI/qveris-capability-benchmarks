@@ -41,10 +41,81 @@ def test_article_is_bound_to_dividend_release() -> None:
     assert "3 轮" in article
     assert "36 次" in article
     assert "同花顺 iFinD（Native MCP）" in article
-    assert "Not qualified" in article
+    assert "本次样本未通过" in article
     assert "https://qveris.ai/providers/ths_ifind" not in article
     assert "AI 友好度" not in article
     assert "Direct Test 4/4" not in article
+
+
+def test_article_uses_reader_facing_outcomes_and_one_decision_flow() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    for internal_term in ("Qualified", "Not qualified", "Evidence insufficient"):
+        assert internal_term not in article
+    for public_state in (
+        "本次样本通过",
+        "本次样本未通过",
+        "证据不足",
+        "未测试：明确不适用",
+    ):
+        assert public_state in article
+
+    headings = [
+        "## 实测结论一览",
+        "## 开发者怎么选",
+        "## 证据与供应商差异",
+        "## Agent 选型时额外检查什么",
+        "## 测试方法、复测与贡献",
+        "## 限制、披露与更正",
+        "## 常见问题",
+    ]
+    positions = [article.index(heading) for heading in headings]
+    assert positions == sorted(positions)
+    assert "## AI Agent 接入时要做的 5 件事" not in article
+
+
+def test_article_publishes_inspect_list_prices_not_discounted_account_costs() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    expected = {
+        "恒生聚源": "1 credit/call",
+        "Twelve Data": "2.37 credits/call",
+        "Alpha Vantage": "2 credits/call",
+        "EODHD": "2.81 credits/call",
+        "Massive": "1 credit/call",
+    }
+
+    for provider, list_price in expected.items():
+        row = _provider_row(overview_rows, provider, "QVeris")
+        assert list_price in row[2]
+    for discounted in (
+        "0.100 credits",
+        "0.200 credits",
+        "0.237 credits",
+        "0.281 credits",
+    ):
+        assert discounted not in article
+    assert "QVeris Inspect 公开标价" in article
+    assert "账号实际扣费" in article
+    assert "https://massive.com/pricing?product=stocks" in article
+    assert "Stocks Basic Free" in article
+
+
+def test_article_explains_market_samples_and_evidence_heatmap() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    for phrase in (
+        "代表市场样本结果",
+        "通过（2/2）",
+        "本次代表样本未通过（0/2）",
+        "未测试：明确不适用",
+        "不能据此断言供应商完全不支持该市场",
+        "核心可用性",
+        "响应字段丰富度",
+        "未独立测量不等于失败",
+        "字段丰富不等于记录可用",
+    ):
+        assert phrase in article
 
 
 def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
@@ -65,7 +136,7 @@ def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
 def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
-    assert "## Direct Test 可观察的 Agent 接入风险信号" in article
+    assert "## Agent 选型时额外检查什么" in article
     for signal in (
         "必需事件字段",
         "证券身份",
@@ -289,11 +360,13 @@ def test_selection_market_chart_changes_with_edition(tmp_path: Path) -> None:
 
 def test_article_embeds_market_coverage_chart_next_to_market_section() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
-    market_section = article.split("### 市场覆盖：", 1)[1].split("## 6 家供应商", 1)[0]
+    market_section = article.split("### 九个代表市场的样本结果", 1)[1].split(
+        "### 六家供应商逐一分析", 1
+    )[0]
     chart_path = "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png"
 
     assert f"]({chart_path})]({chart_path})" in market_section
-    assert "绿色表示固定代表 symbol 连续 2 轮" in market_section
+    assert "图中绿色表示该市场的固定代表 symbol 连续两轮" in market_section
 
 
 def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(
@@ -329,6 +402,12 @@ def test_manifest_uses_public_release_as_source_of_truth() -> None:
     assert manifest["selection_snapshot"]["input_digest"] == (
         f"sha256:{hashlib.sha256(snapshot_input.read_bytes()).hexdigest()}"
     )
+    pricing = ROOT / manifest["artifacts"]["qveris_list_pricing"]
+    assert manifest["qveris_list_pricing"]["digest"] == (
+        f"sha256:{hashlib.sha256(pricing.read_bytes()).hexdigest()}"
+    )
+    assert manifest["qveris_list_pricing"]["source"] == "qveris_inspect"
+    assert manifest["qveris_list_pricing"]["inspected_at"] == "2026-08-12"
     market_release = ROOT / manifest["artifacts"]["market_coverage_release"]
     assert manifest["market_coverage_release"]["digest"] == (
         f"sha256:{hashlib.sha256(market_release.read_bytes()).hexdigest()}"
@@ -344,19 +423,19 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
 
     for phrase in (
         "QVeris gateway 延迟中位数",
-        "成功调用 credits 中位数",
+        "QVeris Inspect 公开标价",
         "官方价格",
-        "市场覆盖",
+        "代表市场样本",
         "9 个代表市场",
         "参数清晰度",
         "schema 稳定性",
         "错误恢复",
     ):
         assert phrase in article
-    assert "491 ms / 0.237 credits" in article
-    assert "576 ms / 0.200 credits" in article
-    assert "779 ms / 0.281 credits" in article
-    assert "861 ms / 0.100 credits" in article
+    assert "491 ms / 2.37 credits/call" in article
+    assert "576 ms / 2 credits/call" in article
+    assert "779 ms / 2.81 credits/call" in article
+    assert "861 ms / 1 credit/call" in article
     assert "综合 AI 友好度" not in article
     assert "已验证全球市场覆盖" not in article
 
@@ -365,10 +444,14 @@ def test_article_publishes_released_market_coverage_near_the_decision_table() ->
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
-    market_rows = _markdown_table_rows(article, "2/2 通过的代表市场")
+    market_rows = _markdown_table_rows(article, "通过（2/2）的代表市场")
 
-    assert "7/9 通过" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
-    assert "CN 2/2" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
+    assert "7 个市场通过（2/2）" in _provider_row(
+        overview_rows, "EODHD", "QVeris"
+    )[4]
+    assert "CN 通过（2/2）" in _provider_row(
+        overview_rows, "恒生聚源", "QVeris"
+    )[4]
     eodhd = next(row for row in snapshot["rows"] if row["provider_id"] == "eodhd")
     verified = {
         result["market"]
@@ -384,7 +467,7 @@ def test_article_publishes_released_market_coverage_near_the_decision_table() ->
     hangseng_market_row = _provider_row(market_rows, "恒生聚源", "QVeris")
     assert hangseng_market_row[1] == "CN"
     assert "66 次真实调用" in article
-    assert "54 个 N/A 单元" in article
+    assert "54 个明确不适用单元" in article
 
 
 def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
@@ -392,12 +475,12 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
     overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
     expected_base = {
-        "恒生聚源": "基础 Release 保持 **Evidence insufficient**",
-        "同花顺 iFinD": "**Not qualified**",
-        "Twelve Data": "**Qualified**",
-        "Alpha Vantage": "**Qualified**",
-        "EODHD": "**Qualified**",
-        "Massive": "**Qualified**",
+        "恒生聚源": "**证据不足**",
+        "同花顺 iFinD": "**本次样本未通过**",
+        "Twelve Data": "**本次样本通过**",
+        "Alpha Vantage": "**本次样本通过**",
+        "EODHD": "**本次样本通过**",
+        "Massive": "**本次样本通过**",
     }
     aliases = {"Massive Stocks": "Massive"}
     for row in snapshot["rows"]:
@@ -416,11 +499,11 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
             for result in row["market_coverage"]["results"]
         )
         if provider == "Alpha Vantage":
-            assert f"{verified} 个适用市场均 2/2" in overview[4]
+            assert f"{verified} 个适用市场通过（2/2）" in overview[4]
         elif provider in {"EODHD", "Twelve Data"}:
-            assert f"{verified}/9 通过" in overview[4]
+            assert f"{verified} 个市场通过（2/2）" in overview[4]
         elif provider == "恒生聚源":
-            assert "CN 2/2" in overview[4]
+            assert "CN 通过（2/2）" in overview[4]
         assert (
             applicable
             + sum(
@@ -429,8 +512,8 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
             )
             == 9
         )
-    assert "当前市场套件只有 2 轮" in article
-    assert "仍应对主 suite 生成一个新的 3 轮 successor release" in article
+    assert "市场补充套件改为优先读取响应 `stockcode`" in article
+    assert "需要生成新的三轮 successor release" in article
 
     quick_advice = article.split("> **快速建议**：", 1)[1].split("\n", 1)[0]
     by_provider = {row["provider_id"]: row for row in snapshot["rows"]}
@@ -447,10 +530,10 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     alpha_not_applicable = sum(
         result["state"] == "not_applicable" for result in alpha_results
     )
-    assert f"EODHD 在 9 个代表市场中通过 {eodhd_verified} 个" in quick_advice
+    assert f"EODHD 的代表样本通过 {eodhd_verified} 个市场" in quick_advice
     assert f"Twelve Data 通过 {twelve_verified} 个" in quick_advice
     assert f"Alpha Vantage 的 {alpha_verified} 个适用市场全部通过" in quick_advice
-    assert f"另外 {alpha_not_applicable} 个已被 QVeris 明确标为不支持" in quick_advice
+    assert f"另外 {alpha_not_applicable} 个由 QVeris 明确标为不支持" in quick_advice
 
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:
@@ -459,7 +542,7 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
     aliases = {"Massive Stocks": "Massive"}
     runtime_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
     pricing_rows = _markdown_table_rows(article, "| Provider / Access Path |")
-    market_rows = _markdown_table_rows(article, "2/2 通过的代表市场")
+    market_rows = _markdown_table_rows(article, "通过（2/2）的代表市场")
 
     for row in snapshot["rows"]:
         provider = aliases.get(row["provider_name"], row["provider_name"])
@@ -469,9 +552,11 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
         runtime_row = _provider_row(runtime_rows, provider, access_path)
         metrics = row["gateway_metrics"]
         if metrics["state"] == "measured":
+            amount = row["qveris_list_price"]["amount_credits"]
+            unit = "credit/call" if amount == 1 else "credits/call"
             runtime = (
                 f"{metrics['latency_median_ms']:.0f} ms / "
-                f"{metrics['median_credits']:.3f} credits"
+                f"{amount:g} {unit}"
             )
             assert runtime in runtime_row[2]
         else:
@@ -483,9 +568,12 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             assert pricing["pricing_url"] in pricing_row[0]
             assert pricing["free_tier"] in pricing_row[1]
             assert pricing["paid_plans"] in pricing_row[2]
-        else:
+        elif provider != "Massive":
             assert "Evidence insufficient" in pricing_row[1]
             assert "Evidence insufficient" in pricing_row[2]
+        else:
+            assert "https://massive.com/pricing?product=stocks" in pricing_row[0]
+            assert "Stocks Basic Free" in pricing_row[1]
 
         market_row = _provider_row(market_rows, provider, access_path)
         results = row["market_coverage"]["results"]

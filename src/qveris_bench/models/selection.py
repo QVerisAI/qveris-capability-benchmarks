@@ -15,6 +15,7 @@ from qveris_bench.models.enums import AccessPathType
 
 MeasurementState = Literal["measured", "evidence_insufficient", "not_applicable"]
 PricingState = Literal["declared", "evidence_insufficient"]
+QVerisListPriceState = Literal["declared", "not_applicable"]
 MarketResultState = Literal["verified", "provider_negative", "not_applicable"]
 
 
@@ -164,6 +165,30 @@ class OfficialPricingSnapshot(FrozenModel):
         return self
 
 
+class QVerisListPriceSnapshot(FrozenModel):
+    state: QVerisListPriceState
+    amount_credits: float | None = Field(default=None, gt=0)
+    unit: Literal["per_call"] | None = None
+    source: Literal["qveris_inspect"] | None = None
+    inspected_at: date | None = None
+    evidence_ref: EvidenceRef | None = None
+
+    @model_validator(mode="after")
+    def validate_price(self) -> QVerisListPriceSnapshot:
+        details = (
+            self.amount_credits,
+            self.unit,
+            self.source,
+            self.inspected_at,
+            self.evidence_ref,
+        )
+        if self.state == "declared" and any(item is None for item in details):
+            raise ValueError("declared QVeris list price requires inspect provenance")
+        if self.state == "not_applicable" and any(item is not None for item in details):
+            raise ValueError("not-applicable QVeris list price cannot carry facts")
+        return self
+
+
 class SelectionObservation(FrozenModel):
     state: MeasurementState
     passed: int | None = Field(default=None, ge=0)
@@ -254,6 +279,7 @@ class SelectionSnapshotRow(FrozenModel):
     observation_window: ObservationWindow
     run_observations: RunObservationsSnapshot
     gateway_metrics: GatewayMetricsSnapshot
+    qveris_list_price: QVerisListPriceSnapshot
     official_pricing: OfficialPricingSnapshot
     market_coverage: MarketCoverageSnapshot
     agent_interface: AgentInterfaceSnapshot

@@ -1,0 +1,39 @@
+{
+  "snapshot_id": "dividend-events-qveris-list-pricing-2026-08-12",
+  "version": "1.0.0",
+  "source": "qveris_inspect",
+  "inspected_at": "2026-08-12",
+  "bindings_digest": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",
+  "prices": [
+    {
+      "provider_id": "hangseng",
+      "access_path_id": "hangseng-dividends-qveris",
+      "tool_id": "hangseng_polysource.stock.dividend.query.v2.6174546b",
+      "amount_credits": 1
+    },
+    {
+      "provider_id": "twelve-data",
+      "access_path_id": "twelve-data-dividends-qveris",
+      "tool_id": "twelvedata.dividends.retrieve.v1.c0c9b142",
+      "amount_credits": 2.37
+    },
+    {
+      "provider_id": "alpha-vantage",
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "tool_id": "alphavantage.dividends.list.v1.467a92c0",
+      "amount_credits": 2
+    },
+    {
+      "provider_id": "eodhd",
+      "access_path_id": "eodhd-dividends-qveris",
+      "tool_id": "eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a",
+      "amount_credits": 2.81
+    },
+    {
+      "provider_id": "massive-stocks",
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "tool_id": "polygon.stocks.dividends.list.v1.ea25c492",
+      "amount_credits": 1
+    }
+  ]
+}

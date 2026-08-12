@@ -23,6 +23,7 @@ from qveris_bench.models.selection import (
     MarketResultState,
     ObservationWindow,
     OfficialPricingSnapshot,
+    QVerisListPriceSnapshot,
     RunObservationsSnapshot,
     SelectionObservation,
     SelectionSnapshot,
@@ -183,6 +184,29 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     market_observation_date = date.fromisoformat(
         str(market_compiled.suite.environment.get("as_of"))
     )
+    list_pricing_spec = _mapping(config, "qveris_list_pricing")
+    list_pricing_path = root / _string(list_pricing_spec, "snapshot")
+    list_pricing_digest = _sha256(list_pricing_path)
+    bindings_path = root / _string(list_pricing_spec, "bindings")
+    list_prices = _load_qveris_list_prices(
+        list_pricing_path,
+        bindings_path,
+        edition=edition,
+    )
+    qveris_identities = {
+        identity
+        for identity in identity_cells
+        if next(
+            item
+            for item in registry_by_id[identity[0]].access_paths
+            if item.access_path_id == identity[1]
+        ).path_type
+        is AccessPathType.QVERIS_CONNECTOR
+    }
+    if set(list_prices) != qveris_identities:
+        raise SelectionSnapshotBuildError(
+            "QVeris list pricing identities do not match selection identities"
+        )
     rows: list[SelectionSnapshotRow] = []
     provider_digests: dict[str, str] = {}
     for (provider_id, access_path_id), scoped_cells in sorted(identity_cells.items()):
@@ -231,6 +255,22 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                     case_roles,
                     is_qveris=is_qveris,
                 ),
+                qveris_list_price=(
+                    QVerisListPriceSnapshot(
+                        state="declared",
+                        amount_credits=list_prices[(provider_id, access_path_id)][
+                            "amount_credits"
+                        ],
+                        unit="per_call",
+                        source="qveris_inspect",
+                        inspected_at=list_prices[(provider_id, access_path_id)][
+                            "inspected_at"
+                        ],
+                        evidence_ref=list_pricing_digest,
+                    )
+                    if is_qveris
+                    else QVerisListPriceSnapshot(state="not_applicable")
+                ),
                 official_pricing=_pricing(
                     record.provider.official_pricing, access_path_id
                 ),
@@ -263,6 +303,8 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
             "market_coverage_release": market_release_digest,
             "market_coverage_suite": _sha256(market_suite_path),
             "market_coverage_cases": _sha256(market_cases_path),
+            "qveris_list_pricing": list_pricing_digest,
+            "qveris_direct_bindings": _sha256(bindings_path),
         },
         rows=tuple(rows),
         limitations=tuple(str(item) for item in config.get("limitations", [])),
@@ -322,6 +364,50 @@ def _gateway_metrics(
         latency_evidence_refs=latency_refs,
         cost_evidence_refs=cost_refs,
     )
+
+
+def _load_qveris_list_prices(
+    snapshot_path: Path,
+    bindings_path: Path,
+    *,
+    edition: date,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    try:
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        bindings = json.loads(bindings_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SelectionSnapshotBuildError("invalid QVeris list pricing input") from exc
+    if snapshot.get("source") != "qveris_inspect" or snapshot.get(
+        "bindings_digest"
+    ) != _sha256(bindings_path):
+        raise SelectionSnapshotBuildError("QVeris list pricing provenance mismatch")
+    inspected_at = date.fromisoformat(str(snapshot.get("inspected_at")))
+    if inspected_at > edition:
+        raise SelectionSnapshotBuildError("QVeris list pricing is newer than edition")
+    binding_identities: dict[tuple[str, str], str] = {}
+    for binding in bindings.get("bindings", []):
+        if binding.get("transport") != "qveris_connector":
+            continue
+        identity = (str(binding.get("provider_id")), str(binding.get("access_path_id")))
+        tool_id = str(binding.get("tool_id"))
+        previous = binding_identities.setdefault(identity, tool_id)
+        if previous != tool_id:
+            raise SelectionSnapshotBuildError("Access Path has multiple QVeris tools")
+    result: dict[tuple[str, str], dict[str, Any]] = {}
+    for fact in snapshot.get("prices", []):
+        if not isinstance(fact, dict):
+            raise SelectionSnapshotBuildError("invalid QVeris list price fact")
+        identity = (str(fact.get("provider_id")), str(fact.get("access_path_id")))
+        if identity in result or binding_identities.get(identity) != fact.get("tool_id"):
+            raise SelectionSnapshotBuildError("QVeris list price identity mismatch")
+        amount = fact.get("amount_credits")
+        if isinstance(amount, bool) or not isinstance(amount, (int, float)) or amount <= 0:
+            raise SelectionSnapshotBuildError("invalid QVeris list price amount")
+        result[identity] = {
+            "amount_credits": float(amount),
+            "inspected_at": inspected_at,
+        }
+    return result
 
 
 def _run_observations(

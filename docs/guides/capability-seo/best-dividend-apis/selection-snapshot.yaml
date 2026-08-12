@@ -8,6 +8,9 @@ cap_release:
 suite: cap_packs/dividend_events/suite.yaml
 cases: cap_packs/dividend_events/cases.yaml
 providers_root: providers
+qveris_list_pricing:
+  snapshot: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
+  bindings: cap_packs/dividend_events/direct-bindings.json
 observation_window:
   start: "2026-08-11"
   end: "2026-08-11"
@@ -20,4 +23,4 @@ limitations:
   - Market coverage uses one fixed representative symbol per market and is not comprehensive provider coverage.
   - A market is verified only when both Direct Test rounds complete the Dividend Event contract.
   - Explicitly unsupported or contract-inapplicable markets are not called again and remain not_applicable.
-  - QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing.
+  - QVeris latency describes the gateway Access Path; list credits come from qveris inspect and are not account billing.

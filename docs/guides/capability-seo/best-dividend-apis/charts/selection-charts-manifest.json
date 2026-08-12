@@ -1,8 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:ef35a3650ced8fa0dc140a73aa5f0c1cbb0f9df48fe7d99b07eb45a59cff93d7",
-    "dividend-market-coverage.png": "sha256:2b3ce84b7affd10a097d96f5304dd70aab1bd392feea8f7528d3e9e90d1c82d6"
+    "dividend-runtime-tradeoff.png": "sha256:d88fc747635dd863a54949b3f483b4939c1ddeee9361510244e3cd4f35ae7235",
+    "dividend-market-coverage.png": "sha256:e9a4abe5dce2282d31b641f20335c648fc5762785de89f55392dcd79013fdf82"
   },
   "data": {
     "rows": [
@@ -12,9 +12,9 @@
         "median_latency_ms": 491.005,
         "min_latency_ms": 372.38,
         "max_latency_ms": 560.82,
-        "median_credits": 0.237,
-        "latency_samples": 6,
-        "cost_samples": 3
+        "list_price_credits": 2.37,
+        "price_inspected_at": "2026-08-12",
+        "latency_samples": 6
       },
       {
         "provider": "Alpha Vantage",
@@ -22,9 +22,9 @@
         "median_latency_ms": 575.685,
         "min_latency_ms": 383.85,
         "max_latency_ms": 1783.63,
-        "median_credits": 0.2,
-        "latency_samples": 6,
-        "cost_samples": 3
+        "list_price_credits": 2.0,
+        "price_inspected_at": "2026-08-12",
+        "latency_samples": 6
       },
       {
         "provider": "恒生聚源",
@@ -32,9 +32,9 @@
         "median_latency_ms": 623.01,
         "min_latency_ms": 497.68,
         "max_latency_ms": 1708.29,
-        "median_credits": 0.1,
-        "latency_samples": 6,
-        "cost_samples": 3
+        "list_price_credits": 1.0,
+        "price_inspected_at": "2026-08-12",
+        "latency_samples": 6
       },
       {
         "provider": "EODHD",
@@ -42,9 +42,9 @@
         "median_latency_ms": 778.74,
         "min_latency_ms": 687.55,
         "max_latency_ms": 1555.72,
-        "median_credits": 0.281,
-        "latency_samples": 6,
-        "cost_samples": 3
+        "list_price_credits": 2.81,
+        "price_inspected_at": "2026-08-12",
+        "latency_samples": 6
       },
       {
         "provider": "Massive",
@@ -52,9 +52,9 @@
         "median_latency_ms": 860.975,
         "min_latency_ms": 761.87,
         "max_latency_ms": 1202.26,
-        "median_credits": 0.1,
-        "latency_samples": 6,
-        "cost_samples": 3
+        "list_price_credits": 1.0,
+        "price_inspected_at": "2026-08-12",
+        "latency_samples": 6
       }
     ],
     "market_coverage": {
@@ -651,7 +651,7 @@
     }
   },
   "input_digests": {
-    "selection_snapshot": "sha256:b35a3b9773f9541bcbf63d2f3908de706af48f79035d9ec077e210e02de1e790"
+    "selection_snapshot": "sha256:a46c075d6c94e16e03c20d43227172ffc4b6611ec398a49f1741e2074ed5c289"
   },
   "rendered_at": "2026-08-12"
 }

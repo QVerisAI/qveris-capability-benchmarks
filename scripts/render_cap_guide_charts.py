@@ -339,6 +339,9 @@ def render_selection_tradeoff(
         metrics = item["gateway_metrics"]
         if metrics["state"] != "measured":
             continue
+        list_price = item["qveris_list_price"]
+        if list_price["state"] != "declared":
+            raise ValueError("QVeris runtime chart requires inspect list pricing")
         rows.append(
             {
                 "provider": (
@@ -350,16 +353,20 @@ def render_selection_tradeoff(
                 "median_latency_ms": metrics["latency_median_ms"],
                 "min_latency_ms": metrics["latency_min_ms"],
                 "max_latency_ms": metrics["latency_max_ms"],
-                "median_credits": metrics["median_credits"],
+                "list_price_credits": list_price["amount_credits"],
+                "price_inspected_at": list_price["inspected_at"],
                 "latency_samples": metrics["latency_sample_size"],
-                "cost_samples": metrics["cost_sample_size"],
             }
         )
     rows.sort(key=lambda item: item["median_latency_ms"])
-    sample_sizes = {(item["latency_samples"], item["cost_samples"]) for item in rows}
+    sample_sizes = {item["latency_samples"] for item in rows}
     if len(sample_sizes) != 1:
         raise ValueError("selection chart requires consistent sample sizes")
-    latency_samples, cost_samples = next(iter(sample_sizes))
+    latency_samples = next(iter(sample_sizes))
+    inspection_dates = {item["price_inspected_at"] for item in rows}
+    if len(inspection_dates) != 1:
+        raise ValueError("selection chart requires one inspect pricing snapshot")
+    inspection_date = next(iter(inspection_dates))
 
     output_dir.mkdir(parents=True, exist_ok=True)
     chart_name = "dividend-runtime-tradeoff.png"
@@ -371,7 +378,7 @@ def render_selection_tradeoff(
         median_latency = item["median_latency_ms"]
         min_latency = item["min_latency_ms"]
         max_latency = item["max_latency_ms"]
-        credits = item["median_credits"]
+        credits = item["list_price_credits"]
         ax.errorbar(
             median_latency,
             credits,
@@ -397,9 +404,9 @@ def render_selection_tradeoff(
             color="#0F172A",
         )
     ax.set_xlabel("QVeris gateway 延迟中位数（ms；横线为最小—最大）", color="#334155")
-    ax.set_ylabel("成功调用 credits 中位数", color="#334155")
+    ax.set_ylabel("QVeris credits/call (inspect)", color="#334155")
     ax.set_title(
-        "一次 Dividend Event 调用：延迟与 credits 的取舍",
+        "Dividend Event: latency and QVeris list credits",
         color="#143F74",
         fontsize=18,
         fontweight=600,
@@ -412,9 +419,8 @@ def render_selection_tradeoff(
     fig.text(
         0.09,
         0.025,
-        f"QVeris gateway 小样本观测 · {edition} · 每条路径 latency "
-        f"n={latency_samples}，credits n={cost_samples}；"
-        "不是 Native API SLA 或官网价格",
+        f"QVeris gateway sample · {edition} · n={latency_samples} per path; "
+        f"list credits from qveris inspect ({inspection_date}), not account billing",
         color="#475569",
         fontsize=9.5,
     )

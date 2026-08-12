@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import yaml
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import (
@@ -129,6 +130,56 @@ def test_ac5_pricing_respects_access_path_scope() -> None:
     assert alpha.suite_fingerprint
     assert alpha.disclosure_level == "sanitized_public"
     assert alpha.license_status == "cleared"
+
+
+def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
+    rows = {
+        row.access_path_id: row
+        for row in build_selection_snapshot(INPUT, ROOT).snapshot.rows
+    }
+    expected = {
+        "hangseng-dividends-qveris": 1.0,
+        "massive-stocks-dividends-qveris": 1.0,
+        "alpha-vantage-dividends-qveris": 2.0,
+        "twelve-data-dividends-qveris": 2.37,
+        "eodhd-dividends-qveris": 2.81,
+    }
+
+    for access_path_id, amount in expected.items():
+        price = rows[access_path_id].qveris_list_price
+        assert price.state == "declared"
+        assert price.amount_credits == amount
+        assert price.unit == "per_call"
+        assert price.source == "qveris_inspect"
+        assert price.evidence_ref.startswith("sha256:")
+
+    native = rows["ifind-native-mcp"].qveris_list_price
+    assert native.state == "not_applicable"
+    assert native.amount_credits is None
+
+
+@pytest.mark.parametrize("mutation", ["string_amount", "wrong_tool", "wrong_digest"])
+def test_ac5_qveris_list_pricing_fails_closed(
+    tmp_path: Path, mutation: str
+) -> None:
+    pricing = json.loads(
+        (INPUT.parent / "qveris-list-pricing.json").read_text(encoding="utf-8")
+    )
+    if mutation == "string_amount":
+        pricing["prices"][0]["amount_credits"] = "1"
+    elif mutation == "wrong_tool":
+        pricing["prices"][0]["tool_id"] = pricing["prices"][1]["tool_id"]
+    else:
+        pricing["bindings_digest"] = f"sha256:{'f' * 64}"
+    pricing_path = tmp_path / "qveris-list-pricing.json"
+    pricing_path.write_text(json.dumps(pricing), encoding="utf-8")
+    config = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
+    config["qveris_list_pricing"]["snapshot"] = str(pricing_path)
+    input_path = tmp_path / "selection-snapshot.yaml"
+    input_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    with pytest.raises(SelectionSnapshotBuildError):
+        build_selection_snapshot(input_path, ROOT)
 
 
 def test_ac6_agent_signals_remain_independent_dimensions() -> None:

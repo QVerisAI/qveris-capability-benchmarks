@@ -4,7 +4,7 @@
   "edition": "2026-08-12",
   "input_digests": {
     "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
-    "input": "sha256:b430fdd0abd458f3003e0cf91243b6573b1181f7f67d6de6b198913174edf9da",
+    "input": "sha256:51cd609a710fa7d1bb56ada153f5ccd3d840607d221426e208d3d70635aaae5f",
     "market_coverage_cases": "sha256:021508b60f456f0c30c698ee06288221c7080d67035320710f5119fc348fb550",
     "market_coverage_release": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
     "market_coverage_suite": "sha256:0b133ae5f3252ace61407e4ba30d52e14d4876c7e8c93e2f44f5f59637833048",
@@ -16,6 +16,8 @@
       "massive-stocks": "sha256:64b50bc3ec8fff193b4ef7a6f5f35d9a2f5f908760ff0d7b30579b3436e7a221",
       "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
     },
+    "qveris_direct_bindings": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",
+    "qveris_list_pricing": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
     "release": "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
     "suite": "sha256:fc7c1458026ec030a7be24b1786344f128237160d0012ebb64b774d1ded2b6a9"
   },
@@ -23,7 +25,7 @@
     "Market coverage uses one fixed representative symbol per market and is not comprehensive provider coverage.",
     "A market is verified only when both Direct Test rounds complete the Dividend Event contract.",
     "Explicitly unsupported or contract-inapplicable markets are not called again and remain not_applicable.",
-    "QVeris latency and credits describe the gateway Access Path, not provider-native performance or pricing."
+    "QVeris latency describes the gateway Access Path; list credits come from qveris inspect and are not account billing."
   ],
   "market_coverage_release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
   "rows": [
@@ -211,6 +213,14 @@
       },
       "provider_id": "alpha-vantage",
       "provider_name": "Alpha Vantage",
+      "qveris_list_price": {
+        "amount_credits": 2.0,
+        "evidence_ref": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
+        "inspected_at": "2026-08-12",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:74bbef735af28d5aebe617ad154efcb0033280a143b1a66ca5b730e644b6bd9c",
@@ -424,6 +434,14 @@
       },
       "provider_id": "eodhd",
       "provider_name": "EODHD",
+      "qveris_list_price": {
+        "amount_credits": 2.81,
+        "evidence_ref": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
+        "inspected_at": "2026-08-12",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
@@ -615,6 +633,14 @@
       },
       "provider_id": "hangseng",
       "provider_name": "\u6052\u751f\u805a\u6e90",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "evidence_ref": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
+        "inspected_at": "2026-08-12",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:41d0ca23c3987891e3bdec4ee0520acf88012981b256f420b047e4dc04cde985",
@@ -794,6 +820,14 @@
       },
       "provider_id": "ifind",
       "provider_name": "\u540c\u82b1\u987a iFinD",
+      "qveris_list_price": {
+        "amount_credits": null,
+        "evidence_ref": null,
+        "inspected_at": null,
+        "source": null,
+        "state": "not_applicable",
+        "unit": null
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:4c3d76be5e3ecfe7c2d10a6af26e7d63489dfa4f2ccae57095c745f00e5e5390",
@@ -981,6 +1015,14 @@
       },
       "provider_id": "massive-stocks",
       "provider_name": "Massive Stocks",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "evidence_ref": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
+        "inspected_at": "2026-08-12",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:08926242dd2627a1c6120252e97f56ad4413d033ea4fb8605277d635c442cd59",
@@ -1194,6 +1236,14 @@
       },
       "provider_id": "twelve-data",
       "provider_name": "Twelve Data",
+      "qveris_list_price": {
+        "amount_credits": 2.37,
+        "evidence_ref": "sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767",
+        "inspected_at": "2026-08-12",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
       "run_observations": {
         "evidence_refs": [
           "sha256:30e7395da0e5c3299cd97901f5777e7cab5fc329eee54d4c9d8401a06d4a5ce5",

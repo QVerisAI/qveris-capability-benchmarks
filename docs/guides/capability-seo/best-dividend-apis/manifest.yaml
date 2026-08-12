@@ -29,6 +29,17 @@ publication_policy:
   direct_test_required: true
   freeze_shortlist_after_baseline: true
   states: [qualified, not_qualified, evidence_insufficient, not_applicable]
+  public_outcomes: [本次样本通过, 本次样本未通过, 证据不足, 未测试：明确不适用]
+  market_claim_scope: representative_samples
+  qveris_price_source: qveris_inspect
+  required_sections:
+    - 实测结论一览
+    - 开发者怎么选
+    - 证据与供应商差异
+    - Agent 选型时额外检查什么
+    - 测试方法、复测与贡献
+    - 限制、披露与更正
+    - 常见问题
 release:
   directory: releases/dividend-events-2026-q3-v1
   digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
@@ -38,8 +49,13 @@ release:
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:b430fdd0abd458f3003e0cf91243b6573b1181f7f67d6de6b198913174edf9da
-  digest: sha256:b35a3b9773f9541bcbf63d2f3908de706af48f79035d9ec077e210e02de1e790
+  input_digest: sha256:51cd609a710fa7d1bb56ada153f5ccd3d840607d221426e208d3d70635aaae5f
+  digest: sha256:a46c075d6c94e16e03c20d43227172ffc4b6611ec398a49f1741e2074ed5c289
+qveris_list_pricing:
+  id: dividend-events-qveris-list-pricing-2026-08-12
+  source: qveris_inspect
+  inspected_at: "2026-08-12"
+  digest: sha256:7a15909d6b17a75c1745aa4540a04c1dca2c6dc8c9ab8c0ef12078d9ca7d0767
 market_coverage_release:
   directory: releases/dividend-events-market-coverage-2026-q3-v1
   digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
@@ -65,6 +81,9 @@ seo:
     Alpha Vantage: https://www.alphavantage.co/documentation/#dividends
     EODHD: https://eodhd.com/financial-apis/api-splits-dividends/
     Massive: https://massive.com/docs/rest/stocks/corporate-actions/dividends
+  official_sources:
+    Massive Stocks pricing: https://massive.com/pricing?product=stocks
+    Massive Dividends documentation: https://massive.com/docs/rest/stocks/corporate-actions/dividends
   provider_pages:
     恒生聚源: https://qveris.ai/providers/hangseng_polysource
     Twelve Data: https://qveris.ai/providers/twelvedata
@@ -90,10 +109,11 @@ artifacts:
   market_coverage_github_artifacts: releases/dividend-events-market-coverage-2026-q3-v1/github-artifacts.json
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
+  qveris_list_pricing: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
   charts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-evidence-heatmap.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/evidence-matrix-manifest.json
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:01eba05b83a27ed4bcaf27e3ee8cb94ec533f2f3b0fa938dc109a02d08ceeb3c
+  selection_charts_manifest_digest: sha256:0046edbf9e185bda5db5dc853160032755c7dbdbb0e8a1de29493fd0ee1ccba3
