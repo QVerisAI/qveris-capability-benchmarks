@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import re
 from pathlib import Path
@@ -31,51 +32,91 @@ EVIDENCE_CHARTS = (
 MANIFEST_EVIDENCE_CHARTS = tuple(f"docs/guides/{target}" for target in EVIDENCE_CHARTS)
 
 
+def test_english_publication_contract(tmp_path: Path) -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    seo = manifest["seo"]
+
+    assert re.search(r"[\u4e00-\u9fff]", article) is None
+    assert article.splitlines()[0] == f"# {seo['title']}"
+    assert 45 <= len(seo["title"]) <= 65
+    assert 120 <= len(seo["meta_description"]) <= 160
+    assert seo["primary_keyword"].lower() in seo["title"].lower()
+    assert manifest["publication_policy"]["required_sections"] == [
+        "Results at a glance",
+        "How developers should choose",
+        "Evidence and provider differences",
+        "What AI Agent builders should verify",
+        "Method, reproduction, and contribution",
+        "Limitations, disclosures, and corrections",
+        "FAQ",
+    ]
+    assert manifest["publication_policy"]["public_outcomes"] == [
+        "Sample passed",
+        "Sample did not pass",
+        "Evidence insufficient",
+        "Not tested: explicitly not applicable",
+    ]
+
+    snapshot = MANIFEST.parent / "selection-snapshot.json"
+    rendered = render_selection_tradeoff(snapshot, tmp_path)
+    market = rendered["data"]["market_coverage"]
+    assert market["title"] == (
+        "Dividend Event results: 9 representative markets × 6 Access Paths"
+    )
+    assert {row["provider"] for row in market["rows"]} >= {"Hang Seng", "iFinD"}
+    assert (
+        re.search(r"[\u4e00-\u9fff]", inspect.getsource(render_selection_tradeoff))
+        is None
+    )
+
+
 def test_article_is_bound_to_dividend_release() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
     assert "dividend-events-2026-q3-v1" in article
     assert RELEASE_DIGEST in article
-    assert "3 轮" in article
-    assert "36 次" in article
-    assert "同花顺 iFinD（Native MCP）" in article
-    assert "本次样本未通过" in article
+    assert "three times" in article
+    assert "36 live calls" in article
+    assert "iFinD](" in article
+    assert "(Native MCP)" in article
+    assert "Sample did not pass" in article
     assert "https://qveris.ai/providers/ths_ifind" not in article
-    assert "AI 友好度" not in article
+    assert "AI-friendly rating" not in article
     assert "Direct Test 4/4" not in article
 
 
 def test_article_uses_reader_facing_outcomes_and_one_decision_flow() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
-    for internal_term in ("Qualified", "Not qualified", "Evidence insufficient"):
+    for internal_term in ("Qualified", "Not qualified", "Agent-friendly score"):
         assert internal_term not in article
     for public_state in (
-        "本次样本通过",
-        "本次样本未通过",
-        "未测试：明确不适用",
+        "Sample passed",
+        "Sample did not pass",
+        "Not tested: explicitly not applicable",
     ):
         assert public_state in article
 
     headings = [
-        "## 实测结论一览",
-        "## 开发者怎么选",
-        "## 证据与供应商差异",
-        "## Agent 选型时额外检查什么",
-        "## 测试方法、复测与贡献",
-        "## 限制、披露与更正",
-        "## 常见问题",
+        "## Results at a glance",
+        "## How developers should choose",
+        "## Evidence and provider differences",
+        "## What AI Agent builders should verify",
+        "## Method, reproduction, and contribution",
+        "## Limitations, disclosures, and corrections",
+        "## FAQ",
     ]
     positions = [article.index(heading) for heading in headings]
     assert positions == sorted(positions)
-    assert "## AI Agent 接入时要做的 5 件事" not in article
+    assert "## Five things to do when integrating an AI Agent" not in article
 
 
 def test_article_publishes_inspect_list_prices_not_discounted_account_costs() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
-    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    overview_rows = _markdown_table_rows(article, "| Provider and Access Path |")
     expected = {
-        "恒生聚源": "1 credit/call",
+        "Hang Seng": "1 credit/call",
         "Twelve Data": "2.37 credits/call",
         "Alpha Vantage": "0 credits/call",
         "EODHD": "2.81 credits/call",
@@ -92,8 +133,8 @@ def test_article_publishes_inspect_list_prices_not_discounted_account_costs() ->
         "0.281 credits",
     ):
         assert discounted not in article
-    assert "QVeris Inspect 公开标价" in article
-    assert "账号实际扣费" in article
+    assert "public QVeris Inspect price" in article
+    assert "actual charge to the test account" in article
     assert "https://massive.com/pricing?product=stocks" in article
     assert "Stocks Basic Free" in article
 
@@ -102,21 +143,21 @@ def test_article_explains_market_samples_and_evidence_heatmap() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
     for phrase in (
-        "代表市场样本结果",
-        "通过（2/2）",
-        "本次代表样本未通过（0/2）",
-        "未测试：明确不适用",
-        "不能据此断言供应商完全不支持该市场",
-        "字段曾经出现不等于每条记录都完整",
+        "representative market sample results",
+        "passed (2/2)",
+        "did not pass (0/2)",
+        "not tested: explicitly not applicable",
+        "does not prove that the provider does not support the market",
+        "does not mean every historical record is complete",
     ):
         assert phrase in article
     for confusing_term in (
-        "身份阻断",
-        "未独立测量",
+        "identity blocked",
+        "not independently measured",
         "stockobject",
         "stockcode",
         "successor release",
-        "提取器",
+        "extractor",
     ):
         assert confusing_term not in article
     assert "dividend-evidence-heatmap.png" not in article
@@ -157,21 +198,23 @@ def test_article_has_only_verified_qveris_provider_calls_to_action() -> None:
 def test_article_exposes_agent_signals_without_an_aggregate_rating() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
-    assert "## Agent 选型时额外检查什么" in article
+    assert "## What AI Agent builders should verify" in article
     for signal in (
-        "必需事件字段",
-        "证券身份",
-        "无效 symbol",
-        "响应内币种",
-        "附加事件日期",
-        "参数清晰度、分页和 Agent Trial",
+        "Required event fields",
+        "Security identity",
+        "Invalid symbol",
+        "Currency in response",
+        "Additional event dates",
+        "Parameter clarity, pagination, and Agent Trial",
     ):
         assert signal in article
-    assert "AI 友好度" not in article
-    assert "Agent 总分" not in article
-    assert "与 `AAPL` 对应" not in article
-    assert article.count("本次未验证响应自身返回的证券代码") == 4
-    assert "响应未提供可用于独立核对的证券代码" in article
+    assert "AI-friendly rating" not in article
+    assert "Agent total score" not in article
+    assert (
+        article.count("Published sample does not prove the response identified `AAPL`")
+        == 4
+    )
+    assert "No response security code was available to cross-check" in article
 
 
 def test_article_evidence_charts_are_declared_and_valid_image() -> None:
@@ -187,7 +230,7 @@ def test_article_evidence_charts_are_declared_and_valid_image() -> None:
             assert chart.width >= 1600
             assert chart.height >= 900
             assert chart.width > chart.height
-    assert "完整事件日期组" not in article
+    assert "complete event date set" not in article
     assert "date-timeline.svg" not in article
     assert "dividend-api-evidence-matrix.svg" not in article
 
@@ -232,7 +275,7 @@ def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
     assert market_chart.is_file(), "AC1 must render the Finlight-style market matrix"
     market_data = generated["data"]["market_coverage"]
     assert market_data["title"] == (
-        "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果"
+        "Dividend Event results: 9 representative markets × 6 Access Paths"
     )
     assert market_data["edition"] == "2026-08-12"
     assert market_data["observation_date"] == "2026-08-12"
@@ -285,7 +328,7 @@ def test_selection_market_chart_preserves_every_access_path_identity(
     }
     labels = [row["label"] for row in rendered["data"]["market_coverage"]["rows"]]
     assert len(labels) == len(set(labels))
-    assert "× 7 条 Access Path" in rendered["data"]["market_coverage"]["title"]
+    assert "× 7 Access Paths" in rendered["data"]["market_coverage"]["title"]
 
 
 def test_selection_market_chart_derives_round_labels(tmp_path: Path) -> None:
@@ -322,13 +365,13 @@ def test_selection_market_chart_changes_with_edition(tmp_path: Path) -> None:
 
 def test_article_embeds_market_coverage_chart_next_to_market_section() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
-    market_section = article.split("### 九个代表市场的样本结果", 1)[1].split(
-        "### 六家供应商逐一分析", 1
-    )[0]
+    market_section = article.split("### Representative samples across nine markets", 1)[
+        1
+    ].split("### Provider-by-provider analysis", 1)[0]
     chart_path = "capability-seo/best-dividend-apis/charts/dividend-market-coverage.png"
 
     assert f"]({chart_path})]({chart_path})" in market_section
-    assert "图中绿色表示该市场的固定代表 symbol 连续两轮" in market_section
+    assert "Green means the fixed representative symbol" in market_section
 
 
 def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(
@@ -388,32 +431,34 @@ def test_article_answers_runtime_price_coverage_and_agent_decisions() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
     for phrase in (
-        "QVeris gateway 延迟中位数",
-        "QVeris Inspect 公开标价",
-        "官方价格",
-        "代表市场样本",
-        "9 个代表市场",
-        "参数清晰度",
-        "schema 稳定性",
-        "错误恢复",
+        "Median QVeris gateway latency",
+        "public QVeris Inspect price",
+        "official pricing",
+        "representative market sample",
+        "nine markets",
+        "parameter clarity",
+        "schema stability",
+        "error recovery",
     ):
         assert phrase in article
     assert "491 ms / 2.37 credits/call" in article
     assert "576 ms / 0 credits/call" in article
     assert "779 ms / 2.81 credits/call" in article
     assert "861 ms / 1 credit/call" in article
-    assert "综合 AI 友好度" not in article
-    assert "已验证全球市场覆盖" not in article
+    assert "aggregate AI-friendly rating" not in article
+    assert "verified global market coverage" not in article
 
 
 def test_article_publishes_released_market_coverage_near_the_decision_table() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
-    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
-    market_rows = _markdown_table_rows(article, "通过（2/2）的代表市场")
+    overview_rows = _markdown_table_rows(article, "| Provider and Access Path |")
+    market_rows = _markdown_table_rows(article, "Representative markets passed (2/2)")
 
-    assert "7 个市场通过（2/2）" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
-    assert "CN 通过（2/2）" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
+    assert (
+        "7 markets passed (2/2)" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
+    )
+    assert "CN passed (2/2)" in _provider_row(overview_rows, "Hang Seng", "QVeris")[4]
     eodhd = next(row for row in snapshot["rows"] if row["provider_id"] == "eodhd")
     verified = {
         result["market"]
@@ -426,27 +471,26 @@ def test_article_publishes_released_market_coverage_near_the_decision_table() ->
         item.strip() for item in eodhd_market_row[1].split(",") if item.strip()
     }
     assert published_markets == verified
-    hangseng_market_row = _provider_row(market_rows, "恒生聚源", "QVeris")
+    hangseng_market_row = _provider_row(market_rows, "Hang Seng", "QVeris")
     assert hangseng_market_row[1] == "CN"
-    assert "66 次真实调用" in article
-    assert "54 个明确不适用单元" in article
+    assert "66 live calls" in article
+    assert "other 54 retain an explicit not-applicable reason" in article
 
 
 def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
-    overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    overview_rows = _markdown_table_rows(article, "| Provider and Access Path |")
     expected_base = {
-        "恒生聚源": "**本次 CN 样本通过**",
-        "同花顺 iFinD": "**本次样本未通过**",
-        "Twelve Data": "**本次样本通过**",
-        "Alpha Vantage": "**本次样本通过**",
-        "EODHD": "**本次样本通过**",
-        "Massive": "**本次样本通过**",
+        "Hang Seng": "**CN sample passed:**",
+        "iFinD": "**Sample did not pass:**",
+        "Twelve Data": "**Sample passed:**",
+        "Alpha Vantage": "**Sample passed:**",
+        "EODHD": "**Sample passed:**",
+        "Massive": "**Sample passed:**",
     }
-    aliases = {"Massive Stocks": "Massive"}
     for row in snapshot["rows"]:
-        provider = aliases.get(row["provider_name"], row["provider_name"])
+        provider = _article_provider_name(row)
         access_path = (
             "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
         )
@@ -461,11 +505,11 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
             for result in row["market_coverage"]["results"]
         )
         if provider == "Alpha Vantage":
-            assert f"{verified} 个适用市场通过（2/2）" in overview[4]
+            assert f"{verified} applicable markets passed (2/2)" in overview[4]
         elif provider in {"EODHD", "Twelve Data"}:
-            assert f"{verified} 个市场通过（2/2）" in overview[4]
-        elif provider == "恒生聚源":
-            assert "CN 通过（2/2）" in overview[4]
+            assert f"{verified} markets passed (2/2)" in overview[4]
+        elif provider == "Hang Seng":
+            assert "CN passed (2/2)" in overview[4]
         assert (
             applicable
             + sum(
@@ -474,10 +518,15 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
             )
             == 9
         )
-    for internal_detail in ("stockobject", "stockcode", "successor release", "提取器"):
+    for internal_detail in (
+        "stockobject",
+        "stockcode",
+        "successor release",
+        "extractor",
+    ):
         assert internal_detail not in article
 
-    quick_advice = article.split("> **快速建议**：", 1)[1].split("\n", 1)[0]
+    quick_advice = article.split("> **Quick recommendation:**", 1)[1].split("\n", 1)[0]
     by_provider = {row["provider_id"]: row for row in snapshot["rows"]}
     eodhd_verified = sum(
         result["state"] == "verified"
@@ -492,22 +541,23 @@ def test_article_summary_is_exactly_bound_to_base_and_market_releases() -> None:
     alpha_not_applicable = sum(
         result["state"] == "not_applicable" for result in alpha_results
     )
-    assert f"EODHD 的代表样本通过 {eodhd_verified} 个市场" in quick_advice
-    assert f"Twelve Data 通过 {twelve_verified} 个" in quick_advice
-    assert f"Alpha Vantage 的 {alpha_verified} 个适用市场全部通过" in quick_advice
-    assert f"另外 {alpha_not_applicable} 个由 QVeris 明确标为不支持" in quick_advice
+    assert f"EODHD passed {eodhd_verified} markets" in quick_advice
+    assert f"Twelve Data passed {twelve_verified}" in quick_advice
+    assert f"Alpha Vantage passed all {alpha_verified} markets" in quick_advice
+    assert (
+        f"other {alpha_not_applicable} explicitly unsupported markets" in quick_advice
+    )
 
 
 def test_article_selection_facts_match_every_snapshot_row() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
-    aliases = {"Massive Stocks": "Massive"}
-    runtime_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
+    runtime_rows = _markdown_table_rows(article, "| Provider and Access Path |")
     pricing_rows = _markdown_table_rows(article, "| Provider / Access Path |")
-    market_rows = _markdown_table_rows(article, "通过（2/2）的代表市场")
+    market_rows = _markdown_table_rows(article, "Representative markets passed (2/2)")
 
     for row in snapshot["rows"]:
-        provider = aliases.get(row["provider_name"], row["provider_name"])
+        provider = _article_provider_name(row)
         access_path = (
             "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
         )
@@ -519,7 +569,7 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
             runtime = f"{metrics['latency_median_ms']:.0f} ms / {amount:g} {unit}"
             assert runtime in runtime_row[2]
         else:
-            assert "不适用" in runtime_row[2]
+            assert "Not applicable" in runtime_row[2]
 
         pricing_row = _provider_row(pricing_rows, provider, access_path)
         pricing = row["official_pricing"]
@@ -558,8 +608,11 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
     totals = {result["total_rounds"] for result in measured}
     assert len(totals) == 1
     total = totals.pop()
-    assert f"| Provider / Access Path | 通过（{total}/{total}）的代表市场" in article
-    assert f"| 本次代表样本未通过（0/{total}）" in article
+    assert (
+        f"| Provider / Access Path | Representative markets passed ({total}/{total})"
+        in article
+    )
+    assert f"| Representative sample did not pass (0/{total})" in article
 
 
 def test_article_price_ranking_and_billing_scope_come_from_snapshot() -> None:
@@ -573,19 +626,19 @@ def test_article_price_ranking_and_billing_scope_come_from_snapshot() -> None:
     minimum = min(prices.values())
     lowest = sorted(name for name, amount in prices.items() if amount == minimum)
     assert lowest == ["Alpha Vantage"]
-    assert "Alpha Vantage 的 Inspect 标价最低（0 credits/call）" in article
-    assert "恒生聚源和 Massive 次低（1 credit/call）" in article
-    assert "本文表格和图表不使用账号实际扣费" in article
+    assert "Alpha Vantage had the lowest Inspect price at 0 credits/call" in article
+    assert "followed by Hang Seng and Massive at 1 credit/call" in article
+    assert "does not use account billing in its tables or charts" in article
 
 
 def test_article_market_totals_are_bound_to_release_and_snapshot() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     market = manifest["market_coverage_release"]
-    assert f"共 {market['public_evidence_records']} 次真实调用" in article
-    assert f"{market['planned_cells']} 个 frozen cells" in article
+    assert f"{market['public_evidence_records']} live calls" in article
+    assert f"{market['planned_cells']} planned test cells" in article
     not_applicable = market["planned_cells"] - market["applicable_cells"]
-    assert f"{not_applicable} 个明确不适用单元" in article
+    assert f"other {not_applicable} retain an explicit not-applicable reason" in article
 
 
 def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:
@@ -605,6 +658,15 @@ def _provider_row(rows: list[list[str]], provider: str, access_path: str) -> lis
     matches = [row for row in rows if provider in row[0] and access_path in row[0]]
     assert len(matches) == 1
     return matches[0]
+
+
+def _article_provider_name(row: dict[str, object]) -> str:
+    aliases = {
+        "hangseng": "Hang Seng",
+        "ifind": "iFinD",
+        "massive-stocks": "Massive",
+    }
+    return aliases.get(str(row["provider_id"]), str(row["provider_name"]))
 
 
 def test_article_embeds_only_decision_useful_snapshot_chart() -> None:

@@ -2,7 +2,7 @@ schema_version: 1
 benchmark_id: dividend-events-2026-q3-v1
 article_slug: best-dividend-apis
 edition: "2026-08-12"
-search_intent: 对比分红数据 API 的事件语义、实测运行成本、价格与市场证据，帮助开发者完成单能力选型
+search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
 comparison_shortlist:
@@ -21,25 +21,25 @@ supplier_entities:
   EODHD: eodhd.com
   Massive: massive.com
 scenarios:
-  - {id: us_positive_dividend_event, article_label: AAPL 分红事件, minimum_rounds: 3}
-  - {id: cn_positive_dividend_event, article_label: 600519.SH 分红事件, minimum_rounds: 3}
-  - {id: invalid_symbol_control, article_label: 无效代码控制, minimum_rounds: 3}
+  - {id: us_positive_dividend_event, article_label: AAPL Dividend Event, minimum_rounds: 3}
+  - {id: cn_positive_dividend_event, article_label: 600519.SH Dividend Event, minimum_rounds: 3}
+  - {id: invalid_symbol_control, article_label: invalid-symbol control, minimum_rounds: 3}
 publication_policy:
   one_canonical_tool_per_access_path: true
   direct_test_required: true
   freeze_shortlist_after_baseline: true
   states: [qualified, not_qualified, evidence_insufficient, not_applicable]
-  public_outcomes: [本次样本通过, 本次样本未通过, 证据不足, 未测试：明确不适用]
+  public_outcomes: [Sample passed, Sample did not pass, Evidence insufficient, "Not tested: explicitly not applicable"]
   market_claim_scope: representative_samples
   qveris_price_source: qveris_inspect
   required_sections:
-    - 实测结论一览
-    - 开发者怎么选
-    - 证据与供应商差异
-    - Agent 选型时额外检查什么
-    - 测试方法、复测与贡献
-    - 限制、披露与更正
-    - 常见问题
+    - Results at a glance
+    - How developers should choose
+    - Evidence and provider differences
+    - What AI Agent builders should verify
+    - Method, reproduction, and contribution
+    - Limitations, disclosures, and corrections
+    - FAQ
 release:
   directory: releases/dividend-events-2026-q3-v1
   digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
@@ -69,10 +69,10 @@ market_coverage_release:
   public_evidence_records: 66
   rounds_per_cell: 2
 seo:
-  title: "2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南"
-  meta_description: "2026 年实测 6 家分红数据 API：对比事件字段、无效代码、QVeris 延迟与 credits、官方价格、市场证据及 Agent 接入风险，附公开证据与复测方法。"
-  primary_keyword: 分红数据 API
-  secondary_keywords: [分红 API, 除息数据 API, 股息数据 API, dividend API]
+  title: "Best Dividend APIs for Developers in 2026: 6 Providers Tested"
+  meta_description: "Compare six dividend APIs using 102 live calls: event fields, invalid-symbol handling, QVeris latency and pricing, nine markets, and reproducible evidence."
+  primary_keyword: dividend API
+  secondary_keywords: [dividend data API, stock dividend API, ex-dividend date API, dividend API comparison]
   publication_action: new_page
   inventory_checked_at: "2026-08-11"
   target_slug: best-dividend-apis
@@ -115,4 +115,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:c7f8521b1773c9f74af39322d4ed56171f7d67517b79bcf4f39c87b53e99b1fe
+  selection_charts_manifest_digest: sha256:72aba77df39a374a8d99d2ad5f9daad51eb39c951da0cbe0256cc48bd7d4c5b1

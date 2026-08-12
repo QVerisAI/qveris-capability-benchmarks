@@ -1,176 +1,178 @@
-# 2026 年最佳分红数据 API：6 家供应商真实调用、字段差异与 AI Agent 选型指南
+# Best Dividend APIs for Developers in 2026: 6 Providers Tested
 
-如果你的应用需要一条可以直接进入事件日历、收益回测或现金流模型的分红记录，最低要求不是“接口返回了数据”，而是能确认**证券身份、除权除息日和单次每股现金金额**。本次固定样本中，Twelve Data、Alpha Vantage、EODHD 和 Massive 的 QVeris Access Path 连续 3 轮完成了这项任务；恒生聚源的 CN 代表样本连续 2 轮完成任务；同花顺 iFinD Native MCP 返回年度累计单位分红，但没有形成可绑定日期的单次 Dividend Event。
+There is no single best dividend API for every application. In this benchmark, Twelve Data, Alpha Vantage, EODHD, and Massive produced usable US Dividend Events; Hang Seng passed the representative mainland China sample. Alpha Vantage and Massive exposed the richest date sets, while Twelve Data and Massive explicitly returned currency.
 
-我们另外对 US、HK、CN、JP、DE、FR、BR、IN、ES 九个代表市场做了两轮复测。这里发布的是**代表市场样本结果**，不是供应商全部证券和历史区间的覆盖承诺。
+A usable event needs more than a successful response. Your application must be able to verify the **security identity, ex-dividend date, and cash amount per share for one event**. The iFinD Native MCP returned an annual cumulative per-unit dividend, but not a dated, single Dividend Event.
 
-> **快速建议**：只做美股基础分红事件，可以先复测 Twelve Data、Alpha Vantage、EODHD 或 Massive。需要公告日、登记日和支付日，优先看 Alpha Vantage 与 Massive；需要响应明确给出币种，优先看 Twelve Data 与 Massive。跨市场时，EODHD 的代表样本通过 7 个市场，Twelve Data 通过 6 个；Alpha Vantage 的 4 个适用市场全部通过，另外 5 个由 QVeris 明确标为不支持，因此没有重复调用。
+We made 102 live calls across two test suites, including invalid-symbol controls and representative symbols from US, HK, CN, JP, DE, FR, BR, IN, and ES. These **representative market sample results** are not claims about every security, date range, entitlement, or market a provider covers.
 
-## 本文目录
+> **Quick recommendation:** Start with Twelve Data, Alpha Vantage, EODHD, or Massive for basic US Dividend Events. For broader representative-market results, EODHD passed 7 markets and Twelve Data passed 6. Alpha Vantage passed all 4 markets that QVeris marked applicable; we did not spend calls retesting the other 5 explicitly unsupported markets.
 
-- [实测结论一览](#实测结论一览)
-- [开发者怎么选](#开发者怎么选)
-- [证据与供应商差异](#证据与供应商差异)
-- [Agent 选型时额外检查什么](#agent-选型时额外检查什么)
-- [测试方法、复测与贡献](#测试方法复测与贡献)
-- [限制、披露与更正](#限制披露与更正)
-- [常见问题](#常见问题)
+## Contents
 
-## 实测结论一览
+- [Results at a glance](#results-at-a-glance)
+- [How developers should choose](#how-developers-should-choose)
+- [Evidence and provider differences](#evidence-and-provider-differences)
+- [What AI Agent builders should verify](#what-ai-agent-builders-should-verify)
+- [Method, reproduction, and contribution](#method-reproduction-and-contribution)
+- [Limitations, disclosures, and corrections](#limitations-disclosures-and-corrections)
+- [FAQ](#faq)
 
-基础测试日期为 2026-08-11：每条适用 Access Path 包含一个正向证券样本和一个无效 symbol 负向控制，各执行 3 轮，共 36 次真实调用。市场补充测试日期为 2026-08-12：27 个适用正向单元与 6 条路径的负向控制各执行 2 轮，共 66 次真实调用。两份 Release 独立计数，不合并成一个总分。
+## Results at a glance
 
-| 供应商与 Access Path | 本次 Dividend Event 样本结论 | QVeris gateway 延迟中位数 / QVeris Inspect 公开标价 | Native 官方价格入口 | 9 个代表市场样本 |
+The baseline test ran on August 11, 2026. Each applicable Access Path had one positive security sample and one invalid-symbol negative control, each repeated three times: 36 live calls. The market test ran on August 12, 2026. It included 27 applicable positive cells plus one negative control for each of the six paths, repeated twice: 66 live calls. The two Releases remain separate and are not combined into a score.
+
+| Provider and Access Path | Dividend Event sample result | Median QVeris gateway latency / public QVeris Inspect price | Native official pricing | 9 representative market samples |
 |---|---|---:|---|---|
-| [恒生聚源](https://www.gildata.com/products/core-data.html)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **本次 CN 样本通过**：连续两轮返回可核验的证券身份、除权除息日和单次金额 | 623 ms / 1 credit/call | 未公开标准价，商务询价 | CN 通过（2/2）；其余 8 个未测试：明确不适用 |
-| [同花顺 iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md)（Native MCP） | **本次样本未通过**：缺少单次事件日期，年度累计值也不能证明本次事件金额 | 不适用，Native MCP 不混入 QVeris 指标 | 个人版 CNY 40/月起，5,000 次请求 | US、HK、CN 本次代表样本未通过（0/2）；其余 6 个未测试：明确不适用 |
-| [Twelve Data](https://twelvedata.com/docs#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **本次样本通过**：AAPL 三轮均返回除权除息日和单次金额；无效 symbol 三轮均未产生伪事件 | 491 ms / 2.37 credits/call | Grow USD 29/月起；免费层 800 credits/日 | 6 个市场通过（2/2）；HK、CN、ES 本次代表样本未通过（0/2） |
-| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **本次样本通过**：AAPL 正向样本与无效 symbol 控制均连续三轮满足门槛 | 576 ms / 0 credits/call | Premium USD 49.99/月起；免费层 25 次/日 | 4 个适用市场通过（2/2）；5 个未测试：明确不适用 |
-| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/eodhd) | **本次样本通过**：AAPL 正向样本与无效 symbol 控制均连续三轮满足门槛 | 779 ms / 2.81 credits/call | All-in-One USD 99.99/月 | 7 个市场通过（2/2）；JP、IN 本次代表样本未通过（0/2） |
-| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends)（QVeris）· [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **本次样本通过**：AAPL 正向样本与无效 symbol 控制均连续三轮满足门槛 | 861 ms / 1 credit/call | [Stocks Basic Free](https://massive.com/pricing?product=stocks)；Dividend endpoint 包含在所有 Stocks plans | US 通过（2/2）；其余 8 个未测试：明确不适用 |
+| [Hang Seng](https://www.gildata.com/products/core-data.html) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **CN sample passed:** both rounds returned a verifiable security identity, ex-dividend date, and single-event amount | 623 ms / 1 credit/call | No public standard price; contact sales | CN passed (2/2); other 8 not tested: explicitly not applicable |
+| [iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md) (Native MCP) | **Sample did not pass:** no single-event date, and the annual cumulative value cannot establish the amount for one event | Not applicable; Native MCP is excluded from QVeris metrics | Personal plan from CNY 40/month for 5,000 requests | US, HK, and CN samples did not pass (0/2); other 6 not tested: explicitly not applicable |
+| [Twelve Data](https://twelvedata.com/docs#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Sample passed:** AAPL returned an ex-dividend date and single-event amount in all three rounds; the invalid symbol produced no fabricated event | 491 ms / 2.37 credits/call | Grow from USD 29/month; free tier 800 credits/day | 6 markets passed (2/2); HK, CN, and ES samples did not pass (0/2) |
+| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 576 ms / 0 credits/call | Premium from USD 49.99/month; free tier 25 requests/day | 4 applicable markets passed (2/2); 5 not tested: explicitly not applicable |
+| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 779 ms / 2.81 credits/call | All-in-One USD 99.99/month | 7 markets passed (2/2); JP and IN samples did not pass (0/2) |
+| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 861 ms / 1 credit/call | [Stocks Basic Free](https://massive.com/pricing?product=stocks); Dividend endpoint included in all Stocks plans | US passed (2/2); other 8 not tested: explicitly not applicable |
 
-这四种公开状态只描述证据，不代替采购结论：
+These four public states describe evidence, not a final procurement decision:
 
-- **本次样本通过**：冻结输入的全部轮次都完成了当前 CAP 定义的任务。
-- **本次样本未通过**：已经真实调用，但结果缺少必要语义或字段。
-- **证据不足**：现有公开证据不足以形成通过或未通过结论；它不代表供应商没有这项能力。
-- **未测试：明确不适用**：QVeris 或 Access Path 合同已明确不支持，因此没有浪费调用继续探测。
+- **Sample passed:** every frozen round completed the task defined by this benchmark.
+- **Sample did not pass:** live calls completed, but the result lacked required fields or business meaning.
+- **Evidence insufficient:** the published evidence cannot support either conclusion; this does not mean the provider lacks the capability.
+- **Not tested: explicitly not applicable:** QVeris or the Access Path contract explicitly excludes the market, so we did not spend calls probing it again.
 
-“本次样本通过”不等于生产 SLA，也不代表所有证券、市场、日期范围和授权场景都可用。
+“Sample passed” is not a production SLA and does not establish support for every security, market, date range, or licensing scenario.
 
-## 开发者怎么选
+## How developers should choose
 
-### 只需要美股除权除息日和单次金额
+### You only need a US ex-dividend date and single-event amount
 
-Twelve Data、Alpha Vantage、EODHD 和 Massive 都进入优先复测名单。选择时再看三个工程维度：你的目标字段、QVeris 单次标价，以及在部署区域内重新测得的 P95/P99 延迟。
+Twelve Data, Alpha Vantage, EODHD, and Massive should be on the first reproduction shortlist. Then compare three engineering dimensions: the fields your product needs, the QVeris list price per call, and P95/P99 latency measured again from your deployment region.
 
-### 需要公告日、登记日和支付日
+### You need declaration, record, and payment dates
 
-优先复测 Alpha Vantage 和 Massive，因为这些字段在本次公开样本中实际出现。字段“曾经出现”不等于每条历史记录都完整，生产接入仍应测缺失率和历史深度。
+Reproduce Alpha Vantage and Massive first because those fields appeared in the published samples. A field appearing once does not mean every historical record is complete, so production acceptance should also measure missing-field rates and historical depth.
 
-### 必须使用响应内的明确币种
+### Currency must be explicit in the response
 
-优先核验 Twelve Data 和 Massive。本次样本中它们明确提供了 `currency`；其他路径没有提供时，应保持为空或从另一份有明确来源的数据集补充，不能按交易所静默猜测。
+Start with Twelve Data and Massive. Both explicitly returned `currency` in this sample. When another path omits it, leave it null or enrich it from a separately sourced dataset—do not silently infer it from the exchange.
 
-### 主要处理 A 股分红
+### Your primary use case is mainland China dividends
 
-恒生聚源的 CN 代表样本通过（2/2），可以作为优先复测候选。iFinD Native MCP 在 CN 两轮仍缺单次事件日期与金额语义。
+Hang Seng's representative CN sample passed both rounds and is the first candidate to reproduce. The iFinD Native MCP still lacked a single-event date and amount meaning in both CN rounds.
 
-### 需要一个 key 比较多家数据源
+### You want one key for several data sources
 
-选择 QVeris Access Path，可以减少认证与调用协议差异。统一 key 不会自动统一供应商的字段语义，因此证券身份、日期和金额仍需按照同一个 CAP 规则验证。
+A QVeris Access Path reduces authentication and protocol differences. One key does not standardize provider semantics, so security identity, dates, and amounts still need the same CAP checks across every path.
 
-## 证据与供应商差异
+## Evidence and provider differences
 
-### 为什么 Dividend Event 比“查分红”更难
+### Why a Dividend Event is harder than “get dividends”
 
-一个可用于程序处理的分红事件至少要回答四件事：是哪只证券、何时除息、单次每股金额是多少、这次响应到底是“没有事件”还是“请求失败”。公告日、登记日和支付日是很有价值的扩展字段，但不能替代除权除息日。币种没有出现在响应里时，也不能根据市场自行补全。
+A machine-usable event must answer four questions: which security, what ex-dividend date, what cash amount per share for this event, and whether an empty response means “no event” or “request failed.” Declaration, record, and payment dates are valuable extensions, but they cannot replace the ex-dividend date. Currency must not be inferred from the market when it is absent.
 
-同一证券在不同接口中还可能采用 `AAPL`、`600519.SH` 或供应商内部标识。日期和金额看起来都正确，只要返回证券不能与请求证券对应，整条记录就不能安全进入数据库、回测或 Agent 上下文。
+The same security may appear as `AAPL`, `600519.SH`, or a provider-specific identifier. Even plausible dates and amounts are unsafe if the returned security cannot be tied back to the requested one.
 
-### 核心能力和字段丰富度怎么看
+### Core usability versus field richness
 
-核心字段决定一条记录能否进入业务系统：证券身份、除权除息日和单次金额缺一不可。币种、公告日、登记日和支付日属于附加字段，可以帮助构建更完整的事件模型，但字段曾经出现不等于每条记录都完整。选型时应先确认核心字段，再按业务需要比较附加字段。
+Core fields determine whether a record can enter a business system: security identity, ex-dividend date, and single-event amount are all required. Currency, declaration date, record date, and payment date enrich an event model, but a field appearing in a sample does not guarantee it is present on every record. Validate core usability first, then compare optional fields required by your application.
 
-### 实测延迟与 QVeris 公开标价
+### Observed latency and public QVeris list price
 
-[![五条 QVeris 分红 Access Path 的延迟与 Inspect 标价取舍](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)
+[![Latency and QVeris Inspect list-price trade-off for five dividend Access Paths](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)](capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png)
 
-横轴是 QVeris gateway 延迟中位数，横线是本次六次调用的最小—最大值；纵轴是 `qveris inspect` 返回的公开标价，不是当前账号实际扣费。测试账号存在折扣，账号实际扣费不能用于公开选型，因此本文表格和图表不使用账号实际扣费，也不把它当作价格证据。
+The x-axis is median QVeris gateway latency; each horizontal bar spans the observed minimum to maximum across six calls. The y-axis is the public list price returned by `qveris inspect`, not the actual charge to the test account. Because that account receives a discount, this article does not use account billing in its tables or charts.
 
-本次样本中 Twelve Data 延迟中位数最低；Alpha Vantage 的 Inspect 标价最低（0 credits/call），恒生聚源和 Massive 次低（1 credit/call）；EODHD 的标价和观测延迟都更高。六次调用只能用于确定复测顺序，不能预测生产流量下的地域差异、P95/P99 或 Native API SLA。
+Twelve Data had the lowest median latency in this sample. Alpha Vantage had the lowest Inspect price at 0 credits/call, followed by Hang Seng and Massive at 1 credit/call. EODHD had both the highest list price and highest observed median latency. Six calls can prioritize a reproduction test; they cannot predict regional performance, P95/P99, or a provider's Native API SLA.
 
-### Native 套餐和 QVeris credits 是两种价格
+### Native plans and QVeris credits are different prices
 
-| Provider / Access Path | 免费或试用入口 | 付费入口 | 价格证据作用域 |
+| Provider / Access Path | Free or trial entry | Paid entry | Scope of price evidence |
 |---|---|---|---|
-| [恒生聚源 / QVeris](https://www.gildata.com/products/core-data.html) | `Not published for this snapshot.` | `Commercial; see product page.` | 供应商产品页；QVeris 标价另见 Inspect snapshot |
-| [同花顺 iFinD / Native MCP](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | `New accounts receive 2,000 trial requests` | `Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests` | 仅 Native MCP |
-| [Twelve Data / QVeris](https://twelvedata.com/pricing) | `Basic with 8 API credits per minute and 800 per day` | `Grow from USD 29/month` | Provider-wide 官方价格；QVeris 标价按 Tool 核验 |
-| [Alpha Vantage / QVeris](https://www.alphavantage.co/premium/) | `25 API requests per day` | `Premium from USD 49.99/month` | Provider-wide 官方价格；QVeris 标价按 Tool 核验 |
-| [EODHD / QVeris](https://eodhd.com/pricing) | `20 API calls per day` | `All-in-One USD 99.99/month` | Provider-wide 官方价格；QVeris 标价按 Tool 核验 |
-| [Massive / QVeris](https://massive.com/pricing?product=stocks) | `Stocks Basic Free` | `Stocks Starter USD 29/month` | 官方文档声明 Dividend endpoint 包含在所有 Stocks plans；QVeris 标价按 Tool 核验 |
+| [Hang Seng / QVeris](https://www.gildata.com/products/core-data.html) | `Not published for this snapshot.` | `Commercial; see product page.` | Provider product page; QVeris list price comes from the Inspect snapshot |
+| [iFinD / Native MCP](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | `New accounts receive 2,000 trial requests` | `Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests` | Native MCP only |
+| [Twelve Data / QVeris](https://twelvedata.com/pricing) | `Basic with 8 API credits per minute and 800 per day` | `Grow from USD 29/month` | Provider-wide official price; QVeris price verified per Tool |
+| [Alpha Vantage / QVeris](https://www.alphavantage.co/premium/) | `25 API requests per day` | `Premium from USD 49.99/month` | Provider-wide official price; QVeris price verified per Tool |
+| [EODHD / QVeris](https://eodhd.com/pricing) | `20 API calls per day` | `All-in-One USD 99.99/month` | Provider-wide official price; QVeris price verified per Tool |
+| [Massive / QVeris](https://massive.com/pricing?product=stocks) | `Stocks Basic Free` | `Stocks Starter USD 29/month` | Official documentation includes Dividends in all Stocks plans; QVeris price verified per Tool |
 
-供应商套餐、QVeris credits 和测试账号实际扣费是三种不同事实。套餐还可能涉及实时性、交易所费用、缓存和再分发权限，不能只按最低月费排序。
+Provider subscriptions, QVeris credits, and actual test-account charges are three different facts. Plans may also differ by real-time access, exchange fees, caching, and redistribution rights, so monthly price alone is not enough for procurement.
 
-### 九个代表市场的样本结果
+### Representative samples across nine markets
 
-[![9 个代表市场、6 条 Access Path 的 Dividend Event 实测矩阵](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)
+[![Dividend Event test matrix for nine representative markets and six Access Paths](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)](capability-seo/best-dividend-apis/charts/dividend-market-coverage.png)
 
-图中绿色表示该市场的固定代表 symbol 连续两轮都返回可核验的证券身份、`effective_date` 和 `amount`；橙色表示两轮都执行了，但没有形成合格的 Dividend Event；灰色表示 QVeris 或 Access Path 合同已经明确不适用，因此没有重复探测。
+Green means the fixed representative symbol returned a verifiable security identity, ex-dividend date, and single-event cash amount in both rounds. Orange means both calls ran but did not produce a valid Dividend Event. Gray means QVeris or the Access Path contract explicitly marked the market not applicable, so we did not probe it again.
 
-| Provider / Access Path | 通过（2/2）的代表市场 | 本次代表样本未通过（0/2） | 未测试：明确不适用 |
+| Provider / Access Path | Representative markets passed (2/2) | Representative sample did not pass (0/2) | Not tested: explicitly not applicable |
 |---|---|---|---|
-| 恒生聚源 / QVeris | CN | — | US, HK, JP, DE, FR, BR, IN, ES：合同仅覆盖中国内地交易所 |
-| 同花顺 iFinD / Native MCP | — | US, HK, CN：缺单次事件日期与金额语义 | JP, DE, FR, BR, IN, ES：合同只声明 US/HK/CN |
+| Hang Seng / QVeris | CN | — | US, HK, JP, DE, FR, BR, IN, ES: contract limited to mainland China exchanges |
+| iFinD / Native MCP | — | US, HK, CN: no single-event date or amount meaning | JP, DE, FR, BR, IN, ES: contract declares only US/HK/CN |
 | Twelve Data / QVeris | US, JP, DE, FR, BR, IN | HK, CN, ES | — |
-| Alpha Vantage / QVeris | US, CN, FR, ES | — | HK, JP, DE, BR, IN：QVeris 明确不支持 |
+| Alpha Vantage / QVeris | US, CN, FR, ES | — | HK, JP, DE, BR, IN: explicitly unsupported by QVeris |
 | EODHD / QVeris | US, HK, CN, DE, FR, BR, ES | JP, IN | — |
-| Massive / QVeris | US | — | HK, CN, JP, DE, FR, BR, IN, ES：Stocks Access Path 仅适用于美国股票 |
+| Massive / QVeris | US | — | HK, CN, JP, DE, FR, BR, IN, ES: Stocks Access Path applies to US equities |
 
-`2/2` 是重复性证据，不是统计意义上的全市场认证；`0/2` 只说明所选 symbol 和窗口连续两轮没有完成任务，不能据此断言供应商完全不支持该市场。要进入生产，应把自己的 symbol、权限、日期范围和授权条件带入同一套复测。
+`2/2` is repeatability evidence, not statistical certification of an entire market. `0/2` means only that the selected symbol and window failed the task in both rounds; it does not prove that the provider does not support the market. Before production, rerun the same checks with your symbols, permissions, date ranges, and licensing requirements.
 
-市场 Release 共包含 120 个 frozen cells：66 个适用单元都有公开脱敏 terminal，54 个明确不适用单元保留冻结原因。未知、临时失败或缺少证据不能被改写成不适用。
+The market Release contains 120 planned test cells. All 66 applicable cells have sanitized public evidence, while the other 54 retain an explicit not-applicable reason. Unknown states, temporary failures, and missing evidence cannot be relabeled as not applicable.
 
-### 六家供应商逐一分析
+### Provider-by-provider analysis
 
-#### 恒生聚源：CN 代表样本通过
+#### Hang Seng: representative CN sample passed
 
-CN 代表样本连续两轮返回了可核验的证券身份、除权除息日和单次金额，可以作为 A 股分红事件的优先复测候选。正式接入前仍应使用自己的 symbol、日期范围和权限再次验证。
+The representative CN sample returned a verifiable security identity, ex-dividend date, and single-event amount in both rounds. It is a priority candidate for reproducing mainland China dividend events with your own symbols, date range, and permissions.
 
-#### 同花顺 iFinD：年度累计值不能替代单次事件
+#### iFinD: an annual cumulative value is not a single event
 
-iFinD Native MCP 三轮都返回年度累计单位分红，但没有可核验的除权除息日。年度累计值不能证明某次事件的金额，因此不适用于本文定义的事件日历、除息日回测或价格调整任务。本次只评测官方 Native MCP，不提供 QVeris CTA。
+The iFinD Native MCP returned an annual cumulative per-unit dividend in all three baseline rounds but no verifiable ex-dividend date. That value cannot establish the amount of one event, so it does not satisfy this article's event-calendar, ex-date backtest, or price-adjustment use cases. We tested only the official Native MCP and do not provide a QVeris CTA for iFinD.
 
-#### Twelve Data：核心字段直接，并明确返回币种
+#### Twelve Data: direct core fields with explicit currency
 
-本次 AAPL 样本提供 `effective_date`、`amount` 和 `currency`，适合作为美股基础分红日历或事件提醒的复测候选。分页上限、全市场范围和套餐限额尚未独立验证。
+The AAPL sample returned `effective_date`, `amount`, and `currency`, making it a reproduction candidate for basic US dividend calendars and notifications. We did not measure pagination limits, complete market scope, or plan quotas.
 
-#### Alpha Vantage：样本中的事件日期更丰富
+#### Alpha Vantage: richer event dates in the sample
 
-除最低字段外，本次样本还出现公告日、登记日和支付日，适合需要多阶段事件模型的开发者优先复测。这只证明固定 AAPL 样本中出现了这些字段，不代表所有记录都完整。
+In addition to the required fields, the sample included declaration, record, and payment dates. This makes Alpha Vantage a priority reproduction candidate for multi-stage event models, but it does not prove those fields are complete across all records.
 
-#### EODHD：核心字段通过，数据形状精简
+#### EODHD: core fields in a compact shape
 
-公开事实包含除权除息日、金额和事件数量，没有据此推断币种或其他日期。只需要标准化核心事件时它是候选；如果业务依赖公告日、支付日或币种，应把这些字段加入自己的验收测试。
+The public facts include ex-dividend date, amount, and event count. We did not infer currency or additional dates. EODHD is a candidate for normalized core events; applications that require declaration date, payment date, or currency should add those fields to their own acceptance tests.
 
-#### Massive：字段丰富，官方 Stocks 套餐入口明确
+#### Massive: rich fields with a clear Stocks plan entry point
 
-本次样本同时提供币种、公告日、登记日、除权除息日和支付日。Massive 官方文档还将 Dividend endpoint 列为所有 Stocks plans 可用，个人开发者可从 Stocks Basic Free 开始核验；通过 QVeris 调用时则以对应 Tool 的 1 credit/call Inspect 标价为准。
+The sample included currency, declaration date, record date, ex-dividend date, and payment date. Massive's official documentation lists the Dividends endpoint in all Stocks plans, so individual developers can begin with Stocks Basic Free. Through QVeris, the corresponding Tool's Inspect price was 1 credit/call.
 
-## Agent 选型时额外检查什么
+## What AI Agent builders should verify
 
-本文没有执行 Agent Trial，也不做综合 Agent 评级。对 Agent 来说，字段多并不是唯一标准；身份来源、错误语义和缺失值处理往往更容易造成静默错误。
+We did not run an Agent Trial and do not publish an aggregate Agent rating. For an Agent, field count is not enough: identity provenance, error meaning, and missing-value handling are common sources of silent failure.
 
-| Provider 与 Access Path | 必需事件字段 | 证券身份 | 无效 symbol | 响应内币种 | 附加事件日期 |
+| Provider and Access Path | Required event fields | Security identity | Invalid symbol | Currency in response | Additional event dates |
 |---|---|---|---|---|---|
-| 恒生聚源（QVeris） | CN 样本 2/2 | 响应证券代码已与请求 symbol 对应 | 3/3 正确处理 | 本次未返回 | 公告日、登记日、支付日 |
-| 同花顺 iFinD（Native MCP） | 缺单次金额语义与除权除息日 | 响应未提供可用于独立核对的证券代码 | 3/3 正确处理 | 本次未发布 | 未形成单次事件日期组 |
-| Twelve Data（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | `USD` | 本次仅返回除权除息日 |
-| Alpha Vantage（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | 本次未返回 | 公告日、登记日、支付日 |
-| EODHD（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | 本次未返回 | 本次仅返回除权除息日 |
-| Massive（QVeris） | 3/3 | 本次未验证响应自身返回的证券代码 | 3/3 正确处理 | `USD` | 公告日、登记日、支付日 |
+| Hang Seng (QVeris) | CN sample 2/2 | Returned security code matched the requested symbol | Handled correctly 3/3 | Not returned in this sample | Declaration, record, and payment dates |
+| iFinD (Native MCP) | Missing single-event amount meaning and ex-dividend date | No response security code was available to cross-check | Handled correctly 3/3 | Not published in this sample | No single-event date set |
+| Twelve Data (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | `USD` | Only ex-dividend date in this sample |
+| Alpha Vantage (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | Not returned in this sample | Declaration, record, and payment dates |
+| EODHD (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | Not returned in this sample | Only ex-dividend date in this sample |
+| Massive (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | `USD` | Declaration, record, and payment dates |
 
-选型时应分别检查参数清晰度、schema 稳定性、错误恢复、分页、身份来源和单工具完成能力。当前 Release 只充分观察了必需字段和无效 symbol；参数清晰度、分页和 Agent Trial 没有足够证据，因此保持未测量，而不是合成一个主观总分。
+Evaluate parameter clarity, schema stability, error recovery, pagination, identity provenance, and single-tool completion separately. The current Releases sufficiently observe required fields and invalid-symbol handling. Parameter clarity, pagination, and Agent Trial behavior remain unmeasured rather than being collapsed into a subjective score.
 
-公开事实中的规范化 symbol 可能来自请求输入回填，不能单独证明响应身份一致。只有保留供应商返回标识的来源，并完成 canonical symbol 映射，才能把这一维判为通过。无效 symbol 三轮正确处理也不代表已经覆盖限流、超时、认证过期和服务端异常。
+A symbol copied from the request cannot prove that the response belongs to the same security. Production validation should preserve the identifier returned by the provider and its mapping to the requested symbol. Likewise, correct invalid-symbol handling in three rounds says nothing about rate limits, timeouts, expired authentication, or server failures.
 
-## 测试方法、复测与贡献
+## Method, reproduction, and contribution
 
-### 我们怎么测试
+### How we tested
 
-- **正向样本**：美股基础路径使用 `AAPL`，A 股基础路径使用 `600519.SH`，并固定历史时间窗。
-- **最低门槛**：证券身份可核验，同时存在除权除息日 `effective_date` 和数值有效的单次每股现金分红 `amount`。
-- **负向控制**：使用明确无效的 symbol，接受空态或可归因的供应商拒绝，不接受编造的分红事件。
-- **基础重复性**：每个适用用例连续执行 3 轮；Direct Test 是强制项。
-- **市场补充**：九个市场各固定一个代表 symbol，每个适用单元执行 2 轮。
-- **证据处理**：原始响应默认私有，只公开通过脱敏和授权检查的终态事实及 digest。
+- **Positive samples:** `AAPL` for the US baseline paths and `600519.SH` for mainland China, with a frozen historical window.
+- **Minimum contract:** verifiable security identity plus `effective_date` and a numeric, single-event cash `amount` per share.
+- **Negative control:** an explicitly invalid symbol may produce an empty result or attributable provider rejection, but never a fabricated event.
+- **Baseline repeatability:** three rounds per applicable case; Direct Test is mandatory.
+- **Market extension:** one representative symbol for each of nine markets, with two rounds per applicable cell.
+- **Evidence handling:** raw responses remain private by default; only sanitized, license-cleared terminal facts and digests are public.
 
-两轮市场测试适合验证确定性接口在固定样本上的重复性，但不足以证明完整市场覆盖。明确不支持的市场不再重复探测；没有明确合同结论的市场不能因为缺少证据而记为不适用。
+Two market rounds measure repeatability for a deterministic API on a fixed sample; they do not establish complete market coverage. Explicitly unsupported markets are not probed again. A market cannot be marked not applicable merely because evidence is missing.
 
-### 不需要 key：离线复核公开 Release
+### No key required: replay the public Releases offline
 
-离线 replay 会验证 run plan、终态 cells、公开 terminal、suite fingerprint 和 Release 字节是否一致。它证明发布物没有被悄悄改写，不证明供应商今天仍返回相同结果。
+Offline replay verifies the run plan, terminal cells, public terminals, suite fingerprint, and Release bytes. It proves that the publication has not been silently rewritten; it does not prove that a provider returns the same data today.
 
 ```bash
 uv sync --locked --all-groups
@@ -181,60 +183,60 @@ uv run qveris-bench release replay \
   --expected-digest sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
 ```
 
-可以检查[基础 Release](../../releases/dividend-events-2026-q3-v1/release.json)、[市场 Release](../../releases/dividend-events-market-coverage-2026-q3-v1/release.json)、[Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json)、[基础公开证据](../../evidence/dividend-events-2026-q3-v1/)、[市场公开证据](../../evidence/dividend-events-market-coverage-2026-q3-v1/)和[离线 replay 说明](../release-replay.md)。图中的绿色或橙色市场单元都能沿 digest 找到对应 terminal。
+Inspect the [baseline Release](../../releases/dividend-events-2026-q3-v1/release.json), [market Release](../../releases/dividend-events-market-coverage-2026-q3-v1/release.json), [Selection Snapshot](capability-seo/best-dividend-apis/selection-snapshot.json), [baseline public evidence](../../evidence/dividend-events-2026-q3-v1/), [market public evidence](../../evidence/dividend-events-market-coverage-2026-q3-v1/), and [offline replay guide](../release-replay.md). Every green or orange market cell can be traced by digest to its public terminal.
 
-### 有 key：重新执行真实调用
+### With a key: rerun the live calls
 
-[Dividend Events live workflow](../../.github/workflows/live-dividend-events-e2e.yml)将基础 binding 分 3 轮执行；[Market workflow](../../.github/workflows/live-dividend-market-coverage-e2e.yml)将适用 binding 分 2 轮执行：
+The [Dividend Events live workflow](../../.github/workflows/live-dividend-events-e2e.yml) runs three baseline rounds. The [Market workflow](../../.github/workflows/live-dividend-market-coverage-e2e.yml) runs two rounds for each applicable market binding:
 
-- 五条 QVeris Access Path 使用 `QVERIS_API_KEY`；
-- 同花顺 iFinD 只使用 `IFIND_MCP_API_KEY`，走 Native MCP；
-- 凭证通过环境变量或 GitHub Actions secrets 注入，不能写入 fixture、日志或 PR。
+- five QVeris Access Paths use `QVERIS_API_KEY`;
+- iFinD uses only `IFIND_MCP_API_KEY` through its Native MCP;
+- credentials must come from environment variables or GitHub Actions secrets, never fixtures, logs, Issues, or PRs.
 
-新的真实执行不会覆盖历史 Release。输入、规则或结果变化时，会发布一个保留旧版 digest 的新版本。
+A new live run does not overwrite a historical Release. Changes to inputs, rules, or outcomes produce a new version that preserves the previous digest.
 
-### 供应商与开发者如何参与
+### How providers and developers can participate
 
-供应商可以提交 [Provider submission](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=provider-submission.yml)，说明 Provider、Access Path、官方接口、授权范围和希望参与的能力。API key 和私有响应不能进入 Issue 或 PR，凭证通过安全渠道处理。
+Providers can submit a [Provider submission](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=provider-submission.yml) describing the Provider, Access Path, official interface, authorization scope, and requested capability. API keys and private responses must not appear in an Issue or PR; credentials are handled through a secure channel.
 
-开发者可以贡献 [CAP 与方法提案](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=cap-method-proposal.yml)，包括边界用例、负向控制、字段规则和可授权来源。认为结果有误时，可以提交带 Release digest 与反证的 [Result challenge](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=result-challenge.yml)。供应商可以更正事实，但不能购买纳入、结论或排序。
+Developers can propose [CAP methods and cases](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=cap-method-proposal.yml), including boundary cases, negative controls, field rules, and licensable sources. To dispute a result, file a [Result challenge](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=result-challenge.yml) with the Release digest and counter-evidence. Providers may correct facts but cannot purchase inclusion, conclusions, or ranking.
 
-## 限制、披露与更正
+## Limitations, disclosures, and corrections
 
-- 本文只测试 Dividend Events 这一项能力，不代表供应商的综合金融数据质量。
-- 基础样本只覆盖 `AAPL`、`600519.SH` 和无效 symbol；市场套件每个市场只使用一个代表 symbol。
-- `2/2` 与 `3/3` 是固定样本重复性，不是全量证券覆盖率或统计置信区间。
-- 明确不适用的市场没有重复调用；未知、临时失败或缺少证据不能改写成不适用。
-- QVeris gateway 延迟只描述本次 Access Path 小样本，不能归因于供应商 Native API。
-- QVeris credits 来自 2026-08-12 的 Inspect 公开标价；测试账号实际扣费不进入公开比较。
-- Native 套餐来自供应商官方页面，正式采购前应复核额度、实时性、交易所费用、缓存和再分发权限。
-- QVeris 运营平台参与部分 Access Path 的接入，但测试规则、终态证据和复测入口公开；本文不接受付费排名。
-- 恒生聚源的 CN 代表样本为 2/2；这只代表本文固定样本，不等于全部 A 股证券和历史区间均已验证。
+- This article tests only Dividend Events, not a provider's overall financial-data quality.
+- Baseline samples cover only `AAPL`, `600519.SH`, and an invalid symbol; each market extension uses one representative symbol.
+- `2/2` and `3/3` are fixed-sample repeatability, not full-universe coverage or a statistical confidence interval.
+- Explicitly inapplicable markets were not called again; unknown states, temporary failures, and missing evidence cannot be relabeled not applicable.
+- QVeris gateway latency describes this Access Path sample and cannot be attributed to a provider's Native API.
+- QVeris credits are the public Inspect prices observed on August 12, 2026; discounted test-account charges are excluded from the comparison.
+- Native plans come from official provider pages. Before procurement, verify quotas, real-time access, exchange fees, caching, and redistribution rights.
+- QVeris operates some tested Access Paths, but the rules, terminal evidence, and reproduction entry points are public. This article does not accept paid ranking.
+- Hang Seng's representative CN sample was 2/2. This does not establish support for every mainland China security or historical interval.
 
-完整的公开证据、测试规则与复测入口见 [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks)。
+The public evidence, test rules, and reproduction entry points are available in [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks).
 
-## 常见问题
+## FAQ
 
-### 哪个分红数据 API 最适合开发者？
+### Which dividend API is best for developers?
 
-没有脱离需求的统一答案。只需要美股除权除息日和单次金额时，Twelve Data、Alpha Vantage、EODHD 和 Massive 都是复测候选；需要完整日期组可优先看 Alpha Vantage 或 Massive；需要明确币种可优先看 Twelve Data 或 Massive。
+There is no context-free winner. For a US ex-dividend date and single-event amount, reproduce Twelve Data, Alpha Vantage, EODHD, and Massive first. For a fuller date set, start with Alpha Vantage or Massive. For explicit currency, start with Twelve Data or Massive.
 
-### “本次样本通过”是否代表数据绝对完整？
+### Does “sample passed” mean the data is completely reliable?
 
-不代表。它只表示冻结 symbol、时间窗和轮次完成了当前 Dividend Event 任务。所有历史事件、全市场证券和持续 SLA 需要独立证据。
+No. It means only that the frozen symbol, time window, and rounds completed the current Dividend Event task. Full historical coverage, all securities, and continuous SLA require separate evidence.
 
-### `0/2` 是否代表这个市场不支持？
+### Does `0/2` mean the provider does not support that market?
 
-不代表。它表示选定代表 symbol 在固定窗口连续两轮没有返回合格事件。可能原因包括接口确实不覆盖、symbol 方言不同、权限限制或该窗口的数据行为；只有明确的官方或 Access Path 合同结论才会写成不适用。
+No. It means the selected representative symbol did not produce a valid event in either fixed-window round. Possible causes include true lack of coverage, a different symbol dialect, permissions, or window-specific behavior. We use “not applicable” only when an official or Access Path contract says so explicitly.
 
-### 为什么 iFind 返回年度累计单位分红仍然没有通过？
+### Why did iFinD not pass if it returned an annual cumulative dividend?
 
-本文测的是单次 Dividend Event。年度累计单位分红不能证明某次事件的金额，也没有对应的除权除息日，无法安全用于除息日回测、价格调整或事件提醒。
+This CAP measures a single Dividend Event. An annual cumulative per-unit dividend neither establishes one event's amount nor supplies its ex-dividend date, so it is unsafe for ex-date backtests, price adjustment, and event notifications.
 
-### 可以直接比较表中的延迟吗？
+### Can I compare the latency values directly?
 
-可以在同一 QVeris gateway 边界和观察窗口内用于第一轮复测排序，但不能把六次调用的中位数当作 Native API 性能排名或 SLA。正式选型还应补测目标地域和并发下的 P95/P99。
+Use them only to prioritize reproduction within the same QVeris gateway boundary and observation window. A six-call median is not a Native API performance ranking or SLA. Production selection should measure P95/P99 under your target region and concurrency.
 
-### 我能用自己的 API key 复测吗？
+### Can I reproduce the test with my own API key?
 
-可以。QVeris 已接入的供应商使用一个 `QVERIS_API_KEY`；iFind 使用自己的 Native MCP key。复测应保留相同输入、规则和轮次，结果变化时创建新的 Release，而不是覆盖旧证据。
+Yes. QVeris-integrated providers use one `QVERIS_API_KEY`; iFinD uses its own Native MCP key. Keep the same inputs, rules, and round counts, and publish a new Release if results change instead of overwriting old evidence. Start with the [public repository](https://github.com/QVerisAI/qveris-capability-benchmarks), replay the Releases offline, then rerun the live workflow before committing to a provider.

@@ -56,8 +56,8 @@ def _sha256_identity(path: Path) -> str:
 
 
 _DIVIDEND_PROVIDERS = {
-    "hangseng": "恒生聚源",
-    "ifind": "同花顺 iFinD",
+    "hangseng": "Hang Seng",
+    "ifind": "iFinD",
     "twelve-data": "Twelve Data",
     "alpha-vantage": "Alpha Vantage",
     "eodhd": "EODHD",
@@ -344,11 +344,7 @@ def render_selection_tradeoff(
             raise ValueError("QVeris runtime chart requires inspect list pricing")
         rows.append(
             {
-                "provider": (
-                    "Massive"
-                    if item["provider_id"] == "massive-stocks"
-                    else item["provider_name"]
-                ),
+                "provider": _DIVIDEND_PROVIDERS[item["provider_id"]],
                 "access_path": "QVeris",
                 "median_latency_ms": metrics["latency_median_ms"],
                 "min_latency_ms": metrics["latency_min_ms"],
@@ -400,16 +396,19 @@ def render_selection_tradeoff(
             textcoords="offset points",
             xytext=(9, 10 if index % 2 == 0 else -18),
             fontsize=11,
-            fontweight=600,
+            fontweight=700,
             color="#0F172A",
         )
-    ax.set_xlabel("QVeris gateway 延迟中位数（ms；横线为最小—最大）", color="#334155")
-    ax.set_ylabel("QVeris credits/call (inspect)", color="#334155")
+    ax.set_xlabel(
+        "Median QVeris gateway latency (ms; bar shows min-max)",
+        color="#334155",
+    )
+    ax.set_ylabel("QVeris list price (credits/call)", color="#334155")
     ax.set_title(
-        "Dividend Event: latency and QVeris list credits",
+        "Dividend Event: latency vs QVeris list price",
         color="#143F74",
         fontsize=18,
-        fontweight=600,
+        fontweight=700,
         pad=18,
     )
     ax.grid(True, color="#E2E8F0", linewidth=1)
@@ -450,15 +449,11 @@ def render_selection_tradeoff(
             {
                 "provider_id": provider_id,
                 "access_path_id": item["access_path_id"],
-                "provider": (
-                    "Massive"
-                    if provider_id == "massive-stocks"
-                    else item["provider_name"]
-                ),
+                "provider": _DIVIDEND_PROVIDERS[provider_id],
                 "access_path_type": item["access_path_type"],
                 "access_path": access_path_label,
                 "label": (
-                    f"{item['provider_name']} · {access_path_label} · "
+                    f"{_DIVIDEND_PROVIDERS[provider_id]} · {access_path_label} · "
                     f"{item['access_path_id']}"
                 ),
                 "results": {result["market"]: result for result in coverage["results"]},
@@ -487,8 +482,8 @@ def render_selection_tradeoff(
         raise ValueError("selection market chart requires one round count")
     round_count = next(iter(total_rounds))
     market_title = (
-        f"{len(markets)} 个代表市场 × {len(market_rows)} 条 Access Path："
-        "Dividend Event 实测结果"
+        "Dividend Event results: "
+        f"{len(markets)} representative markets × {len(market_rows)} Access Paths"
     )
     market_data = {
         "title": market_title,
@@ -533,7 +528,7 @@ def render_selection_tradeoff(
                 va="center",
                 color="#FFFFFF" if state != "not_applicable" else "#475569",
                 fontsize=11,
-                fontweight=600,
+                fontweight=700,
             )
     ax.set_xlim(-0.5, len(markets) - 0.5)
     ax.set_ylim(len(market_rows) - 0.5, -0.5)
@@ -552,23 +547,23 @@ def render_selection_tradeoff(
         market_title,
         color="#143F74",
         fontsize=20,
-        fontweight=600,
+        fontweight=700,
         y=0.96,
     )
     fig.legend(
         handles=[
             Patch(
                 facecolor="#12B76A",
-                label=f"{round_count}/{round_count} 通过 Dividend Event 门槛",
+                label=f"{round_count}/{round_count} sample passed",
             ),
             Patch(
                 facecolor="#F79009",
-                label=f"0/{round_count} 已实测但未满足门槛",
+                label=f"0/{round_count} sample did not pass",
             ),
             Patch(
                 facecolor="#E5EEF5",
                 edgecolor="#CBD5E1",
-                label="N/A 明确不支持或合同不适用",
+                label="N/A · explicitly not applicable",
             ),
         ],
         loc="lower center",
@@ -580,9 +575,10 @@ def render_selection_tradeoff(
     fig.text(
         0.08,
         0.018,
-        f"Market Release {observation_date} · 每个适用单元 {round_count} rounds · "
+        f"Market Release {observation_date} · "
+        f"{round_count} rounds per applicable cell · "
         f"{market_release_digest[:23]}… · Selection {selection_digest[:23]}… · "
-        "单一代表 symbol，不外推供应商全部市场",
+        "one representative symbol per market; not full-market coverage",
         color="#475569",
         fontsize=9.5,
     )

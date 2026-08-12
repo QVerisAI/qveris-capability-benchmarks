@@ -1,8 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:447b596581c3fa52d423736788ddc027af2cde3ad432473cf836ce86d4563d36",
-    "dividend-market-coverage.png": "sha256:07242f9713ef2da341a7696638e2c3a025e919ff2a74b095428b24927a64f276"
+    "dividend-runtime-tradeoff.png": "sha256:482193c2145a950c19d4f8bdd06e130e7b895ae59279bc4ea87b9fb1c63d1582",
+    "dividend-market-coverage.png": "sha256:0915fa4f8b8ecca770c836169ca7e2f9b56d676e1117e10baa8ca9e653f58e18"
   },
   "data": {
     "rows": [
@@ -27,7 +27,7 @@
         "latency_samples": 6
       },
       {
-        "provider": "恒生聚源",
+        "provider": "Hang Seng",
         "access_path": "QVeris",
         "median_latency_ms": 623.01,
         "min_latency_ms": 497.68,
@@ -58,7 +58,7 @@
       }
     ],
     "market_coverage": {
-      "title": "9 个代表市场 × 6 条 Access Path：Dividend Event 实测结果",
+      "title": "Dividend Event results: 9 representative markets × 6 Access Paths",
       "edition": "2026-08-12",
       "observation_date": "2026-08-12",
       "release_digest": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
@@ -77,10 +77,10 @@
         {
           "provider_id": "hangseng",
           "access_path_id": "hangseng-dividends-qveris",
-          "provider": "恒生聚源",
+          "provider": "Hang Seng",
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
-          "label": "恒生聚源 · QVeris · hangseng-dividends-qveris",
+          "label": "Hang Seng · QVeris · hangseng-dividends-qveris",
           "results": {
             "BR": {
               "applicability_reason": "Access Path contract limits this Tool to mainland China exchanges.",
@@ -162,10 +162,10 @@
         {
           "provider_id": "ifind",
           "access_path_id": "ifind-native-mcp",
-          "provider": "同花顺 iFinD",
+          "provider": "iFinD",
           "access_path_type": "native_mcp",
           "access_path": "Native MCP",
-          "label": "同花顺 iFinD · Native MCP · ifind-native-mcp",
+          "label": "iFinD · Native MCP · ifind-native-mcp",
           "results": {
             "BR": {
               "applicability_reason": "Access Path contract declares only CN, HK, and US market coverage.",
@@ -568,7 +568,7 @@
           "provider": "Massive",
           "access_path_type": "qveris_connector",
           "access_path": "QVeris",
-          "label": "Massive Stocks · QVeris · massive-stocks-dividends-qveris",
+          "label": "Massive · QVeris · massive-stocks-dividends-qveris",
           "results": {
             "BR": {
               "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
