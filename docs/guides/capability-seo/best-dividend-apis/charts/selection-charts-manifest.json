@@ -2,7 +2,7 @@
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
     "dividend-runtime-tradeoff.png": "sha256:6d6dcb0ed7010281c463909d705ff92fd00831fbf9c18b1dd89230bb93e64d81",
-    "dividend-market-coverage.png": "sha256:296b8b485839d7836f9ee6a116d7e8129ee888877e19a18b7afc4dac2c1ff12e"
+    "dividend-market-coverage.png": "sha256:5e1122e85c5990562ebbf6bb1437cde50848ebc4e06ef45abd4ced6ffc869a36"
   },
   "data": {
     "rows": [
@@ -251,6 +251,100 @@
           }
         },
         {
+          "provider_id": "alpha-vantage",
+          "access_path_id": "alpha-vantage-dividends-qveris",
+          "provider": "Alpha Vantage",
+          "access_path_type": "qveris_connector",
+          "access_path": "QVeris",
+          "label": "Alpha Vantage · QVeris · alpha-vantage-dividends-qveris",
+          "results": {
+            "BR": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "BR",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "CN": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:1fbf997ed2844189dca18038376fb04dcbc134ee3df79e9896066508094ff55a",
+                "sha256:fdd7dd71ac20dc02bfe785d8dc268310bb7755ad641715860521275bf3cb5055"
+              ],
+              "market": "CN",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "DE": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "DE",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "ES": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:91ebb3d203c783d4a1cfbfe3b6353079232b808b013b50b11d35ebbab03ee37e",
+                "sha256:f11f96146b820b34fc788cf229c48b36184b2764c22c85b003cc32841c010383"
+              ],
+              "market": "ES",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "FR": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:2db9b65520417a7a096ea666707adc42e378828a893a272d1017603e6d0ae82e",
+                "sha256:459fa9c5d2f2df5d2ab805b7287f73b1219207612f62789c8ca0b047c13ed297"
+              ],
+              "market": "FR",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            },
+            "HK": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "HK",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "IN": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "IN",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "JP": {
+              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
+              "evidence_refs": [],
+              "market": "JP",
+              "passed_rounds": 0,
+              "state": "not_applicable",
+              "total_rounds": 2
+            },
+            "US": {
+              "applicability_reason": null,
+              "evidence_refs": [
+                "sha256:9f1e5b5e1752753c3ca041ffdf9c54795a380f7c9f55c9b96a4166b066f5b2f3",
+                "sha256:f259031dd801cb443412de9b6e48fb7f0c0c8cabfdfdd4e82834a7b58592a5d7"
+              ],
+              "market": "US",
+              "passed_rounds": 2,
+              "state": "verified",
+              "total_rounds": 2
+            }
+          }
+        },
+        {
           "provider_id": "twelve-data",
           "access_path_id": "twelve-data-dividends-qveris",
           "provider": "Twelve Data",
@@ -351,100 +445,6 @@
               "evidence_refs": [
                 "sha256:a549dac8062b4aa9c469db335f6ef06c3dc0688c70f27386d93147ed79028615",
                 "sha256:cbb71a704b05d3abd870963bb1f89d5419990c6660cb5c30d4862711aa34f8dd"
-              ],
-              "market": "US",
-              "passed_rounds": 2,
-              "state": "verified",
-              "total_rounds": 2
-            }
-          }
-        },
-        {
-          "provider_id": "alpha-vantage",
-          "access_path_id": "alpha-vantage-dividends-qveris",
-          "provider": "Alpha Vantage",
-          "access_path_type": "qveris_connector",
-          "access_path": "QVeris",
-          "label": "Alpha Vantage · QVeris · alpha-vantage-dividends-qveris",
-          "results": {
-            "BR": {
-              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
-              "evidence_refs": [],
-              "market": "BR",
-              "passed_rounds": 0,
-              "state": "not_applicable",
-              "total_rounds": 2
-            },
-            "CN": {
-              "applicability_reason": null,
-              "evidence_refs": [
-                "sha256:1fbf997ed2844189dca18038376fb04dcbc134ee3df79e9896066508094ff55a",
-                "sha256:fdd7dd71ac20dc02bfe785d8dc268310bb7755ad641715860521275bf3cb5055"
-              ],
-              "market": "CN",
-              "passed_rounds": 2,
-              "state": "verified",
-              "total_rounds": 2
-            },
-            "DE": {
-              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
-              "evidence_refs": [],
-              "market": "DE",
-              "passed_rounds": 0,
-              "state": "not_applicable",
-              "total_rounds": 2
-            },
-            "ES": {
-              "applicability_reason": null,
-              "evidence_refs": [
-                "sha256:91ebb3d203c783d4a1cfbfe3b6353079232b808b013b50b11d35ebbab03ee37e",
-                "sha256:f11f96146b820b34fc788cf229c48b36184b2764c22c85b003cc32841c010383"
-              ],
-              "market": "ES",
-              "passed_rounds": 2,
-              "state": "verified",
-              "total_rounds": 2
-            },
-            "FR": {
-              "applicability_reason": null,
-              "evidence_refs": [
-                "sha256:2db9b65520417a7a096ea666707adc42e378828a893a272d1017603e6d0ae82e",
-                "sha256:459fa9c5d2f2df5d2ab805b7287f73b1219207612f62789c8ca0b047c13ed297"
-              ],
-              "market": "FR",
-              "passed_rounds": 2,
-              "state": "verified",
-              "total_rounds": 2
-            },
-            "HK": {
-              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
-              "evidence_refs": [],
-              "market": "HK",
-              "passed_rounds": 0,
-              "state": "not_applicable",
-              "total_rounds": 2
-            },
-            "IN": {
-              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
-              "evidence_refs": [],
-              "market": "IN",
-              "passed_rounds": 0,
-              "state": "not_applicable",
-              "total_rounds": 2
-            },
-            "JP": {
-              "applicability_reason": "QVeris preflight explicitly marks this market unsupported.",
-              "evidence_refs": [],
-              "market": "JP",
-              "passed_rounds": 0,
-              "state": "not_applicable",
-              "total_rounds": 2
-            },
-            "US": {
-              "applicability_reason": null,
-              "evidence_refs": [
-                "sha256:9f1e5b5e1752753c3ca041ffdf9c54795a380f7c9f55c9b96a4166b066f5b2f3",
-                "sha256:f259031dd801cb443412de9b6e48fb7f0c0c8cabfdfdd4e82834a7b58592a5d7"
               ],
               "market": "US",
               "passed_rounds": 2,

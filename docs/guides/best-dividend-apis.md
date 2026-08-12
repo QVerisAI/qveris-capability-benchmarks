@@ -1,12 +1,12 @@
 # Best Dividend APIs for Developers in 2026: 6 Providers
 
-There is no single best dividend API for every application. Through the tested QVeris Access Paths, Twelve Data, Alpha Vantage, EODHD, and Massive returned the required ex-dividend date and single-event amount for the fixed AAPL sample. Their published facts do not independently prove that each response identified `AAPL`, so production identity validation remains necessary. Hang Seng's tested QVeris Access Path passed the representative mainland China sample with a response security code that matched the request.
+There is no single best dividend API for every application. Through the tested QVeris Access Paths, Alpha Vantage, Twelve Data, EODHD, and Massive returned the required ex-dividend date and single-event amount for the fixed AAPL sample. Their published facts do not independently prove that each response identified `AAPL`, so production identity validation remains necessary. Hang Seng's tested QVeris Access Path passed the representative mainland China sample with a response security code that matched the request.
 
 This dividend API comparison treats a successful response as only the starting point. A dividend data API must let your application verify the **security identity, ex-dividend date, and cash amount per share for one event**. Among the US samples, Alpha Vantage and Massive exposed the broadest event-date sets, while Twelve Data and Massive explicitly returned currency. The iFinD Native MCP returned an annual cumulative per-unit dividend, but not a dated, single Dividend Event.
 
 We made 102 live calls across two test suites, including invalid-symbol controls and representative symbols from US, HK, CN, JP, DE, FR, BR, IN, and ES. These **representative market sample results** are not claims about every security, date range, entitlement, or market a provider covers.
 
-> **Quick recommendation:** Through the tested QVeris Access Paths, start by reproducing Twelve Data, Alpha Vantage, EODHD, or Massive for basic US Dividend Events. For broader representative-market results, EODHD passed 7 markets and Twelve Data passed 6. Alpha Vantage passed all 4 markets that QVeris marked applicable; we did not spend calls retesting the other 5 explicitly unsupported markets.
+> **Quick recommendation:** Through the tested QVeris Access Paths, start by reproducing Alpha Vantage, Twelve Data, EODHD, or Massive for basic US Dividend Events. For broader representative-market results, EODHD passed 7 markets and Twelve Data passed 6. Alpha Vantage passed all 4 markets that QVeris marked applicable; we did not spend calls retesting the other 5 explicitly unsupported markets.
 
 ## Contents
 
@@ -26,8 +26,8 @@ The baseline test ran on August 11, 2026. Each applicable Access Path had one po
 |---|---|---:|---|---|
 | [Hang Seng](https://www.gildata.com/products/core-data.html) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **CN sample passed:** both rounds returned a verifiable security identity, ex-dividend date, and single-event amount | 623 ms / 1 credit/call | No public standard price; contact sales | CN passed (2/2); other 8 not tested: explicitly not applicable |
 | [iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md) (Native MCP) | **Sample did not pass:** no single-event date, and the annual cumulative value cannot establish the amount for one event | Not applicable; Native MCP is excluded from QVeris metrics | Personal CNY 40/month for 5,000 requests | US, HK, and CN samples did not pass (0/2); other 6 not tested: explicitly not applicable |
-| [Twelve Data](https://twelvedata.com/docs#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Sample passed:** AAPL returned an ex-dividend date and single-event amount in all three rounds; the invalid symbol produced no fabricated event | 491 ms / 2.37 credits/call | Grow from USD 29/month; free tier 800 credits/day | 6 markets passed (2/2); HK, CN, and ES samples did not pass (0/2) |
 | [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 576 ms / 1 credit/call | Premium from USD 49.99/month; free tier 25 requests/day | 4 applicable markets passed (2/2); 5 not tested: explicitly not applicable |
+| [Twelve Data](https://twelvedata.com/docs#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Sample passed:** AAPL returned an ex-dividend date and single-event amount in all three rounds; the invalid symbol produced no fabricated event | 491 ms / 2.37 credits/call | Grow from USD 29/month; free tier 800 credits/day | 6 markets passed (2/2); HK, CN, and ES samples did not pass (0/2) |
 | [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 779 ms / 2.81 credits/call | All-in-One USD 99.99/month | 7 markets passed (2/2); JP and IN samples did not pass (0/2) |
 | [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 861 ms / 1 credit/call | [Stocks Basic Free](https://massive.com/pricing?product=stocks); Dividend endpoint included in all Stocks plans | US passed (2/2); other 8 not tested: explicitly not applicable |
 
@@ -44,7 +44,7 @@ These four public states describe evidence, not a final procurement decision:
 
 ### You only need a US ex-dividend date and single-event amount
 
-The tested QVeris Access Paths for Twelve Data, Alpha Vantage, EODHD, and Massive should be on the first reproduction shortlist. Then compare three engineering dimensions: the fields your product needs, the QVeris list price per call, and P95/P99 latency measured again from your deployment region.
+The tested QVeris Access Paths for Alpha Vantage, Twelve Data, EODHD, and Massive should be on the first reproduction shortlist. Then compare three engineering dimensions: the fields your product needs, the QVeris list price per call, and P95/P99 latency measured again from your deployment region.
 
 ### You need declaration, record, and payment dates
 
@@ -88,8 +88,8 @@ Twelve Data had the lowest median latency in this sample. Alpha Vantage, Hang Se
 |---|---|---|---|
 | [Hang Seng / QVeris](https://www.gildata.com/products/core-data.html) | `Not published for this snapshot.` | `Commercial; see product page.` | Provider product page; QVeris list price comes from the Inspect snapshot |
 | [iFinD / Native MCP](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | `New accounts receive 2,000 trial requests` | `Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests` | Native MCP only |
-| [Twelve Data / QVeris](https://twelvedata.com/pricing) | `Basic with 8 API credits per minute and 800 per day` | `Grow from USD 29/month` | Provider-wide official price; QVeris price verified per Tool |
 | [Alpha Vantage / QVeris](https://www.alphavantage.co/premium/) | `25 API requests per day` | `Premium from USD 49.99/month` | Provider-wide official price; QVeris price verified per Tool |
+| [Twelve Data / QVeris](https://twelvedata.com/pricing) | `Basic with 8 API credits per minute and 800 per day` | `Grow from USD 29/month` | Provider-wide official price; QVeris price verified per Tool |
 | [EODHD / QVeris](https://eodhd.com/pricing) | `20 API calls per day` | `All-in-One USD 99.99/month` | Provider-wide official price; QVeris price verified per Tool |
 | [Massive / QVeris](https://massive.com/pricing?product=stocks) | `Stocks Basic Free` | `Stocks Starter USD 29/month` | Official documentation includes Dividends in all Stocks plans; QVeris price verified per Tool |
 
@@ -105,8 +105,8 @@ Green means the fixed representative symbol returned a verifiable security ident
 |---|---|---|---|
 | Hang Seng / QVeris | CN | — | US, HK, JP, DE, FR, BR, IN, ES: contract limited to mainland China exchanges |
 | iFinD / Native MCP | — | US, HK, CN: no single-event date or amount meaning | JP, DE, FR, BR, IN, ES: contract declares only US/HK/CN |
-| Twelve Data / QVeris | US, JP, DE, FR, BR, IN | HK, CN, ES | — |
 | Alpha Vantage / QVeris | US, CN, FR, ES | — | HK, JP, DE, BR, IN: explicitly unsupported by QVeris |
+| Twelve Data / QVeris | US, JP, DE, FR, BR, IN | HK, CN, ES | — |
 | EODHD / QVeris | US, HK, CN, DE, FR, BR, ES | JP, IN | — |
 | Massive / QVeris | US | — | HK, CN, JP, DE, FR, BR, IN, ES: Stocks Access Path applies to US equities |
 
@@ -124,13 +124,13 @@ The representative CN sample returned a verifiable security identity, ex-dividen
 
 The iFinD Native MCP returned an annual cumulative per-unit dividend in all three baseline rounds but no verifiable ex-dividend date. That value cannot establish the amount of one event, so it does not satisfy this article's event-calendar, ex-date backtest, or price-adjustment use cases. We tested only the official Native MCP and do not provide a QVeris CTA for iFinD.
 
-#### Twelve Data: direct core fields with explicit currency
-
-The AAPL sample returned `effective_date`, `amount`, and `currency`, making it a reproduction candidate for basic US dividend calendars and notifications. We did not measure pagination limits, complete market scope, or plan quotas.
-
 #### Alpha Vantage: richer event dates in the sample
 
 In addition to the required fields, the sample included declaration, record, and payment dates. This makes Alpha Vantage a priority reproduction candidate for multi-stage event models, but it does not prove those fields are complete across all records.
+
+#### Twelve Data: direct core fields with explicit currency
+
+The AAPL sample returned `effective_date`, `amount`, and `currency`, making it a reproduction candidate for basic US dividend calendars and notifications. We did not measure pagination limits, complete market scope, or plan quotas.
 
 #### EODHD: core fields in a compact shape
 
@@ -148,8 +148,8 @@ We did not run an Agent Trial and do not publish an aggregate Agent rating. For 
 |---|---|---|---|---|---|
 | Hang Seng (QVeris) | CN sample 2/2 | Returned security code matched the requested symbol | Handled correctly 3/3 | Not returned in this sample | Declaration, record, and payment dates |
 | iFinD (Native MCP) | Missing single-event amount meaning and ex-dividend date | No response security code was available to cross-check | Handled correctly 3/3 | Not published in this sample | No single-event date set |
-| Twelve Data (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | `USD` | Only ex-dividend date in this sample |
 | Alpha Vantage (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | Not returned in this sample | Declaration, record, and payment dates |
+| Twelve Data (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | `USD` | Only ex-dividend date in this sample |
 | EODHD (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | Not returned in this sample | Only ex-dividend date in this sample |
 | Massive (QVeris) | 3/3 | Published sample does not prove the response identified `AAPL` | Handled correctly 3/3 | `USD` | Declaration, record, and payment dates |
 
@@ -221,7 +221,7 @@ The public evidence, test rules, and reproduction entry points are available fro
 
 ### Which dividend API is best for developers?
 
-There is no context-free winner. For a US ex-dividend date and single-event amount, reproduce the tested QVeris Access Paths for Twelve Data, Alpha Vantage, EODHD, and Massive first. Among the US samples, Alpha Vantage and Massive exposed the fuller date sets. For explicit currency, start with the tested QVeris Access Paths for Twelve Data or Massive.
+There is no context-free winner. For a US ex-dividend date and single-event amount, reproduce the tested QVeris Access Paths for Alpha Vantage, Twelve Data, EODHD, and Massive first. Among the US samples, Alpha Vantage and Massive exposed the fuller date sets. For explicit currency, start with the tested QVeris Access Paths for Twelve Data or Massive.
 
 ### Does “sample passed” mean the data is completely reliable?
 

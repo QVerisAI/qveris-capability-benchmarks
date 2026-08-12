@@ -58,8 +58,8 @@ def _sha256_identity(path: Path) -> str:
 _DIVIDEND_PROVIDERS = {
     "hangseng": "Hang Seng",
     "ifind": "iFinD",
-    "twelve-data": "Twelve Data",
     "alpha-vantage": "Alpha Vantage",
+    "twelve-data": "Twelve Data",
     "eodhd": "EODHD",
     "massive-stocks": "Massive",
 }

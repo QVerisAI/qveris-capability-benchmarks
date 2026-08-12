@@ -127,4 +127,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:11421318f19b353a4cb2df849776a972dfd33bfc74f8412864fd12b885ab7a70
+  selection_charts_manifest_digest: sha256:e5e85c8880e34cca42b4e5a323931d78ec1122771d9b4fd1d8013102684dc9dd

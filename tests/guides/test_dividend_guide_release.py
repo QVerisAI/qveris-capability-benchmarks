@@ -115,6 +115,33 @@ def test_article_uses_reader_facing_outcomes_and_one_decision_flow() -> None:
     assert "## Five things to do when integrating an AI Agent" not in article
 
 
+def test_article_keeps_one_provider_order_across_comparisons() -> None:
+    article = ARTICLE.read_text(encoding="utf-8")
+    expected = [
+        "Hang Seng",
+        "iFinD",
+        "Alpha Vantage",
+        "Twelve Data",
+        "EODHD",
+        "Massive",
+    ]
+    tables = [
+        _markdown_table_rows(article, "| Provider and Access Path |"),
+        _markdown_table_rows(article, "| Provider / Access Path | Free or trial"),
+        _markdown_table_rows(article, "Representative markets passed (2/2)"),
+        _markdown_table_rows(
+            article, "| Provider and Access Path | Required event fields |"
+        ),
+    ]
+
+    for rows in tables:
+        assert [next(name for name in expected if name in row[0]) for row in rows] == (
+            expected
+        )
+    headings = [article.index(f"#### {name}:") for name in expected]
+    assert headings == sorted(headings)
+
+
 def test_article_publishes_inspect_list_prices_not_discounted_account_costs() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     overview_rows = _markdown_table_rows(article, "| Provider and Access Path |")
