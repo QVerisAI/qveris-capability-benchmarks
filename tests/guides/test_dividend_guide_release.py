@@ -143,6 +143,11 @@ def test_committed_evidence_charts_are_release_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
+    assert generated["charts"] == committed["charts"]
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
+        f"sha256:{hashlib.sha256((committed_dir / 'selection-charts-manifest.json').read_bytes()).hexdigest()}"
+    )
     assert generated["input_digests"]["release"] == RELEASE_DIGEST
     chart_name = "dividend-evidence-heatmap.png"
     if platform.system() == "Linux":
@@ -179,15 +184,15 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert generated["input_digests"]["selection_snapshot"] == (
         f"sha256:{hashlib.sha256(snapshot.read_bytes()).hexdigest()}"
     )
-    chart_name = "dividend-runtime-tradeoff.png"
-    if platform.system() == "Linux":
-        assert (tmp_path / chart_name).read_bytes() == (
-            committed_dir / chart_name
-        ).read_bytes()
-    assert committed["charts"][chart_name] == (
-        "sha256:"
-        + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
-    )
+    for chart_name, digest in committed["charts"].items():
+        if platform.system() == "Linux":
+            assert (tmp_path / chart_name).read_bytes() == (
+                committed_dir / chart_name
+            ).read_bytes()
+        assert digest == (
+            "sha256:"
+            + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
+        )
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 
@@ -204,7 +209,14 @@ def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
     assert market_data["title"] == (
         "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN"
     )
-    assert market_data["highlighted_provider_id"] == "eodhd"
+    assert market_data["highlighted_access_paths"] == [
+        ["eodhd", "eodhd-dividends-qveris"]
+    ]
+    assert market_data["edition"] == "2026-08-12"
+    assert market_data["observation_window"] == {
+        "start": "2026-07-20",
+        "end": "2026-08-12",
+    }
     assert market_data["markets"] == [
         "AT",
         "BE",
@@ -250,6 +262,49 @@ def test_selection_market_coverage_chart_reuses_verified_snapshot_states(
             market_chart.read_bytes()
             == (MANIFEST.parent / "charts" / market_chart.name).read_bytes()
         )
+
+
+def test_selection_market_chart_preserves_every_access_path_identity(
+    tmp_path: Path,
+) -> None:
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    extra = json.loads(json.dumps(snapshot["rows"][0]))
+    extra.update(
+        {
+            "provider_id": "alpha-vantage-alt",
+            "provider_name": "Alpha Vantage Alt",
+            "access_path_id": "alpha-vantage-dividends-alt-qveris",
+        }
+    )
+    snapshot["rows"].append(extra)
+    path = tmp_path / "selection.json"
+    path.write_text(json.dumps(snapshot), encoding="utf-8")
+
+    rendered = render_selection_tradeoff(path, tmp_path / "charts")
+    identities = {
+        (row["provider_id"], row["access_path_id"])
+        for row in rendered["data"]["market_coverage"]["rows"]
+    }
+    assert identities == {
+        (row["provider_id"], row["access_path_id"]) for row in snapshot["rows"]
+    }
+
+
+def test_selection_market_chart_changes_with_edition(tmp_path: Path) -> None:
+    snapshot = json.loads((MANIFEST.parent / "selection-snapshot.json").read_text())
+    first_path = tmp_path / "first.json"
+    first_path.write_text(json.dumps(snapshot), encoding="utf-8")
+    first = render_selection_tradeoff(first_path, tmp_path / "first")
+
+    snapshot["edition"] = "2026-08-13"
+    second_path = tmp_path / "second.json"
+    second_path.write_text(json.dumps(snapshot), encoding="utf-8")
+    second = render_selection_tradeoff(second_path, tmp_path / "second")
+
+    chart_name = "dividend-market-coverage.png"
+    assert first["charts"][chart_name] != second["charts"][chart_name]
+    assert first["data"]["market_coverage"]["edition"] == "2026-08-12"
+    assert second["data"]["market_coverage"]["edition"] == "2026-08-13"
 
 
 def test_article_embeds_market_coverage_chart_next_to_market_section() -> None:

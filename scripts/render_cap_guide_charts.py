@@ -422,20 +422,36 @@ def render_selection_tradeoff(
     fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)
 
+    provider_order = {
+        provider_id: index for index, provider_id in enumerate(_DIVIDEND_PROVIDERS)
+    }
+    snapshot_rows = sorted(
+        snapshot["rows"],
+        key=lambda item: (
+            provider_order.get(item["provider_id"], len(provider_order)),
+            item["provider_id"],
+            item["access_path_id"],
+        ),
+    )
     market_rows = []
-    for provider_id in _DIVIDEND_PROVIDERS:
-        item = next(
-            row for row in snapshot["rows"] if row["provider_id"] == provider_id
-        )
+    for item in snapshot_rows:
+        provider_id = item["provider_id"]
         coverage = item["market_coverage"]
+        if (
+            item["access_path_type"] == "native_mcp"
+            and coverage["sv_state"] != "not_applicable"
+        ):
+            raise ValueError("Native market coverage must be not_applicable")
         market_rows.append(
             {
                 "provider_id": provider_id,
+                "access_path_id": item["access_path_id"],
                 "provider": (
                     "Massive"
                     if provider_id == "massive-stocks"
                     else item["provider_name"]
                 ),
+                "access_path_type": item["access_path_type"],
                 "access_path": (
                     "Native MCP"
                     if item["access_path_type"] == "native_mcp"
@@ -449,7 +465,14 @@ def render_selection_tradeoff(
         {market for item in market_rows for market in item["verified_markets"]}
     )
     measured_rows = [item for item in market_rows if item["verified_markets"]]
-    highlighted_row = max(measured_rows, key=lambda item: len(item["verified_markets"]))
+    maximum_evidence_count = max(
+        len(item["verified_markets"]) for item in measured_rows
+    )
+    highlighted_rows = [
+        item
+        for item in measured_rows
+        if len(item["verified_markets"]) == maximum_evidence_count
+    ]
     summaries = []
     for item in sorted(
         measured_rows,
@@ -459,9 +482,25 @@ def render_selection_tradeoff(
         scope = verified[0] if len(verified) == 1 else f"{len(verified)} 个市场"
         summaries.append(f"{item['provider']} {scope}")
     market_title = "QVeris SV 市场正向证据：" + "，".join(summaries)
+    windows = {
+        json.dumps(
+            item["market_coverage"]["sv_observation_window"],
+            sort_keys=True,
+        )
+        for item in snapshot_rows
+        if item["market_coverage"]["sv_observation_window"] is not None
+    }
+    if len(windows) != 1:
+        raise ValueError("selection market chart requires one SV observation window")
+    observation_window = json.loads(next(iter(windows)))
+    selection_digest = _sha256_identity(selection_snapshot_path)
     market_data = {
         "title": market_title,
-        "highlighted_provider_id": highlighted_row["provider_id"],
+        "highlighted_access_paths": [
+            [item["provider_id"], item["access_path_id"]] for item in highlighted_rows
+        ],
+        "edition": snapshot["edition"],
+        "observation_window": observation_window,
         "markets": markets,
         "rows": market_rows,
     }
@@ -512,21 +551,25 @@ def render_selection_tradeoff(
                     fontsize=11,
                     fontweight=600,
                 )
-        highlighted_index = next(
-            index
-            for index, row in enumerate(market_rows)
-            if row["provider_id"] == highlighted_row["provider_id"]
-        )
-        ax.add_patch(
-            Rectangle(
-                (-0.5, highlighted_index - 0.5),
-                len(market_group),
-                1,
-                fill=False,
-                edgecolor="#FF8C00",
-                linewidth=2.2,
+        highlighted_identities = {
+            (item["provider_id"], item["access_path_id"]) for item in highlighted_rows
+        }
+        for highlighted_index, row in enumerate(market_rows):
+            if (
+                row["provider_id"],
+                row["access_path_id"],
+            ) not in highlighted_identities:
+                continue
+            ax.add_patch(
+                Rectangle(
+                    (-0.5, highlighted_index - 0.5),
+                    len(market_group),
+                    1,
+                    fill=False,
+                    edgecolor="#FF8C00",
+                    linewidth=2.2,
+                )
             )
-        )
         ax.set_xlim(-0.5, len(market_group) - 0.5)
         ax.set_ylim(len(market_rows) - 0.5, -0.5)
         ax.set_xticks(range(len(market_group)))
@@ -556,7 +599,7 @@ def render_selection_tradeoff(
                 facecolor="none",
                 edgecolor="#FF8C00",
                 linewidth=2,
-                label="本快照覆盖最多",
+                label="正向证据条目最多（不代表供应商覆盖）",
             ),
         ],
         loc="lower center",
@@ -568,8 +611,9 @@ def render_selection_tradeoff(
     fig.text(
         0.08,
         0.018,
-        "绿色只表示 QVeris MKT.DIVIDENDS SV 正向证据；"
-        "灰色不代表供应商不支持；Dividend CAP 结论需另行判断",
+        f"Selection {snapshot['edition']} · SV {observation_window['start']}—"
+        f"{observation_window['end']} · {selection_digest[:23]}… · "
+        "绿色仅为正向证据；灰色不代表不支持；CAP 结论需另行判断",
         color="#475569",
         fontsize=9.5,
     )
@@ -585,7 +629,7 @@ def render_selection_tradeoff(
         },
         "data": {"rows": rows, "market_coverage": market_data},
         "input_digests": {
-            "selection_snapshot": _sha256_identity(selection_snapshot_path),
+            "selection_snapshot": selection_digest,
         },
         "rendered_at": edition,
     }

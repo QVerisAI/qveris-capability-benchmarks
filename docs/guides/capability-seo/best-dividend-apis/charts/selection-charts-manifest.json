@@ -2,7 +2,7 @@
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
     "dividend-runtime-tradeoff.png": "sha256:ce9c240c4760005f309f4052ec2940c6146dccd79cfb09f6ef2219f766e59b96",
-    "dividend-market-coverage.png": "sha256:becf17c83325f13012fa28cbb259d9974336f58280604ff2d524aac77d162c23"
+    "dividend-market-coverage.png": "sha256:78224f98d8fe1c4bc8638a22577163d282d713b89a379e34ea11786a3da766e2"
   },
   "data": {
     "rows": [
@@ -59,7 +59,17 @@
     ],
     "market_coverage": {
       "title": "QVeris SV 市场正向证据：EODHD 24 个市场，恒生聚源 CN",
-      "highlighted_provider_id": "eodhd",
+      "highlighted_access_paths": [
+        [
+          "eodhd",
+          "eodhd-dividends-qveris"
+        ]
+      ],
+      "edition": "2026-08-12",
+      "observation_window": {
+        "end": "2026-08-12",
+        "start": "2026-07-20"
+      },
       "markets": [
         "AT",
         "BE",
@@ -90,7 +100,9 @@
       "rows": [
         {
           "provider_id": "hangseng",
+          "access_path_id": "hangseng-dividends-qveris",
           "provider": "恒生聚源",
+          "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "state": "measured",
           "verified_markets": [
@@ -99,28 +111,36 @@
         },
         {
           "provider_id": "ifind",
+          "access_path_id": "ifind-native-mcp",
           "provider": "同花顺 iFinD",
+          "access_path_type": "native_mcp",
           "access_path": "Native MCP",
           "state": "not_applicable",
           "verified_markets": []
         },
         {
           "provider_id": "twelve-data",
+          "access_path_id": "twelve-data-dividends-qveris",
           "provider": "Twelve Data",
+          "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "state": "evidence_insufficient",
           "verified_markets": []
         },
         {
           "provider_id": "alpha-vantage",
+          "access_path_id": "alpha-vantage-dividends-qveris",
           "provider": "Alpha Vantage",
+          "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "state": "evidence_insufficient",
           "verified_markets": []
         },
         {
           "provider_id": "eodhd",
+          "access_path_id": "eodhd-dividends-qveris",
           "provider": "EODHD",
+          "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "state": "measured",
           "verified_markets": [
@@ -152,7 +172,9 @@
         },
         {
           "provider_id": "massive-stocks",
+          "access_path_id": "massive-stocks-dividends-qveris",
           "provider": "Massive",
+          "access_path_type": "qveris_connector",
           "access_path": "QVeris",
           "state": "evidence_insufficient",
           "verified_markets": []
