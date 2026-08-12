@@ -401,9 +401,8 @@ def _load_qveris_list_prices(
         if not isinstance(fact, dict):
             raise SelectionSnapshotBuildError("invalid QVeris list price fact")
         identity = (str(fact.get("provider_id")), str(fact.get("access_path_id")))
-        if (
-            identity in result
-            or binding_identities.get(identity) != fact.get("tool_id")
+        if identity in result or binding_identities.get(identity) != fact.get(
+            "tool_id"
         ):
             raise SelectionSnapshotBuildError("QVeris list price identity mismatch")
         amount = fact.get("amount_credits")

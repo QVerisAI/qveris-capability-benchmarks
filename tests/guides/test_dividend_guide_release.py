@@ -446,12 +446,8 @@ def test_article_publishes_released_market_coverage_near_the_decision_table() ->
     overview_rows = _markdown_table_rows(article, "| 供应商与 Access Path |")
     market_rows = _markdown_table_rows(article, "通过（2/2）的代表市场")
 
-    assert "7 个市场通过（2/2）" in _provider_row(
-        overview_rows, "EODHD", "QVeris"
-    )[4]
-    assert "CN 通过（2/2）" in _provider_row(
-        overview_rows, "恒生聚源", "QVeris"
-    )[4]
+    assert "7 个市场通过（2/2）" in _provider_row(overview_rows, "EODHD", "QVeris")[4]
+    assert "CN 通过（2/2）" in _provider_row(overview_rows, "恒生聚源", "QVeris")[4]
     eodhd = next(row for row in snapshot["rows"] if row["provider_id"] == "eodhd")
     verified = {
         result["market"]
@@ -554,10 +550,7 @@ def test_article_selection_facts_match_every_snapshot_row() -> None:
         if metrics["state"] == "measured":
             amount = row["qveris_list_price"]["amount_credits"]
             unit = "credit/call" if amount == 1 else "credits/call"
-            runtime = (
-                f"{metrics['latency_median_ms']:.0f} ms / "
-                f"{amount:g} {unit}"
-            )
+            runtime = f"{metrics['latency_median_ms']:.0f} ms / {amount:g} {unit}"
             assert runtime in runtime_row[2]
         else:
             assert "不适用" in runtime_row[2]

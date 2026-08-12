@@ -160,9 +160,7 @@ def test_ac5_qveris_list_prices_come_from_inspect_not_account_billing() -> None:
 
 
 @pytest.mark.parametrize("mutation", ["string_amount", "wrong_tool", "wrong_digest"])
-def test_ac5_qveris_list_pricing_fails_closed(
-    tmp_path: Path, mutation: str
-) -> None:
+def test_ac5_qveris_list_pricing_fails_closed(tmp_path: Path, mutation: str) -> None:
     pricing = json.loads(
         (INPUT.parent / "qveris-list-pricing.json").read_text(encoding="utf-8")
     )
