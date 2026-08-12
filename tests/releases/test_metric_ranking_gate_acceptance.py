@@ -141,6 +141,7 @@ def test_ac2_release_gate_accepts_complete_frozen_metric_cohort() -> None:
         _release(_fact(1), _fact(2)),
         (_cell(1), _cell(2)),
         (_evidence(1), _evidence(2)),
+        metric_registry=(_definition(),),
     )
 
 
@@ -150,6 +151,7 @@ def test_ac2_release_gate_rejects_incomplete_ranking_cohort() -> None:
             _release(_fact(1)),
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -159,6 +161,7 @@ def test_ac2_release_gate_rejects_metric_suite_mismatch() -> None:
             _release(_fact(1, suite="9" * 64), _fact(2)),
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -182,6 +185,7 @@ def test_ac2_release_gate_rejects_evidence_from_another_provider_cell() -> None:
             _release(mismatched, _fact(2)),
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -204,6 +208,7 @@ def test_ac2_release_gate_rejects_inconsistent_frozen_cohort() -> None:
             _release(_fact(1), inconsistent),
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -231,6 +236,7 @@ def test_ac2_release_gate_rejects_forged_cohort_digest() -> None:
             forged_release,
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -257,6 +263,49 @@ def test_ac3_release_gate_rejects_unregistered_metric_definition() -> None:
             ),
             (_cell(1), _cell(2)),
             (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
+        )
+
+
+def test_ac3_release_gate_rejects_self_attested_metric_registry() -> None:
+    with pytest.raises(ReleaseGateError, match="CAP-owned metric registry"):
+        validate_release_inputs(
+            _release(_fact(1), _fact(2)),
+            (_cell(1), _cell(2)),
+            (_evidence(1), _evidence(2)),
+        )
+
+
+def test_ac2_release_gate_rejects_rank_reversed_against_scores() -> None:
+    release = _release(_fact(1), _fact(2))
+    first, second = release.developer_selection_facts
+    reversed_release = release.model_copy(
+        update={
+            "developer_selection_facts": (
+                first.model_copy(
+                    update={
+                        "metric_score": first.metric_score.model_copy(
+                            update={"value": 10}
+                        )
+                    }
+                ),
+                second.model_copy(
+                    update={
+                        "metric_score": second.metric_score.model_copy(
+                            update={"value": 90}
+                        )
+                    }
+                ),
+            )
+        }
+    )
+
+    with pytest.raises(ReleaseGateError, match="score ordering"):
+        validate_release_inputs(
+            reversed_release,
+            (_cell(1), _cell(2)),
+            (_evidence(1), _evidence(2)),
+            metric_registry=(_definition(),),
         )
 
 
@@ -286,4 +335,5 @@ def test_ac2_release_gate_rejects_invalid_tie_sequences(
             _release(*facts),
             tuple(_cell(index) for index in range(1, 4)),
             tuple(_evidence(index) for index in range(1, 4)),
+            metric_registry=(_definition(),),
         )

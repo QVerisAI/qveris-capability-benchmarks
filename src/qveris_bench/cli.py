@@ -27,6 +27,7 @@ from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.base import EvidenceRef
 from qveris_bench.models.enums import CellState, QualificationDisposition
 from qveris_bench.models.evidence import EvidenceBundle
+from qveris_bench.models.metric import MetricDefinition
 from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
@@ -508,7 +509,7 @@ def run_resume(
 
 
 def _load_json_model_list(
-    path: Path, model: type[RunCell] | type[EvidenceBundle]
+    path: Path, model: type[RunCell] | type[EvidenceBundle] | type[MetricDefinition]
 ) -> tuple[object, ...]:
     document = json.loads(path.read_text())
     if not isinstance(document, list):
@@ -522,16 +523,26 @@ def release_build(
     cells_path: Path,
     evidence_path: Path,
     output: Annotated[Path, typer.Option(help="Immutable release JSON output.")],
+    metric_registry: Annotated[
+        Path | None,
+        typer.Option(help="CAP-owned metric definition registry JSON."),
+    ] = None,
 ) -> None:
     """Build an immutable release from validated machine-readable inputs."""
     try:
         release = BenchmarkRelease.model_validate_json(release_path.read_text())
         cells = _load_json_model_list(cells_path, RunCell)
         evidence = _load_json_model_list(evidence_path, EvidenceBundle)
+        definitions = (
+            _load_json_model_list(metric_registry, MetricDefinition)
+            if metric_registry is not None
+            else ()
+        )
         content = build_release(
             release,
             cast(tuple[RunCell, ...], cells),
             cast(tuple[EvidenceBundle, ...], evidence),
+            metric_registry=cast(tuple[MetricDefinition, ...], definitions),
         )
     except (OSError, ValueError) as exc:
         typer.echo(str(exc), err=True)

@@ -311,5 +311,12 @@ def _release_with_dimension_metric(tmp_path: Path) -> Path:
         developer_selection_facts=(fact,),
     )
     path = tmp_path / "metric-release.json"
-    path.write_bytes(build_release(release, (cell,), (evidence,)))
+    path.write_bytes(
+        build_release(
+            release,
+            (cell,),
+            (evidence,),
+            metric_registry=(definition,),
+        )
+    )
     return path

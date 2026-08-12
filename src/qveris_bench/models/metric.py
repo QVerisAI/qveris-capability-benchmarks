@@ -155,20 +155,6 @@ def metric_ranking_cohort_digest(rankings: list[MetricRanking]) -> str:
     first = rankings[0]
     payload = {
         "cohort_id": first.cohort_id,
-        "metric_id": first.metric_id,
-        "definition_digest": first.definition_digest,
-        "dimension_id": first.dimension_id,
-        "cap_id": first.cap_id,
-        "cap_version": first.cap_version,
-        "method_version": first.method_version,
-        "method_digest": first.method_digest,
-        "suite_fingerprint": first.suite_fingerprint,
-        "rank_of": first.rank_of,
-        "tie_method": first.tie_method,
-        "direction": first.direction,
-        "scale_min": first.scale_min,
-        "scale_max": first.scale_max,
-        "unit": first.unit,
         "members": sorted(
             (ranking.provider_id, ranking.access_path_id) for ranking in rankings
         ),

@@ -204,11 +204,7 @@ def _gateway_insufficient(cap_id: str) -> tuple[ProfileDimension, ...]:
 def _released_metric_dimensions(
     cap_id: str, release: BenchmarkRelease
 ) -> tuple[ProfileDimension, ...]:
-    facts = release.developer_selection_facts + tuple(
-        fact
-        for provider_facts in release.provider_feedback_facts.values()
-        for fact in provider_facts
-    )
+    facts = release.developer_selection_facts
     return tuple(
         ProfileDimension(
             cap_id=cap_id,
