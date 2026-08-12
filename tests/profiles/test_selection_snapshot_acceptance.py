@@ -212,6 +212,24 @@ def test_ac5_official_pricing_supplement_fails_closed_on_wrong_scope(
         build_selection_snapshot(input_path, ROOT)
 
 
+def test_ac5_official_pricing_supplement_fails_closed_on_wrong_provenance(
+    tmp_path: Path,
+) -> None:
+    supplement = json.loads(
+        (INPUT.parent / "official-pricing-supplement.json").read_text(encoding="utf-8")
+    )
+    supplement["prices"][0]["pricing"]["suite_fingerprint"] = "f" * 64
+    supplement_path = tmp_path / "official-pricing-supplement.json"
+    supplement_path.write_text(json.dumps(supplement), encoding="utf-8")
+    config = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
+    config["official_pricing_supplement"]["snapshot"] = str(supplement_path)
+    input_path = tmp_path / "selection-snapshot.yaml"
+    input_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    with pytest.raises(SelectionSnapshotBuildError):
+        build_selection_snapshot(input_path, ROOT)
+
+
 def test_ac6_agent_signals_remain_independent_dimensions() -> None:
     rows = build_selection_snapshot(INPUT, ROOT).snapshot.rows
 

@@ -218,6 +218,18 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
             "official pricing supplement contains unknown selection identity"
         )
     for provider_id, access_path_id in pricing_supplements:
+        supplement = pricing_supplements[(provider_id, access_path_id)]
+        source_matches = [
+            item
+            for item in registry_by_id[provider_id].provider.official_pricing
+            if item.source_digest == supplement.source_digest
+            and str(item.pricing_url) == str(supplement.pricing_url)
+            and item.suite_fingerprint == supplement.suite_fingerprint
+        ]
+        if len(source_matches) != 1:
+            raise SelectionSnapshotBuildError(
+                "official pricing supplement provenance mismatch"
+            )
         base_pricing = _pricing(
             registry_by_id[provider_id].provider.official_pricing,
             access_path_id,

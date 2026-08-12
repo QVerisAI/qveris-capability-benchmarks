@@ -17,7 +17,7 @@
         "applies_to": ["massive-stocks-dividends-qveris"],
         "currencies": ["USD"],
         "extractor_version": "1.0.0",
-        "suite_fingerprint": "60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
         "disclosure_level": "sanitized_public",
         "license_status": "cleared"
       }

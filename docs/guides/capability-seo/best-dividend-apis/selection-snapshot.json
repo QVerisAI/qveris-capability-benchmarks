@@ -8,7 +8,7 @@
     "market_coverage_cases": "sha256:021508b60f456f0c30c698ee06288221c7080d67035320710f5119fc348fb550",
     "market_coverage_release": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
     "market_coverage_suite": "sha256:0b133ae5f3252ace61407e4ba30d52e14d4876c7e8c93e2f44f5f59637833048",
-    "official_pricing_supplement": "sha256:16f970abd0025fc860139022048941edc573d295a6f81bf12b19d495d31a478c",
+    "official_pricing_supplement": "sha256:22575a3d9d5197df0273b8f9707daa35a920dedfe7d637651274a7eca9164e84",
     "providers": {
       "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
       "eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
@@ -1035,7 +1035,7 @@
         "pricing_url": "https://massive.com/pricing?product=stocks",
         "source_digest": "74c0b1e200eb072becdfb0463056f7dcb498f7cebae8df65480d46792a2255de",
         "state": "declared",
-        "suite_fingerprint": "60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
         "verified_at": "2026-08-12"
       },
       "provider_id": "massive-stocks",
