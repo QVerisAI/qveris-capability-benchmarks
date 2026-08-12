@@ -120,6 +120,9 @@ def test_article_explains_market_samples_and_evidence_heatmap() -> None:
     ):
         assert confusing_term not in article
     assert "dividend-evidence-heatmap.png" not in article
+    retired = MANIFEST.parent / "charts"
+    assert not (retired / "dividend-evidence-heatmap.png").exists()
+    assert not (retired / "evidence-matrix-manifest.json").exists()
 
 
 def test_article_omits_unpublished_local_and_related_guide_links() -> None:
