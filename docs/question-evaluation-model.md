@@ -166,8 +166,12 @@ documented source, never as `measured` gateway observations.
   scenario's market or language union.
 - Evaluation rules are replayable: two builds of the same release are byte-identical
   and every fact resolves to an immutable release and evidence digest.
-- Aggregate score and rating fields are rejected by the release model. A profile
-  shows per-CAP, per-path tradeoffs and limitations.
+- A per-dimension score requires a typed metric, versioned method, explicit scale,
+  CAP, Provider, Access Path, and released evidence. A rank additionally pins its
+  frozen cohort and tie method.
+- Free-form score, rating, and rank fields are rejected. Provider totals,
+  Agent-friendly composites, cross-CAP composites, and cross-task rankings remain
+  forbidden.
 
 ## Adding a question: the checklist
 

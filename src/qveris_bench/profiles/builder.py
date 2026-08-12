@@ -234,7 +234,8 @@ def _markdown(profile: TaskFitProfile) -> str:
         lines.extend(f"- {item}" for item in profile.limitations)
         lines.append("")
     lines.append(
-        "> No provider total, ranking, or Agent-friendly composite score is included."
+        "> No provider total, cross-CAP ranking, or Agent-friendly "
+        "composite is included."
     )
     return "\n".join(lines) + "\n"
 

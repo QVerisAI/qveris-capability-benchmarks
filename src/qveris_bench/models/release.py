@@ -1,9 +1,5 @@
 from __future__ import annotations
 
-import re
-from collections.abc import Mapping
-from typing import Any
-
 from pydantic import Field, model_validator
 
 from qveris_bench.models.base import (
@@ -14,45 +10,104 @@ from qveris_bench.models.base import (
     StableId,
 )
 from qveris_bench.models.enums import DimensionState, ReleaseFactType
-
-
-def _reject_aggregate_keys(value: Any) -> None:
-    if isinstance(value, Mapping):
-        for key, nested_value in value.items():
-            normalized = re.sub(r"[^a-z0-9]", "", str(key).lower())
-            if any(
-                token in normalized for token in ("score", "rating", "agentfriendly")
-            ):
-                raise ValueError(f"aggregate field is forbidden: {key}")
-            _reject_aggregate_keys(nested_value)
-    elif isinstance(value, (list, tuple)):
-        for nested_value in value:
-            _reject_aggregate_keys(nested_value)
+from qveris_bench.models.metric import (
+    UNSTRUCTURED_METRIC_PROPERTY_NAMES_SCHEMA,
+    MetricDetails,
+    MetricRanking,
+    MetricScore,
+    reject_unstructured_metric_keys,
+)
 
 
 class ReleaseFact(FrozenModel):
     fact_type: ReleaseFactType
     dimension_state: DimensionState | None = None
-    details: dict[str, Any] = Field(
+    dimension_id: StableId | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    details: MetricDetails = Field(
         default_factory=dict,
-        json_schema_extra={
-            "propertyNames": {
-                "not": {
-                    "anyOf": [
-                        {"pattern": "[s][c][o][r][e]"},
-                        {"pattern": "[r][a][t][i][n][g]"},
-                        {"pattern": "[a][g][e][n][t][f][r][i][e][n][d][l][y]"},
-                    ]
-                }
-            },
-        },
+        json_schema_extra={"propertyNames": UNSTRUCTURED_METRIC_PROPERTY_NAMES_SCHEMA},
+    )
+    metric_score: MetricScore | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    metric_ranking: MetricRanking | None = Field(
+        default=None, exclude_if=lambda value: value is None
     )
     evidence_refs: tuple[EvidenceRef, ...] = ()
 
     @model_validator(mode="after")
-    def reject_aggregate_fields(self) -> ReleaseFact:
-        _reject_aggregate_keys({"fact_type": self.fact_type})
-        _reject_aggregate_keys(self.details)
+    def validate_metric_fields(self) -> ReleaseFact:
+        reject_unstructured_metric_keys(self.details)
+        if (self.metric_score is not None or self.metric_ranking is not None) and (
+            self.dimension_state is not DimensionState.MEASURED
+        ):
+            raise ValueError("metric scores and rankings require a measured fact")
+        metrics = tuple(
+            metric
+            for metric in (self.metric_score, self.metric_ranking)
+            if metric is not None
+        )
+        if metrics and self.dimension_id is None:
+            raise ValueError("metric scores and rankings require dimension_id")
+        if any(metric.dimension_id != self.dimension_id for metric in metrics):
+            raise ValueError("metric dimension_id must match the release fact")
+        if any(
+            not set(metric.evidence_refs).issubset(self.evidence_refs)
+            for metric in metrics
+        ):
+            raise ValueError("metric evidence must be included in fact evidence_refs")
+        if (
+            self.metric_score is not None
+            and self.metric_ranking is not None
+            and self.metric_score.metric_id != self.metric_ranking.metric_id
+        ):
+            raise ValueError("metric score and ranking must use the same metric_id")
+        if (
+            self.metric_score is not None
+            and self.metric_ranking is not None
+            and self.metric_score.method_version != self.metric_ranking.method_version
+        ):
+            raise ValueError(
+                "metric score and ranking must use the same method_version"
+            )
+        if self.metric_score is not None and self.metric_ranking is not None:
+            score_scope = (
+                self.metric_score.cap_id,
+                self.metric_score.provider_id,
+                self.metric_score.access_path_id,
+            )
+            ranking_scope = (
+                self.metric_ranking.cap_id,
+                self.metric_ranking.provider_id,
+                self.metric_ranking.access_path_id,
+            )
+            if score_scope != ranking_scope:
+                raise ValueError(
+                    "metric score and ranking must use the same CAP, Provider, "
+                    "and Access Path"
+                )
+            score_method = (
+                self.metric_score.cap_version,
+                self.metric_score.method_digest,
+                self.metric_score.suite_fingerprint,
+                self.metric_score.scale_min,
+                self.metric_score.scale_max,
+                self.metric_score.unit,
+                self.metric_score.direction,
+            )
+            ranking_method = (
+                self.metric_ranking.cap_version,
+                self.metric_ranking.method_digest,
+                self.metric_ranking.suite_fingerprint,
+                self.metric_ranking.scale_min,
+                self.metric_ranking.scale_max,
+                self.metric_ranking.unit,
+                self.metric_ranking.direction,
+            )
+            if score_method != ranking_method:
+                raise ValueError("metric score and ranking must use the same method")
         return self
 
     @model_validator(mode="after")

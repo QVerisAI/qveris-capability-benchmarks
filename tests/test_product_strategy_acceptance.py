@@ -28,7 +28,7 @@ def test_ac2_strategy_separates_release_and_consumer_boundaries() -> None:
     )
 
 
-def test_ac3_agent_friendliness_is_observable_and_not_a_score() -> None:
+def test_ac3_agent_interface_allows_dimension_scores_not_a_composite() -> None:
     strategy = (ROOT / "docs/product-strategy.md").read_text(encoding="utf-8")
 
     required_observations = (
@@ -44,6 +44,12 @@ def test_ac3_agent_friendliness_is_observable_and_not_a_score() -> None:
     assert not missing, f"AC3 missing Agent-interface observations: {missing}"
     assert "no Agent-friendly composite score" in strategy, (
         "AC3 must prohibit an Agent-friendly aggregate rating"
+    )
+    assert "Per-dimension scores and rankings are allowed" in strategy, (
+        "AC3 must allow evidence-bound dimension comparisons"
+    )
+    assert "same frozen cohort" in strategy, (
+        "AC3 rankings must retain a comparable cohort"
     )
 
 
