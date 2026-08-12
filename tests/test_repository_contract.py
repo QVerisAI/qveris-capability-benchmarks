@@ -155,7 +155,8 @@ def test_ac4_agents_rules_encode_platform_guardrails() -> None:
     required_rules = (
         "cap-specific",
         "access path",
-        "aggregate score",
+        "per-dimension score",
+        "cross-cap composite",
         "single canonical tool",
         "credentials",
         "raw evidence",
