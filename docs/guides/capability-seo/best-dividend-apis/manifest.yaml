@@ -2,6 +2,12 @@ schema_version: 1
 benchmark_id: dividend-events-2026-q3-v1
 article_slug: best-dividend-apis
 edition: "2026-08-12"
+publication_package:
+  package_id: best-dividend-apis-2026-08-12
+  adapter_id: dividend-events-v1
+  adapter_version: 1.0.0
+  cap_id: MKT.DIVIDENDS
+  release_sections: [release, market_coverage_release]
 search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]

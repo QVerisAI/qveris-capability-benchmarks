@@ -42,6 +42,11 @@ from qveris_bench.providers.repository import (
     ProviderValidationError,
     qualify_provider_file,
 )
+from qveris_bench.publications.service import (
+    PublicationReproductionError,
+    report_json,
+    reproduce_publication_package,
+)
 from qveris_bench.question_bank.repository import (
     QuestionBankValidationError,
     load_question_bank,
@@ -71,6 +76,7 @@ qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tool
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
 profile_app = typer.Typer(help="Build deterministic Task Fit Profiles.")
 selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
+publication_app = typer.Typer(help="Reproduce evidence-backed publications offline.")
 _QVERIS_DIRECT_SUITES = {
     "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
     "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
@@ -89,6 +95,7 @@ app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
 app.add_typer(profile_app, name="profile")
 app.add_typer(selection_app, name="selection")
+app.add_typer(publication_app, name="publication")
 
 
 @app.callback()
@@ -142,6 +149,26 @@ def selection_build(
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(built.json_bytes)
     typer.echo(f"Built Selection Snapshot -> {output}")
+
+
+@publication_app.command("reproduce")
+def publication_reproduce(
+    package: Annotated[Path, typer.Option(help="Publication package manifest.")],
+    expected_package_digest: Annotated[
+        str | None,
+        typer.Option(help="Trusted package digest from outside this checkout."),
+    ] = None,
+) -> None:
+    """Rebuild and verify a publication from committed release facts."""
+    try:
+        report = reproduce_publication_package(
+            package,
+            expected_package_digest=expected_package_digest,
+        )
+    except PublicationReproductionError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(report_json(report), nl=False)
 
 
 @qveris_app.command("search")

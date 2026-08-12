@@ -9,6 +9,7 @@ from qveris_bench.models.cap import CapDefinition
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.profile import TaskFitProfile
 from qveris_bench.models.provider import AccessPath, ProviderProfile
+from qveris_bench.models.publication import PublicationPackageManifest
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunPlan, TaskOutcome
 from qveris_bench.models.scenario import DeveloperScenario
@@ -23,6 +24,7 @@ SCHEMA_MODELS: dict[str, type[BaseModel]] = {
     "developer-scenario.schema.json": DeveloperScenario,
     "evidence-bundle.schema.json": EvidenceBundle,
     "provider-profile.schema.json": ProviderProfile,
+    "publication-package.schema.json": PublicationPackageManifest,
     "task-fit-profile.schema.json": TaskFitProfile,
     "run-plan.schema.json": RunPlan,
     "selection-snapshot.schema.json": SelectionSnapshot,

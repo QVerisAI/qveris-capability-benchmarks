@@ -74,11 +74,14 @@ run a constrained single-tool Agent Trial. The system stores private raw artifac
 sanitized observations, categorical outcomes, failure attribution, and independent
 digests before generating an immutable `BenchmarkRelease`.
 
-### Stages 5 and 6: Consumers, not v1 services
+### Stages 5 and 6: Offline consumers, not hosted services
 
 SEO/content publication consumes `developer_selection_facts`. Provider feedback
-consumes `provider_feedback_facts`. v1 defines these release contracts but does not
-generate articles, operate a leaderboard, send messages, run CRM, or build a portal.
+consumes `provider_feedback_facts`. v1 may rebuild and validate a repo-local
+Publication Package through a CAP-owned adapter. The generic orchestrator knows only
+release references, artifact paths, adapter identity, and verification results; it
+does not know CAP fields or generate editorial claims. v1 does not operate a CMS or
+leaderboard, send messages, run CRM, or build a portal.
 
 ## 4. Data flow and provenance
 
@@ -94,7 +97,7 @@ TopicSource
   -> ObservationFacts (sanitized)
   -> TaskOutcome
   -> BenchmarkRelease
-  -> Task-fit Profile / Provider Feedback consumers
+  -> Task-fit Profile / Publication Package / Provider Feedback consumers
 ```
 
 The Developer Scenario composition does not merge CAP executions or outcomes. It points

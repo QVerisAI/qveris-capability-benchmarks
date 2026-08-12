@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "PublicationPackageSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Adapter Id",
+          "type": "string"
+        },
+        "adapter_version": {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "cap_id": {
+          "maxLength": 128,
+          "pattern": "^[A-Z][A-Z0-9]*(?:\\.[A-Z0-9]+)+$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "package_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Package Id",
+          "type": "string"
+        },
+        "release_sections": {
+          "items": {
+            "maxLength": 128,
+            "pattern": "^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Release Sections",
+          "type": "array"
+        }
+      },
+      "required": [
+        "package_id",
+        "adapter_id",
+        "adapter_version",
+        "cap_id",
+        "release_sections"
+      ],
+      "title": "PublicationPackageSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "article_slug": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Article Slug",
+      "type": "string"
+    },
+    "benchmark_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Benchmark Id",
+      "type": "string"
+    },
+    "edition": {
+      "format": "date",
+      "title": "Edition",
+      "type": "string"
+    },
+    "publication_package": {
+      "$ref": "#/$defs/PublicationPackageSpec"
+    },
+    "schema_version": {
+      "minimum": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version",
+    "benchmark_id",
+    "article_slug",
+    "edition",
+    "publication_package"
+  ],
+  "title": "PublicationPackageManifest",
+  "type": "object"
+}

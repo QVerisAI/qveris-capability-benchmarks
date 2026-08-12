@@ -42,6 +42,7 @@ evidence-bound per-dimension rankings within one frozen cohort are permitted.
 | Layer | Operation | Trust established |
 |---|---|---|
 | Offline release replay | Rebuild committed release bytes without network access | The checked-out directory is internally consistent |
+| Offline publication reproduction | Replay Releases and rebuild downstream selection and chart facts | The article package is internally consistent with released facts |
 | Authenticity verification | Compare with a digest from a trusted external anchor | The bundle matches that published identity |
 | Maintainer rerun | Execute the frozen suite through an Access Path | The official operator observed a new live result |
 | Community reproduction | Independent live execution with disclosed environment | A third party observed a comparable result |
@@ -54,7 +55,10 @@ as an attestation or successor release; immutable release bytes are not edited.
 Core continues to own generic suite, execution, evidence, and release contracts.
 CAP Packs own domain semantics. Adapters own authentication, transport, raw response
 persistence, and Provider error normalization. Articles, sites, and Task Fit
-Profiles consume released facts and do not become alternate benchmark engines.
+Profiles consume released facts and do not become alternate benchmark engines. A
+repo-local Publication Package adapter may deterministically rebuild downstream
+artifacts and validate material article facts; it cannot call providers or invent
+facts absent from a Release.
 
 No new database is needed for the current phase. Existing `BenchmarkRelease`,
 `RunPlan`, `RunCell`, and `EvidenceBundle` records contain the facts required for

@@ -1313,6 +1313,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
+    { name = "matplotlib" },
     { name = "mcp" },
     { name = "openai" },
     { name = "pydantic" },
@@ -1323,7 +1324,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "jsonschema" },
-    { name = "matplotlib" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "ruff" },
@@ -1333,6 +1333,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "mcp", specifier = ">=1.13.0" },
     { name = "openai", specifier = ">=1.99.0" },
     { name = "pydantic", specifier = ">=2.11.0" },
@@ -1343,7 +1344,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "jsonschema", specifier = ">=4.26.0" },
-    { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "mypy", specifier = ">=1.17.0" },
     { name = "pytest", specifier = ">=8.4.0" },
     { name = "ruff", specifier = ">=0.12.0" },

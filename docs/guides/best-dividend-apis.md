@@ -170,18 +170,19 @@ A symbol copied from the request cannot prove that the response belongs to the s
 
 Two market rounds measure repeatability for a deterministic API on a fixed sample; they do not establish complete market coverage. Explicitly unsupported markets are not probed again. A market cannot be marked not applicable merely because evidence is missing.
 
-### No key required: replay the public Releases offline
+### No key required: reproduce the publication offline
 
-Offline replay verifies the run plan, terminal cells, public terminals, suite fingerprint, and Release bytes. It proves that the publication has not been silently rewritten; it does not prove that a provider returns the same data today.
+The Publication Package command replays both Releases, rebuilds the Selection Snapshot and chart data, verifies the committed charts, and checks the material facts and links in this article. It proves that the checked-out publication is internally consistent; it does not prove that a provider returns the same data today.
 
 ```bash
 uv sync --locked --all-groups
-uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
-  --expected-digest sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
-uv run qveris-bench release replay \
-  releases/dividend-events-market-coverage-2026-q3-v1 \
-  --expected-digest sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
+uv run qveris-bench publication reproduce \
+  --package docs/guides/capability-seo/best-dividend-apis/manifest.yaml
 ```
+
+No API key or private raw response is required. A trusted Git commit authenticates the package manifest; maintainers can also publish its SHA-256 digest as an external anchor and pass it with `--expected-package-digest`.
+
+The package pins the baseline Release `dividend-events-2026-q3-v1` at `sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0` and verifies the market Release through the same command.
 
 Open the [public benchmark repository on GitHub](https://github.com/QVerisAI/qveris-capability-benchmarks) only if you want to audit or reproduce the results. It contains the immutable Releases, Selection Snapshot, sanitized evidence, and replay instructions behind this article. Ordinary API selection does not require reading those files; every green or orange market cell is already digest-bound to a public terminal.
 
