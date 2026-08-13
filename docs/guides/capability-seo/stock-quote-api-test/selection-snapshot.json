@@ -1,0 +1,228 @@
+{
+  "cap_id": "stock-quote",
+  "edition": "2026-08-13",
+  "github_run_id": "31181603165",
+  "github_sha": "b25422caacce681750d5304682a95d9bdc3e8906",
+  "input_digests": {
+    "cases": "sha256:fbd41e802b6a7077502d6417faadd4841e52ca02a99301a2f45588ccc90584ae",
+    "github_artifacts": "sha256:3fa94e1721d3af540f30de6fabba563bbbdc6c0ae2012b55cb44559220bbd4ea",
+    "provider:eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
+    "provider:finnhub": "sha256:b980c5729a1a11370c7f906996ca2939b739559215987e0bce572b68598478e0",
+    "public_evidence": "sha256:57c5d6f35740b3b67d427e43426a8066782b0faa1e594098829e0befd9e090d6",
+    "selection_input": "sha256:68cebcbe58e36bf7f2775e23042bf30cdf905c00da546b6e5dbe7c0614da6af3",
+    "suite": "sha256:b52c6e4c6d4958948e222817e8a90272cb719c141f54213fef71365b3b7e3633"
+  },
+  "limitations": [
+    "All AAPL quote and freshness Direct observations were terminal provider_negative: Finnhub quote timestamps were stale beyond the frozen 15-minute window and EODHD timestamps were invalid at execution time.",
+    "Neither included path (Finnhub or EODHD via QVeris) returned an SSE quote for the canonical security 600519.SH; all CN coverage and canonical agent-contract cells were provider_negative (unavailable_quote).",
+    "This release records per-path terminal outcomes only; it contains no provider total, ranking, or Agent-friendly composite result."
+  ],
+  "observation_date": "2026-08-07",
+  "release_digest": "sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57",
+  "rows": [
+    {
+      "access_path_id": "finnhub-stock-quote",
+      "access_path_type": "qveris_connector",
+      "case_results": [
+        {
+          "case_id": "aapl-quote",
+          "evidence_refs": [
+            "sha256:dad50b969cdd01e4501736eab6846dcdfffe4a382551927b833cfe16d2f4ec96",
+            "sha256:04809a774bbaeb1f57930ec99828227f3539a3ce9d207bddee4bb08ecb8911f1",
+            "sha256:525bfed9057af4119ca02247b2bc19ae78abf383deb16f3f751fe6dbc1b35a40"
+          ],
+          "failure_reasons": [
+            "stale_timestamp"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "invalid-stock",
+          "evidence_refs": [
+            "sha256:60c8282ae57589d2aa182609df7684c2185e9a5c6d260f4827d7081110153e70",
+            "sha256:cfec397ee4b58a29e300840e9719e4c4632e805365341a5a8e852397d4b661f0",
+            "sha256:9cd08747bc179ad358d4adfe056cbcf64d21cc10ef6fd4064902df99081179fb"
+          ],
+          "failure_reasons": [],
+          "passed_rounds": 3,
+          "role": "negative_control",
+          "state": "passed",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "aapl-freshness-precision",
+          "evidence_refs": [
+            "sha256:3028a861d85ea44176727c7acd2a7f256e756a9b25e407ca1cd82850a07c6861",
+            "sha256:3ed738411c38ca1a4dbf4554159066b9ceedbb34e638401fc4e5734b0b266dcc",
+            "sha256:fb974003b0b484b907080dded86004e3ba1353e8cc69de7c465c6977df235b40"
+          ],
+          "failure_reasons": [
+            "stale_timestamp"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "cn-600519-market-coverage",
+          "evidence_refs": [
+            "sha256:90a68e4dfcb8068e7c56638b92a26851f8c87e1264eabe603ed67997b966b5fa",
+            "sha256:f8885f2fd5db413263f0905f93795d8ebe793720c455112711f3f234cc9b1a20",
+            "sha256:bf946130ccd22d156c6770143de91f613cc6fe4d02e8bde31e47a2944a330f1f"
+          ],
+          "failure_reasons": [
+            "unavailable_quote"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "cn-600519-agent-contract",
+          "evidence_refs": [
+            "sha256:815e20493b257ea5dee4976d797ab199d052291a0e06364932a1fe6a48671f31",
+            "sha256:a06d9a50eadd2476863b37b0df0d0a9cfad0c823fd2931c707d97dfe436ee4dd",
+            "sha256:55fdbe6d2bfbd64bbd4bbd005ae91ff05a167fd16d7cd9f5ede527434ed4dcc0"
+          ],
+          "failure_reasons": [
+            "unavailable_quote"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        }
+      ],
+      "official_pricing": {
+        "applies_to": [
+          "finnhub-stock-quote",
+          "finnhub-etf-holdings"
+        ],
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Free plan with 60 API calls per minute",
+        "license_status": "cleared",
+        "paid_plans": "All-in-One USD 3,500/month billed annually",
+        "pricing_id": "finnhub-official-pricing",
+        "pricing_url": "https://finnhub.io/pricing",
+        "source_digest": "eff357486ad4802751226f48e174112d051fe38f6ff99785b3c46903bc01bc49",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "finnhub",
+      "provider_name": "Finnhub",
+      "qualified": false
+    },
+    {
+      "access_path_id": "eodhd-stock-quote",
+      "access_path_type": "qveris_connector",
+      "case_results": [
+        {
+          "case_id": "aapl-quote",
+          "evidence_refs": [
+            "sha256:74dfccef497249a6f3fe486eef1a828eded872da4d74cf5d68479320bf8e070d",
+            "sha256:0037f931d857855a53f59af6082e0dc9f9f90c59fcd491223e4932a351a947ff",
+            "sha256:46d4102f5277b22f4a141b2de5cbb1c8c2674b034aac9117f1a519f14cf1878a"
+          ],
+          "failure_reasons": [
+            "invalid_timestamp"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "invalid-stock",
+          "evidence_refs": [
+            "sha256:4a1cda07e45dd87e293ce2af888d98ebb17ebff43fdce6b9c249622c17483f4e",
+            "sha256:f0027d28ff05638254b5a3ad9b5ffb1cceeaf9fdd1e1f8071f4f994c1cb254e4",
+            "sha256:fb294250e49c8b142fed00c228b2ec674d6be7b79e2e7a856b7a7cf42d3a16cc"
+          ],
+          "failure_reasons": [],
+          "passed_rounds": 3,
+          "role": "negative_control",
+          "state": "passed",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "aapl-freshness-precision",
+          "evidence_refs": [
+            "sha256:9a2e5dfa67dc3e835404dae58136216fd863b6244c44a5b545045eb27006d62f",
+            "sha256:4f8ea12669c659dd6f45ead9a97e54a149065fe938b7223e5dad7970c36e5218",
+            "sha256:fb52ee4639e770e05505fe22151dd7b635817c39a9dbe6bc359710b413e0b196"
+          ],
+          "failure_reasons": [
+            "invalid_timestamp"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "cn-600519-market-coverage",
+          "evidence_refs": [
+            "sha256:12e909609a75a5c4a6bde8cdc935de70ba3e97c31ed547c06f5af1a54535c0c5",
+            "sha256:6deb63e743c355baafd9bc3d5401484ea9df2f775e9334b287b3447b4428a1e8",
+            "sha256:b26f65ef47c00fef352c93e74c86ac0a2ac1ee7840e682dbe5481ea2d953914b"
+          ],
+          "failure_reasons": [
+            "unavailable_quote"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        },
+        {
+          "case_id": "cn-600519-agent-contract",
+          "evidence_refs": [
+            "sha256:20727ec3aebaa3fa565a70711d04bd13a59f7317abdb5f1268a99779c98bfafc",
+            "sha256:b68541a8a157bab74cdd92461dce4a78a85153e99b6616bb6f4bd703ef4dc26f",
+            "sha256:2a962d23c4e91e4d00f09e32dedb960532f2060fbeded81c34d07c58557ca060"
+          ],
+          "failure_reasons": [
+            "unavailable_quote"
+          ],
+          "passed_rounds": 0,
+          "role": "positive",
+          "state": "provider_negative",
+          "total_rounds": 3
+        }
+      ],
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "20 API calls per day",
+        "license_status": "cleared",
+        "paid_plans": "All-in-One USD 99.99/month",
+        "pricing_id": "eodhd-official-pricing",
+        "pricing_url": "https://eodhd.com/pricing",
+        "source_digest": "3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "eodhd",
+      "provider_name": "EODHD",
+      "qualified": false
+    }
+  ],
+  "snapshot_id": "stock-quote-api-test-2026-08-13",
+  "suite_fingerprint": "686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d",
+  "version": "1.0.0"
+}

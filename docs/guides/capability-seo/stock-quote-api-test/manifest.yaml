@@ -1,0 +1,66 @@
+schema_version: 1
+benchmark_id: stock-quote-family-2026-q3-v1
+article_slug: stock-quote-api-test
+edition: "2026-08-13"
+publication_package:
+  package_id: stock-quote-api-test-2026-08-13
+  adapter_id: stock-quote-v1
+  adapter_version: 1.0.0
+  cap_id: stock-quote
+  release_sections: [release]
+search_intent: Compare tested Stock Quote API Access Paths by quote validity, freshness, canonical symbol handling, negative controls, and official pricing.
+comparison_shortlist: [Finnhub, EODHD]
+publication_policy:
+  display_order: [finnhub-stock-quote, eodhd-stock-quote]
+  direct_test_required: true
+  no_qualified_winner: true
+  market_claim_scope: representative_samples
+  required_sections:
+    - Quick answer
+    - What developers should care about in a stock quote API
+    - Test results
+    - Pricing context
+    - How we tested
+    - How to reproduce the publication
+    - How to contribute
+    - Limitations, disclosure, and corrections
+    - FAQ
+release:
+  directory: releases/stock-quote-family-2026-q3-v1
+  digest: sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57
+  suite_fingerprint: 686670b3a6955cf1efa8039e35e5fe72be2fc3bc6655817fa9336416eefa565d
+  planned_cells: 30
+  applicable_cells: 30
+  public_evidence_records: 30
+  rounds_per_cell: 3
+selection_snapshot:
+  id: stock-quote-api-test-2026-08-13
+  input_digest: sha256:68cebcbe58e36bf7f2775e23042bf30cdf905c00da546b6e5dbe7c0614da6af3
+  digest: sha256:b59b191e16bc3c105d789a19b7581fef5a09cd20b6942aeca0ed4a0fe334c646
+seo:
+  title: "Stock Quote API Test 2026: Finnhub vs EODHD"
+  meta_description: "Compare Finnhub and EODHD Stock Quote API paths using 30 live calls, freshness checks, invalid-symbol controls, pricing, and reproducible evidence in 2026."
+  primary_keyword: Stock Quote API
+  secondary_keywords: [real-time stock API, stock market data API]
+  publication_action: new_page
+  inventory_checked_at: "2026-08-13"
+  target_slug: stock-quote-api-test
+  competing_urls: []
+  related_guides:
+    - anchor: Capability Discovery for AI Agents
+      url: https://qveris.ai/guides/capability-discovery-ai-agents/
+    - anchor: QVeris CLI guide
+      url: https://qveris.ai/guides/qveris-cli/
+  github_links:
+    - https://github.com/QVerisAI/qveris-capability-benchmarks
+  official_sources:
+    Finnhub pricing: https://finnhub.io/pricing
+    EODHD pricing: https://eodhd.com/pricing
+artifacts:
+  article: docs/guides/stock-quote-api-test.md
+  selection_snapshot_input: docs/guides/capability-seo/stock-quote-api-test/selection-input.yaml
+  selection_snapshot: docs/guides/capability-seo/stock-quote-api-test/selection-snapshot.json
+  charts:
+    - docs/guides/capability-seo/stock-quote-api-test/charts/stock-quote-outcomes.png
+  selection_charts_manifest: docs/guides/capability-seo/stock-quote-api-test/charts/stock-quote-charts-manifest.json
+  selection_charts_manifest_digest: sha256:61c8557d990db09b19dd33d1b4448d4ac75021766d6e97dd561b274f1d96e7ce

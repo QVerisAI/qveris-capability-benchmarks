@@ -1,0 +1,14 @@
+snapshot_id: stock-quote-api-test-2026-08-13
+version: 1.0.0
+edition: "2026-08-13"
+observation_date: "2026-08-07"
+release:
+  path: releases/stock-quote-family-2026-q3-v1/release.json
+  digest: sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57
+suite: cap_packs/stock_quote_family/suite.yaml
+cases: cap_packs/stock_quote_family/cases.yaml
+providers_root: providers
+public_evidence_root: evidence/stock-quote-family-2026-q3-v1
+display_order:
+  - [finnhub, finnhub-stock-quote]
+  - [eodhd, eodhd-stock-quote]
