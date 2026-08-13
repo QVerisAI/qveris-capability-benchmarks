@@ -4,6 +4,11 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from qveris_bench.cap_packs.crypto_spot_quote.extractors import (
+    CryptoSpotQuoteExtractionError,
+    extract_binance_quote,
+    extract_okx_quote,
+)
 from qveris_bench.models.enums import CellState, FailureAttribution
 
 
@@ -16,98 +21,68 @@ class Terminal:
 
 def evaluate(provider_id: str, case_id: str, payload: Mapping[str, Any]) -> Terminal:
     if case_id == "crypto-invalid-spot-symbol":
-        return _negative(payload)
+        return _negative(provider_id, payload)
+    if case_id != "crypto-btcusdt-spot-quote":
+        return _blocked(FailureAttribution.BENCHMARK_SYSTEM_ERROR)
     data = payload.get("data")
     if not isinstance(data, Mapping) or payload.get("status_code") != 200:
-        return _incomplete()
+        return _blocked(_transport_attribution(payload))
     try:
         if provider_id == "binance":
-            facts = _binance(data)
+            facts = extract_binance_quote(data, expected_symbol="BTCUSDT")
         elif provider_id == "okx":
-            facts = _okx(data)
+            facts = extract_okx_quote(data, expected_symbol="BTCUSDT")
         else:
-            return _incomplete()
-    except ValueError:
-        return _incomplete()
+            return _blocked(FailureAttribution.BENCHMARK_SYSTEM_ERROR)
+    except CryptoSpotQuoteExtractionError:
+        return _blocked(FailureAttribution.EMPTY_OR_PARTIAL_DATA)
     return Terminal(CellState.COMPLETED, None, facts)
 
 
-def _negative(payload: Mapping[str, Any]) -> Terminal:
+def _negative(provider_id: str, payload: Mapping[str, Any]) -> Terminal:
     data = payload.get("data")
-    rejected = payload.get("status_code") != 200
-    if isinstance(data, Mapping):
-        rejected = rejected or (
-            isinstance(data.get("code"), str) and data["code"] != "0"
-        )
+    if provider_id == "binance" and _binance_rejected(payload, data):
+        return _rejected()
+    if provider_id == "okx" and _okx_rejected(payload, data):
+        return _rejected()
+    return _blocked(_transport_attribution(payload))
+
+
+def _binance_rejected(payload: Mapping[str, Any], data: object) -> bool:
+    return (
+        payload.get("status_code") == 400
+        and isinstance(data, Mapping)
+        and data.get("code") == -1121
+        and isinstance(data.get("msg"), str)
+        and "invalid symbol" in data["msg"].lower()
+    )
+
+
+def _okx_rejected(payload: Mapping[str, Any], data: object) -> bool:
+    return (
+        payload.get("status_code") == 200
+        and isinstance(data, Mapping)
+        and data.get("code") == "51001"
+        and data.get("data") == []
+    )
+
+
+def _rejected() -> Terminal:
     return Terminal(
-        CellState.PROVIDER_NEGATIVE,
-        FailureAttribution.PROVIDER_VALIDATION_ERROR
-        if rejected
-        else FailureAttribution.EMPTY_OR_PARTIAL_DATA,
-        {},
+        CellState.PROVIDER_NEGATIVE, FailureAttribution.PROVIDER_VALIDATION_ERROR, {}
     )
 
 
-def _incomplete() -> Terminal:
-    return Terminal(
-        CellState.PROVIDER_NEGATIVE, FailureAttribution.EMPTY_OR_PARTIAL_DATA, {}
-    )
+def _blocked(attribution: FailureAttribution) -> Terminal:
+    return Terminal(CellState.INFRA_BLOCKED, attribution, {})
 
 
-def _binance(data: Mapping[str, Any]) -> dict[str, object]:
-    if data.get("symbol") != "BTCUSDT":
-        raise ValueError("wrong symbol")
-    return _facts(
-        data, "lastPrice", "openPrice", "highPrice", "lowPrice", "closeTime", "BINANCE"
-    )
-
-
-def _okx(data: Mapping[str, Any]) -> dict[str, object]:
-    rows = data.get("data")
-    if data.get("code") != "0" or not isinstance(rows, list) or len(rows) != 1:
-        raise ValueError("invalid response")
-    row = rows[0]
-    if (
-        not isinstance(row, Mapping)
-        or row.get("instType") != "SPOT"
-        or row.get("instId") != "BTC-USDT"
-    ):
-        raise ValueError("wrong instrument")
-    return _facts(row, "last", "open24h", "high24h", "low24h", "ts", "OKX")
-
-
-def _facts(
-    data: Mapping[str, Any],
-    price_key: str,
-    open_key: str,
-    high_key: str,
-    low_key: str,
-    timestamp_key: str,
-    exchange: str,
-) -> dict[str, object]:
-    values = {
-        "price": data.get(price_key),
-        "open": data.get(open_key),
-        "high": data.get(high_key),
-        "low": data.get(low_key),
-    }
-    try:
-        facts = {
-            name: float(value)
-            for name, value in values.items()
-            if isinstance(value, (int, float, str)) and not isinstance(value, bool)
-        }
-        timestamp = int(data[timestamp_key])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ValueError("missing required quote field") from exc
-    if len(facts) != len(values):
-        raise ValueError("missing required quote field")
-    if min(facts.values()) <= 0 or facts["high"] < facts["low"] or timestamp <= 0:
-        raise ValueError("invalid quote field")
-    return {
-        "symbol": "BTCUSDT",
-        **facts,
-        "timestamp": timestamp,
-        "exchange": exchange,
-        "currency": "USDT",
-    }
+def _transport_attribution(payload: Mapping[str, Any]) -> FailureAttribution:
+    status_code = payload.get("status_code")
+    if status_code == 401:
+        return FailureAttribution.AUTH_OR_ENTITLEMENT
+    if status_code == 429:
+        return FailureAttribution.RATE_LIMITED
+    if isinstance(status_code, int) and status_code >= 500:
+        return FailureAttribution.PROVIDER_RUNTIME_ERROR
+    return FailureAttribution.EMPTY_OR_PARTIAL_DATA

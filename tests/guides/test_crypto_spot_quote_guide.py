@@ -43,6 +43,24 @@ def test_guide_preserves_provider_and_access_path_identity() -> None:
     assert "not a native API benchmark" in article
 
 
+def test_guide_derives_latency_recommendation_from_public_evidence() -> None:
+    evidence_path = ROOT / "releases" / "crypto-spot-quote-2026-q3-v1" / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    latencies = {
+        provider_id: sorted(
+            item["latency_ms"]
+            for item in evidence
+            if ":crypto-btcusdt-spot-quote:" in item["run_key"]
+            and f":{provider_id}:" in item["run_key"]
+        )[1]
+        for provider_id in ("binance", "okx")
+    }
+    assert latencies == {"binance": 313.08, "okx": 285.82}
+    article = ARTICLE.read_text(encoding="utf-8")
+    assert "OKX was the lower-latency path" in article
+    assert "or lower median gateway latency in this snapshot matter more" in article
+
+
 def test_guide_uses_a_clear_buyer_flow_without_internal_implementation_terms() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     headings = [

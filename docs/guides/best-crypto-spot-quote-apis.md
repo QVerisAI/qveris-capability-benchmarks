@@ -5,7 +5,7 @@ description: "A reproducible 2026 test of Binance and OKX crypto spot quote Acce
 
 # Best Crypto Spot Quote APIs for Developers: Binance vs OKX
 
-For a BTC/USDT spot-price workflow, both tested paths returned the required price and 24-hour OHLC fields in all three fixed samples, and both rejected the invalid-pair control in all three samples. Binance was the lower-latency path in this small test; OKX exposed a clear spot-instrument identifier in its response. This is a comparison of the tested QVeris Access Paths, not a native API benchmark or a general ranking of either exchange.
+For a BTC/USDT spot-price workflow, both tested paths returned the required price and 24-hour OHLC fields in all three fixed samples, and both rejected the invalid-pair control in all three samples. OKX was the lower-latency path in this small test and exposed a clear spot-instrument identifier in its response. This is a comparison of the tested QVeris Access Paths, not a native API benchmark or a general ranking of either exchange.
 
 ## Results
 
@@ -20,7 +20,7 @@ The table answers one narrow developer decision: can this path return a current,
 
 ## How to choose
 
-Choose **Binance / QVeris** when the exact `BTCUSDT` symbol dialect and lower median gateway latency in this snapshot match your workflow. Choose **OKX / QVeris** when your application benefits from an explicit `SPOT` instrument type and the `BTC-USDT` dialect.
+Choose **Binance / QVeris** when the exact `BTCUSDT` symbol dialect matches your workflow. Choose **OKX / QVeris** when the exact `BTC-USDT` dialect, an explicit `SPOT` instrument type, or lower median gateway latency in this snapshot matter more.
 
 Do not choose from this page if you need a cross-exchange consolidated price, historical candles, perpetuals, options, or on-chain data. Those are different developer decisions and require separate evidence.
 
@@ -46,7 +46,7 @@ uv run qveris-bench release replay releases/crypto-spot-quote-2026-q3-v1 \
   --expected-digest sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f
 ```
 
-To make a new live edition, provide `QVERIS_API_KEY` or authenticate locally with the QVeris CLI, then run `uv run python scripts/run_crypto_spot_quote.py`. Raw responses remain outside the repository; the release contains only sanitized terminal facts and their digests.
+To make a new live edition, provide `QVERIS_API_KEY` or authenticate locally with the QVeris CLI, then run `uv run python scripts/run_crypto_spot_quote.py --release-id crypto-spot-quote-2026-q4-v1`. The ID must be new: the runner refuses to overwrite a published edition. Raw responses remain outside the repository; the release contains only sanitized terminal facts and their digests.
 
 Providers and contributors can submit a reproducible correction or an additional Access Path through the [contribution guide](https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/CONTRIBUTING.md). Inclusion cannot be purchased, and an added path is tested separately rather than merged with an existing provider row.
 
@@ -60,7 +60,7 @@ If a factual claim is wrong, open a reproducible issue with the exact request, e
 
 ### Which crypto spot quote API won?
 
-Neither. In this fixed BTC/USDT test, both tested QVeris paths passed the required-field and invalid-pair checks. Binance had the lower median gateway latency in this snapshot, while OKX returned an explicit spot instrument type.
+Neither. In this fixed BTC/USDT test, both tested QVeris paths passed the required-field and invalid-pair checks. OKX had the lower median gateway latency in this snapshot and returned an explicit spot instrument type.
 
 ### Does 3/3 mean Binance or OKX supports all crypto pairs?
 
