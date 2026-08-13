@@ -27,6 +27,23 @@ proves that the checked-out inputs deterministically rebuild the published bundl
 it is not a live rerun. See the [release replay guide](docs/release-replay.md) for
 the full trust boundary and optional external digest verification.
 
+## Reproduce a published comparison
+
+The Dividend guide is the first complete Publication Package. One offline command
+replays both pinned Releases, rebuilds the Selection Snapshot and chart data, checks
+the committed chart files, and validates material article facts and links:
+
+```bash
+uv run qveris-bench publication reproduce \
+  --package docs/guides/capability-seo/best-dividend-apis/manifest.yaml
+```
+
+No API key or private raw response is required. The command writes only to a
+temporary directory and reports whether canonical chart bytes were also reproduced
+on the supported Linux renderer. A trusted Git commit authenticates the manifest;
+`--expected-package-digest` can additionally compare it with an external SHA-256
+anchor.
+
 ## What the project measures
 
 - Direct Test outcomes for every included applicable Provider / Access Path cell.
@@ -93,8 +110,9 @@ import runtime code from Harbor or `qveris-agent-harness`.
 ## Current scope
 
 The repository implements CAP contracts, suite compilation, Direct-Test execution,
-evidence gates, immutable releases, and offline release replay. Local live reruns
-with a QVeris Key or Native BYOK, hosted execution, a leaderboard site, Provider
+evidence gates, immutable releases, offline release replay, and repo-local offline
+Publication Package verification. Local live reruns with a QVeris Key or Native
+BYOK, model-assisted drafting, hosted execution, a leaderboard site, Provider
 Portal, scheduler, and database are not implemented in v1.
 
 ## Licenses

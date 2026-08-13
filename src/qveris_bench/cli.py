@@ -35,6 +35,11 @@ from qveris_bench.providers.repository import (
     ProviderValidationError,
     qualify_provider_file,
 )
+from qveris_bench.publications.service import (
+    PublicationReproductionError,
+    report_json,
+    reproduce_publication_package,
+)
 from qveris_bench.question_bank.repository import (
     QuestionBankValidationError,
     load_question_bank,
@@ -63,6 +68,7 @@ release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
 selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
+publication_app = typer.Typer(help="Reproduce evidence-backed publications offline.")
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
@@ -72,6 +78,7 @@ app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
 app.add_typer(selection_app, name="selection")
+app.add_typer(publication_app, name="publication")
 
 
 @app.callback()
@@ -93,6 +100,26 @@ def selection_build(
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(built.json_bytes)
     typer.echo(f"Built Selection Snapshot -> {output}")
+
+
+@publication_app.command("reproduce")
+def publication_reproduce(
+    package: Annotated[Path, typer.Option(help="Publication package manifest.")],
+    expected_package_digest: Annotated[
+        str | None,
+        typer.Option(help="Trusted package digest from outside this checkout."),
+    ] = None,
+) -> None:
+    """Rebuild and verify a publication from committed release facts."""
+    try:
+        report = reproduce_publication_package(
+            package,
+            expected_package_digest=expected_package_digest,
+        )
+    except PublicationReproductionError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(report_json(report), nl=False)
 
 
 @question_app.command("validate")

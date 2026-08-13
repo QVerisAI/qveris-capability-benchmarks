@@ -24,12 +24,12 @@ The baseline test ran on August 11, 2026. Each applicable Access Path had one po
 
 | Provider and Access Path | Dividend Event sample result | Median QVeris gateway latency / public QVeris Inspect price | Native official pricing | 9 representative market samples |
 |---|---|---:|---|---|
-| [Hang Seng](https://www.gildata.com/products/core-data.html) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **CN sample passed:** both rounds returned a verifiable security identity, ex-dividend date, and single-event amount | 623 ms / 1 credit/call | No public standard price; contact sales | CN passed (2/2); other 8 not tested: explicitly not applicable |
-| [iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md) (Native MCP) | **Sample did not pass:** no single-event date, and the annual cumulative value cannot establish the amount for one event | Not applicable; Native MCP is excluded from QVeris metrics | Personal CNY 40/month for 5,000 requests | US, HK, and CN samples did not pass (0/2); other 6 not tested: explicitly not applicable |
-| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 576 ms / 1 credit/call | Premium from USD 49.99/month; free tier 25 requests/day | 4 applicable markets passed (2/2); 5 not tested: explicitly not applicable |
-| [Twelve Data](https://twelvedata.com/docs#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Sample passed:** AAPL returned an ex-dividend date and single-event amount in all three rounds; the invalid symbol produced no fabricated event | 491 ms / 2.37 credits/call | Grow from USD 29/month; free tier 800 credits/day | 6 markets passed (2/2); HK, CN, and ES samples did not pass (0/2) |
-| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 779 ms / 2.81 credits/call | All-in-One USD 99.99/month | 7 markets passed (2/2); JP and IN samples did not pass (0/2) |
-| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Sample passed:** both the AAPL sample and invalid-symbol control met the contract in all three rounds | 861 ms / 1 credit/call | [Stocks Basic Free](https://massive.com/pricing?product=stocks); Dividend endpoint included in all Stocks plans | US passed (2/2); other 8 not tested: explicitly not applicable |
+| [Hang Seng](https://www.gildata.com/products/core-data.html) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/hangseng_polysource) | **CN sample passed:** required event fields returned for the CN sample in 2/2 rounds; invalid input was handled correctly in 3/3 rounds | 623 ms / 1 credit/call | No public standard price; contact sales | CN passed (2/2); other 8 not tested: explicitly not applicable |
+| [iFinD](https://mcp.51ifind.com/gwstatic/static/ds_web/ifind-mcp-web/skills/SKILL_INSTALL_GUIDE.md) (Native MCP) | **Sample did not pass:** required event fields were missing in all positive rounds; invalid input was handled correctly in 3/3 rounds | Not applicable; Native MCP is excluded from QVeris metrics | Personal CNY 40/month for 5,000 requests | US, HK, and CN samples did not pass (0/2); other 6 not tested: explicitly not applicable |
+| [Alpha Vantage](https://www.alphavantage.co/documentation/#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | **Sample passed:** required event fields returned in 3/3 rounds; invalid input was handled correctly in 3/3 rounds | 576 ms / 1 credit/call | Premium from USD 49.99/month; free tier 25 requests/day | 4 applicable markets passed (2/2); 5 not tested: explicitly not applicable |
+| [Twelve Data](https://twelvedata.com/docs#dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | **Sample passed:** required event fields returned in 3/3 rounds; invalid input was handled correctly in 3/3 rounds | 491 ms / 2.37 credits/call | Grow from USD 29/month; free tier 800 credits/day | 6 markets passed (2/2); HK, CN, and ES samples did not pass (0/2) |
+| [EODHD](https://eodhd.com/financial-apis/api-splits-dividends/) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | **Sample passed:** required event fields returned in 3/3 rounds; invalid input was handled correctly in 3/3 rounds | 779 ms / 2.81 credits/call | All-in-One USD 99.99/month | 7 markets passed (2/2); JP and IN samples did not pass (0/2) |
+| [Massive](https://massive.com/docs/rest/stocks/corporate-actions/dividends) (QVeris) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | **Sample passed:** required event fields returned in 3/3 rounds; invalid input was handled correctly in 3/3 rounds | 861 ms / 1 credit/call | [Stocks Basic Free](https://massive.com/pricing?product=stocks); Dividend endpoint included in all Stocks plans | US passed (2/2); other 8 not tested: explicitly not applicable |
 
 These four public states describe evidence, not a final procurement decision:
 
@@ -170,18 +170,19 @@ A symbol copied from the request cannot prove that the response belongs to the s
 
 Two market rounds measure repeatability for a deterministic API on a fixed sample; they do not establish complete market coverage. Explicitly unsupported markets are not probed again. A market cannot be marked not applicable merely because evidence is missing.
 
-### No key required: replay the public Releases offline
+### No key required: reproduce the publication offline
 
-Offline replay verifies the run plan, terminal cells, public terminals, suite fingerprint, and Release bytes. It proves that the publication has not been silently rewritten; it does not prove that a provider returns the same data today.
+The Publication Package command replays both Releases, rebuilds the Selection Snapshot and chart data, verifies the committed charts, and checks the material facts and links in this article. It proves that the checked-out publication is internally consistent; it does not prove that a provider returns the same data today.
 
 ```bash
 uv sync --locked --all-groups
-uv run qveris-bench release replay releases/dividend-events-2026-q3-v5 \
-  --expected-digest sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a
-uv run qveris-bench release replay \
-  releases/dividend-events-market-coverage-2026-q3-v5 \
-  --expected-digest sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead
+uv run qveris-bench publication reproduce \
+  --package docs/guides/capability-seo/best-dividend-apis/manifest.yaml
 ```
+
+No API key or private raw response is required. A trusted Git commit authenticates the package manifest; maintainers can also publish its SHA-256 digest as an external anchor and pass it with `--expected-package-digest`.
+
+The package pins the baseline Release `dividend-events-2026-q3-v5` at `sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a` and the market Release `dividend-events-market-coverage-2026-q3-v5` at `sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead`; the same command verifies both.
 
 Open the [public benchmark repository on GitHub](https://github.com/QVerisAI/qveris-capability-benchmarks) only if you want to audit or reproduce the results. It contains the immutable Releases, Selection Snapshot, sanitized evidence, and replay instructions behind this article. Ordinary API selection does not require reading those files; every green or orange market cell is already digest-bound to a public terminal.
 

@@ -13,6 +13,7 @@ EXPECTED_SCHEMAS = {
     "cap-definition.schema.json",
     "evidence-bundle.schema.json",
     "provider-profile.schema.json",
+    "publication-package.schema.json",
     "run-plan.schema.json",
     "selection-snapshot.schema.json",
     "task-outcome.schema.json",

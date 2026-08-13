@@ -31,6 +31,9 @@ selection evidence, start with `docs/product-strategy.md`.
 7. Read `src/qveris_bench/evidence/` and `src/qveris_bench/releases/`. They
    separate private raw artifacts from authorized public evidence, then build and
    verify an immutable release under `releases/<release-id>/`.
+8. Read `src/qveris_bench/publications/` for the CAP-neutral offline package
+   orchestrator. Material article facts and deterministic chart logic stay in the
+   corresponding `src/qveris_bench/cap_packs/<cap>/` adapter.
 
 ## Directory ownership
 
@@ -43,13 +46,15 @@ selection evidence, start with `docs/product-strategy.md`.
 | `src/qveris_bench/outcomes/` | Generic outcome evaluation and attribution | CAP response parsing |
 | `src/qveris_bench/evidence/` | Evidence hashing, redaction, public index | Public ranking logic |
 | `src/qveris_bench/releases/` | Deterministic build, gates, and verification | Live provider execution |
+| `src/qveris_bench/publications/` | Offline package orchestration, safe paths, adapter loading | CAP facts, prose generation, hosted publication |
 | `question_bank/` | Harbor-derived CAP candidates, question families, and public citations | Executable benchmark inputs |
 
 ## Current CAP locations
 
-The repository currently contains Harbor-derived candidates only. A formal CAP
-location appears here only after its pack is verified against the versioned Harbor
-contract export under `harbor_catalog/` and has an immutable release.
+| CAP | Versioned configuration | Domain extractors |
+|---|---|---|
+| Dividend Events | `cap_packs/dividend_events/` | `src/qveris_bench/cap_packs/dividend_events/` |
+| Crypto Spot Quote | `cap_packs/crypto-spot-quote/` | `src/qveris_bench/cap_packs/crypto_spot_quote/` |
 
 `evidence/` and `releases/` are committed public artifacts only. Private raw
 responses and credentials are intentionally outside this repository.

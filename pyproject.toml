@@ -18,10 +18,13 @@ classifiers = [
 ]
 dependencies = [
   "httpx>=0.28.1",
+  "matplotlib==3.11.1",
   "mcp>=1.13.0",
+  "numpy==2.5.2",
   "openai>=1.99.0",
-    "pydantic>=2.11.0",
-    "pydantic-settings>=2.10.1",
+  "pillow==12.3.0",
+  "pydantic>=2.11.0",
+  "pydantic-settings>=2.10.1",
   "pyyaml>=6.0.2",
   "typer>=0.16.0",
 ]
@@ -29,10 +32,12 @@ dependencies = [
 [project.scripts]
 qveris-bench = "qveris_bench.cli:app"
 
+[project.entry-points."qveris_bench.publication_adapters"]
+dividend-events-v1 = "qveris_bench.cap_packs.dividend_events.publication:DividendEventsPublicationAdapter"
+
 [dependency-groups]
 dev = [
   "jsonschema>=4.26.0",
-  "matplotlib>=3.10.0",
   "mypy>=1.17.0",
   "pytest>=8.4.0",
   "ruff>=0.12.0",
