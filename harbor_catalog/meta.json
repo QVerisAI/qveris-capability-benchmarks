@@ -1,0 +1,817 @@
+{
+  "catalog_snapshot_digest": "e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe",
+  "contracts": [
+    {
+      "capability_id": "ALT.APP_USAGE",
+      "contract_digest": "3855a4fcd858bbc5ba738320b2689173ab87b9bacec94ea295a5130995c00daa",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.CONSUMER_SPEND",
+      "contract_digest": "1efdd463d14527331ab0cc7f7c9ddc0746664b06a76cbd5fbecd89bf01e5f22c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.GOVT_CONTRACTS",
+      "contract_digest": "9dc3655e0433652367530c0311bdd45e32823d3ee785c5500fbf738c2cca87ed",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.JOB_POSTINGS",
+      "contract_digest": "98e29ecdfb77c9a1d60fde5bff53fd59a0c153ec9638dc40490ec661621d6273",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.PATENTS",
+      "contract_digest": "3827f74f803e9a091213b11a53e19244da86555ebe306c2e70326c02ffc459f4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.PHARMA_PIPELINE",
+      "contract_digest": "b3f471fb144852470009f9ffc75e9ed05d8a9bec5aeaa261dca1139af08d8605",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.SATELLITE",
+      "contract_digest": "e1d694b6e07834bcc8f55a14427d26b0bc683e3ebc3d2742772f1f9e0a97bbed",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.SHIPPING_AIS",
+      "contract_digest": "353a52b4304e192d21b8727d8b968a5228aa339c33c7d023f53f161cff64ada6",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.SUPPLY_CHAIN",
+      "contract_digest": "86e2ec5777949f33534277f561bb438b127b81c05088f617b329607c56c4e118",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ALT.WEB_TRAFFIC",
+      "contract_digest": "7da84db7c9b28b75d5117a3f885ecab174231a807e15d9ba524d79a10379916e",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ANALYTICS.ATR",
+      "contract_digest": "5317c7568bb164ceec2760d9551776f84352c8c0faf17548c828ec8fc8caf64e",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.BBANDS",
+      "contract_digest": "85c7622fccf5e06b04387c4d3e1d16aa785e69325746fd14484fd1a9e8e4f311",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.CCI",
+      "contract_digest": "7425e90a4d73901459995facd4030168f01146b25f6b214b5c11475bf56b3f82",
+      "contract_version": 4
+    },
+    {
+      "capability_id": "ANALYTICS.EMA",
+      "contract_digest": "344654d9b770d0a2bd9332c50f30d98e80af392364ad2e309a659f0ad09c5339",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.MACD",
+      "contract_digest": "cb7b65029f73e4d3f3d5dc616acbfdb24659f49a8ed60845d9dc90351fe7b24d",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.RSI",
+      "contract_digest": "29838abfe61628d0ab937f1d73ccab172ebdb2598e3560e5a288b1d4163a5e04",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.SMA",
+      "contract_digest": "a94aaddc49394fd98442ce7ea3fa069b773307218d63b56cd71fc7a0e0bf3858",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.STOCH",
+      "contract_digest": "c0e96b099afed86e431541d8bda7cb2439af121e86175411adba39b33aeedd83",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "ANALYTICS.TECH_INDICATORS",
+      "contract_digest": "7abb4330167ddff3a6d33f89da061010207837af0efc6898ffaf123d13e69acc",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "COMPLIANCE.SANCTIONS_PEP",
+      "contract_digest": "37e7cd3f4d5347a98e1273155f35449199e6b5f28d0fff4033e12317315a7ba0",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CREDIT.MATURITY",
+      "contract_digest": "435529b54e78cea23c415c0507998c73be71083e50ed2369180c841e97951576",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CREDIT.SOLVENCY",
+      "contract_digest": "132444ac3c18cda9633c7b781ad2672b587c31ca8b90566307e142946783d4c4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.BARS.HISTORY",
+      "contract_digest": "1e2e5b4505d740c5c748271152c8b2cdbc7e95c26faa48501f5c7712374e61f8",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.CEX_FLOWS",
+      "contract_digest": "848c43fff15669c223f08ccd98e301ccdb9bdcbe2209081691aa72d32fa989b0",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.DERIV.FUNDING_OI",
+      "contract_digest": "affe33cbd72c384ec2e233166a9427593afeac1b54c9c5c4380130d26874e76e",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.FGI",
+      "contract_digest": "bbbeefd00166a376423a6deac162e35fcc549177802bd8c17308fc8a28db42c6",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.GAS",
+      "contract_digest": "b283b420f831571c18ebfd0d9eaa3a3606bb28eae0e2a2b380aa3dc4da511e07",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.MARKET_RANKINGS",
+      "contract_digest": "b0bfc272f5f8f037b4c947d87de4156dad70c16df0bde42774a7158f5e2ff57b",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.ONCHAIN.BASIC",
+      "contract_digest": "2e81908d477123ae0ea21550a220c58431258dc41425f95396635175879b352d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.OPTIONS",
+      "contract_digest": "c7d00ed6a2f555f0aa8a88be934507c7f0e7ffb4dccbeed2edd3d086a1590448",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.PERP",
+      "contract_digest": "2181cea67dc20b7f07fd4eb9049840851d72e332a1c828e3dcfa39a6482d9175",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.REF_MASTER",
+      "contract_digest": "e100e339eb198c6630d93208ff01665c3f57b79b3c168fea55e24ab7eee3906d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.SPOT.RT",
+      "contract_digest": "d3c6e7288bd57ecf12bfae4db720c632cabb58ae56f0d21303687f873dec2ef4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "CRYPTO.WHALE",
+      "contract_digest": "3969234beade4d61cd182fbad12db9cc667b16ec8f812fb465fc4d3efcfd030d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "DERIV.FUTURES.BARS",
+      "contract_digest": "81836af8ff5034ebadebf8e36278cf2e5c80732dff0ced3956dec1542e528129",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "DERIV.FUTURES.MARKET",
+      "contract_digest": "05a0c63aaf6fa3c42ba3b60b2e848a4543347f932cebadd7cd5e4e63a6b4fe84",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "EARNINGS.ACTUAL_SURPRISE",
+      "contract_digest": "1b7d17b9fc8f124e435c990d48b62ada0105031775300377092463cb5c934586",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ESG.CARBON",
+      "contract_digest": "b99a85db5870878e42eea3de9e2972930c19b6447745367b652e70a204ef01e5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ESG.CONTROVERSY",
+      "contract_digest": "d6350b715931128746e0932ea67b5ecddf2326e3160f1983082e7261c6a6eba6",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ESG.SCORES",
+      "contract_digest": "3ee5d4b0d490c736c64cb1896fed33d08ab4dcfb16f70ce2c956d98ebb79a65a",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ESTIMATES.CONSENSUS",
+      "contract_digest": "7bea4980eaf1b7a906c41621a1e44889991f9216c40530be84709e6e3209a7b3",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "ESTIMATES.RATINGS_TARGETS",
+      "contract_digest": "25e9694b53e59141c106350ab3daf500dce7caff630caad9b304c3504b3f0765",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.FLOWS.AUM",
+      "contract_digest": "ac21de1e52fd89c64c759fbcf6b1f48f1c4d1de58ebb35315c2c61d9c04ebde3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.FLOWS.MARKET",
+      "contract_digest": "34dea24d0c0189b50e258653ee00a6048805c0994c6265aa85adf353e8bb0be8",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.HOLDINGS",
+      "contract_digest": "0723d3158dc43ef97e5a9e3910a2810055ac60ae50e61086a88fa735e3fbe530",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.HOLDINGS.HISTORY",
+      "contract_digest": "c7958de45d48ec1c9ffa10ad9e26478df31d53478c1daebbede3b3a1a9275176",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.NAV.IOPV",
+      "contract_digest": "b138406168c4806037101d94b4a0d8f466001e90cbbcf12484110f7adac6b958",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.PCF",
+      "contract_digest": "9827b6b62114530838135e8257300013923cac45473a2db361980003f029d1ca",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "ETF.REF_MASTER",
+      "contract_digest": "738d8c78f40c46a8a2b921e4cf641660891e6d1c1791c50b647856b8b7c2d450",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "EVENT.CALENDAR.CORP",
+      "contract_digest": "e687b48f8c3398df095df915ee4b1977de0ca5ec0da7f77de879d0a11510e76d",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "EVENT.CALENDAR.EARNINGS",
+      "contract_digest": "af78dac959756a8711ab3ce4776e2ba69ada67211b21c8cefeb72516ddcbb339",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "EVENT.CALENDAR.IPO",
+      "contract_digest": "4807e4202338909ee8295dd2bebce0782be37d222de1d5177c33a5fbadb1575f",
+      "contract_version": 5
+    },
+    {
+      "capability_id": "EVENT.CALENDAR.MACRO",
+      "contract_digest": "17da03b43f0440a929e47e69ca086d2bd4a43cab4e029fe0e061759d30183260",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "EVENT.EARNINGS_PREANNOUNCEMENT",
+      "contract_digest": "22f77fa78a00a5238010266f1c88a438faef9368b78c665998fca0cc389243dc",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.CDS_SPREAD",
+      "contract_digest": "13e05005e0366a43f1f8d034c83d59c0c55487e4533f68a6e1eab5da529575a4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.CONVERTIBLE",
+      "contract_digest": "f3fb014b98678f0d2e271ea3882be0ecc7d0519fdd13a5e326dc88867af1fd2d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.CURVES.GOVT",
+      "contract_digest": "ae902adbe0bbca65b9764ddc6321c47545ca799c8d570e628d1548bf133d137b",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.DEFAULT_RECORDS",
+      "contract_digest": "9a9ec86cdd81c016723897f6d9bc3afa490cb8cf948754267c87a96959d5d743",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.PRICING.EVALUATED",
+      "contract_digest": "9ff100277404decff49ffa8aa86b002df44dcefbed116860b69752dcebfd34da",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.RATINGS",
+      "contract_digest": "5e185525f998ed05e98c73e8b7def13528463b4c7df46f55a90450dc2e0d830a",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.REF_MASTER",
+      "contract_digest": "645c16517d691256140f59174d11907507753e83df346ceed6d9cfff684b9904",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FI.TRADES.POSTTRADE",
+      "contract_digest": "c5f9cf4be3cd6645ca35a2afd0e09bad9d74d107cb1facde44f1a194ec86453c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FILINGS.REGULATORY.METADATA",
+      "contract_digest": "0ab9ce105fef6239ae2c880c5379d7e9a7d2d5e3e08886f0c5d5216185db7f4f",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "FILINGS.REGULATORY.RAW",
+      "contract_digest": "8a1cc210f80a511992f2e0093ef44cf8a12cbb3f7c35fbc6d59bbaad6f4af595",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FILINGS.STRUCTURED.XBRL",
+      "contract_digest": "62c044d11effb0f8672260f5d6be0407b56d82ebf112225fb117760ca9b13e61",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.CROSS_BORDER",
+      "contract_digest": "f1d3591f7e463cdcab654ad7e2b964f17c4574be2c38bbec3628d00286ee27d0",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.DRAGON_TIGER",
+      "contract_digest": "c0913107b621d3047ea3c6c2f5f03f078b36913b9272b6e444543cf4190075ea",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.LARGE_ORDER",
+      "contract_digest": "0d4dad846a08864c94c95f2a539655746375926d9bdba75c0955eb8c26d739f5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.MARKET.CAPITAL",
+      "contract_digest": "539ed8a866a76de1cf724106a80ac3f35aa4735b4d12b61c582b21256e90be1c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.NORTHBOUND",
+      "contract_digest": "5af3947680f57cb006e0e2e6da51a23c7c9af7bc41f550b155ba82c4fc97c280",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FLOW.SECTOR.CAPITAL",
+      "contract_digest": "9d542e1c737ea63d745f5c1eca3a968215ca2b6cf2f3f7518149f49f3c0cd8a0",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUND.CLASSIFICATION",
+      "contract_digest": "4f5db2793c271c2e6e8a6ab3edf85f38fdbccc30b7d228c29566c501ef2a11c4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUND.MUTUAL.HOLDINGS",
+      "contract_digest": "714d8e8fa2d3f9c8ff2bd3df11c77e1a73a7d9798a2a8435301b05c9c4138a47",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUND.MUTUAL.NAV",
+      "contract_digest": "9fb4cada346191ae991a3e25bbf5b52612adf7d9772c94e146a5916ebf61fd60",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUND.MUTUAL.REF_MASTER",
+      "contract_digest": "8466de9c714104ee3c693c96d8ed3fc5b0b3dc2dd98ab82e84b4e97a79444095",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUND.MUTUAL_AUM",
+      "contract_digest": "3b101eab82e1cb506460fc94b8f39a43eb963e124e92dc11836571cca9c62bf6",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "FUNDAMENTALS.BS",
+      "contract_digest": "226970502d69f9d3c099828338573dbadbc7825c7e5c88d3b61a2d4e198e0c7c",
+      "contract_version": 4
+    },
+    {
+      "capability_id": "FUNDAMENTALS.CF",
+      "contract_digest": "76e3f59444e1d358797c7319c7f1410013ccf51c4725650bca8189d9599aca32",
+      "contract_version": 4
+    },
+    {
+      "capability_id": "FUNDAMENTALS.DERIVED_RATIOS",
+      "contract_digest": "de640d0fa8b7a9523786fe7f0cf6a7a3769bd7fe0e2863f066e2d6bd6d54c400",
+      "contract_version": 4
+    },
+    {
+      "capability_id": "FUNDAMENTALS.IS",
+      "contract_digest": "ad18b642b3d80aa3f3d719a293351dc585170496a10f7a5b92b67e6070b20a14",
+      "contract_version": 4
+    },
+    {
+      "capability_id": "FUNDAMENTALS.SEGMENT",
+      "contract_digest": "d4ecfe0e1b5db74a73a05a67ee41946a1ba5b16a7c2680c8e9fe7243d303f06b",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "FX.SPOT",
+      "contract_digest": "9577556d8ba08103a787650d9e03f98fd7d32c7380fa1c97b50d3c018d9a17ee",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "GOVERNANCE.EXECUTIVES",
+      "contract_digest": "c6fe1cf2953e49a82b87ce7daa2fc9ba936312b047d69038ef27f19c7db9a5b3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.BOND",
+      "contract_digest": "3a605bdc0569255dd95548583e5f2993864a84febb9334361f7723acf2a51bc1",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.CONSTITUENTS",
+      "contract_digest": "584cb9ca0fd0e2a4627a37b2eb80841ff896f45d5541912112bdadb301971c55",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.LEVELS",
+      "contract_digest": "d944b10cfb7d89ef772cc9811b9e4d37addd7ffdfdc451493c387c29e2db8825",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.METADATA",
+      "contract_digest": "fed67ea162ccbb857d9b0338838003a2b7c04a2972e10a5b9181ecfa95a6e1ee",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.REBALANCE_EVENTS",
+      "contract_digest": "1f7e04b34fed7b9869543cc8086a11abd93fbaa211de2eca758bd2479c43782c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "INDEX.VIX",
+      "contract_digest": "2ba335cade240627df8a77ce23f077c31042bf662b69c1ca92cb7169e7a65c8c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MACRO.ACTUAL_VS_FORECAST",
+      "contract_digest": "a0fc5cf97660b83bdc1e7e668dcf3168d5e2447a6f9f43156231a919d18958bd",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MACRO.COMMODITY_BENCHMARK",
+      "contract_digest": "d0ca6be97c0a643667fb6f62db6a6b1633316f441ae0661a3a80ce719498fa71",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MACRO.EMPLOYMENT",
+      "contract_digest": "6927a95178cb9dc64ed6bd5dd5ceb10e48cd6dcaefebd56b3231dcec8a623be0",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MACRO.INDICATORS",
+      "contract_digest": "b6264b988cd7290a438761c01c93e14d188a2e9beaa8db237766e9028194d9f6",
+      "contract_version": 6
+    },
+    {
+      "capability_id": "MACRO.POPULATION",
+      "contract_digest": "260c9c2397e86494dbdcee1fe0edbbfb16b35b3973130d8945a6d826245b9df4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MACRO.REAL_ESTATE",
+      "contract_digest": "514c592cc7c23807b75f0c90c00989c9bc4fd1841a550bb744931cda10cb99c5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.AFTER_HOURS",
+      "contract_digest": "ae1ced43a0e1857592d1aaef40e717e8db5bc6269f460f6a0aeb8f517a285de7",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.BARS.ADJUSTED",
+      "contract_digest": "ad6a9e4ff211e72b3ec7e875a04f59e69f9b2c4b44ff6584762800b867ae5d9d",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "MKT.BARS.EOD",
+      "contract_digest": "3de69fc9b9938a652d47dc9b5764acd1e6d5445381f8a8b8a77d33075247b859",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.BARS.INTRADAY",
+      "contract_digest": "bbb272de9576b4ee3653bc0ee3719910f2e4ad54d2e4a3b0737ad48544d9ee5e",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.BREADTH.INTERNALS",
+      "contract_digest": "65d2090450104d924f613f2ccbbefda6b956052854dbf7a75ff43780191ceffb",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CN.BLOCK_TRADES",
+      "contract_digest": "96fd62e5298fcbf7c1631ec7ad258e3e0410f48605c09c82e16c5a1e825355db",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CN.BONUS",
+      "contract_digest": "d2e5255c1fa905bea229c4c0f00700b80a7eecfa194ec18529f86b78e5e7001b",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CN.CONCEPT",
+      "contract_digest": "887498198f717f35a14a587fbf1eeca3bad9ebee44f6503f840df1c4370e9b2c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CN.IPO_SUB",
+      "contract_digest": "89531ed996a0ac3349ebe8cda18f683c33243833827873731c4998e8b6a42174",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CN.LOCK_UP",
+      "contract_digest": "f8992d6a95a810bcaae5517d0c36e5be5ed941cc72b7c1437defea440aaad4d2",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.CORPORATE_ACTIONS",
+      "contract_digest": "70d5687f6cdb493df3d8af69fc38f8fb41d027139c423bf3018b861f593b3f8d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.DIVIDENDS",
+      "contract_digest": "1de71a9968a1cb04f26603e5af5479f255afcc962532e6bd6cbcb6f298931b37",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.L1.RT",
+      "contract_digest": "945d4cc16f1c9abdcaa6ebec15630a8a9c66f64eead140fb73d624ba9d10ed9e",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "MKT.LIQUIDITY",
+      "contract_digest": "7724bca896497510cf7247f593a6e7eb5c0820a30800966b886e543a80d2f939",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.MARGIN",
+      "contract_digest": "34f2afd02d722641464d722cb0a0fc6c5d62d38e56d473ed0a592f6dd8d91bb4",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.MARGIN_AGGREGATE",
+      "contract_digest": "c08089fc2cc56b2635a32ebb4f645c204a4a4954ab2cb7057d9ddc3e1144d83c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.PRICE_LIMIT",
+      "contract_digest": "48610c4b6b7a9b4a6ef0039a729166882b944381d23d0dde5a8bc94248ba8c83",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.SPLITS",
+      "contract_digest": "2b3d93514572a68d364bfcdeeefa7c1fba57eb475ccf2e2c6e3d671e5d3e1b5a",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.TCA",
+      "contract_digest": "fc0dd0fc0228504a211fb7e54270559179508e0e747b6627d97aeb0445f33033",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.TOP_MOVERS",
+      "contract_digest": "f42efd9702b1ed6fdd66a1631f92ba90d499fe0ac0159a58b6d2dfadac7e7798",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.TRADES_TICK",
+      "contract_digest": "c76fb8be9d25c69c925ac2f1e5edef35d3ee040cb6ed59588a835a63fedec395",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.TRADING.AGGREGATE",
+      "contract_digest": "30cb59388bc40a995e97cfa61190caedafb7ec2ae9a4cb7ec5916d22c48824c3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "MKT.TRADING_HALTS_FEED",
+      "contract_digest": "d93c953426806b3677e1d18a997bfb97e9a3bea658a5aea1cbf4b732836cb9c6",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NEWS.DEDUP.CLUSTER",
+      "contract_digest": "52898996ec2dc90a8891e2723f430786027860c069a06da7f90ea85f708c457c",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NEWS.FIN.REALTIME",
+      "contract_digest": "af6a0a9fc144ee0e445d32470a3bb076cb19647aa1343c4c01702d63f73f617a",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NEWS.FIN.TAGGED",
+      "contract_digest": "b826e4c1bf2e61efb8e35ea4b29febada982a77b2dc18d778d4004e8b05c1861",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.DOC_CONVERT",
+      "contract_digest": "a2d44396cb7d889d867f3eef61f22e836531d1183a52282b18f154b001f2fa10",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.SOCIAL_MEDIA",
+      "contract_digest": "43fa49a7d05d1e2e1149882605d083bd401b760168ab3a84c849f38e6f518cd7",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.WEB_SCRAPE",
+      "contract_digest": "c0a71db7657e5bf3d85934558ab96c2adfa8d24a219be4ad99bad7c5459ff182",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.WEB_SEARCH",
+      "contract_digest": "4b2cd0777739bd0ee5a1bc69023b5aecb98bef438790e37c214fade503221cf3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.YOUTUBE_TRANSCRIPT",
+      "contract_digest": "cd56dbd81b1745e950e38740f6c7a999df98084e8712bce42b9c35dbd09897d5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "NON_FIN.YOUTUBE_TRANSCRIPT_URL",
+      "contract_digest": "13907ec08dd88e5a53db1e9586b728aea0fa7aa2d97307c2d743956179206f42",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OPT.CHAIN",
+      "contract_digest": "286a268338d12c794022a2a9303720354b13ad7cf7b49e287bbf82754a1ef551",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OPT.GREEKS.IV",
+      "contract_digest": "f01265b0aac90a24a0127ba49b5093ba1351b94c8fcfeb1e06e54e5c8ff48da3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OPT.REF_MASTER",
+      "contract_digest": "873fc35133322dfac57ba9c987f3fd0a27cb7a86c2a5bbea988780a26050206f",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OWNERSHIP.INSIDER_TRADES",
+      "contract_digest": "8ccc8a826b3dfa21a56d7ce8ac9b1aaf64186e2028c741aa2c9212e79552da2d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OWNERSHIP.INSTITUTIONAL",
+      "contract_digest": "1ec043d0322616792cda22aefa043950231bac8099abf348a8be0cec56708d54",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OWNERSHIP.PLEDGE",
+      "contract_digest": "b1fc74fd5240f06b50bee3754ee246cc4cb747f608b8c14163421c147ba9c795",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OWNERSHIP.SHARE_STRUCTURE",
+      "contract_digest": "da91ca43e816d2ac33d8050ce573be664cc6b4faac1f96515b4cfa524c8d41bb",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "OWNERSHIP.SHORT_INTEREST",
+      "contract_digest": "5acb9f62a22f342d5cf5dafeea6e0d7aab622a4eb81467cf60bdc272f3c6bac3",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RATES.GOVT_BENCHMARK",
+      "contract_digest": "0123f6f71e22364cfe8c11828e3a39d757ef7488f709cd503f0fc07b8cbd2004",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RATES.INTERBANK_BENCHMARK",
+      "contract_digest": "c7d828c481a7d13618e3302508ff00f9c1f702619e8a148c2464dc650ce4ce82",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RATES.POLICY",
+      "contract_digest": "1141eabfe28e4e4a706c199b080ca03df8fdc707c6f481bd954551064cd875b5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.CLASSIFICATION.INDUSTRY",
+      "contract_digest": "b622344de35e513de649e80e321adae90b74ffa876dc62a48f9feef893cd50af",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.CLASSIFICATION.THEME",
+      "contract_digest": "62437c303fbe2e331e28b56f79974a52c6038ce6fc8404ef15d83a2344da23f8",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "REF.COMPANY_PROFILE",
+      "contract_digest": "b238f9ca2f56fbac000085ff6c5eaecc486623235caacac8390ae24c89cfe541",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "REF.COUNTRY_REGION_MAP",
+      "contract_digest": "f520e73ee09b9d90cd63c521495867c3b5b653cff10823d046543d502516c6cb",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.CURRENCY_MASTER",
+      "contract_digest": "4e145aa9ee9071c7baaf51c5674793fc347386e9efa55504f14d83370be74e1b",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.ENTITY_HIERARCHY",
+      "contract_digest": "e5420857e3ab629b3d38fb3b85c95ec662dc51b88de4163e9c05f0e3b008fd92",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.ENTITY_MASTER",
+      "contract_digest": "f9757576396b91c15e7bd726fb43dc48e2349c7e82716c01513f15b2dbe4276b",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.ENTITY_RELATIONSHIP",
+      "contract_digest": "887139028efd7c12896ca464b2f1f59440f630aaba6a36c816b8cc6f4ec5fe63",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.EQUITY_STRUCTURE",
+      "contract_digest": "8509743fa832694ca3a7fcc4407caf973f3196b9aaf30d875275de83337d53aa",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.EXCHANGE_CALENDAR",
+      "contract_digest": "87c9317f93a86e45292a092f327cba6f798ad34f322e65c98f880c7ed8adc626",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "REF.HALT_EVENTS",
+      "contract_digest": "c7915f8cf97ee0b1ebd336bae67ea3bd9c5e4fe9c21ba38721217e94c65cf8f5",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.SECURITY_MASTER",
+      "contract_digest": "bf4d8fbe0127a6ce77bd57ff6b126d8fb899e2d4e93e2f97824252b0bc3180ee",
+      "contract_version": 3
+    },
+    {
+      "capability_id": "REF.SUPPLY_CHAIN",
+      "contract_digest": "6c6a0b8274c7d89c63bc8ab83cec445681f08f7366a9b3f9660a62c2a4db79a9",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "REF.SYMBOLOGY",
+      "contract_digest": "1896a6c582db56d4bceddca200486b03d1f23222061d3036e612f4345c6af83f",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "REF.TRADING_STATUS",
+      "contract_digest": "a90c1ccad16c4d03d403329055c0ccc4242f8291e85d59d73f5bfc8e901f54e9",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RESEARCH.ANALYST_REPORTS",
+      "contract_digest": "56353ea6347959396a14e503c9ac21d6897799629c4453d15c665f5c61795133",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RESEARCH.EXPERT_CALLS",
+      "contract_digest": "79bdcbfddfb5787f58179f31b945329c7b511a80e49b968df152c46ca62ace5d",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "RISK.BETA",
+      "contract_digest": "0f40c820e2427024d5193ebc1a3ee7e22482463439faa9bf13e9a3493f17e462",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "RISK.VOLATILITY",
+      "contract_digest": "1238787d8f6ee0268dbfb6e18264734ab1bb8919188ac2b0dd47a2fa1cc7e0c9",
+      "contract_version": 2
+    },
+    {
+      "capability_id": "SENTIMENT.TEXT_SIGNALS",
+      "contract_digest": "96a66db427bd4973fb07eb0d382ee08919809984717dc62d267de6eebdcd4897",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "TRANSCRIPTS.CONFERENCE",
+      "contract_digest": "fcd3ecd279caff22129d32ade95517449f3b891411482c5ecd9239b59f4c4749",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "TRANSCRIPTS.EARNINGS_CALL",
+      "contract_digest": "4d97a9d94e6fcf4cc889526e09af0c376e8876463c2f27c9fd137f6d7e4d19af",
+      "contract_version": 1
+    },
+    {
+      "capability_id": "TRANSCRIPTS.MEDIA_VIDEO",
+      "contract_digest": "c4a421f26ae55f7f1193829fd1387a3f56f4a9e2cf0d1319707c58bf522ec689",
+      "contract_version": 1
+    }
+  ],
+  "counts": {
+    "catalog": 161,
+    "contracts": 161,
+    "errors": 0
+  },
+  "exporter_version": "1.0.0",
+  "origin": "https://harbor.qveris.cloud"
+}

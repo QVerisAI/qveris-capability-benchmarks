@@ -7,7 +7,12 @@ import json
 
 import pytest
 
-from scripts.export_harbor_catalog import build_contract_url, export_catalog, main
+from scripts.export_harbor_catalog import (
+    build_contract_url,
+    export_catalog,
+    main,
+    normalize_catalog,
+)
 
 
 def _catalog(items: list[dict]) -> dict:
@@ -67,7 +72,7 @@ def test_export_writes_expected_files(
     assert (
         meta["catalog_snapshot_digest"]
         == hashlib.sha256((tmp_path / "contracts.json").read_bytes()).hexdigest()
-    ), "AC1 export must publish the exact private snapshot digest"
+    ), "AC1 export must publish the exact public snapshot digest"
     assert meta["contracts"][0] == {
         "capability_id": "MKT.BARS.EOD",
         "contract_version": None,
@@ -95,6 +100,40 @@ def test_export_contract_failure_fails_closed(tmp_path) -> None:
 
     with pytest.raises(RuntimeError, match="incomplete"):
         export_catalog("https://harbor.qveris.cloud", "hbr_test", tmp_path, fetch=fetch)
+
+
+def test_ac4_normalize_catalog_is_deterministic_and_rebuilds_public_metadata(
+    tmp_path,
+) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}]), indent=4),
+        encoding="utf-8",
+    )
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.L1.RT",
+                    "contract": {"capability_id": "MKT.L1.RT", "contract_version": 1},
+                }
+            ],
+            indent=4,
+        ),
+        encoding="utf-8",
+    )
+
+    first = normalize_catalog(tmp_path)
+    first_bytes = {
+        filename: (tmp_path / filename).read_bytes()
+        for filename in ("catalog.json", "contracts.json", "meta.json")
+    }
+    second = normalize_catalog(tmp_path)
+
+    assert first == second
+    assert first_bytes == {
+        filename: (tmp_path / filename).read_bytes()
+        for filename in first_bytes
+    }, "AC4 unchanged Harbor responses must produce no catalog diff"
 
 
 def test_contract_url_quotes_capability_id() -> None:

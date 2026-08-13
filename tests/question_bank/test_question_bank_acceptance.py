@@ -55,6 +55,7 @@ def test_ac2_every_candidate_has_contract_derived_core_and_boundary_questions() 
 
 def test_ac3_question_bank_rejects_non_harbor_candidate_source(tmp_path: Path) -> None:
     bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "harbor_catalog", tmp_path / "harbor_catalog")
     shutil.copytree(ROOT / "question_bank", bank_root)
     capabilities_path = bank_root / "capabilities.yaml"
     document = yaml.safe_load(capabilities_path.read_text(encoding="utf-8"))
@@ -65,12 +66,28 @@ def test_ac3_question_bank_rejects_non_harbor_candidate_source(tmp_path: Path) -
         load_question_bank(bank_root)
 
 
+def test_ac3_question_bank_rejects_a_candidate_missing_from_public_contracts(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    shutil.copytree(ROOT / "harbor_catalog", tmp_path / "harbor_catalog")
+    capabilities_path = bank_root / "capabilities.yaml"
+    document = yaml.safe_load(capabilities_path.read_text(encoding="utf-8"))
+    document["capabilities"][0]["harbor_capability_id"] = "MKT.NOT_EXPORTED"
+    capabilities_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+
+    with pytest.raises(QuestionBankValidationError, match="public Harbor contracts"):
+        load_question_bank(bank_root)
+
+
 def test_ac3_question_bank_rejects_an_orphan_executable_cap_pack(
     tmp_path: Path,
 ) -> None:
     bank_root = tmp_path / "question_bank"
     packs_root = tmp_path / "cap_packs"
     shutil.copytree(ROOT / "question_bank", bank_root)
+    shutil.copytree(ROOT / "harbor_catalog", tmp_path / "harbor_catalog")
     orphan = packs_root / "orphan" / "cap.yaml"
     orphan.parent.mkdir(parents=True)
     orphan.write_text(

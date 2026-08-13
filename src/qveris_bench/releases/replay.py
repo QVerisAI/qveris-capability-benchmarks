@@ -7,6 +7,10 @@ from typing import Any
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    validate_harbor_source,
+)
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
@@ -46,6 +50,7 @@ def replay_release_dir(
     release_dir: Path,
     *,
     expected_digest: str | None = None,
+    harbor_contracts_path: Path | None = None,
 ) -> ReplayResult:
     files = {name: _read_required_file(release_dir, name) for name in _REQUIRED_FILES}
     release = _validate_model(
@@ -84,6 +89,13 @@ def replay_release_dir(
         )
     if run_plan.cap_sources != release.cap_sources:
         raise ReleaseReplayError("run-plan CAP provenance does not match release input")
+    if release.cap_sources:
+        contracts_path = harbor_contracts_path or _find_harbor_contracts(release_dir)
+        for source in release.cap_sources:
+            try:
+                validate_harbor_source(source, contracts_path)
+            except HarborSnapshotError as exc:
+                raise ReleaseReplayError("Harbor CAP provenance is invalid") from exc
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
 
@@ -117,6 +129,14 @@ def replay_release_dir(
         published_digest=published_digest,
         expected_digest_verified=expected_digest is not None,
     )
+
+
+def _find_harbor_contracts(release_dir: Path) -> Path | None:
+    for ancestor in (release_dir, *release_dir.parents):
+        candidate = ancestor / "harbor_catalog" / "contracts.json"
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 def _read_required_file(release_dir: Path, filename: str) -> bytes:

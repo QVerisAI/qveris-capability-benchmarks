@@ -20,4 +20,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Export Harbor catalog and contracts
-        run: python scripts/export_harbor_catalog.py --output .harbor-snapshots/catalog
+        run: python scripts/export_harbor_catalog.py --output harbor_catalog
+      - name: Require a reviewed catalog commit
+        run: git diff --exit-code -- harbor_catalog

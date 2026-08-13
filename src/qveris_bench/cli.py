@@ -321,7 +321,7 @@ def suite_freeze(
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
     harbor_contracts: Annotated[
-        Path | None, typer.Option(help="Private Harbor contracts.json export.")
+        Path | None, typer.Option(help="Public versioned Harbor contracts.json.")
     ] = None,
     output: Annotated[Path | None, typer.Option(help="Frozen suite output.")] = None,
 ) -> None:
@@ -343,7 +343,7 @@ def suite_plan(
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
     harbor_contracts: Annotated[
-        Path | None, typer.Option(help="Private Harbor contracts.json export.")
+        Path | None, typer.Option(help="Public versioned Harbor contracts.json.")
     ] = None,
     output: Annotated[Path | None, typer.Option(help="Run Plan output.")] = None,
 ) -> None:
@@ -473,12 +473,19 @@ def release_replay(
         str | None,
         typer.Option(help="Trusted published digest from outside this checkout."),
     ] = None,
+    harbor_contracts: Annotated[
+        Path | None,
+        typer.Option(
+            help="Public Harbor contracts.json used to verify formal CAP provenance."
+        ),
+    ] = None,
 ) -> None:
     """Replay an immutable release offline without calling provider APIs."""
     try:
         result = replay_release_dir(
             release_dir,
             expected_digest=expected_digest,
+            harbor_contracts_path=harbor_contracts,
         )
     except ReleaseReplayError as exc:
         typer.echo(str(exc), err=True)

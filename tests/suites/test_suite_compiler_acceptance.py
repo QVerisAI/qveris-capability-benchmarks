@@ -166,7 +166,7 @@ def _write_inputs(
             sort_keys=False,
         )
     )
-    harbor_contracts = root / ".harbor-snapshots" / "catalog" / "contracts.json"
+    harbor_contracts = root / "harbor_catalog" / "contracts.json"
     harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
     harbor_contracts.write_bytes(contracts_bytes)
     (harbor_contracts.parent / "meta.json").write_text(
@@ -175,6 +175,13 @@ def _write_inputs(
                 "origin": "https://harbor.qveris.cloud",
                 "exporter_version": "1.0.0",
                 "catalog_snapshot_digest": snapshot_digest,
+                "contracts": [
+                    {
+                        "capability_id": "MKT.ETF_HOLDINGS",
+                        "contract_version": 1,
+                        "contract_digest": contract_digest,
+                    }
+                ],
             }
         )
     )
@@ -261,8 +268,7 @@ def test_ac0_suite_freeze_requires_matching_harbor_contract_snapshot(
         cases_path,
         providers_root,
         harbor_contracts_path=tmp_path
-        / ".harbor-snapshots"
-        / "catalog"
+        / "harbor_catalog"
         / "contracts.json",
     )
 

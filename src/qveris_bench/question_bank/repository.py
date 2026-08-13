@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -60,6 +61,32 @@ def _cap_packs_by_id(cap_packs_root: Path) -> dict[str, tuple[Path, ...]]:
     return {cap_id: tuple(paths) for cap_id, paths in packs.items()}
 
 
+def _public_harbor_capability_ids(contracts_path: Path) -> set[str]:
+    try:
+        records = json.loads(contracts_path.read_bytes())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise QuestionBankValidationError(
+            "public Harbor contracts are unreadable"
+        ) from exc
+    if not isinstance(records, list):
+        raise QuestionBankValidationError("public Harbor contracts must be a list")
+    capability_ids: set[str] = set()
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        capability_id = record.get("capability_id")
+        contract = record.get("contract")
+        if (
+            isinstance(capability_id, str)
+            and isinstance(contract, dict)
+            and contract.get("capability_id") == capability_id
+        ):
+            capability_ids.add(capability_id)
+    if len(capability_ids) != len(records):
+        raise QuestionBankValidationError("public Harbor contracts are invalid")
+    return capability_ids
+
+
 def _require_compilable_cap_pack(
     cap_id: str, cap_paths: tuple[Path, ...], providers_root: Path
 ) -> None:
@@ -84,6 +111,7 @@ def _validate_cross_references(
     capabilities: tuple[CandidateCapability, ...],
     questions: tuple[BankQuestion, ...],
     cap_packs_root: Path,
+    harbor_contracts_path: Path,
 ) -> None:
     _require_unique(sources, "source_id", "source IDs")
     _require_unique(capabilities, "cap_id", "capability IDs")
@@ -91,6 +119,9 @@ def _validate_cross_references(
     source_ids = {str(source.source_id) for source in sources}
     sources_by_id = {str(source.source_id): source for source in sources}
     capability_ids = {str(capability.cap_id) for capability in capabilities}
+    public_harbor_capability_ids = _public_harbor_capability_ids(
+        harbor_contracts_path
+    )
     for question in questions:
         if str(question.cap_id) not in capability_ids:
             raise QuestionBankValidationError(
@@ -122,6 +153,11 @@ def _validate_cross_references(
         if capability.source_id != "harbor-capability-catalog":
             raise QuestionBankValidationError(
                 f"capability {capability.cap_id} must originate from the Harbor catalog"
+            )
+        if capability.harbor_capability_id not in public_harbor_capability_ids:
+            raise QuestionBankValidationError(
+                f"capability {capability.cap_id} is missing from public Harbor "
+                "contracts"
             )
         roles = {
             str(question.role)
@@ -169,7 +205,11 @@ def _validate_cross_references(
             )
 
 
-def load_question_bank(root: Path, cap_packs_root: Path | None = None) -> QuestionBank:
+def load_question_bank(
+    root: Path,
+    cap_packs_root: Path | None = None,
+    harbor_contracts_path: Path | None = None,
+) -> QuestionBank:
     sources = _validate_records(
         _load_records(root / "sources.yaml", "sources"), QuestionSource, "sources"
     )
@@ -186,6 +226,7 @@ def load_question_bank(root: Path, cap_packs_root: Path | None = None) -> Questi
         capabilities,
         questions,
         cap_packs_root or root.parent / "cap_packs",
+        harbor_contracts_path or root.parent / "harbor_catalog" / "contracts.json",
     )
     return QuestionBank(
         sources=sources,

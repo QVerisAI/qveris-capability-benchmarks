@@ -54,6 +54,14 @@ class CompiledSuite:
         assert_resume_fingerprint(self.fingerprint, fingerprint)
 
 
+def _find_harbor_contracts(suite_path: Path) -> Path | None:
+    for ancestor in (suite_path.parent, *suite_path.parents):
+        candidate = ancestor / "harbor_catalog" / "contracts.json"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def _resolve_cases(
     suite: BenchmarkSuite, available: tuple[BenchmarkCase, ...]
 ) -> tuple[BenchmarkCase, ...]:
@@ -142,9 +150,8 @@ def compile_suite(
             f"suite CAP {suite.cap_id}@{suite.cap_version} does not match "
             f"{cap.cap_id}@{cap.version}"
         )
-    resolved_harbor_contracts_path = (
-        harbor_contracts_path
-        or suite_path.parent.parent / ".harbor-snapshots" / "catalog" / "contracts.json"
+    resolved_harbor_contracts_path = harbor_contracts_path or _find_harbor_contracts(
+        suite_path
     )
     try:
         for source in cap.sources:

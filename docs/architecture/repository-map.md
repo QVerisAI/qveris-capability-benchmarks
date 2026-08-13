@@ -48,8 +48,8 @@ selection evidence, start with `docs/product-strategy.md`.
 ## Current CAP locations
 
 The repository currently contains Harbor-derived candidates only. A formal CAP
-location appears here only after its pack is verified against a private Harbor
-contract export and has an immutable release.
+location appears here only after its pack is verified against the versioned Harbor
+contract export under `harbor_catalog/` and has an immutable release.
 
 `evidence/` and `releases/` are committed public artifacts only. Private raw
 responses and credentials are intentionally outside this repository.

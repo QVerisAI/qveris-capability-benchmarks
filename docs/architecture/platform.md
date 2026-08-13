@@ -83,7 +83,7 @@ generate articles, operate a leaderboard, send messages, run CRM, or build a por
 ## 4. Data flow and provenance
 
 ```text
-Harbor catalog contract (private snapshot)
+Versioned public Harbor catalog contract
   -> CapDefinition
   -> ProviderCandidatePool
   -> FrozenBenchmarkSuite

@@ -83,3 +83,25 @@ def _validate_snapshot_metadata(contracts_path: Path, payload: bytes) -> None:
         raise HarborSnapshotError("Harbor contract snapshot exporter is unsupported")
     if metadata.get("catalog_snapshot_digest") != hashlib.sha256(payload).hexdigest():
         raise HarborSnapshotError("Harbor contract snapshot metadata digest is invalid")
+    contracts = metadata.get("contracts")
+    if not isinstance(contracts, list):
+        raise HarborSnapshotError("Harbor contract provenance metadata is missing")
+    try:
+        records = json.loads(payload)
+    except json.JSONDecodeError as exc:
+        raise HarborSnapshotError("Harbor contract snapshot is unreadable") from exc
+    expected = [
+        {
+            "capability_id": record["capability_id"],
+            "contract_version": record["contract"].get("contract_version"),
+            "contract_digest": canonical_contract_digest(record["contract"]),
+        }
+        for record in records
+        if isinstance(record, dict)
+        and isinstance(record.get("capability_id"), str)
+        and isinstance(record.get("contract"), dict)
+    ]
+    if contracts != expected:
+        raise HarborSnapshotError(
+            "Harbor contract provenance metadata does not match contracts"
+        )
