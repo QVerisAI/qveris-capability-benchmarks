@@ -23,6 +23,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment: benchmark-e2e
     steps:
       - uses: actions/checkout@v4
