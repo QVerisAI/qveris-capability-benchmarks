@@ -37,6 +37,7 @@ jobs:
           uv run python scripts/cap_direct_test_probe.py \
             --fixture "scripts/fixtures/cap-direct-test-$FIXTURE_PREFIX.yaml" \
             --rounds "$ROUNDS" \
+            --call-delay-seconds 15 \
             --output "evidence/private/cap-direct-test.jsonl" \
             --raw-output "evidence/private/cap-direct-test-raw"
         env:

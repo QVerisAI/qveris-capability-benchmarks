@@ -334,6 +334,32 @@ def test_direct_test_runs_independent_provider_paths_concurrently() -> None:
     assert all(result.state == "passed" for result in results)
 
 
+def test_direct_test_spaces_calls_within_one_provider_path(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pauses: list[float] = []
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+    monkeypatch.setattr("scripts.cap_direct_test_probe.time.sleep", pauses.append)
+
+    run_probe(
+        (probe,),
+        lambda _tool, _parameters: {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        },
+        rounds=3,
+        call_delay_seconds=15,
+    )
+
+    assert pauses == [15, 15]
+
+
 def test_ac5_any_failed_or_unavailable_cell_fails_the_probe() -> None:
     assert (
         probe_state(

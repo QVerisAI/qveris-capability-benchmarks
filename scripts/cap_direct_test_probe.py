@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.parse
 import urllib.request
 from collections.abc import Callable
@@ -296,11 +297,17 @@ def run_probe(
     execute: Callable[[str, dict[str, Any]], dict[str, Any]],
     *,
     rounds: int = 2,
+    call_delay_seconds: float = 0,
 ) -> list[CellResult]:
+    if call_delay_seconds < 0:
+        raise ValueError("call delay must be non-negative")
+
     def run_supplier(probe: SupplierProbe) -> list[CellResult]:
         results: list[CellResult] = []
         for case in probe.cases:
             for round_index in range(1, rounds + 1):
+                if results and call_delay_seconds:
+                    time.sleep(call_delay_seconds)
                 try:
                     outcome = execute(probe.tool_id, case.parameters)
                     result = evaluate_cell(case, outcome)
@@ -373,6 +380,7 @@ def main(argv: list[str] | None = None) -> int:
         default=Path("scripts/fixtures/cap-direct-test-corporate-actions.yaml"),
     )
     parser.add_argument("--rounds", type=int, default=2)
+    parser.add_argument("--call-delay-seconds", type=float, default=0)
     parser.add_argument("--base-url", default="https://qveris.ai/api/v1")
     parser.add_argument(
         "--output",
@@ -393,7 +401,12 @@ def main(argv: list[str] | None = None) -> int:
 
     probes = load_fixture(args.fixture, Path("providers"))
     execute = build_executor(args.base_url.rstrip("/"), api_key)
-    results = run_probe(probes, execute, rounds=args.rounds)
+    results = run_probe(
+        probes,
+        execute,
+        rounds=args.rounds,
+        call_delay_seconds=args.call_delay_seconds,
+    )
     if args.raw_output is not None:
         write_private_raw_evidence(args.raw_output, results)
 
