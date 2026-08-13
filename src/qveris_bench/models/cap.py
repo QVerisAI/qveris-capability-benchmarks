@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from pydantic import Field, HttpUrl, model_validator
+from pydantic import Field, model_validator
 
 from qveris_bench.models.base import FrozenModel, SemanticVersion, Sha256, StableId
 from qveris_bench.models.enums import SourceType

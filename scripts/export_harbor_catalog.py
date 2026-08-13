@@ -66,22 +66,47 @@ def export_catalog(
         "errors": len(errors),
     }
     exported_at = datetime.now(UTC).isoformat()
+    contracts_bytes = json.dumps(contracts, ensure_ascii=False, indent=2).encode(
+        "utf-8"
+    )
+    catalog_snapshot_digest = hashlib.sha256(contracts_bytes).hexdigest()
+    contract_provenance = [
+        {
+            "capability_id": record["capability_id"],
+            "contract_version": record["contract"].get("contract_version"),
+            "contract_digest": hashlib.sha256(
+                json.dumps(
+                    record["contract"],
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest(),
+        }
+        for record in contracts
+    ]
     (out_dir / "catalog.json").write_text(
         json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    (out_dir / "contracts.json").write_text(
-        json.dumps(contracts, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    (out_dir / "contracts.json").write_bytes(contracts_bytes)
     (out_dir / "meta.json").write_text(
         json.dumps(
-            {"exported_at": exported_at, "counts": counts},
+            {
+                "exported_at": exported_at,
+                "counts": counts,
+                "catalog_snapshot_digest": catalog_snapshot_digest,
+                "contracts": contract_provenance,
+            },
             ensure_ascii=False,
             indent=2,
         ),
         encoding="utf-8",
     )
-    digest = hashlib.sha256((out_dir / "contracts.json").read_bytes()).hexdigest()
-    return {"counts": counts, "digest": digest, "output_dir": str(out_dir)}
+    return {
+        "counts": counts,
+        "digest": catalog_snapshot_digest,
+        "output_dir": str(out_dir),
+    }
 
 
 def main(argv: list[str] | None = None) -> int:

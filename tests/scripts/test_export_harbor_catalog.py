@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 
 import pytest
@@ -60,7 +61,23 @@ def test_export_writes_expected_files(
     assert (tmp_path / "meta.json").exists()
     stored = json.loads((tmp_path / "contracts.json").read_text(encoding="utf-8"))
     assert stored[0]["contract"]["standard_query"]["required"][0]["name"] == "symbol"
-    assert result["digest"]
+    meta = json.loads((tmp_path / "meta.json").read_text(encoding="utf-8"))
+    assert meta["catalog_snapshot_digest"] == hashlib.sha256(
+        (tmp_path / "contracts.json").read_bytes()
+    ).hexdigest(), "AC1 export must publish the exact private snapshot digest"
+    assert meta["contracts"][0] == {
+        "capability_id": "MKT.BARS.EOD",
+        "contract_version": None,
+        "contract_digest": hashlib.sha256(
+            json.dumps(
+                contract_eod,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        ).hexdigest(),
+    }, "AC1 export must expose the per-contract provenance needed by a formal CAP"
+    assert result["digest"] == meta["catalog_snapshot_digest"]
 
 
 def test_export_contract_failure_is_recorded_not_fatal(tmp_path) -> None:

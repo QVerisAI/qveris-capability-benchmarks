@@ -406,11 +406,21 @@ def provider_cohort_check(
 
 
 def _compile_suite_from_cli(
-    suite_path: Path, cases: Path | None, providers_root: Path, cap: Path | None
+    suite_path: Path,
+    cases: Path | None,
+    providers_root: Path,
+    cap: Path | None,
+    harbor_contracts: Path | None,
 ) -> CompiledSuite:
     cases_path = cases or suite_path.with_name("cases.yaml")
     try:
-        return compile_suite(suite_path, cases_path, providers_root, cap)
+        return compile_suite(
+            suite_path,
+            cases_path,
+            providers_root,
+            cap,
+            harbor_contracts,
+        )
     except ValueError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
@@ -424,10 +434,15 @@ def suite_freeze(
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
+    harbor_contracts: Annotated[
+        Path | None, typer.Option(help="Private Harbor contracts.json export.")
+    ] = None,
     output: Annotated[Path | None, typer.Option(help="Frozen suite output.")] = None,
 ) -> None:
     """Freeze resolved suite inputs and write their fingerprint."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
+    compiled = _compile_suite_from_cli(
+        suite_path, cases, providers_root, cap, harbor_contracts
+    )
     output_path = output or suite_path.with_name("suite.frozen.json")
     write_frozen_suite(compiled, output_path)
     typer.echo(f"Frozen suite {compiled.fingerprint} -> {output_path}")
@@ -441,10 +456,15 @@ def suite_plan(
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
+    harbor_contracts: Annotated[
+        Path | None, typer.Option(help="Private Harbor contracts.json export.")
+    ] = None,
     output: Annotated[Path | None, typer.Option(help="Run Plan output.")] = None,
 ) -> None:
     """Expand a frozen suite into deterministic run cells."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
+    compiled = _compile_suite_from_cli(
+        suite_path, cases, providers_root, cap, harbor_contracts
+    )
     output_path = output or suite_path.with_name("run-plan.json")
     write_run_plan(compiled, output_path)
     applicable = sum(cell.applicable for cell in compiled.run_plan.cells)

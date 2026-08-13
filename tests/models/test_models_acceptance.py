@@ -73,7 +73,12 @@ def test_ac2_invalid_semantic_versions_are_rejected(version: str) -> None:
 
 @pytest.mark.parametrize(
     "missing",
-    ["harbor_capability_id", "contract_version", "catalog_snapshot_digest", "contract_digest"],
+    [
+        "harbor_capability_id",
+        "contract_version",
+        "catalog_snapshot_digest",
+        "contract_digest",
+    ],
 )
 def test_ac3_formal_caps_require_pinned_harbor_provenance(missing: str) -> None:
     values = {

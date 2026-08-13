@@ -110,7 +110,10 @@ def test_ac5_catalog_is_sorted_and_skips_template_directory(tmp_path: Path) -> N
 
     caps = CapCatalogRepository(tmp_path).list()
 
-    assert [cap.cap_id for cap in caps] == ["dividend-events", "realtime-financial-news"], (
+    assert [cap.cap_id for cap in caps] == [
+        "dividend-events",
+        "realtime-financial-news",
+    ], (
         "AC5 catalog output must be deterministic and exclude templates"
     )
 
@@ -132,7 +135,12 @@ def test_ac6_non_harbor_cap_source_is_rejected(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     "missing",
-    ["harbor_capability_id", "contract_version", "catalog_snapshot_digest", "contract_digest"],
+    [
+        "harbor_capability_id",
+        "contract_version",
+        "catalog_snapshot_digest",
+        "contract_digest",
+    ],
 )
 def test_ac6_harbor_cap_requires_immutable_contract_provenance(
     tmp_path: Path, missing: str

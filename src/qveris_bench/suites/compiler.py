@@ -4,7 +4,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    validate_harbor_source,
+)
 from qveris_bench.catalog.validation import validate_cap_file
+from qveris_bench.models.cap import CapDefinition
 from qveris_bench.models.enums import QualificationDisposition
 from qveris_bench.models.provider import AccessPath
 from qveris_bench.models.run import RunPlan
@@ -100,6 +105,7 @@ def _resolve_access_paths(
 
 
 def _snapshot(
+    cap: CapDefinition,
     suite: BenchmarkSuite,
     cases: tuple[BenchmarkCase, ...],
     access_paths: tuple[AccessPath, ...],
@@ -108,6 +114,7 @@ def _snapshot(
     outcome_rules: OutcomeRules,
 ) -> dict[str, Any]:
     return {
+        "cap": cap.model_dump(mode="json"),
         "suite": suite.model_dump(mode="json"),
         "cases": [case.model_dump(mode="json") for case in cases],
         "access_paths": [path.model_dump(mode="json") for path in access_paths],
@@ -122,6 +129,7 @@ def compile_suite(
     cases_path: Path,
     providers_root: Path,
     cap_path: Path | None = None,
+    harbor_contracts_path: Path | None = None,
 ) -> CompiledSuite:
     suite = load_suite(suite_path)
     resolved_cap_path = cap_path or suite_path.with_name("cap.yaml")
@@ -134,6 +142,15 @@ def compile_suite(
             f"suite CAP {suite.cap_id}@{suite.cap_version} does not match "
             f"{cap.cap_id}@{cap.version}"
         )
+    resolved_harbor_contracts_path = (
+        harbor_contracts_path
+        or suite_path.parent.parent / ".harbor-snapshots" / "catalog" / "contracts.json"
+    )
+    try:
+        for source in cap.sources:
+            validate_harbor_source(source, resolved_harbor_contracts_path)
+    except HarborSnapshotError as exc:
+        raise SuiteCompilationError(str(exc)) from exc
     cases = _resolve_cases(suite, load_cases(cases_path))
     try:
         bindings = load_provider_bindings(
@@ -149,7 +166,15 @@ def compile_suite(
         validate_provider_bindings(bindings, access_paths)
     except ValueError as exc:
         raise SuiteCompilationError(str(exc)) from exc
-    snapshot = _snapshot(suite, cases, access_paths, records, bindings, outcome_rules)
+    snapshot = _snapshot(
+        cap,
+        suite,
+        cases,
+        access_paths,
+        records,
+        bindings,
+        outcome_rules,
+    )
     fingerprint = suite_fingerprint(snapshot)
     run_plan = expand_run_plan(suite, cases, access_paths, fingerprint)
     return CompiledSuite(

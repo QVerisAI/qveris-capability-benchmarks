@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -132,6 +133,18 @@ def _write_inputs(
     )
 
     cap_path = root / "cap_pack" / "cap.yaml"
+    contract = {
+        "capability_id": "MKT.ETF_HOLDINGS",
+        "contract_version": 1,
+        "field_spec": {"required": [{"name": "symbol", "type": "string"}]},
+    }
+    contract_digest = hashlib.sha256(
+        json.dumps(contract, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    contracts_bytes = json.dumps(
+        [{"capability_id": "MKT.ETF_HOLDINGS", "contract": contract}]
+    ).encode()
+    snapshot_digest = hashlib.sha256(contracts_bytes).hexdigest()
     cap_path.write_text(
         yaml.safe_dump(
             {
@@ -140,11 +153,22 @@ def _write_inputs(
                 "name": "ETF Holdings",
                 "business_use": "Compare constituent-level ETF data providers.",
                 "scope": ["US-listed ETFs"],
-                "sources": [{"source_type": "qveris_original"}],
+                "sources": [
+                    {
+                        "source_type": "harbor_catalog",
+                        "harbor_capability_id": "MKT.ETF_HOLDINGS",
+                        "contract_version": 1,
+                        "catalog_snapshot_digest": snapshot_digest,
+                        "contract_digest": contract_digest,
+                    }
+                ],
             },
             sort_keys=False,
         )
     )
+    harbor_contracts = root / ".harbor-snapshots" / "catalog" / "contracts.json"
+    harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
+    harbor_contracts.write_bytes(contracts_bytes)
 
     suite = {
         "suite_id": "etf-holdings-v1",
@@ -208,6 +232,37 @@ def _write_inputs(
         )
     )
     return suite_path, cases_path, providers_root
+
+
+def test_ac0_suite_freeze_requires_matching_harbor_contract_snapshot(
+    tmp_path: Path,
+) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+
+    with pytest.raises(SuiteCompilationError, match="Harbor contract snapshot"):
+        compile_suite(
+            suite_path,
+            cases_path,
+            providers_root,
+            harbor_contracts_path=tmp_path / "missing-contracts.json",
+        )
+
+    compiled = compile_suite(
+        suite_path,
+        cases_path,
+        providers_root,
+        harbor_contracts_path=tmp_path
+        / ".harbor-snapshots"
+        / "catalog"
+        / "contracts.json",
+    )
+
+    assert compiled.suite.cap_id == "etf-holdings", (
+        "AC0 formal CAP freeze must bind its actual Harbor contract"
+    )
+    assert compiled.snapshot["cap"]["sources"][0]["harbor_capability_id"] == (
+        "MKT.ETF_HOLDINGS"
+    ), "AC0 frozen suite must retain Harbor provenance"
 
 
 def test_ac1_matrix_expands_every_case_path_mode_and_round(tmp_path: Path) -> None:
