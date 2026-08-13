@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from qveris_bench.execution.direct_binding import (
+    load_direct_binding_registry,
+    validate_direct_binding_registry,
+)
 from qveris_bench.providers.repository import ProviderRegistryRepository
 from qveris_bench.suites.compiler import compile_suite
 
@@ -47,3 +51,27 @@ def test_authorized_corporate_actions_keeps_global_qualifications() -> None:
         "massive-stocks-corporate-actions-qveris": "excluded",
         "twelve-data-corporate-actions-qveris": "excluded",
     }
+
+
+def test_corporate_actions_direct_bindings_cover_each_frozen_cell() -> None:
+    pack = ROOT / "cap_packs" / "corporate-actions"
+    registry = load_direct_binding_registry(pack / "direct-bindings.json")
+
+    validate_direct_binding_registry(
+        registry,
+        pack / "suite.yaml",
+        pack / "cases.yaml",
+        ROOT / "providers",
+        cap_path=pack / "cap.yaml",
+    )
+
+    assert len(registry.bindings) == 8
+    assert {binding.provider_id for binding in registry.bindings} == {
+        "alpha-vantage",
+        "eodhd",
+        "massive-stocks",
+        "twelve-data",
+    }
+    assert all(
+        binding.discovery_query == binding.tool_id for binding in registry.bindings
+    )
