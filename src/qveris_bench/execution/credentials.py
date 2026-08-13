@@ -1,21 +1,29 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
+
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class QverisCredentialError(ValueError):
     pass
 
 
-def load_qveris_api_key() -> str:
-    key = os.environ.get("QVERIS_API_KEY")
-    if isinstance(key, str) and key.strip():
-        return key
-    config_path = Path.home() / ".config" / "qveris" / "config.json"
+class QverisCredentials(BaseSettings):
+    model_config = SettingsConfigDict(extra="ignore")
+
+    qveris_api_key: SecretStr | None = None
+
+
+def load_qveris_api_key(config_path: Path | None = None) -> str:
+    key = QverisCredentials().qveris_api_key
+    if key is not None and key.get_secret_value().strip():
+        return key.get_secret_value()
+    path = config_path or Path.home() / ".config" / "qveris" / "config.json"
     try:
-        document = json.loads(config_path.read_text(encoding="utf-8"))
+        document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         document = None
     key = document.get("api_key") if isinstance(document, dict) else None
