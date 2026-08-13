@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -12,6 +13,9 @@ import httpx
 import pytest
 from typer.testing import CliRunner
 
+from qveris_bench.cap_packs.dividend_events.publication import (
+    DividendEventsPublicationAdapter,
+)
 from qveris_bench.cli import app
 from qveris_bench.publications.service import (
     PublicationReproductionError,
@@ -201,8 +205,8 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
         ),
         (
             "docs/guides/best-dividend-apis.md",
-            b"**Sample passed:** both the AAPL sample",
-            b"**Sample did not pass:** both the AAPL sample",
+            b"**Sample passed:** required event fields returned in 3/3 rounds",
+            b"**Sample did not pass:** required event fields returned in 3/3 rounds",
             "baseline outcome drifted",
         ),
         (
@@ -537,3 +541,137 @@ def test_ac6_malformed_publication_artifact_has_a_stable_error(tmp_path: Path) -
         reproduce_publication_package(
             repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
         )
+
+
+def test_ac7_additional_contradictory_article_claims_fail(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    article = repository / "docs/guides/best-dividend-apis.md"
+    article.write_text(
+        article.read_text(encoding="utf-8").replace(
+            "\n\nThere is no single best dividend API",
+            (
+                "\n\nWe made 999 live calls, the market Release contains 999 "
+                "planned cells, and it is pinned at `sha256:"
+                + "0" * 64
+                + "`.\n\nThere is no single best dividend API"
+            ),
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(PublicationReproductionError, match="article facts drifted"):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac7_provider_selection_advice_is_release_derived(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    article = repository / "docs/guides/best-dividend-apis.md"
+    article.write_text(
+        article.read_text(encoding="utf-8").replace(
+            "Alpha Vantage and Massive first because those fields appeared",
+            "EODHD first because those fields appeared",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(PublicationReproductionError, match="selection advice drifted"):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+@pytest.mark.parametrize("extra", ["extra.txt", "nested/extra.json"])
+def test_ac7_public_evidence_rejects_every_undeclared_file(
+    tmp_path: Path,
+    extra: str,
+) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    target = repository / "evidence/dividend-events-2026-q3-v1" / extra
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("undeclared", encoding="utf-8")
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="public evidence file set differs",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac7_public_evidence_rejects_a_symlink_alias(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    evidence = repository / "evidence/dividend-events-2026-q3-v1"
+    os.symlink(
+        evidence / "alpha-vantage-aapl-dividends-round-1-terminal.json",
+        evidence / "undeclared-terminal.json",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="public evidence file set differs",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac7_every_declared_adapter_module_is_the_executed_source(
+    tmp_path: Path,
+) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    chart_source = (
+        repository / "src/qveris_bench/cap_packs/dividend_events/selection_charts.py"
+    )
+    chart_source.write_text(
+        chart_source.read_text(encoding="utf-8").replace(
+            '"alpha-vantage": "Alpha Vantage"',
+            '"alpha-vantage": "Tampered Alpha"',
+        ),
+        encoding="utf-8",
+    )
+    sources = [
+        "src/qveris_bench/cap_packs/dividend_events/publication.py",
+        "src/qveris_bench/cap_packs/dividend_events/selection_charts.py",
+    ]
+    digest = hashlib.sha256()
+    for source in sources:
+        digest.update(source.encode())
+        digest.update(b"\0")
+        digest.update((repository / source).read_bytes())
+    package = repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+    package.write_text(
+        re.sub(
+            r"adapter_digest: sha256:[0-9a-f]{64}",
+            "adapter_digest: sha256:" + digest.hexdigest(),
+            package.read_text(encoding="utf-8"),
+            count=1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="declared adapter module does not match its bound source",
+    ):
+        reproduce_publication_package(package)
+
+
+def test_ac7_adapter_execution_has_a_production_network_deny(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def attempt_network(*args: object, **kwargs: object) -> tuple[str, ...]:
+        socket.create_connection(("example.com", 443))
+        return ("selection_snapshot", "charts", "article_facts", "links")
+
+    monkeypatch.setattr(DividendEventsPublicationAdapter, "reproduce", attempt_network)
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="network access is disabled",
+    ):
+        reproduce_publication_package(PACKAGE)

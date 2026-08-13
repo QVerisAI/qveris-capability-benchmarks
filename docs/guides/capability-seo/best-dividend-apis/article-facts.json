@@ -38,9 +38,191 @@
     "ES"
   ],
   "package_id": "best-dividend-apis-2026-08-12",
+  "paths": [
+    {
+      "access_path_id": "hangseng-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "additional_event_dates": "Declaration, record, and payment dates",
+      "currency": "Not returned in this sample",
+      "evidence_ref_count": 8,
+      "evidence_refs_digest": "sha256:e971eef1db2fa7307d8a84f8fab5071012957c530bdcae2c16ae574e571d790c",
+      "identity": "Returned security code matched the requested symbol",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "hangseng",
+      "provider_name": "Hang Seng",
+      "provider_negative_markets": [],
+      "required_fields": "CN sample 2/2",
+      "required_fields_passed": true,
+      "verified_markets": [
+        "CN"
+      ]
+    },
+    {
+      "access_path_id": "ifind-native-mcp",
+      "access_path_type": "native_mcp",
+      "additional_event_dates": "No single-event date set",
+      "currency": "Not published in this sample",
+      "evidence_ref_count": 12,
+      "evidence_refs_digest": "sha256:771afef5c0c0467efbd8cc0241652ce015a808b183ebcb2c731a662d15d37028",
+      "identity": "No response security code was available to cross-check",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "ifind",
+      "provider_name": "iFinD",
+      "provider_negative_markets": [
+        "US",
+        "HK",
+        "CN"
+      ],
+      "required_fields": "Missing single-event amount meaning and ex-dividend date",
+      "required_fields_passed": false,
+      "verified_markets": []
+    },
+    {
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "additional_event_dates": "Declaration, record, and payment dates",
+      "currency": "Not returned in this sample",
+      "evidence_ref_count": 14,
+      "evidence_refs_digest": "sha256:a57b6c0c615603e3a700a7c0fa2fc96a93b8f1d5a4a324a3d3ca7e20462f0d8f",
+      "identity": "Published sample does not prove the response identified `AAPL`",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "alpha-vantage",
+      "provider_name": "Alpha Vantage",
+      "provider_negative_markets": [],
+      "required_fields": "3/3",
+      "required_fields_passed": true,
+      "verified_markets": [
+        "US",
+        "CN",
+        "FR",
+        "ES"
+      ]
+    },
+    {
+      "access_path_id": "twelve-data-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "additional_event_dates": "Only ex-dividend date in this sample",
+      "currency": "`USD`",
+      "evidence_ref_count": 24,
+      "evidence_refs_digest": "sha256:d78c8776e48f7abc124147a75b1d678f3e721fcb5aec9480422baa23c65585e7",
+      "identity": "Published sample does not prove the response identified `AAPL`",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "twelve-data",
+      "provider_name": "Twelve Data",
+      "provider_negative_markets": [
+        "HK",
+        "CN",
+        "ES"
+      ],
+      "required_fields": "3/3",
+      "required_fields_passed": true,
+      "verified_markets": [
+        "US",
+        "JP",
+        "DE",
+        "FR",
+        "BR",
+        "IN"
+      ]
+    },
+    {
+      "access_path_id": "eodhd-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "additional_event_dates": "Only ex-dividend date in this sample",
+      "currency": "Not returned in this sample",
+      "evidence_ref_count": 24,
+      "evidence_refs_digest": "sha256:982c53b204708844a4724fd28ffb5815a088d35fec1df68013780c3ddd242eec",
+      "identity": "Published sample does not prove the response identified `AAPL`",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "eodhd",
+      "provider_name": "EODHD",
+      "provider_negative_markets": [
+        "JP",
+        "IN"
+      ],
+      "required_fields": "3/3",
+      "required_fields_passed": true,
+      "verified_markets": [
+        "US",
+        "HK",
+        "CN",
+        "DE",
+        "FR",
+        "BR",
+        "ES"
+      ]
+    },
+    {
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "access_path_type": "qveris_connector",
+      "additional_event_dates": "Declaration, record, and payment dates",
+      "currency": "`USD`",
+      "evidence_ref_count": 8,
+      "evidence_refs_digest": "sha256:bb1e43e0d297244854023e1f58a21cd5bf3d5ccac75571d715ea883673a7d683",
+      "identity": "Published sample does not prove the response identified `AAPL`",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "massive-stocks",
+      "provider_name": "Massive",
+      "provider_negative_markets": [],
+      "required_fields": "3/3",
+      "required_fields_passed": true,
+      "verified_markets": [
+        "US"
+      ]
+    }
+  ],
   "pricing_observed_at": "2026-08-12",
   "provider_count": 6,
   "qveris_access_path_count": 5,
+  "recommendations": {
+    "basic_us": [
+      "Alpha Vantage",
+      "Twelve Data",
+      "EODHD",
+      "Massive"
+    ],
+    "cn_identity_verified": [
+      "Hang Seng"
+    ],
+    "cn_native_incomplete": [
+      "iFinD"
+    ],
+    "cn_provider_negative": [
+      "iFinD",
+      "Twelve Data"
+    ],
+    "cn_verified": [
+      "Hang Seng",
+      "Alpha Vantage",
+      "EODHD"
+    ],
+    "explicit_currency_us": [
+      "Twelve Data",
+      "Massive"
+    ],
+    "full_event_dates_us": [
+      "Alpha Vantage",
+      "Massive"
+    ]
+  },
   "schema_version": 1,
   "total_live_calls": 102
 }

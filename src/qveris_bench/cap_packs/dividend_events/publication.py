@@ -263,6 +263,32 @@ def _build_article_facts(
         raise PublicationReproductionError(
             "article facts require one runtime sample size and pricing date"
         )
+    order = _mapping(manifest, "publication_policy").get("display_order")
+    if not isinstance(order, list):
+        raise PublicationReproductionError("article display order is missing")
+    ordered_rows = sorted(rows, key=lambda row: order.index(row["access_path_id"]))
+    path_facts = [
+        _path_article_facts(row, manifest, repository_root) for row in ordered_rows
+    ]
+    basic_us = [
+        str(item["provider_name"])
+        for item in path_facts
+        if item["access_path_type"] == "qveris_connector"
+        and item["required_fields_passed"]
+        and "US" in cast(list[str], item["verified_markets"])
+    ]
+    full_dates_us = [
+        str(item["provider_name"])
+        for item in path_facts
+        if item["additional_event_dates"] == "Declaration, record, and payment dates"
+        and "US" in cast(list[str], item["verified_markets"])
+    ]
+    explicit_currency_us = [
+        str(item["provider_name"])
+        for item in path_facts
+        if str(item["currency"]).startswith("`")
+        and "US" in cast(list[str], item["verified_markets"])
+    ]
     return {
         "schema_version": 1,
         "package_id": _mapping(manifest, "publication_package")["package_id"],
@@ -273,6 +299,36 @@ def _build_article_facts(
         "latency_sample_size": latency_sample_sizes.pop(),
         "pricing_observed_at": pricing_dates.pop(),
         "markets": list(_MARKET_ORDER),
+        "paths": path_facts,
+        "recommendations": {
+            "basic_us": basic_us,
+            "full_event_dates_us": full_dates_us,
+            "explicit_currency_us": explicit_currency_us,
+            "cn_verified": [
+                str(item["provider_name"])
+                for item in path_facts
+                if "CN" in cast(list[str], item["verified_markets"])
+            ],
+            "cn_identity_verified": [
+                str(item["provider_name"])
+                for item in path_facts
+                if "CN" in cast(list[str], item["verified_markets"])
+                and item["identity"]
+                == "Returned security code matched the requested symbol"
+            ],
+            "cn_provider_negative": [
+                str(item["provider_name"])
+                for item in path_facts
+                if "CN" in cast(list[str], item["provider_negative_markets"])
+            ],
+            "cn_native_incomplete": [
+                str(item["provider_name"])
+                for item in path_facts
+                if item["access_path_type"] == "native_mcp"
+                and not item["required_fields_passed"]
+                and "CN" in cast(list[str], item["provider_negative_markets"])
+            ],
+        },
         "total_live_calls": cast(int, baseline["public_evidence_records"])
         + cast(int, market["public_evidence_records"]),
         "baseline_release": {
@@ -283,6 +339,64 @@ def _build_article_facts(
             **market,
             "observation_date": market_dates.pop(),
         },
+    }
+
+
+def _path_article_facts(
+    row: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    repository_root: Path,
+) -> dict[str, object]:
+    required, identity, currency, dates = _agent_expected_cells(
+        row,
+        manifest,
+        repository_root,
+    )
+    invalid = _mapping(_mapping(row, "agent_interface"), "invalid_input_handling")
+    market_results = _mapping(row, "market_coverage")["results"]
+    if not isinstance(market_results, list):
+        raise PublicationReproductionError("market coverage results are invalid")
+    evidence_refs = set(_mapping(row, "run_observations").get("evidence_refs", []))
+    evidence_refs.update(
+        evidence_ref
+        for result in market_results
+        for evidence_ref in result.get("evidence_refs", [])
+    )
+    canonical_evidence_refs = sorted(str(value) for value in evidence_refs)
+    return {
+        "provider_id": row["provider_id"],
+        "provider_name": _PROVIDER_NAMES[str(row["provider_id"])],
+        "access_path_id": row["access_path_id"],
+        "access_path_type": row["access_path_type"],
+        "required_fields": required,
+        "required_fields_passed": not required.startswith("Missing"),
+        "identity": identity,
+        "invalid_input": {
+            "passed": invalid["passed"],
+            "total": invalid["total"],
+        },
+        "currency": currency,
+        "additional_event_dates": dates,
+        "verified_markets": [
+            market
+            for market in _MARKET_ORDER
+            if any(
+                result["market"] == market and result["state"] == "verified"
+                for result in market_results
+            )
+        ],
+        "provider_negative_markets": [
+            market
+            for market in _MARKET_ORDER
+            if any(
+                result["market"] == market and result["state"] == "provider_negative"
+                for result in market_results
+            )
+        ],
+        "evidence_ref_count": len(canonical_evidence_refs),
+        "evidence_refs_digest": _digest(
+            json.dumps(canonical_evidence_refs, separators=(",", ":")).encode()
+        ),
     }
 
 
@@ -418,10 +532,224 @@ def _validate_material_claims(
     for snippet in snippets:
         if article.count(snippet) != 1:
             raise PublicationReproductionError("article facts drifted")
+    expected_quantities = {
+        r"\b(\d+) live calls\b": sorted(
+            [
+                int(facts["total_live_calls"]),
+                int(baseline["public_evidence_records"]),
+                int(market["public_evidence_records"]),
+            ]
+        ),
+        r"\b(\d+) planned (?:test )?cells\b": [int(market["planned_cells"])],
+        r"\bAll (\d+) applicable cells\b": [int(market["applicable_cells"])],
+        r"\bother (\d+) retain\b": [int(market["not_applicable_cells"])],
+    }
+    for pattern, expected in expected_quantities.items():
+        observed = sorted(int(value) for value in re.findall(pattern, article))
+        if observed != expected:
+            raise PublicationReproductionError("article facts drifted")
+    expected_digests = sorted(
+        [str(baseline["release_digest"]), str(market["release_digest"])]
+    )
+    if sorted(re.findall(r"sha256:[0-9a-f]{64}", article)) != expected_digests:
+        raise PublicationReproductionError("article facts drifted")
     _require(
         market_count == 9,
         "article facts market count drifted",
     )
+
+
+def _validate_selection_advice(
+    article: str,
+    facts: Mapping[str, Any],
+) -> None:
+    recommendations = _mapping(facts, "recommendations")
+
+    def names(key: str) -> list[str]:
+        value = recommendations.get(key)
+        if not isinstance(value, list) or not all(
+            isinstance(item, str) for item in value
+        ):
+            raise PublicationReproductionError(
+                f"article recommendation facts are invalid: {key}"
+            )
+        return value
+
+    basic_us = _english_list(names("basic_us"))
+    full_dates = _english_list(names("full_event_dates_us"))
+    currencies = _english_list(names("explicit_currency_us"))
+    cn_identity = _english_list(names("cn_identity_verified"))
+    cn_native_incomplete = _english_list(names("cn_native_incomplete"))
+    paths = facts.get("paths")
+    if not isinstance(paths, list):
+        raise PublicationReproductionError("article path facts are invalid")
+
+    def path_names(
+        *,
+        dates: str | None = None,
+        currency: bool | None = None,
+        required: bool | None = None,
+        market: str | None = None,
+    ) -> list[str]:
+        matches: list[str] = []
+        for item in paths:
+            if not isinstance(item, Mapping):
+                raise PublicationReproductionError("article path facts are invalid")
+            if dates is not None and item.get("additional_event_dates") != dates:
+                continue
+            has_currency = str(item.get("currency")).startswith("`")
+            if currency is not None and has_currency is not currency:
+                continue
+            if (
+                required is not None
+                and item.get("required_fields_passed") is not required
+            ):
+                continue
+            if market is not None and market not in item.get("verified_markets", []):
+                continue
+            matches.append(str(item["provider_name"]))
+        return matches
+
+    native_incomplete = _english_list(path_names(required=False))
+    full_dates_no_currency = _english_list(
+        path_names(
+            dates="Declaration, record, and payment dates",
+            currency=False,
+            market="US",
+        )
+    )
+    full_dates_currency = _english_list(
+        path_names(
+            dates="Declaration, record, and payment dates",
+            currency=True,
+            market="US",
+        )
+    )
+    only_ex_currency = _english_list(
+        path_names(
+            dates="Only ex-dividend date in this sample",
+            currency=True,
+            market="US",
+        )
+    )
+    only_ex_no_currency = _english_list(
+        path_names(
+            dates="Only ex-dividend date in this sample",
+            currency=False,
+            market="US",
+        )
+    )
+    expected = (
+        (
+            "There is no single best dividend API for every application. Through "
+            f"the tested QVeris Access Paths, {basic_us} returned the required "
+            "ex-dividend date and single-event amount for the fixed AAPL sample. "
+            "Their published facts do not independently prove that each response "
+            "identified `AAPL`, so production identity validation remains necessary. "
+            f"{cn_identity}'s tested QVeris Access Path passed the representative "
+            "mainland China sample with a response security code that matched the "
+            "request."
+        ),
+        (
+            "This dividend API comparison treats a successful response as only the "
+            "starting point. A dividend data API must let your application verify the "
+            "**security identity, ex-dividend date, and cash amount per share for one "
+            f"event**. Among the US samples, {full_dates} exposed the broadest "
+            f"event-date sets, while {currencies} explicitly returned currency. The "
+            f"{native_incomplete} Native MCP returned an annual cumulative per-unit "
+            "dividend, but not a dated, single Dividend Event."
+        ),
+        (
+            "For US workflows, reproduce the tested QVeris Access Paths for "
+            f"{full_dates} first because those fields appeared in the published "
+            f"samples. For mainland China, {cn_identity}'s tested sample exposed the "
+            "same additional date types. A field appearing once does not mean every "
+            "historical record is complete, so production acceptance should also "
+            "measure missing-field rates and historical depth."
+        ),
+        (
+            f"Start with the tested QVeris Access Paths for {currencies}. Both "
+            "explicitly returned `currency` in this sample. When another path omits "
+            "it, leave it null or enrich it from a separately sourced dataset—do not "
+            "silently infer it from the exchange."
+        ),
+        (
+            f"{cn_identity}'s tested QVeris Access Path passed both representative CN "
+            "rounds and is the first candidate to reproduce. The "
+            f"{cn_native_incomplete} Native MCP still lacked a single-event date and "
+            "amount meaning in both CN rounds."
+        ),
+        (
+            "The tested QVeris Access Paths for "
+            f"{basic_us} should be on the first reproduction shortlist. Then compare "
+            "three engineering dimensions: the fields your product needs, the QVeris "
+            "list price per call, and P95/P99 latency measured again from your "
+            "deployment region."
+        ),
+        (
+            "The representative CN sample returned a verifiable security identity, "
+            "ex-dividend date, and single-event amount in both rounds. It is a "
+            "priority "
+            "candidate for reproducing mainland China dividend events with your own "
+            "symbols, date range, and permissions."
+        ),
+        (
+            f"The {native_incomplete} Native MCP returned an annual cumulative "
+            "per-unit dividend in all three baseline rounds but no verifiable "
+            "ex-dividend date. That value cannot establish the amount of one event, so "
+            "it does not satisfy this article's event-calendar, ex-date backtest, or "
+            "price-adjustment use cases. We tested only the official Native MCP and do "
+            f"not provide a QVeris CTA for {native_incomplete}."
+        ),
+        (
+            "In addition to the required fields, the sample included declaration, "
+            "record, and payment dates. This makes "
+            f"{full_dates_no_currency} a priority reproduction candidate for "
+            "multi-stage event models, but it does not prove those fields are complete "
+            "across all records."
+        ),
+        (
+            "The AAPL sample returned `effective_date`, `amount`, and `currency`, "
+            "making it a reproduction candidate for basic US dividend calendars and "
+            "notifications. We did not measure pagination limits, complete market "
+            "scope, or plan quotas."
+        ),
+        (
+            "The public facts include ex-dividend date, amount, and event count. We "
+            "did "
+            "not infer currency or additional dates. "
+            f"{only_ex_no_currency} is a candidate for normalized core events; "
+            "applications that require declaration date, payment date, or currency "
+            "should add those fields to their own acceptance tests."
+        ),
+        (
+            "The sample included currency, declaration date, record date, ex-dividend "
+            f"date, and payment date. {full_dates_currency}'s official documentation "
+            "lists the Dividends endpoint in all Stocks plans, so individual "
+            "developers can begin with Stocks Basic Free. Through QVeris, the "
+            "corresponding Tool's "
+            "Inspect price was 1 credit/call."
+        ),
+    )
+    headings = (
+        f"#### {cn_identity}: representative CN sample passed",
+        f"#### {native_incomplete}: an annual cumulative value is not a single event",
+        f"#### {full_dates_no_currency}: richer event dates in the sample",
+        f"#### {only_ex_currency}: direct core fields with explicit currency",
+        f"#### {only_ex_no_currency}: core fields in a compact shape",
+        f"#### {full_dates_currency}: rich fields with a clear Stocks plan entry point",
+    )
+    try:
+        heading_positions = [article.index(heading) for heading in headings]
+    except ValueError as exc:
+        raise PublicationReproductionError("selection advice drifted") from exc
+    if heading_positions != sorted(heading_positions):
+        raise PublicationReproductionError("selection advice drifted")
+    for index, paragraph in enumerate(expected, start=1):
+        if article.count(paragraph) != 1:
+            raise PublicationReproductionError(
+                f"selection advice drifted: paragraph {index}"
+            )
 
 
 def _validate_selection_release_refs(
@@ -605,9 +933,17 @@ def _validate_article_facts(
     for row in ordered_rows:
         provider = _PROVIDER_NAMES[str(row["provider_id"])]
         access = "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris"
+        expected_agent = _agent_expected_cells(
+            row,
+            manifest,
+            repository_root,
+        )
+        invalid = row["agent_interface"]["invalid_input_handling"]
+        expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
         overview_row = _provider_row(overview, provider, access)
         _require(
-            overview_row[1] == _expected_overview_outcome(row),
+            overview_row[1]
+            == _expected_overview_outcome(expected_agent[0], expected_invalid),
             f"baseline outcome drifted: {provider}",
         )
         metrics = row["gateway_metrics"]
@@ -652,13 +988,6 @@ def _validate_article_facts(
         _require(published_sets == expected_sets, f"market facts drifted: {provider}")
 
         agent_row = _provider_row(agent, provider, access)
-        expected_agent = _agent_expected_cells(
-            row,
-            manifest,
-            repository_root,
-        )
-        invalid = row["agent_interface"]["invalid_input_handling"]
-        expected_invalid = f"Handled correctly {invalid['passed']}/{invalid['total']}"
         _require(
             agent_row[1:]
             == [
@@ -672,6 +1001,7 @@ def _validate_article_facts(
         )
 
     _validate_material_claims(article, article_facts)
+    _validate_selection_advice(article, article_facts)
     seo = _mapping(manifest, "seo")
     provider_count = int(article_facts["provider_count"])
     access_path_count = int(article_facts["access_path_count"])
@@ -693,7 +1023,10 @@ def _validate_article_facts(
     )
     _require(
         article.splitlines()[0]
-        == f"# Best Dividend APIs for Developers in 2026: {len(rows)} Providers",
+        == (
+            "# Best Dividend APIs for Developers in 2026: "
+            f"{article_facts['provider_count']} Providers"
+        ),
         "article title Provider count drifted",
     )
     by_provider = {row["provider_id"]: row for row in rows}
@@ -835,27 +1168,25 @@ def _validate_links(
         )
 
 
-def _expected_overview_outcome(row: Mapping[str, Any]) -> str:
-    provider_id = row["provider_id"]
-    if provider_id == "hangseng":
+def _expected_overview_outcome(required: str, invalid: str) -> str:
+    invalid_rounds = invalid.removeprefix("Handled correctly ")
+    if required.startswith("Missing"):
         return (
-            "**CN sample passed:** both rounds returned a verifiable security "
-            "identity, ex-dividend date, and single-event amount"
+            "**Sample did not pass:** required event fields were missing in all "
+            f"positive rounds; invalid input was handled correctly in {invalid_rounds} "
+            "rounds"
         )
-    if provider_id == "ifind":
-        return (
-            "**Sample did not pass:** no single-event date, and the annual "
-            "cumulative value cannot establish the amount for one event"
-        )
-    if provider_id == "twelve-data":
-        return (
-            "**Sample passed:** AAPL returned an ex-dividend date and single-event "
-            "amount in all three rounds; the invalid symbol produced no fabricated "
-            "event"
-        )
+    required_scope = (
+        f"for the {required.removesuffix(' sample 2/2')} sample in 2/2 rounds"
+        if required.startswith("CN sample ")
+        else f"in {required} rounds"
+    )
+    outcome = (
+        "CN sample passed" if required.startswith("CN sample ") else "Sample passed"
+    )
     return (
-        "**Sample passed:** both the AAPL sample and invalid-symbol control met "
-        "the contract in all three rounds"
+        f"**{outcome}:** required event fields returned {required_scope}; invalid "
+        f"input was handled correctly in {invalid_rounds} rounds"
     )
 
 

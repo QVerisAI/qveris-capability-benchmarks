@@ -11,7 +11,7 @@ publication_package:
   adapter_sources:
     - src/qveris_bench/cap_packs/dividend_events/publication.py
     - src/qveris_bench/cap_packs/dividend_events/selection_charts.py
-  adapter_digest: sha256:be1339066a57a05e81ce5983b55702eeba5d6ae06dd2b96f695ee3cb76712935
+  adapter_digest: sha256:f3f3ff0eed1ee45504fc6ba49a5aad6703f7fc38554617f0212d9530eada3707
 search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
@@ -126,7 +126,7 @@ seo:
 artifacts:
   article: docs/guides/best-dividend-apis.md
   article_facts: docs/guides/capability-seo/best-dividend-apis/article-facts.json
-  article_facts_digest: sha256:9c6d0c5991f4ca4dbba6254751c76ae3242b6ce7803e9d45a48cfe532453dccf
+  article_facts_digest: sha256:bdc5c7d02ef9a8f1827fda78b28a824176c27cd717008909c2888e7a3db466c4
   cases: cap_packs/dividend_events/cases.yaml
   release: releases/dividend-events-2026-q3-v5/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1

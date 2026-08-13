@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import inspect
 import json
+import os
 import platform
 import tempfile
+from collections.abc import Iterator
+from contextlib import ExitStack, contextmanager
 from importlib.metadata import entry_points
 from pathlib import Path
 from typing import cast
+from unittest.mock import patch
 
 from pydantic import ValidationError
 
@@ -113,35 +118,28 @@ def reproduce_publication_package(
     )
     if adapter_digest != manifest.publication_package.adapter_digest:
         raise PublicationReproductionError("publication adapter digest mismatch")
-    adapter_source = inspect.getsourcefile(type(adapter))
-    expected_sources = {
-        resolve_repository_path(repository_root, source)
-        for source in manifest.publication_package.adapter_sources
-    }
-    if adapter_source is None:
-        raise PublicationReproductionError(
-            "loaded publication adapter does not match its bound source"
-        )
-    loaded_source = Path(adapter_source).resolve(strict=True).read_bytes()
-    if all(source.read_bytes() != loaded_source for source in expected_sources):
-        raise PublicationReproductionError(
-            "loaded publication adapter does not match its bound source"
-        )
     with tempfile.TemporaryDirectory(prefix="qveris-publication-") as temporary:
-        try:
-            checks = adapter.reproduce(
-                repository_root=repository_root,
-                package_path=resolved_package,
-                package=manifest.publication_package,
-                document=document,
-                output_dir=Path(temporary),
+        with _isolated_cache_environment(Path(temporary)):
+            _validate_adapter_modules(
+                adapter,
+                repository_root,
+                manifest.publication_package.adapter_sources,
             )
-        except PublicationReproductionError:
-            raise
-        except (IndexError, KeyError, OSError, TypeError, ValueError) as exc:
-            raise PublicationReproductionError(
-                f"publication validation failed: {exc}"
-            ) from exc
+            try:
+                with _offline_network():
+                    checks = adapter.reproduce(
+                        repository_root=repository_root,
+                        package_path=resolved_package,
+                        package=manifest.publication_package,
+                        document=document,
+                        output_dir=Path(temporary),
+                    )
+            except PublicationReproductionError:
+                raise
+            except (IndexError, KeyError, OSError, TypeError, ValueError) as exc:
+                raise PublicationReproductionError(
+                    f"publication validation failed: {exc}"
+                ) from exc
     if checks != _EXPECTED_CHECKS:
         raise PublicationReproductionError(
             "publication adapter did not complete every required check"
@@ -268,6 +266,78 @@ def _source_digest(repository_root: Path, sources: tuple[str, ...]) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
+def _validate_adapter_modules(
+    adapter: PublicationAdapter,
+    repository_root: Path,
+    sources: tuple[str, ...],
+) -> None:
+    module_names: set[str] = set()
+    for source in sources:
+        relative = Path(source)
+        if not relative.parts or relative.parts[0] != "src" or relative.suffix != ".py":
+            raise PublicationReproductionError(
+                "publication adapter source must name a Python module under src"
+            )
+        module_parts = list(relative.with_suffix("").parts[1:])
+        if module_parts[-1] == "__init__":
+            module_parts.pop()
+        module_name = ".".join(module_parts)
+        module_names.add(module_name)
+        module = importlib.import_module(module_name)
+        loaded_source = inspect.getsourcefile(module)
+        bound_source = resolve_repository_path(repository_root, source)
+        if (
+            loaded_source is None
+            or Path(loaded_source).resolve(strict=True).read_bytes()
+            != bound_source.read_bytes()
+        ):
+            raise PublicationReproductionError(
+                "declared adapter module does not match its bound source"
+            )
+    if type(adapter).__module__ not in module_names:
+        raise PublicationReproductionError(
+            "loaded publication adapter is not a declared module"
+        )
+
+
+@contextmanager
+def _offline_network() -> Iterator[None]:
+    def deny_network(*args: object, **kwargs: object) -> None:
+        raise PublicationReproductionError(
+            "network access is disabled during publication reproduction"
+        )
+
+    targets = (
+        "socket.create_connection",
+        "socket.getaddrinfo",
+        "socket.socket.connect",
+        "socket.socket.connect_ex",
+        "socket.socket.sendto",
+    )
+    with ExitStack() as stack:
+        for target in targets:
+            stack.enter_context(patch(target, deny_network))
+        yield
+
+
+@contextmanager
+def _isolated_cache_environment(directory: Path) -> Iterator[None]:
+    cache = directory / "module-cache"
+    cache.mkdir()
+    names = ("MPLCONFIGDIR", "XDG_CACHE_HOME")
+    previous = {name: os.environ.get(name) for name in names}
+    for name in names:
+        os.environ[name] = str(cache)
+    try:
+        yield
+    finally:
+        for name, value in previous.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
+
+
 def _validate_public_evidence_file_set(
     release_dir: Path,
     repository_root: Path,
@@ -288,14 +358,22 @@ def _validate_public_evidence_file_set(
     for entry in entries:
         if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
             raise PublicationReproductionError("public evidence manifest is invalid")
+        lexical = (repository_root / entry["path"]).absolute()
         path = resolve_repository_path(repository_root, entry["path"])
-        expected.add(path)
-        parents.add(path.parent)
-    observed = {
-        path.resolve(strict=True)
-        for parent in parents
-        for path in parent.glob("*.json")
-        if path.is_file()
-    }
+        if lexical.is_symlink() or lexical != path:
+            raise PublicationReproductionError("public evidence file set differs")
+        expected.add(lexical)
+        parents.add(lexical.parent)
+    if len(parents) != 1:
+        raise PublicationReproductionError(
+            "one Release must publish evidence in one directory"
+        )
+    evidence_root = parents.pop()
+    observed: set[Path] = set()
+    for path in evidence_root.rglob("*"):
+        if path.is_symlink():
+            raise PublicationReproductionError("public evidence file set differs")
+        if path.is_file():
+            observed.add(path.absolute())
     if observed != expected:
         raise PublicationReproductionError("public evidence file set differs")
