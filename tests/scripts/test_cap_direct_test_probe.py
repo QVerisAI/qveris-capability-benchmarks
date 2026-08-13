@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from scripts.cap_direct_test_probe import (
     Case,
     SupplierProbe,
