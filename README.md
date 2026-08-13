@@ -28,18 +28,23 @@ the full trust boundary and optional external digest verification.
 
 ## Reproduce a published comparison
 
-The Dividend guide is the first complete Publication Package. One offline command
-replays both pinned Releases, rebuilds the Selection Snapshot and chart data, checks
-the committed chart files, and validates material article facts and links:
+Dividend Events and Stock Quote are the first two complete Publication Packages.
+The same offline command shape replays pinned Releases, rebuilds a CAP-owned
+Selection Snapshot and chart data, checks committed chart files, and validates
+material article facts and links:
 
 ```bash
 uv run qveris-bench publication reproduce \
   --package docs/guides/capability-seo/best-dividend-apis/manifest.yaml
+
+uv run qveris-bench publication reproduce \
+  --package docs/guides/capability-seo/stock-quote-api-test/manifest.yaml
 ```
 
 No API key or private raw response is required. The command writes only to a
-temporary directory and reports whether canonical chart bytes were also reproduced
-on the supported Linux renderer. A trusted Git commit authenticates the manifest;
+temporary directory, rebuilds structured chart data, and verifies each committed
+chart digest. It does not claim cross-platform PNG byte identity. A trusted Git
+commit authenticates the manifest;
 `--expected-package-digest` can additionally compare it with an external SHA-256
 anchor.
 
