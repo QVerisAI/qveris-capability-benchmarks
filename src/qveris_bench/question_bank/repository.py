@@ -119,9 +119,7 @@ def _validate_cross_references(
     source_ids = {str(source.source_id) for source in sources}
     sources_by_id = {str(source.source_id): source for source in sources}
     capability_ids = {str(capability.cap_id) for capability in capabilities}
-    public_harbor_capability_ids = _public_harbor_capability_ids(
-        harbor_contracts_path
-    )
+    public_harbor_capability_ids = _public_harbor_capability_ids(harbor_contracts_path)
     for question in questions:
         if str(question.cap_id) not in capability_ids:
             raise QuestionBankValidationError(

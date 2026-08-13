@@ -267,9 +267,7 @@ def test_ac0_suite_freeze_requires_matching_harbor_contract_snapshot(
         suite_path,
         cases_path,
         providers_root,
-        harbor_contracts_path=tmp_path
-        / "harbor_catalog"
-        / "contracts.json",
+        harbor_contracts_path=tmp_path / "harbor_catalog" / "contracts.json",
     )
 
     assert compiled.suite.cap_id == "etf-holdings", (

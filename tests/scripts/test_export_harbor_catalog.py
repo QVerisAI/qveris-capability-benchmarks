@@ -131,8 +131,7 @@ def test_ac4_normalize_catalog_is_deterministic_and_rebuilds_public_metadata(
 
     assert first == second
     assert first_bytes == {
-        filename: (tmp_path / filename).read_bytes()
-        for filename in first_bytes
+        filename: (tmp_path / filename).read_bytes() for filename in first_bytes
     }, "AC4 unchanged Harbor responses must produce no catalog diff"
 
 
