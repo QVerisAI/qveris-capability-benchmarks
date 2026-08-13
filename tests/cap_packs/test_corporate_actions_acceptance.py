@@ -32,9 +32,7 @@ def test_corporate_actions_pack_freezes_four_qveris_paths_and_three_rounds() -> 
     assert len(compiled.run_plan.cells) == 24
 
 
-def test_corporate_actions_authorization_does_not_mutate_global_path_qualification() -> (
-    None
-):
+def test_authorized_corporate_actions_keeps_global_qualifications() -> None:
     registry = ProviderRegistryRepository(ROOT / "providers").list()
     selected = {
         path.access_path_id: path.qualification.disposition.value
