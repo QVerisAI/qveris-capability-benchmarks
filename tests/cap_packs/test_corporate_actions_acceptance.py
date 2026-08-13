@@ -18,13 +18,11 @@ def test_corporate_actions_pack_freezes_four_qveris_paths_and_three_rounds() -> 
     )
 
     assert (
-        compiled.run_plan.cap_sources[0].harbor_capability_id
-        == "MKT.CORPORATE_ACTIONS"
+        compiled.run_plan.cap_sources[0].harbor_capability_id == "MKT.CORPORATE_ACTIONS"
     )
     assert {cell.round for cell in compiled.run_plan.cells} == {1, 2, 3}
     assert {
-        (cell.provider_id, cell.access_path_id)
-        for cell in compiled.run_plan.cells
+        (cell.provider_id, cell.access_path_id) for cell in compiled.run_plan.cells
     } == {
         ("alpha-vantage", "alpha-vantage-corporate-actions-qveris"),
         ("eodhd", "eodhd-corporate-actions-qveris"),
@@ -34,8 +32,9 @@ def test_corporate_actions_pack_freezes_four_qveris_paths_and_three_rounds() -> 
     assert len(compiled.run_plan.cells) == 24
 
 
-def test_corporate_actions_authorization_does_not_mutate_global_path_qualification(
-) -> None:
+def test_corporate_actions_authorization_does_not_mutate_global_path_qualification() -> (
+    None
+):
     registry = ProviderRegistryRepository(ROOT / "providers").list()
     selected = {
         path.access_path_id: path.qualification.disposition.value
