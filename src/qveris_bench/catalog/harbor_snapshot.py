@@ -37,6 +37,14 @@ def load_public_harbor_contracts(
             "Harbor contract snapshot must contain a contract list"
         )
     _validate_snapshot_metadata(contracts_path, payload)
+    if any(
+        record["contract"].get("capability_id") != record["capability_id"]
+        for record in records
+        if isinstance(record, dict)
+        and isinstance(record.get("capability_id"), str)
+        and isinstance(record.get("contract"), dict)
+    ):
+        raise HarborSnapshotError("Harbor contract identity does not match its record")
     index = {
         record["capability_id"]: record["contract"]
         for record in records

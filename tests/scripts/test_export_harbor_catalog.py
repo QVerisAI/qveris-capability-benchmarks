@@ -7,6 +7,10 @@ import json
 
 import pytest
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    load_public_harbor_contracts,
+)
 from scripts.export_harbor_catalog import (
     build_contract_url,
     export_catalog,
@@ -156,6 +160,49 @@ def test_ac4_normalize_rejects_catalog_contract_membership_drift(tmp_path) -> No
 
     with pytest.raises(RuntimeError, match="membership"):
         normalize_catalog(tmp_path)
+
+
+def test_ac4_public_catalog_rejects_a_contract_with_a_different_inner_identity(
+    tmp_path,
+) -> None:
+    records = [
+        {
+            "capability_id": "MKT.L1.RT",
+            "contract": {"capability_id": "MKT.OTHER", "contract_version": 1},
+        }
+    ]
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}])), encoding="utf-8"
+    )
+    (tmp_path / "contracts.json").write_text(json.dumps(records), encoding="utf-8")
+    (tmp_path / "meta.json").write_text(
+        json.dumps(
+            {
+                "origin": "https://harbor.qveris.cloud",
+                "exporter_version": "1.0.0",
+                "catalog_snapshot_digest": hashlib.sha256(
+                    (tmp_path / "contracts.json").read_bytes()
+                ).hexdigest(),
+                "contracts": [
+                    {
+                        "capability_id": "MKT.L1.RT",
+                        "contract_version": 1,
+                        "contract_digest": hashlib.sha256(
+                            json.dumps(
+                                records[0]["contract"],
+                                sort_keys=True,
+                                separators=(",", ":"),
+                            ).encode()
+                        ).hexdigest(),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(HarborSnapshotError, match="identity"):
+        load_public_harbor_contracts(tmp_path / "contracts.json")
 
 
 def test_contract_url_quotes_capability_id() -> None:
