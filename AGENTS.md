@@ -12,7 +12,9 @@ These rules apply to every change in this repository.
   a scenario requirement.
 - Make Agent-interface fitness visible through separate observations such as
   parameter clarity, schema stability, error recovery, pagination, language mapping,
-  and single-tool completion. Never collapse them into an Agent-friendly rating.
+  and single-tool completion. A per-dimension score or same-cohort ranking is allowed
+  only with a versioned method and released evidence; never collapse dimensions into
+  an Agent-friendly composite.
 - Treat developer selection dimensions as targets until a CAP defines the
   measurement and a release carries supporting evidence. Missing evidence must stay
   unavailable or evidence-insufficient, never inferred from provider claims.
@@ -26,8 +28,9 @@ These rules apply to every change in this repository.
 - Direct Test is mandatory for every included applicable provider cell.
 - A constrained Agent Trial receives exactly one single canonical tool. Do not add
   discovery, routing, multi-tool planning, or tool-selection metrics.
-- Do not add an aggregate score, provider total score, Agent-friendly rating, or
-  any other cross-task composite ranking.
+- Do not add a provider total score, Agent-friendly composite, cross-CAP composite,
+  or cross-task composite ranking. Keep every permitted per-dimension score and
+  ranking scoped to one CAP, Provider, Access Path, method version, and frozen cohort.
 - Adapters handle authentication, transport, raw response persistence, and provider
   error normalization. Business outcomes belong to CAP-owned extractors and rules.
 - Stages 5 and 6 consume release facts only. Do not implement SEO/CMS, a leaderboard

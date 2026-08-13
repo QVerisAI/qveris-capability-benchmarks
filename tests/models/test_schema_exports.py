@@ -18,7 +18,7 @@ EXPECTED_SCHEMAS = {
 }
 
 
-def test_ac8_schema_exports_are_deterministic_and_forbid_score_fields(
+def test_ac8_schema_exports_are_deterministic_and_type_metric_score_fields(
     tmp_path: Path,
 ) -> None:
     export_schemas(tmp_path)
@@ -31,7 +31,13 @@ def test_ac8_schema_exports_are_deterministic_and_forbid_score_fields(
     assert check_schemas(tmp_path), "AC8 fresh schema export must pass --check"
 
     combined = b"\n".join(first.values()).lower()
-    for forbidden in (b'"score"', b'"rating"', b"wrong_tool_selected"):
+    assert b'"metricscore"' in combined, "AC8 typed dimension scores must export"
+    assert b'"metricranking"' in combined, "AC8 typed dimension ranks must export"
+    for forbidden in (
+        b'"provider_score"',
+        b'"agent_friendly_rating"',
+        b"wrong_tool_selected",
+    ):
         assert forbidden not in combined, f"AC8 forbidden schema field: {forbidden!r}"
 
 

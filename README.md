@@ -5,8 +5,9 @@ for one concrete capability from replayable evidence.
 
 Every official benchmark release evaluates exactly one CAP. Native APIs, native MCP
 interfaces, and QVeris Access Paths remain separate test cells, run under the same
-frozen cases and outcome rules. The project publishes observable facts and
-limitations—not a provider total score or an Agent-friendly rating.
+frozen cases and outcome rules. The project publishes observable facts,
+evidence-bound per-dimension metrics, and limitations—not a provider total score or
+an Agent-friendly composite.
 
 ## Verify a published release
 
@@ -35,6 +36,9 @@ the full trust boundary and optional external digest verification.
   when recorded. New official releases require Provider-side attribution for every
   Provider-negative outcome; named historical bundles retain their original bytes.
 - Native and QVeris paths independently, even when one path performs worse.
+- Per-dimension scores and rankings only when an independently supplied CAP registry,
+  content-addressed method, released evidence, and one digest-verified frozen
+  Provider / Access Path cohort define the comparison.
 
 Accuracy, precision, latency, reliability, cost, market coverage, language
 coverage, and Agent interface behavior are the target task-fit profile dimensions.
