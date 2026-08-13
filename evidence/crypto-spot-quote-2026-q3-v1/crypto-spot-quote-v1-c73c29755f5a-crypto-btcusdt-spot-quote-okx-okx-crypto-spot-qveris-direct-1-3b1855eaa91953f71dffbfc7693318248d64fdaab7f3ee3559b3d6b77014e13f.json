@@ -1,0 +1,19 @@
+{
+  "case_id": "crypto-btcusdt-spot-quote",
+  "facts": {
+    "currency": "USDT",
+    "exchange": "OKX",
+    "high": 64496.9,
+    "low": 63309.4,
+    "open": 63766.0,
+    "price": 63887.4,
+    "symbol": "BTCUSDT",
+    "timestamp": 1786604814469
+  },
+  "failure_attribution": null,
+  "gateway_latency_ms": 214.1,
+  "raw_digest": "sha256:68b9228aca411f8ea1842e79b7a0890cca9809bb5ed2ce3d1774053156dc741f",
+  "round": 1,
+  "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:1",
+  "state": "completed"
+}
