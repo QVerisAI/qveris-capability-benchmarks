@@ -18,6 +18,7 @@ from typing import Any
 
 import yaml
 
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.providers.repository import ProviderRegistryRepository
 
 
@@ -50,6 +51,9 @@ class CellResult:
     notes: str = ""
     latency_ms: float | None = None
     cost_credits: float | None = None
+    raw_document: dict[str, Any] | None = None
+    raw_digest: str | None = None
+    raw_content: bytes | None = None
 
 
 def _observation_present(data: Any, observation: str) -> bool:
@@ -188,7 +192,8 @@ def build_executor(
         )
         try:
             with urllib.request.urlopen(execute_request, timeout=60) as response:
-                body = json.loads(response.read().decode("utf-8"))
+                raw_content = response.read()
+                body = json.loads(raw_content.decode("utf-8"))
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"execute HTTP {exc.code}") from exc
         result = body.get("result") or {}
@@ -198,6 +203,9 @@ def build_executor(
             "data": result.get("data"),
             "latency_ms": body.get("elapsed_time_ms"),
             "cost_credits": billing.get("list_amount_credits"),
+            "raw_document": body,
+            "raw_digest": sha256_digest(raw_content),
+            "raw_content": raw_content,
         }
 
     return execute
@@ -215,6 +223,9 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             notes="no execution result",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
         )
     if status_code not in (200, 204):
         return CellResult(
@@ -225,6 +236,9 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             notes=f"provider response HTTP {status_code}",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
         )
     if case.negative_control:
         passed = _negative_ok(data, status_code)
@@ -236,6 +250,9 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             notes=("" if passed else "negative control returned data"),
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
         )
     missing = tuple(
         observation
@@ -251,6 +268,9 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
         missing=missing,
         latency_ms=outcome.get("latency_ms"),
         cost_credits=outcome.get("cost_credits"),
+        raw_document=outcome.get("raw_document"),
+        raw_digest=outcome.get("raw_digest"),
+        raw_content=outcome.get("raw_content"),
     )
 
 
@@ -289,6 +309,9 @@ def run_probe(
                         notes=result.notes,
                         latency_ms=result.latency_ms,
                         cost_credits=result.cost_credits,
+                        raw_document=result.raw_document,
+                        raw_digest=result.raw_digest,
+                        raw_content=result.raw_content,
                     )
                 )
         return results
@@ -307,6 +330,24 @@ def probe_state(cells: list[CellResult]) -> str:
     return "passed"
 
 
+def write_private_raw_evidence(
+    output_dir: Path, cells: list[CellResult]
+) -> dict[str, str]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    written: dict[str, str] = {}
+    for cell in cells:
+        if cell.raw_content is None or cell.raw_digest is None:
+            continue
+        evidence_id = f"{cell.provider_id}-{cell.case_id}-round-{cell.round}"
+        if evidence_id in written:
+            raise ValueError("duplicate private raw evidence identity")
+        if sha256_digest(cell.raw_content) != cell.raw_digest:
+            raise ValueError("private raw evidence digest mismatch")
+        (output_dir / f"{evidence_id}.json").write_bytes(cell.raw_content)
+        written[evidence_id] = cell.raw_digest
+    return written
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -321,6 +362,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("evidence/private/cap-direct-test.jsonl"),
     )
+    parser.add_argument(
+        "--raw-output",
+        type=Path,
+        help="Private raw response directory; never commit this directory.",
+    )
     args = parser.parse_args(argv)
 
     api_key = os.getenv("QVERIS_API_KEY")
@@ -331,6 +377,8 @@ def main(argv: list[str] | None = None) -> int:
     probes = load_fixture(args.fixture, Path("providers"))
     execute = build_executor(args.base_url.rstrip("/"), api_key)
     results = run_probe(probes, execute, rounds=args.rounds)
+    if args.raw_output is not None:
+        write_private_raw_evidence(args.raw_output, results)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     recorded_at = datetime.now(UTC).isoformat()
@@ -349,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
                         "notes": result.notes,
                         "latency_ms": result.latency_ms,
                         "cost_credits": result.cost_credits,
+                        "raw_digest": result.raw_digest,
                         "recorded_at": recorded_at,
                     },
                     ensure_ascii=False,

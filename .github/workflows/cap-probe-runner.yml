@@ -37,7 +37,8 @@ jobs:
           uv run python scripts/cap_direct_test_probe.py \
             --fixture "scripts/fixtures/cap-direct-test-$FIXTURE_PREFIX.yaml" \
             --rounds "$ROUNDS" \
-            --output "evidence/private/cap-direct-test.jsonl"
+            --output "evidence/private/cap-direct-test.jsonl" \
+            --raw-output "evidence/private/cap-direct-test-raw"
         env:
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
           FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}

@@ -3,18 +3,22 @@
 from __future__ import annotations
 
 import urllib.error
+from pathlib import Path
 from threading import Barrier
 
 import pytest
 
+from qveris_bench.evidence.hashing import sha256_digest
 from scripts.cap_direct_test_probe import (
     Case,
+    CellResult,
     SupplierProbe,
     build_executor,
     evaluate_cell,
     load_fixture,
     probe_state,
     run_probe,
+    write_private_raw_evidence,
 )
 
 
@@ -54,10 +58,20 @@ def test_executor_reuses_one_discovery_for_repeated_frozen_tool_calls(
     execute = build_executor("https://qveris.ai/api/v1", "test-key")
 
     execute("provider.splits", {"symbol": "AAPL"})
-    execute("provider.splits", {"symbol": "NOTASTOCK"})
+    second = execute("provider.splits", {"symbol": "NOTASTOCK"})
 
     assert sum(url.endswith("/search") for url, _ in requests) == 1
     assert len(requests) == 3
+    assert second["raw_document"] == {
+        "result": {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31"},
+        },
+        "billing": {"list_amount_credits": 1},
+        "elapsed_time_ms": 100,
+    }
+    assert second["raw_digest"].startswith("sha256:")
+    assert second["raw_content"]
 
 
 def test_executor_caches_a_frozen_tool_discovery_failure(
@@ -97,6 +111,56 @@ def test_ac1_positive_all_observations_present_passes() -> None:
     }
     result = evaluate_cell(_case(), outcome)
     assert result.state == "passed"
+
+
+def test_probe_keeps_raw_gateway_document_out_of_terminal_summary() -> None:
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+    raw_document = {
+        "result": {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        }
+    }
+
+    result = run_probe(
+        (probe,),
+        lambda _tool, _parameters: {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+            "raw_document": raw_document,
+        },
+        rounds=1,
+    )[0]
+
+    assert result.raw_document == raw_document
+    assert result.raw_document is not None
+
+
+def test_private_raw_evidence_is_written_separately_from_summary(
+    tmp_path: Path,
+) -> None:
+    raw_content = b'{"private":"provider response"}'
+    result = CellResult(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        case_id="aapl-splits",
+        round=1,
+        state="passed",
+        raw_content=raw_content,
+        raw_digest=sha256_digest(raw_content),
+    )
+
+    written = write_private_raw_evidence(tmp_path, [result])
+
+    assert written == {"eodhd-aapl-splits-round-1": result.raw_digest}
+    assert (tmp_path / "eodhd-aapl-splits-round-1.json").read_bytes() == raw_content
 
 
 def test_ac2_positive_missing_observation_fails() -> None:
