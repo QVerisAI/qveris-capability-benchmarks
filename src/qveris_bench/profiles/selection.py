@@ -738,12 +738,8 @@ def _sha256(path: Path) -> str:
 
 
 def _execution_contract_digest(snapshot: dict[str, Any]) -> str:
-    execution_snapshot = dict(snapshot)
-    cap = dict(execution_snapshot["cap"])
-    cap.pop("sources", None)
-    execution_snapshot["cap"] = cap
     return (
-        "sha256:" + hashlib.sha256(canonical_json_bytes(execution_snapshot)).hexdigest()
+        "sha256:" + hashlib.sha256(canonical_json_bytes(snapshot)).hexdigest()
     )
 
 
@@ -760,8 +756,9 @@ def _validate_suite_contract(
     if compiled_fingerprint == released_fingerprint:
         return
     if (
-        release_metadata.get("cap_id") is not None
-        or release_metadata.get("cap_sources") is not None
+        release_metadata.get("cap_id") != snapshot["cap"]["cap_id"]
+        or release_metadata.get("cap_version") != snapshot["cap"]["version"]
+        or release_metadata.get("cap_sources") != snapshot["cap"]["sources"]
         or historical_contract.get("suite_fingerprint") != released_fingerprint
         or historical_contract.get("execution_contract_digest")
         != _execution_contract_digest(snapshot)

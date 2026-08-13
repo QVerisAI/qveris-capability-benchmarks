@@ -176,11 +176,11 @@ Offline replay verifies the run plan, terminal cells, public terminals, suite fi
 
 ```bash
 uv sync --locked --all-groups
-uv run qveris-bench release replay releases/dividend-events-2026-q3-v1 \
-  --expected-digest sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+uv run qveris-bench release replay releases/dividend-events-2026-q3-v5 \
+  --expected-digest sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a
 uv run qveris-bench release replay \
-  releases/dividend-events-market-coverage-2026-q3-v1 \
-  --expected-digest sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
+  releases/dividend-events-market-coverage-2026-q3-v5 \
+  --expected-digest sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead
 ```
 
 Open the [public benchmark repository on GitHub](https://github.com/QVerisAI/qveris-capability-benchmarks) only if you want to audit or reproduce the results. It contains the immutable Releases, Selection Snapshot, sanitized evidence, and replay instructions behind this article. Ordinary API selection does not require reading those files; every green or orange market cell is already digest-bound to a public terminal.

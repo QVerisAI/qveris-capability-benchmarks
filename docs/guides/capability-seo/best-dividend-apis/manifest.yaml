@@ -1,5 +1,5 @@
 schema_version: 1
-benchmark_id: dividend-events-2026-q3-v1
+benchmark_id: dividend-events-2026-q3-v5
 article_slug: best-dividend-apis
 edition: "2026-08-12"
 search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
@@ -48,16 +48,16 @@ publication_policy:
     - Limitations, disclosures, and corrections
     - FAQ
 release:
-  directory: releases/dividend-events-2026-q3-v1
-  digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+  directory: releases/dividend-events-2026-q3-v5
+  digest: sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a
   suite_fingerprint: 60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741
   planned_cells: 54
   applicable_cells: 36
   public_evidence_records: 36
 selection_snapshot:
   id: dividend-events-selection-2026-q3-v1
-  input_digest: sha256:bf226e4b4208c44774231535ef75ad4024db479001b27e5b63afb4683c34474c
-  digest: sha256:31ce1c6e37396c0312a3a1b0226ab19906bae3e093759966248f87392d83fe0b
+  input_digest: sha256:3b13f32c63194ffb9b5eda8decef0c8cbfd555b90af73a7910690b7a59c3ef83
+  digest: sha256:c519276549e6e9c45a88817050fbde86a1e98b30f7ac754e84074ad2c1571a36
 qveris_list_pricing:
   id: dividend-events-qveris-list-pricing-2026-08-12
   source: qveris_inspect
@@ -68,8 +68,8 @@ official_pricing_supplement:
   source: official_provider_page
   digest: sha256:22575a3d9d5197df0273b8f9707daa35a920dedfe7d637651274a7eca9164e84
 market_coverage_release:
-  directory: releases/dividend-events-market-coverage-2026-q3-v1
-  digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
+  directory: releases/dividend-events-market-coverage-2026-q3-v5
+  digest: sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead
   suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
   planned_cells: 120
   applicable_cells: 66
@@ -116,16 +116,16 @@ seo:
 artifacts:
   article: docs/guides/best-dividend-apis.md
   cases: cap_packs/dividend_events/cases.yaml
-  release: releases/dividend-events-2026-q3-v1/release.json
+  release: releases/dividend-events-2026-q3-v5/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
   market_coverage_suite: cap_packs/dividend_events/market-suite.yaml
   market_coverage_cases: cap_packs/dividend_events/market-cases.yaml
   market_coverage_bindings: cap_packs/dividend_events/market-direct-bindings.json
   market_coverage_preflight: cap_packs/dividend_events/market-preflight.yaml
-  market_coverage_release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
+  market_coverage_release: releases/dividend-events-market-coverage-2026-q3-v5/release.json
   market_coverage_public_evidence: evidence/dividend-events-market-coverage-2026-q3-v1
-  market_coverage_public_evidence_manifest: releases/dividend-events-market-coverage-2026-q3-v1/public-evidence-manifest.json
-  market_coverage_github_artifacts: releases/dividend-events-market-coverage-2026-q3-v1/github-artifacts.json
+  market_coverage_public_evidence_manifest: releases/dividend-events-market-coverage-2026-q3-v5/public-evidence-manifest.json
+  market_coverage_github_artifacts: releases/dividend-events-market-coverage-2026-q3-v5/github-artifacts.json
   selection_snapshot_input: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.yaml
   selection_snapshot: docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json
   qveris_list_pricing: docs/guides/capability-seo/best-dividend-apis/qveris-list-pricing.json
@@ -134,4 +134,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:dddbf1ec3060060c4bd837d47705ed71fbc999c26583919aa2640125b4fd6b2e
+  selection_charts_manifest_digest: sha256:24ffff730d5fa8bc88cc13d7e26a06c4f08ff9023fe38f59b89497a83e519345

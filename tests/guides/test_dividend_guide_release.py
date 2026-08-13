@@ -19,11 +19,11 @@ from scripts.render_cap_guide_charts import (
 ROOT = Path(__file__).resolve().parents[2]
 ARTICLE = ROOT / "docs/guides/best-dividend-apis.md"
 MANIFEST = ROOT / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
-RELEASE_DIR = ROOT / "releases/dividend-events-2026-q3-v1"
+RELEASE_DIR = ROOT / "releases/dividend-events-2026-q3-v5"
 CASES = ROOT / "cap_packs/dividend_events/cases.yaml"
 PIPELINE_DOC = ROOT / "docs/how-a-cap-becomes-an-article.html"
 RELEASE_DIGEST = (
-    "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+    "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a"
 )
 EVIDENCE_CHARTS = (
     "capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png",
@@ -76,7 +76,7 @@ def test_english_publication_contract(tmp_path: Path) -> None:
 def test_article_is_bound_to_dividend_release() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
 
-    assert "dividend-events-2026-q3-v1" in article
+    assert "dividend-events-2026-q3-v5" in article
     assert RELEASE_DIGEST in article
     assert "three times" in article
     assert "36 live calls" in article
@@ -452,7 +452,7 @@ def test_selection_tradeoff_chart_rejects_inconsistent_sample_sizes(
 def test_manifest_uses_public_release_as_source_of_truth() -> None:
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
 
-    assert manifest["benchmark_id"] == "dividend-events-2026-q3-v1"
+    assert manifest["benchmark_id"] == "dividend-events-2026-q3-v5"
     assert manifest["release"]["digest"] == RELEASE_DIGEST
     assert manifest["release"]["applicable_cells"] == 36
     assert all(case["minimum_rounds"] == 3 for case in manifest["scenarios"])
@@ -847,7 +847,7 @@ def test_release_chart_is_derived_from_release_bytes(tmp_path: Path) -> None:
     assert chart_manifest["input_digests"]["cases"] == (
         f"sha256:{hashlib.sha256(CASES.read_bytes()).hexdigest()}"
     )
-    assert chart_manifest["release_id"] == "dividend-events-2026-q3-v1"
+    assert chart_manifest["release_id"] == "dividend-events-2026-q3-v5"
     written = json.loads(
         (tmp_path / "charts-manifest.json").read_text(encoding="utf-8")
     )
