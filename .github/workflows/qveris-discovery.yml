@@ -34,3 +34,10 @@ jobs:
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
           DISCOVERY_QUERY: ${{ inputs.query }}
           DISCOVERY_LIMIT: ${{ inputs.limit }}
+      - name: Upload private discovery evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qveris-discovery-raw
+          path: ${{ runner.temp }}/qveris-raw
+          if-no-files-found: error
