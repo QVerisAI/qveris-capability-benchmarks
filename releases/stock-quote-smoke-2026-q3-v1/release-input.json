@@ -1,9 +1,0 @@
-{
-  "release_id": "stock-quote-smoke-2026-q3-v1",
-  "version": "1.0.0",
-  "suite_fingerprint": "0fc498e5c65badd54c71b82d9ae249d0253bb9d64abd3906970da2712b8406bb",
-  "run_plan_digest": "sha256:ff2fbefd3d953d2e7bfa4feba18784ab8b951f6ed93b2edb752a5502b7028fec",
-  "evidence_ids": ["stock-quote-aapl-direct-1", "stock-quote-invalid-direct-1"],
-  "outcome_ids": ["stock-quote-aapl-provider-negative", "stock-quote-invalid-completed"],
-  "limitations": ["The AAPL Direct observation was stale at execution time and is recorded as provider_negative."]
-}

@@ -32,9 +32,10 @@ def _copy_publication_repository(tmp_path: Path) -> Path:
         "docs/guides/capability-seo/best-dividend-apis",
         "evidence/dividend-events-2026-q3-v1",
         "evidence/dividend-events-market-coverage-2026-q3-v1",
+        "harbor_catalog",
         "providers",
-        "releases/dividend-events-2026-q3-v1",
-        "releases/dividend-events-market-coverage-2026-q3-v1",
+        "releases/dividend-events-2026-q3-v5",
+        "releases/dividend-events-market-coverage-2026-q3-v5",
     ):
         source = ROOT / relative
         target = copied / relative
@@ -135,8 +136,8 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
     ("relative_path", "old", "new", "message"),
     [
         (
-            "releases/dividend-events-2026-q3-v1/release.json",
-            b'"release_id": "dividend-events-2026-q3-v1"',
+            "releases/dividend-events-2026-q3-v5/release.json",
+            b'"release_id": "dividend-events-2026-q3-v5"',
             b'"release_id": "tampered-release"',
             "release reproduction failed",
         ),
@@ -302,9 +303,9 @@ def test_ac5_dividend_adapter_rejects_an_extra_release(tmp_path: Path) -> None:
             (
                 "release_sections: [release, market_coverage_release, extra_release]"
                 "\nextra_release:"
-                "\n  directory: releases/dividend-events-2026-q3-v1"
+                "\n  directory: releases/dividend-events-2026-q3-v5"
                 "\n  digest: "
-                "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+                "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a"
             ),
         ),
         encoding="utf-8",

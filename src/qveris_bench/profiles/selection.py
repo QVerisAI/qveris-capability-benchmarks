@@ -98,10 +98,13 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     cells = [item for item in release.get("cells", []) if isinstance(item, dict)]
     evidence = [item for item in release.get("evidence", []) if isinstance(item, dict)]
     release_metadata = release.get("release")
-    if not isinstance(release_metadata, dict) or (
-        compiled.fingerprint != release_metadata.get("suite_fingerprint")
-    ):
-        raise SelectionSnapshotBuildError("compiled suite fingerprint mismatch")
+    _validate_suite_contract(
+        compiled.snapshot,
+        compiled.fingerprint,
+        release_metadata,
+        _mapping(config, "historical_execution_contract"),
+        "compiled suite",
+    )
     _validate_release_projection(release, cells, evidence, suite.suite_id)
     try:
         replay_release_dir(release_path.parent, expected_digest=actual_release_digest)
@@ -142,10 +145,13 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
     )
     market_release = json.loads(market_release_bytes)
     market_release_metadata = market_release.get("release")
-    if not isinstance(market_release_metadata, dict) or (
-        market_release_metadata.get("suite_fingerprint") != market_compiled.fingerprint
-    ):
-        raise SelectionSnapshotBuildError("market suite fingerprint mismatch")
+    _validate_suite_contract(
+        market_compiled.snapshot,
+        market_compiled.fingerprint,
+        market_release_metadata,
+        _mapping(market_spec, "historical_execution_contract"),
+        "market suite",
+    )
     market_cells = [
         item
         for item in market_release.get("cells", [])
@@ -729,6 +735,33 @@ def _public_refs(evidence: list[dict[str, Any]], *, field: str) -> tuple[str, ..
 
 def _sha256(path: Path) -> str:
     return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+
+
+def _execution_contract_digest(snapshot: dict[str, Any]) -> str:
+    return "sha256:" + hashlib.sha256(canonical_json_bytes(snapshot)).hexdigest()
+
+
+def _validate_suite_contract(
+    snapshot: dict[str, Any],
+    compiled_fingerprint: str,
+    release_metadata: object,
+    historical_contract: dict[str, Any],
+    label: str,
+) -> None:
+    if not isinstance(release_metadata, dict):
+        raise SelectionSnapshotBuildError(f"{label} release metadata is invalid")
+    released_fingerprint = release_metadata.get("suite_fingerprint")
+    if compiled_fingerprint == released_fingerprint:
+        return
+    if (
+        release_metadata.get("cap_id") != snapshot["cap"]["cap_id"]
+        or release_metadata.get("cap_version") != snapshot["cap"]["version"]
+        or release_metadata.get("cap_sources") != snapshot["cap"]["sources"]
+        or historical_contract.get("suite_fingerprint") != released_fingerprint
+        or historical_contract.get("execution_contract_digest")
+        != _execution_contract_digest(snapshot)
+    ):
+        raise SelectionSnapshotBuildError(f"{label} fingerprint mismatch")
 
 
 def _mapping(document: dict[str, Any], key: str) -> dict[str, Any]:

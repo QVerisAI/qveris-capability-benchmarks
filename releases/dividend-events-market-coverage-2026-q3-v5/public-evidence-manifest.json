@@ -1,0 +1,400 @@
+{
+  "evidence": [
+    {
+      "evidence_id": "alpha-vantage-cn-600519-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-cn-600519-dividend-market-round-1.json",
+      "public_digest": "sha256:1fbf997ed2844189dca18038376fb04dcbc134ee3df79e9896066508094ff55a",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-cn-600519-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-cn-600519-dividend-market-round-2.json",
+      "public_digest": "sha256:fdd7dd71ac20dc02bfe785d8dc268310bb7755ad641715860521275bf3cb5055",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-es-san-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-es-san-dividend-market-round-1.json",
+      "public_digest": "sha256:f11f96146b820b34fc788cf229c48b36184b2764c22c85b003cc32841c010383",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-es-san-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-es-san-dividend-market-round-2.json",
+      "public_digest": "sha256:91ebb3d203c783d4a1cfbfe3b6353079232b808b013b50b11d35ebbab03ee37e",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-fr-mc-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-fr-mc-dividend-market-round-1.json",
+      "public_digest": "sha256:2db9b65520417a7a096ea666707adc42e378828a893a272d1017603e6d0ae82e",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-fr-mc-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-fr-mc-dividend-market-round-2.json",
+      "public_digest": "sha256:459fa9c5d2f2df5d2ab805b7287f73b1219207612f62789c8ca0b047c13ed297",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:cdc6eb11e290b738a018bd59a9113572a7e06f61599862625ab04d029b7444b1",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:b2b7c72207043102375a3c22f6948bb7b50b52eb58854864861ff6758edeec78",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-us-aapl-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-us-aapl-dividend-market-round-1.json",
+      "public_digest": "sha256:f259031dd801cb443412de9b6e48fb7f0c0c8cabfdfdd4e82834a7b58592a5d7",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-us-aapl-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/alpha-vantage-us-aapl-dividend-market-round-2.json",
+      "public_digest": "sha256:9f1e5b5e1752753c3ca041ffdf9c54795a380f7c9f55c9b96a4166b066f5b2f3",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-br-petr4-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-br-petr4-dividend-market-round-1.json",
+      "public_digest": "sha256:0b1648510e3b6246bcd779d77970d1d442b065b0d1bf81b985145ebcf7a8adf1",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-br-petr4-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-br-petr4-dividend-market-round-2.json",
+      "public_digest": "sha256:042dfbe6c0ca1888fb4900d833474b00cc506259d62ea254f1f21b1545e92ccc",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-cn-600519-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-cn-600519-dividend-market-round-1.json",
+      "public_digest": "sha256:84ecb2706ad4b48bda318536dec2e7c48b6fa730f0d3773e5534d905d4a9152c",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-cn-600519-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-cn-600519-dividend-market-round-2.json",
+      "public_digest": "sha256:f4c4120c838d3171b9477b1f62078f94b8f69a9dd05648b2c0b3b80659d55aea",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-de-sap-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-de-sap-dividend-market-round-1.json",
+      "public_digest": "sha256:4079e01364441411ae4c4c08d1b28a22cd912ec69b9a9fad17d891459d25aae8",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-de-sap-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-de-sap-dividend-market-round-2.json",
+      "public_digest": "sha256:b585a90345895e71b541240b0414f15531ea550cc4359da45cfd4ddc360dcbd1",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-es-san-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-es-san-dividend-market-round-1.json",
+      "public_digest": "sha256:926ce6b3f0819e8e525aaffa2d488603e4e4d33062b9f3536d00a4084d67ac90",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-es-san-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-es-san-dividend-market-round-2.json",
+      "public_digest": "sha256:f280bf4f586cea735ef5161cb05025d2230f3537ae2372b11e016d71921e8d43",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-fr-mc-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-fr-mc-dividend-market-round-1.json",
+      "public_digest": "sha256:7d93476223c600e531215ff1c958733128133da492bea55bc27345a786257979",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-fr-mc-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-fr-mc-dividend-market-round-2.json",
+      "public_digest": "sha256:0b6be96abfee9fe9fc08f790d663e9c7b7bfcd624632d9b3f6a56f3f1d05d8c2",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-hk-0700-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-hk-0700-dividend-market-round-1.json",
+      "public_digest": "sha256:87ec878d8a710c192e038b7271b48344e69ec6b3251202b9b4b3d9f1f90d1c71",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-hk-0700-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-hk-0700-dividend-market-round-2.json",
+      "public_digest": "sha256:da2d78ae5ff2bcd93aecd55a233417e9f0d7a650e18e0f2fff5e113750a9972d",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-in-reliance-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-in-reliance-dividend-market-round-1.json",
+      "public_digest": "sha256:368b91c4204e15e8ec65bfd0bc5ac64ed537fd929a7f587f315c834a9dcdee79",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-in-reliance-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-in-reliance-dividend-market-round-2.json",
+      "public_digest": "sha256:66f6a73ec08105da5dd7e1d4a98c14d55832cbe44134683cc0c3bfe01c42c583",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:0db7cf76dd2ded9897941ac36e910c828e03b4e80e2757c0d0bfdd175d512637",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:d91b92fe0688a219110ff79e56cef3f3744bad9abf1adbadf1b484baf39940b8",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-jp-7203-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-jp-7203-dividend-market-round-1.json",
+      "public_digest": "sha256:1e3f54e7b7196639c5610a71e45450d966cd589e02f0fb0fc985a6c060059010",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-jp-7203-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-jp-7203-dividend-market-round-2.json",
+      "public_digest": "sha256:99965beb23b2c30bfab12129ebb8ac71261f82124ff6d7a36658dfc17cb74ef3",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-us-aapl-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-us-aapl-dividend-market-round-1.json",
+      "public_digest": "sha256:5cc176983b9942351f72cfa142a7a0712c40336a4011f5bed33ee6a8fd19e294",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-us-aapl-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/eodhd-us-aapl-dividend-market-round-2.json",
+      "public_digest": "sha256:0707338b36397a8e8b172e24a98398146b610c30e1128a7947f87bb1ed0539c9",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "hangseng-cn-600519-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/hangseng-cn-600519-dividend-market-round-1.json",
+      "public_digest": "sha256:61e585c3af761bff6c18f2516786e3e6a94e8f4bc92a79a28a08344095ff35ca",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:hangseng:hangseng-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "hangseng-cn-600519-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/hangseng-cn-600519-dividend-market-round-2.json",
+      "public_digest": "sha256:5cfccb0a727ad8d6c7aa4d91dd9276abbe8735ccab2db723ac3053c200eae3df",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:hangseng:hangseng-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "hangseng-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/hangseng-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:7c2b13595f0ec5ec2da69575c39fd2a1603e2a44ee393f0f5709fb4b26f66952",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:hangseng:hangseng-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "hangseng-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/hangseng-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:f4a07440f6f1ac9ec3c4c20634963df710b8bc5b8336db64203ed78bc0fc0931",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:hangseng:hangseng-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "ifind-cn-600519-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-cn-600519-dividend-market-round-1.json",
+      "public_digest": "sha256:7138fc2faf40acd0349e192f46229478554c79dcdf6bc1a0d76b46d535b7d50e",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-cn-600519-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-cn-600519-dividend-market-round-2.json",
+      "public_digest": "sha256:2856af267f4baeb674622aa52a138802ff8f7928bdba557de51045ece99a596f",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "ifind-hk-0700-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-hk-0700-dividend-market-round-1.json",
+      "public_digest": "sha256:17e89ac4e162e98c558251a6cab1c4de163e647e4fae6d8f08887eadb2b19d37",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-hk-0700-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-hk-0700-dividend-market-round-2.json",
+      "public_digest": "sha256:107d554c7b33c79b8b7fc34ac203f2175701bc9c67f065561bfaa84ee0c4860b",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "ifind-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:1bf4dc68fedbe70c41104ba7fd8d69f7a6cca0d8c9972aafb26d561ea232151a",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:649b4005f610b80eaf54e935826d583d5b0dba9ed6c1fb3d9c5f94e10a326f9f",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "ifind-us-aapl-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-us-aapl-dividend-market-round-1.json",
+      "public_digest": "sha256:df37f28eace9aec1d8d3e405146d7237f330292c1f0c920c5efa371113037ec0",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-us-aapl-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/ifind-us-aapl-dividend-market-round-2.json",
+      "public_digest": "sha256:e685f0dc37167acf8d7373f4456e43a2feb27cf094acba89e80274b89a6e669e",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "massive-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/massive-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:110f9def2a83154676dadf3dbc8519edcc2585b8ae23674596d362f7aa864941",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/massive-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:14944ab8c371a8146a232c557005173d2aaf9b15fc1104c24f11a47d84169d2d",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "massive-us-aapl-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/massive-us-aapl-dividend-market-round-1.json",
+      "public_digest": "sha256:34f94d44c9054ef7d597314cd05fa37456dc8383f2e7d7c73789d31c1afbc422",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-us-aapl-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/massive-us-aapl-dividend-market-round-2.json",
+      "public_digest": "sha256:7b699605d75258f12112c0872e6fd64a76ea51aa8e55d49de36d12fd1f56ea6c",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:massive-stocks:massive-stocks-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-br-petr4-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-br-petr4-dividend-market-round-1.json",
+      "public_digest": "sha256:4c6cba63d446d06ca3da47e7294d1b810b66a37497a5aff8a2ee216bc6c58d7a",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-br-petr4-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-br-petr4-dividend-market-round-2.json",
+      "public_digest": "sha256:2771ed80fb7ee9f61f097a949bc244a49eb0f20815151255af18418955b81661",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:br-petr4-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-cn-600519-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-cn-600519-dividend-market-round-1.json",
+      "public_digest": "sha256:b78e4cc6e447eb5a7c96755b6fb2aedfce1c90f5d0d9d46d58857b903a6128ab",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-cn-600519-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-cn-600519-dividend-market-round-2.json",
+      "public_digest": "sha256:378078e32f6d69904ba3aecdb3a14c81e7ac2ccba3f16d0d54fa33ce5ea4c883",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:cn-600519-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-de-sap-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-de-sap-dividend-market-round-1.json",
+      "public_digest": "sha256:973281440c98d2cc5b31d04e974d0ad33b8387321b5d0576a9493d43350f04df",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-de-sap-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-de-sap-dividend-market-round-2.json",
+      "public_digest": "sha256:43cf80bb7c7e8f86cff7adc87c125d47fb1fad7c314dab0568c87f905a46131f",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:de-sap-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-es-san-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-es-san-dividend-market-round-1.json",
+      "public_digest": "sha256:a9c23f7a692f704153ea425002e2dad9e368776694f6bf9f7ffd6d20331a03d1",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-es-san-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-es-san-dividend-market-round-2.json",
+      "public_digest": "sha256:e8e363ab9309e82e8ff7d0acc4588edc264a86796b64fab92ebdc89856593628",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:es-san-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-fr-mc-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-fr-mc-dividend-market-round-1.json",
+      "public_digest": "sha256:527e230d9f0ad2532e4da78cfe34f75b2d011c6c20728f5981de4dafabb9be23",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-fr-mc-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-fr-mc-dividend-market-round-2.json",
+      "public_digest": "sha256:c4f853db84c4f7c0d872da5b8becd3cccbe3568e3117c2566b8119551035e337",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:fr-mc-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-hk-0700-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-hk-0700-dividend-market-round-1.json",
+      "public_digest": "sha256:01bfdd99b8cdb0ba8cf4dea7222f490bba44d8d1cb038a3f724fece636ec0463",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-hk-0700-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-hk-0700-dividend-market-round-2.json",
+      "public_digest": "sha256:bdbde5cd8af7aadb608a8a85ca184bdd757bad14a2365cad3fd82b9620f4741b",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:hk-0700-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-in-reliance-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-in-reliance-dividend-market-round-1.json",
+      "public_digest": "sha256:a3a8cf301908bfd183971a078ada5c7078ac3fcb309a2ab0bbd3972c844b8ee1",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-in-reliance-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-in-reliance-dividend-market-round-2.json",
+      "public_digest": "sha256:0e070b73d62c6eaba6b8c53eaa82d0c8238211865b4166468e81e021bed58523",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:in-reliance-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-dividend-market-symbol-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-invalid-dividend-market-symbol-round-1.json",
+      "public_digest": "sha256:01772c67e2be9df7a3731e1127dbb6a096fd30c4f8e22b77a73cb28681750812",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-dividend-market-symbol-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-invalid-dividend-market-symbol-round-2.json",
+      "public_digest": "sha256:5774d99a1c423188f4bfe9b4a48c43f55db02a95c30657c709ff51620bb7fa1e",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:invalid-dividend-market-symbol:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-jp-7203-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-jp-7203-dividend-market-round-1.json",
+      "public_digest": "sha256:f571d49332634aeafc89c401a005950385ea5d062fc82046746d05989891c120",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-jp-7203-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-jp-7203-dividend-market-round-2.json",
+      "public_digest": "sha256:12c7d24c8daeea9cc3cdab6fa48d3e8ee26852d20143ef565dc0fa567078eb68",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:jp-7203-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-us-aapl-dividend-market-round-1",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-us-aapl-dividend-market-round-1.json",
+      "public_digest": "sha256:a549dac8062b4aa9c469db335f6ef06c3dc0688c70f27386d93147ed79028615",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-us-aapl-dividend-market-round-2",
+      "path": "evidence/dividend-events-market-coverage-2026-q3-v1/twelve-data-us-aapl-dividend-market-round-2.json",
+      "public_digest": "sha256:cbb71a704b05d3abd870963bb1f89d5419990c6660cb5c30d4862711aa34f8dd",
+      "run_key": "dividend-events-market-coverage-v1:226e52c3f19f:us-aapl-dividend-market:twelve-data:twelve-data-dividends-qveris:direct:2"
+    }
+  ]
+}

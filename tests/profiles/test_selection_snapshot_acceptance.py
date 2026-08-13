@@ -276,7 +276,7 @@ def test_ac6_provider_negative_is_not_an_agent_signal_pass() -> None:
 def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
-        "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0",
+        "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a",
         "sha256:" + "0" * 64,
     )
     input_path.write_text(text, encoding="utf-8")
@@ -288,7 +288,7 @@ def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
 def test_ac3_snapshot_rejects_market_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
-        "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
+        "sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead",
         "sha256:" + "0" * 64,
     )
     input_path.write_text(text, encoding="utf-8")
@@ -301,8 +301,8 @@ def test_ac3_snapshot_rejects_market_release_digest_drift(tmp_path: Path) -> Non
 
 
 def test_ac1_snapshot_rejects_release_identity_tampering(tmp_path: Path) -> None:
-    release_dir = tmp_path / "dividend-events-2026-q3-v1"
-    shutil.copytree(ROOT / "releases/dividend-events-2026-q3-v1", release_dir)
+    release_dir = tmp_path / "dividend-events-2026-q3-v5"
+    shutil.copytree(ROOT / "releases/dividend-events-2026-q3-v5", release_dir)
     release_path = release_dir / "release.json"
     release = json.loads(release_path.read_text())
     cell = next(cell for cell in release["cells"] if cell["applicable"])
@@ -395,9 +395,9 @@ def _digest(path: Path) -> str:
 def _selection_input_for_release(tmp_path: Path, release_path: Path) -> Path:
     input_path = tmp_path / "selection.yaml"
     source = INPUT.read_text(encoding="utf-8")
-    old_path = "releases/dividend-events-2026-q3-v1/release.json"
+    old_path = "releases/dividend-events-2026-q3-v5/release.json"
     old_digest = (
-        "sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0"
+        "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a"
     )
     input_path.write_text(
         source.replace(old_path, str(release_path)).replace(

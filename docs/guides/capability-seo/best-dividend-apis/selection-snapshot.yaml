@@ -2,9 +2,12 @@ snapshot_id: dividend-events-selection-2026-q3-v1
 version: 1.0.0
 edition: "2026-08-12"
 cap_id: dividend-events
+historical_execution_contract:
+  suite_fingerprint: 60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741
+  execution_contract_digest: sha256:6fa74ef8c609b179aa35a492ae23716c0d0ad554b0713ea0ecae96c0565cdc55
 cap_release:
-  release: releases/dividend-events-2026-q3-v1/release.json
-  digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
+  release: releases/dividend-events-2026-q3-v5/release.json
+  digest: sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a
 suite: cap_packs/dividend_events/suite.yaml
 cases: cap_packs/dividend_events/cases.yaml
 providers_root: providers
@@ -17,10 +20,13 @@ observation_window:
   start: "2026-08-11"
   end: "2026-08-11"
 market_coverage_release:
-  release: releases/dividend-events-market-coverage-2026-q3-v1/release.json
-  digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
+  release: releases/dividend-events-market-coverage-2026-q3-v5/release.json
+  digest: sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead
   suite: cap_packs/dividend_events/market-suite.yaml
   cases: cap_packs/dividend_events/market-cases.yaml
+  historical_execution_contract:
+    suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
+    execution_contract_digest: sha256:6bc8576fb0221f0cd1722f60211efe3049a678019af0aa6ac6d9765c8374428e
 limitations:
   - Market coverage uses one fixed representative symbol per market and is not comprehensive provider coverage.
   - A market is verified only when both Direct Test rounds complete the Dividend Event contract.

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -132,6 +133,18 @@ def _write_inputs(
     )
 
     cap_path = root / "cap_pack" / "cap.yaml"
+    contract = {
+        "capability_id": "MKT.ETF_HOLDINGS",
+        "contract_version": 1,
+        "field_spec": {"required": [{"name": "symbol", "type": "string"}]},
+    }
+    contract_digest = hashlib.sha256(
+        json.dumps(contract, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    contracts_bytes = json.dumps(
+        [{"capability_id": "MKT.ETF_HOLDINGS", "contract": contract}]
+    ).encode()
+    snapshot_digest = hashlib.sha256(contracts_bytes).hexdigest()
     cap_path.write_text(
         yaml.safe_dump(
             {
@@ -140,9 +153,41 @@ def _write_inputs(
                 "name": "ETF Holdings",
                 "business_use": "Compare constituent-level ETF data providers.",
                 "scope": ["US-listed ETFs"],
-                "sources": [{"source_type": "qveris_original"}],
+                "sources": [
+                    {
+                        "source_type": "harbor_catalog",
+                        "harbor_capability_id": "MKT.ETF_HOLDINGS",
+                        "contract_version": 1,
+                        "catalog_snapshot_digest": snapshot_digest,
+                        "contract_digest": contract_digest,
+                    }
+                ],
             },
             sort_keys=False,
+        )
+    )
+    harbor_contracts = root / "harbor_catalog" / "contracts.json"
+    harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
+    harbor_contracts.write_bytes(contracts_bytes)
+    (harbor_contracts.parent / "catalog.json").write_text(
+        json.dumps({"total": 1, "items": [{"capability_id": "MKT.ETF_HOLDINGS"}]}),
+        encoding="utf-8",
+    )
+    (harbor_contracts.parent / "meta.json").write_text(
+        json.dumps(
+            {
+                "origin": "https://harbor.qveris.cloud",
+                "exporter_version": "1.0.0",
+                "catalog_snapshot_digest": snapshot_digest,
+                "counts": {"catalog": 1, "contracts": 1, "errors": 0},
+                "contracts": [
+                    {
+                        "capability_id": "MKT.ETF_HOLDINGS",
+                        "contract_version": 1,
+                        "contract_digest": contract_digest,
+                    }
+                ],
+            }
         )
     )
 
@@ -208,6 +253,39 @@ def _write_inputs(
         )
     )
     return suite_path, cases_path, providers_root
+
+
+def test_ac0_suite_freeze_requires_matching_harbor_contract_snapshot(
+    tmp_path: Path,
+) -> None:
+    suite_path, cases_path, providers_root = _write_inputs(tmp_path)
+
+    with pytest.raises(SuiteCompilationError, match="Harbor contract snapshot"):
+        compile_suite(
+            suite_path,
+            cases_path,
+            providers_root,
+            harbor_contracts_path=tmp_path / "missing-contracts.json",
+        )
+
+    compiled = compile_suite(
+        suite_path,
+        cases_path,
+        providers_root,
+        harbor_contracts_path=tmp_path / "harbor_catalog" / "contracts.json",
+    )
+
+    assert compiled.suite.cap_id == "etf-holdings", (
+        "AC0 formal CAP freeze must bind its actual Harbor contract"
+    )
+    assert compiled.snapshot["cap"]["sources"][0]["harbor_capability_id"] == (
+        "MKT.ETF_HOLDINGS"
+    ), "AC0 frozen suite must retain Harbor provenance"
+    assert [
+        source.model_dump(mode="json") for source in compiled.run_plan.cap_sources
+    ] == compiled.snapshot["cap"]["sources"], (
+        "AC0 run plan must preserve the CAP provenance used for execution"
+    )
 
 
 def test_ac1_matrix_expands_every_case_path_mode_and_round(tmp_path: Path) -> None:

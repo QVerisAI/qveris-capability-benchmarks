@@ -1,0 +1,10 @@
+{
+  "case_id": "crypto-invalid-spot-symbol",
+  "facts": {},
+  "failure_attribution": "provider_validation_error",
+  "gateway_latency_ms": 213.16,
+  "raw_digest": "sha256:37a0ed3a189d710f846702313788d7e430318e496c7e536769e04e5514234227",
+  "round": 3,
+  "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:3",
+  "state": "provider_negative"
+}

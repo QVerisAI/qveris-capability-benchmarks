@@ -1,0 +1,10 @@
+{
+  "case_id": "crypto-invalid-spot-symbol",
+  "facts": {},
+  "failure_attribution": "provider_validation_error",
+  "gateway_latency_ms": 638.54,
+  "raw_digest": "sha256:d8afbefdfd5eae1b1b7fbe1ae8e01cd87c056ee08a466eab2a4d8244b384372f",
+  "round": 1,
+  "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:1",
+  "state": "provider_negative"
+}

@@ -5,7 +5,6 @@ import pytest
 from pydantic import ValidationError
 
 from qveris_bench.models.enums import DimensionState, ReleaseFactType
-from qveris_bench.models.profile import ProfileDimension
 from qveris_bench.models.release import BenchmarkRelease, ReleaseFact
 
 EVIDENCE_REF = "sha256:" + "a" * 64
@@ -74,37 +73,15 @@ def test_ac1_release_fact_accepts_evidence_bound_dimension_score() -> None:
     assert fact.metric_score.value == 80
 
 
-def test_ac1_profile_dimension_accepts_evidence_bound_dimension_score() -> None:
-    dimension = ProfileDimension(
-        cap_id="stock-quote",
-        dimension="agent-interface-error-recoverability",
-        dimension_state=DimensionState.MEASURED,
-        details={"agent_friendly": "subdimension observation"},
-        metric_score=_metric_score(),
-        evidence_refs=(EVIDENCE_REF,),
-    )
-
-    assert dimension.metric_score is not None, "AC1 profile score must validate"
-    assert dimension.details["agent_friendly"] == "subdimension observation"
-
-
 def test_ac4_legacy_facts_do_not_serialize_empty_metric_fields() -> None:
     fact = ReleaseFact(
         fact_type=ReleaseFactType.OUTCOME,
         details={"dimension": "task-completion"},
     )
-    dimension = ProfileDimension(
-        cap_id="stock-quote",
-        dimension="reliability",
-        dimension_state=DimensionState.EVIDENCE_INSUFFICIENT,
-    )
-
     assert "metric_score" not in fact.model_dump(), (
         "AC4 historical release bytes must not gain null metric fields"
     )
     assert "metric_ranking" not in fact.model_dump()
-    assert "metric_score" not in dimension.model_dump()
-    assert "metric_ranking" not in dimension.model_dump()
 
 
 def test_ac2_release_fact_accepts_same_cohort_dimension_ranking() -> None:
@@ -202,15 +179,6 @@ def test_ac3_score_and_ranking_require_the_same_cap_and_access_path() -> None:
             dimension_id="agent-interface-error-recoverability",
             metric_score=_metric_score(),
             metric_ranking=_metric_ranking() | {"access_path_id": "finnhub-native"},
-            evidence_refs=(EVIDENCE_REF,),
-        )
-
-    with pytest.raises(ValidationError, match="profile CAP"):
-        ProfileDimension(
-            cap_id="sec-filing-evidence",
-            dimension="agent-interface:error-recoverability",
-            dimension_state=DimensionState.MEASURED,
-            metric_score=_metric_score(),
             evidence_refs=(EVIDENCE_REF,),
         )
 

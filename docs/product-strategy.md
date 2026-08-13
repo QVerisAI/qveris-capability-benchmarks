@@ -32,13 +32,10 @@ CAP -> Provider and Access Path cells -> Direct Test evidence
     -> constrained Agent Trial observations -> immutable release facts
 ```
 
-Financial Tasks and Task Fit Profiles may consume facts from multiple independent CAP releases
-as a future consumer layer. They cannot merge CAP execution, attribution, evidence,
-or outcomes, and they do not change the current single-CAP publication focus.
-
-Existing `DeveloperScenario` and profile artifacts remain deterministic consumers of
-pinned release facts. This direction does not expand Financial Task runtime models,
-add a database, or build a leaderboard site in v1.
+Future product composition may consume facts from multiple independent CAP releases.
+It cannot merge CAP execution, attribution, evidence, or outcomes, and it does not
+change the current single-CAP publication focus. This direction does not add a
+Financial Task runtime model, database, or leaderboard site in v1.
 
 ## Primary differentiation: Agent-interface fitness
 

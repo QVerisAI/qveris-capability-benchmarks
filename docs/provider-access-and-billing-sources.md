@@ -9,6 +9,7 @@ must not be interpreted as the cost of a QVeris call.
 | Provider | Scope | Original currency | Free access | Paid entry point | Official source | Source SHA-256 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Alpha Vantage | Provider API plans | USD | 25 API requests/day | Premium from USD 49.99/month | [Premium](https://www.alphavantage.co/premium/) | `8c1c5dc3b6635a7d3d58f64378fab701c4d8ec5f122302aa00981aa81da90baa` |
+| Binance | Spot market-data documentation | Not applicable | Official documentation does not state a subscription charge for this endpoint | No provider-paid plan claim is used for the managed QVeris Access Path | [Spot market-data endpoints](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints) | `49ea6809243fc7fb426e07f2fe662097736c7bb405bd2da5eef637d715427999` |
 | Twelve Data | Provider API plans | USD | Basic: 8 API credits/minute, 800/day | Grow from USD 29/month | [Pricing](https://twelvedata.com/pricing) | `00bd84cd0b0d9ce97da479e2a5ebfa25365bc3efa46f7b27c53f8384cb80f27d` |
 | EODHD | Provider API plans | USD | 20 API calls/day | All-in-One USD 99.99/month | [Pricing](https://eodhd.com/pricing) | `3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f` |
 | Financial Modeling Prep | Provider API plans | USD | Basic: 250 calls/day | Starter USD 22/month when billed annually | [Pricing](https://site.financialmodelingprep.com/pricing-plans) | `62e6030f78a90cc15d6b099ef5e962a17650022f153224ef940157aee7dc2466` |
@@ -19,6 +20,7 @@ must not be interpreted as the cost of a QVeris call.
 | 恒生聚源 | Core data product | CNY | Not published | Commercial; see product page | [聚源基础数据库](https://www.gildata.com/products/core-data.html) | `67cb7320607025a487e72270e31f695de598efbb2836511b8775e15e3d211f35` |
 | 融聚汇 | Custom API | Not published | No public free API tier | Custom commercial quote | [API 定制服务](https://www.szfiu.com/custom/detail.php?id=api) | `572259dc17bc81754171295b0741769aaefa921306093d0e4007ca7939affdce` |
 | Narodowy Bank Polski | Public Web API | Not applicable | Public API with no fee or API key | No paid plan | [NBP Web API](https://api.nbp.pl/en.html) | `57b5c30f7712b7d94520d302b07321a485b6e92fac08d4b036240c02d1833f7e` |
+| OKX | Spot market-data documentation | Not applicable | Official documentation does not state a subscription charge for this endpoint | No provider-paid plan claim is used for the managed QVeris Access Path | [Get ticker](https://www.okx.com/docs-v5/en/#rest-api-market-data-get-ticker) | `b65fc4909587094ececca5915e7aa68a046717f14a0ec803268e509b429696f5` |
 | 同花顺 iFinD | Native MCP plans | CNY | New accounts receive 2,000 trial requests | Personal CNY 40/month for 5,000 requests; Enterprise CNY 5,000/month for 1,000,000 requests | [MCP pricing](https://mcp.51ifind.com/?syncCookieTimes=1#/pricing) | `d8621d75747f02e66b4d054d4884a53b86eece43c0966af697215b1856616c00` |
 
 The verification protocol fingerprint is

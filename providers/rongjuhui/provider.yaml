@@ -27,11 +27,11 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: Frozen Direct Test evidence supports this Access Path.
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
       evidence_digest: sha256:812e9c1ce1f8a132d3dd053a986417565d579983a97d716ebbc0d55f015c28fd
   - access_path_id: rongjuhui-custom-api
     provider_id: rongjuhui

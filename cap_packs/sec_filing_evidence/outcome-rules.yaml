@@ -1,2 +1,0 @@
-completion_requires: [filing_id, evidence, citation]
-negative_control_requires: [validation_error]

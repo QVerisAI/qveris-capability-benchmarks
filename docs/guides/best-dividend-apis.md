@@ -182,7 +182,7 @@ uv run qveris-bench publication reproduce \
 
 No API key or private raw response is required. A trusted Git commit authenticates the package manifest; maintainers can also publish its SHA-256 digest as an external anchor and pass it with `--expected-package-digest`.
 
-The package pins the baseline Release `dividend-events-2026-q3-v1` at `sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0` and verifies the market Release through the same command.
+The package pins the baseline Release `dividend-events-2026-q3-v5` at `sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a` and the market Release `dividend-events-market-coverage-2026-q3-v5` at `sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead`; the same command verifies both.
 
 Open the [public benchmark repository on GitHub](https://github.com/QVerisAI/qveris-capability-benchmarks) only if you want to audit or reproduce the results. It contains the immutable Releases, Selection Snapshot, sanitized evidence, and replay instructions behind this article. Ordinary API selection does not require reading those files; every green or orange market cell is already digest-bound to a public terminal.
 

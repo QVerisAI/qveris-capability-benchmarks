@@ -58,11 +58,11 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: Frozen Direct Test evidence supports this Access Path.
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
       evidence_digest: sha256:74f33b98fc38bd64ab1003d06f574b014e35ec72e233a659e03115f181bbdab4
   - access_path_id: fmp-etf-holdings
     provider_id: financial-modeling-prep

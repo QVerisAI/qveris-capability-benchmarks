@@ -124,10 +124,91 @@
       ],
       "title": "RunMode",
       "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_snapshot_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Catalog Snapshot Digest",
+          "type": "string"
+        },
+        "contract_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Contract Digest",
+          "type": "string"
+        },
+        "contract_version": {
+          "minimum": 1,
+          "title": "Contract Version",
+          "type": "integer"
+        },
+        "harbor_capability_id": {
+          "minLength": 3,
+          "pattern": "^[A-Z][A-Z0-9]*(?:\\.[A-Z][A-Z0-9_]*)+$",
+          "title": "Harbor Capability Id",
+          "type": "string"
+        },
+        "source_type": {
+          "$ref": "#/$defs/SourceType"
+        }
+      },
+      "required": [
+        "source_type",
+        "harbor_capability_id",
+        "contract_version",
+        "catalog_snapshot_digest",
+        "contract_digest"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "SourceType": {
+      "enum": [
+        "harbor_catalog"
+      ],
+      "title": "SourceType",
+      "type": "string"
     }
   },
   "additionalProperties": false,
   "properties": {
+    "cap_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cap Id"
+    },
+    "cap_sources": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "title": "Cap Sources",
+      "type": "array"
+    },
+    "cap_version": {
+      "anyOf": [
+        {
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cap Version"
+    },
     "cells": {
       "items": {
         "$ref": "#/$defs/RunCell"

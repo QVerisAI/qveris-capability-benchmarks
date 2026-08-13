@@ -16,12 +16,6 @@ from qveris_bench.evidence.store import RawArtifactStore
 from qveris_bench.execution.orchestrator import CellExecutionResult, RunOrchestrator
 from qveris_bench.execution.qveris import (
     QverisToolClient,
-    execute_discovered_tool,
-    public_response_shape,
-)
-from qveris_bench.execution.qveris_binding import (
-    load_registered_qveris_direct_binding,
-    validate_qveris_direct_binding,
 )
 from qveris_bench.execution.resume import RunStateStore
 from qveris_bench.models.base import EvidenceRef
@@ -32,7 +26,6 @@ from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
-from qveris_bench.profiles.builder import ProfileBuildError, build_profile
 from qveris_bench.profiles.selection import (
     SelectionSnapshotBuildError,
     build_selection_snapshot,
@@ -72,19 +65,10 @@ cap_app = typer.Typer(help="Inspect and validate CAP definitions.")
 provider_app = typer.Typer(help="Validate and qualify Provider Access Paths.")
 suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
-qveris_app = typer.Typer(help="Discover and execute frozen QVeris connector tools.")
+qveris_app = typer.Typer(help="Discover QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
-profile_app = typer.Typer(help="Build deterministic Task Fit Profiles.")
 selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
 publication_app = typer.Typer(help="Reproduce evidence-backed publications offline.")
-_QVERIS_DIRECT_SUITES = {
-    "etf-holdings-v1": Path("cap_packs/etf_holdings/suite.yaml"),
-    "stock-quote-v1": Path("cap_packs/stock_quote_smoke/suite.yaml"),
-    "stock-quote-v2": Path("cap_packs/stock_quote_smoke_v2/suite.yaml"),
-    "stock-quote-v3": Path("cap_packs/stock_quote_family/suite.yaml"),
-    "financial-statements-v1": Path("cap_packs/financial_statement_facts/suite.yaml"),
-    "sec-filing-evidence-v1": Path("cap_packs/sec_filing_evidence/suite.yaml"),
-}
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
@@ -93,7 +77,6 @@ app.add_typer(suite_app, name="suite")
 app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
-app.add_typer(profile_app, name="profile")
 app.add_typer(selection_app, name="selection")
 app.add_typer(publication_app, name="publication")
 
@@ -101,38 +84,6 @@ app.add_typer(publication_app, name="publication")
 @app.callback()
 def main() -> None:
     """Run QVeris capability benchmarks."""
-
-
-@question_app.command("validate")
-def question_validate() -> None:
-    """Validate all sources, capabilities, and questions in the bank."""
-    try:
-        bank = load_question_bank(_REPOSITORY_ROOT / "question_bank")
-    except QuestionBankValidationError as exc:
-        typer.echo(str(exc), err=True)
-        raise typer.Exit(code=1) from exc
-    scenario_label = "scenario" if len(bank.scenarios) == 1 else "scenarios"
-    typer.echo(
-        f"Validated question bank: {len(bank.capabilities)} capabilities, "
-        f"{len(bank.questions)} questions, {len(bank.scenarios)} {scenario_label}."
-    )
-
-
-@profile_app.command("build")
-def profile_build(
-    input: Annotated[Path, typer.Option(help="Profile input YAML path.")],
-    output_dir: Annotated[Path, typer.Option(help="Profile output directory.")],
-) -> None:
-    """Build a deterministic Task Fit Profile from pinned verified releases."""
-    try:
-        built = build_profile(input, _REPOSITORY_ROOT)
-    except ProfileBuildError as exc:
-        typer.echo(str(exc), err=True)
-        raise typer.Exit(code=1) from exc
-    output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "profile.json").write_bytes(built.json_bytes)
-    (output_dir / "profile.md").write_bytes(built.markdown_bytes)
-    typer.echo(f"Built Task Fit Profile -> {output_dir / 'profile.json'}")
 
 
 @selection_app.command("build")
@@ -169,6 +120,20 @@ def publication_reproduce(
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(report_json(report), nl=False)
+
+
+@question_app.command("validate")
+def question_validate() -> None:
+    """Validate all sources, capabilities, and questions in the bank."""
+    try:
+        bank = load_question_bank(_REPOSITORY_ROOT / "question_bank")
+    except QuestionBankValidationError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(
+        f"Validated question bank: {len(bank.capabilities)} capabilities, "
+        f"{len(bank.questions)} questions."
+    )
 
 
 @qveris_app.command("search")
@@ -234,86 +199,6 @@ def qveris_search(
 def _raw_artifact_dir_from_env() -> Path | None:
     value = os.environ.get("QVERIS_BENCH_RAW_ARTIFACT_DIR")
     return Path(value) if value else None
-
-
-def qveris_repository_root() -> Path:
-    binding_registry = _REPOSITORY_ROOT / "cap_packs/qveris-direct-bindings.json"
-    if not binding_registry.is_file():
-        raise ValueError("trusted QVeris benchmark repository data is unavailable")
-    return _REPOSITORY_ROOT
-
-
-@qveris_app.command("execute")
-def qveris_execute(
-    binding_id: Annotated[
-        str, typer.Option(help="Registered frozen Direct binding ID.")
-    ],
-    raw_artifact_dir: Annotated[
-        Path | None,
-        typer.Option(help="Private raw artifact directory outside the repo."),
-    ] = None,
-    response_shape: Annotated[
-        bool,
-        typer.Option(help="Emit a value-free response shape for CAP extractor work."),
-    ] = False,
-) -> None:
-    """Execute one discovery-bound QVeris tool without printing its raw response."""
-    api_key = os.environ.get("QVERIS_API_KEY")
-    raw_dir = raw_artifact_dir or _raw_artifact_dir_from_env()
-    if not api_key:
-        typer.echo("QVERIS_API_KEY is required", err=True)
-        raise typer.Exit(code=1)
-    if raw_dir is None:
-        typer.echo("private raw artifact directory is required", err=True)
-        raise typer.Exit(code=1)
-    try:
-        repository_root = qveris_repository_root()
-        binding = load_registered_qveris_direct_binding(
-            repository_root / "cap_packs/qveris-direct-bindings.json", binding_id
-        )
-        suite_path = _QVERIS_DIRECT_SUITES.get(binding.suite_id)
-        if suite_path is None:
-            raise ValueError("binding suite is not registered for Direct execution")
-        validate_qveris_direct_binding(
-            binding, repository_root / suite_path, repository_root / "providers"
-        )
-
-        async def execute() -> dict[str, object]:
-            client = QverisToolClient(
-                httpx.AsyncClient(), RawArtifactStore(raw_dir, repository_root), api_key
-            )
-            try:
-                result = await execute_discovered_tool(
-                    client,
-                    "qveris-direct-search",
-                    binding.discovery_query,
-                    binding.tool_id,
-                    binding.parameters,
-                )
-            finally:
-                await client.close()
-            summary: dict[str, object] = {
-                "access_path_id": binding.access_path_id,
-                "tool_id": binding.tool_id,
-                "binding_id": binding.binding_id,
-                "discovery_digest": binding.discovery_digest,
-                "discovery_raw_digest": result.search.result.raw_digest,
-                "status_code": result.result.status_code,
-                "raw_digest": result.result.raw_digest,
-            }
-            if response_shape:
-                document = json.loads(
-                    result.result.raw_path.read_text(encoding="utf-8")
-                )
-                summary["response_shape"] = public_response_shape(document, depth=4)
-            else:
-                summary["request_id"] = result.result.request_id
-            return summary
-
-        typer.echo(json.dumps(asyncio.run(execute()), ensure_ascii=False))
-    except (OSError, ValueError) as exc:
-        typer.echo(str(exc), err=True)
-        raise typer.Exit(code=1) from exc
 
 
 def public_discovery_summary(
@@ -456,11 +341,21 @@ def provider_cohort_check(
 
 
 def _compile_suite_from_cli(
-    suite_path: Path, cases: Path | None, providers_root: Path, cap: Path | None
+    suite_path: Path,
+    cases: Path | None,
+    providers_root: Path,
+    cap: Path | None,
+    harbor_contracts: Path | None,
 ) -> CompiledSuite:
     cases_path = cases or suite_path.with_name("cases.yaml")
     try:
-        return compile_suite(suite_path, cases_path, providers_root, cap)
+        return compile_suite(
+            suite_path,
+            cases_path,
+            providers_root,
+            cap,
+            harbor_contracts,
+        )
     except ValueError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
@@ -474,10 +369,15 @@ def suite_freeze(
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
+    harbor_contracts: Annotated[
+        Path | None, typer.Option(help="Public versioned Harbor contracts.json.")
+    ] = None,
     output: Annotated[Path | None, typer.Option(help="Frozen suite output.")] = None,
 ) -> None:
     """Freeze resolved suite inputs and write their fingerprint."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
+    compiled = _compile_suite_from_cli(
+        suite_path, cases, providers_root, cap, harbor_contracts
+    )
     output_path = output or suite_path.with_name("suite.frozen.json")
     write_frozen_suite(compiled, output_path)
     typer.echo(f"Frozen suite {compiled.fingerprint} -> {output_path}")
@@ -491,10 +391,15 @@ def suite_plan(
     providers_root: Annotated[
         Path, typer.Option(help="Provider registry root.")
     ] = Path("providers"),
+    harbor_contracts: Annotated[
+        Path | None, typer.Option(help="Public versioned Harbor contracts.json.")
+    ] = None,
     output: Annotated[Path | None, typer.Option(help="Run Plan output.")] = None,
 ) -> None:
     """Expand a frozen suite into deterministic run cells."""
-    compiled = _compile_suite_from_cli(suite_path, cases, providers_root, cap)
+    compiled = _compile_suite_from_cli(
+        suite_path, cases, providers_root, cap, harbor_contracts
+    )
     output_path = output or suite_path.with_name("run-plan.json")
     write_run_plan(compiled, output_path)
     applicable = sum(cell.applicable for cell in compiled.run_plan.cells)
@@ -617,12 +522,19 @@ def release_replay(
         str | None,
         typer.Option(help="Trusted published digest from outside this checkout."),
     ] = None,
+    harbor_contracts: Annotated[
+        Path | None,
+        typer.Option(
+            help="Public Harbor contracts.json used to verify formal CAP provenance."
+        ),
+    ] = None,
 ) -> None:
     """Replay an immutable release offline without calling provider APIs."""
     try:
         result = replay_release_dir(
             release_dir,
             expected_digest=expected_digest,
+            harbor_contracts_path=harbor_contracts,
         )
     except ReleaseReplayError as exc:
         typer.echo(str(exc), err=True)

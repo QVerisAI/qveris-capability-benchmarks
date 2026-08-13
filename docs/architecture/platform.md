@@ -86,9 +86,7 @@ leaderboard, send messages, run CRM, or build a portal.
 ## 4. Data flow and provenance
 
 ```text
-DeveloperScenario (versioned product composition; consumer layer)
-  -> required CapDefinitions
-TopicSource
+Versioned public Harbor catalog contract
   -> CapDefinition
   -> ProviderCandidatePool
   -> FrozenBenchmarkSuite
@@ -97,12 +95,8 @@ TopicSource
   -> ObservationFacts (sanitized)
   -> TaskOutcome
   -> BenchmarkRelease
-  -> Task-fit Profile / Publication Package / Provider Feedback consumers
+  -> Publication Package / Provider Feedback consumers
 ```
-
-The Developer Scenario composition does not merge CAP executions or outcomes. It points
-to independently released CAP facts and presents their tradeoffs in the developer's
-language. It is a product information architecture, not a v1 runtime workflow.
 
 Each layer consumes the formal product of the preceding layer. A release fact must
 trace back to an observation, public evidence digest, raw digest, extractor version,
