@@ -117,12 +117,48 @@ def test_ac3_negative_control_with_fabricated_data_fails() -> None:
     assert result.state == "failed"
 
 
-def test_ac4_negative_control_empty_response_passes() -> None:
-    outcome = {"status_code": 200, "data": {}}
+def test_ac4_negative_control_explicit_provider_error_passes() -> None:
+    outcome = {
+        "status_code": 200,
+        "data": {"error": "Unknown symbol: NOTASTOCK"},
+    }
     result = evaluate_cell(
         _case(negative_control=True, expected_observations=()), outcome
     )
     assert result.state == "passed"
+
+
+@pytest.mark.parametrize("status_code", [400, 401, 429, 500])
+def test_ac4_negative_control_gateway_or_http_errors_are_unavailable(
+    status_code: int,
+) -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": status_code, "data": {"error": "request failed"}},
+    )
+
+    assert result.state == "n_a"
+
+
+def test_ac4_negative_control_empty_response_is_not_an_explicit_rejection() -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": 200, "data": {}},
+    )
+
+    assert result.state == "failed"
+
+
+def test_ac2_positive_http_error_is_unavailable() -> None:
+    result = evaluate_cell(
+        _case(),
+        {
+            "status_code": 500,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        },
+    )
+
+    assert result.state == "n_a"
 
 
 def test_ac6_csv_string_response_observations_match_header() -> None:
@@ -134,12 +170,12 @@ def test_ac6_csv_string_response_observations_match_header() -> None:
     assert result.state == "passed"
 
 
-def test_ac7_negative_control_empty_event_list_passes() -> None:
+def test_ac7_negative_control_empty_event_list_is_not_an_explicit_rejection() -> None:
     outcome = {"status_code": 200, "data": {"symbol": "NOTASTOCK", "data": []}}
     result = evaluate_cell(
         _case(negative_control=True, expected_observations=()), outcome
     )
-    assert result.state == "passed"
+    assert result.state == "failed"
 
 
 def test_ac8_negative_control_nested_error_envelope_passes() -> None:

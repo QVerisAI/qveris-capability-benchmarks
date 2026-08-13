@@ -70,17 +70,37 @@ def _observation_present(data: Any, observation: str) -> bool:
 
 
 def _negative_ok(data: Any, status_code: int) -> bool:
-    if status_code not in (200, 204):
-        return True
-    if data is None:
-        return True
-    if isinstance(data, dict):
-        return not _has_event_rows(data)
-    if isinstance(data, list):
-        return not data
-    if isinstance(data, str):
-        return len([line for line in data.strip().splitlines() if line.strip()]) < 2
-    return True
+    return (
+        status_code in (200, 204)
+        and not _has_event_rows(data)
+        and _has_explicit_provider_rejection(data)
+    )
+
+
+def _has_explicit_provider_rejection(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            normalized = key.lower().replace("_", "") if isinstance(key, str) else ""
+            if (
+                normalized
+                in {
+                    "error",
+                    "errors",
+                    "errormessage",
+                    "validationerror",
+                    "message",
+                    "msg",
+                }
+                and isinstance(nested, str)
+                and nested.strip()
+            ):
+                return True
+            if _has_explicit_provider_rejection(nested):
+                return True
+        return False
+    if isinstance(value, list):
+        return any(_has_explicit_provider_rejection(item) for item in value)
+    return False
 
 
 def _has_event_rows(value: Any) -> bool:
@@ -193,6 +213,16 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             0,
             "n_a",
             notes="no execution result",
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
+        )
+    if status_code not in (200, 204):
+        return CellResult(
+            "",
+            case.case_id,
+            0,
+            "n_a",
+            notes=f"provider response HTTP {status_code}",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
         )
