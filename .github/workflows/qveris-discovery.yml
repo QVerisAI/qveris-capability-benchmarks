@@ -40,4 +40,4 @@ jobs:
         with:
           name: qveris-discovery-raw
           path: ${{ runner.temp }}/qveris-raw
-          if-no-files-found: error
+          if-no-files-found: ignore
