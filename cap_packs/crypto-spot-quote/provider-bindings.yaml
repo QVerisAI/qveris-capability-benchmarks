@@ -1,0 +1,9 @@
+access_paths:
+  - access_path_id: binance-crypto-spot-qveris
+    provider_id: binance
+    canonical_interface: binance.ticker.24hr.retrieve.v1
+    official_source: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
+  - access_path_id: okx-crypto-spot-qveris
+    provider_id: okx
+    canonical_interface: okx_api_v5.market.ticker.retrieve.v5.e878da46
+    official_source: https://www.okx.com/docs-v5/en/#rest-api-market-data-get-ticker

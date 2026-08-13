@@ -1,9 +1,8 @@
 # CAP Question Bank
 
 `question_bank/` is the reviewed intake layer for future CAPs. It holds atomic,
-QVeris-authored questions before they become executable CAP Packs. These questions
-are the measurement candidates that a product-facing `DeveloperScenario` may
-reference; they are not themselves end-to-end financial workflows.
+Harbor-derived, QVeris-authored questions before they become executable CAP Packs.
+These questions are not themselves end-to-end financial workflows.
 
 ## Selection rules
 
@@ -16,20 +15,9 @@ reference; they are not themselves end-to-end financial workflows.
   model](question-evaluation-model.md): origins are citation-only, judgment is per
   run cell, and released facts are `measured`, `declared`, or
   `evidence_insufficient`.
-- A P0 scenario question declares market, language, as-of semantics, authoritative
-  reference and tolerance rules, interface expectations, and the developer-selection
-  implication before it can be promoted to an executable case.
-- `sources.yaml` records only public, citable evidence. Official API documentation
-  is marked `official_api`; public research benchmarks are marked
-  `external_benchmark`.
-- External benchmarks inform capability discovery and citation only. Their task text
-  is not copied. Every bank question declares `text_origin: qveris_curated`.
-- Questions reference an exact `(scenario_id, version)`. A scenario counts only its
-  own attached questions toward required roles, and every attached question must
-  measure a CAP required by that scenario.
-- Repository-backed benchmark sources pin a full commit and source artifact or task
-  identifiers. An external benchmark cannot be the sole authoritative truth source
-  for a P0 evaluation contract.
+- `sources.yaml` records the public Harbor catalog citation. Every candidate
+  capability maps to one Harbor capability ID, and every bank question declares
+  `text_origin: qveris_curated`.
 
 ## Lifecycle boundary
 
@@ -42,6 +30,5 @@ release gates.
 ## Review
 
 Run `uv run qveris-bench question validate` after any bank edit. It rejects unknown
-sources, scenarios, or CAPs, duplicate IDs, missing required question roles,
-incomplete P0 evaluation contracts, and a lifecycle label that conflicts with an
-executable CAP Pack.
+sources or CAPs, duplicate IDs, missing required question roles, a non-Harbor CAP
+source, and a lifecycle label that conflicts with an executable CAP Pack.

@@ -5,7 +5,7 @@ import json
 from typing import Any
 
 
-def canonical_release_bytes(release: dict[str, Any]) -> bytes:
+def canonical_release_bytes(release: Any) -> bytes:
     return (
         json.dumps(release, allow_nan=False, indent=2, sort_keys=True) + "\n"
     ).encode()

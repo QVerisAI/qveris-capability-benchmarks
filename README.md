@@ -17,10 +17,11 @@ Python 3.12 and [uv](https://docs.astral.sh/uv/) are required.
 git clone https://github.com/QVerisAI/qveris-capability-benchmarks.git
 cd qveris-capability-benchmarks
 uv sync --locked --all-groups
-uv run qveris-bench release replay releases/etf-holdings-2026-q3-v1
+uv run qveris-bench release replay releases/<published-harbor-cap-release>
 ```
 
-This offline release replay validates the frozen run plan, terminal cells, public
+The first formal release will be published only after its CAP Pack is bound to a
+real Harbor contract export. This offline replay validates the frozen run plan, terminal cells, public
 evidence, and canonical release bytes without credentials or provider calls. It
 proves that the checked-out inputs deterministically rebuild the published bundle;
 it is not a live rerun. See the [release replay guide](docs/release-replay.md) for
@@ -59,8 +60,8 @@ responses in an issue or pull request.
 ## Architecture principles
 
 - A CAP is the atomic benchmark and release boundary.
-- Financial Tasks and Task Fit Profiles may consume facts from independent CAP
-  releases; they never merge CAP execution, attribution, or outcomes.
+- Future Financial Tasks may consume facts from independent CAP releases; they
+  never merge CAP execution, attribution, or outcomes.
 - Direct Tests are mandatory. An Agent Trial receives exactly one predetermined
   canonical tool and never replaces Direct evidence.
 - Provider and Access Path identities never merge.

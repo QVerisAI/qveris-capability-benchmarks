@@ -1,0 +1,14 @@
+required:
+  - symbol
+  - price
+  - open
+  - high
+  - low
+optional:
+  - timestamp
+  - exchange
+  - currency
+constraints:
+  - The returned symbol must map exactly to the frozen BTCUSDT input.
+  - Price, open, high, and low must be finite positive numbers.
+  - The response must identify a spot instrument.

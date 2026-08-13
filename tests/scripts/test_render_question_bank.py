@@ -14,8 +14,7 @@ def test_overview_document_is_in_sync_with_the_bank() -> None:
     )
 
     assert rendered == committed
-    assert "46 questions" in rendered
-    assert "`financial-statement-facts`" in rendered
-    assert "`sec-filing-evidence`" in rendered
+    assert "12 questions" in rendered
+    assert "`dividend-events`" in rendered
     assert "`realtime-financial-news`" in rendered
-    assert "Scenario" in rendered
+    assert "Scenario role requirements" not in rendered

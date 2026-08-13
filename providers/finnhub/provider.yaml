@@ -27,11 +27,11 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: Frozen Direct Test evidence supports this Access Path.
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
       evidence_digest: sha256:af842f5deb1cf26f6954a75d322daa7045343f166a387e49732d79c6c3c7f126
   - access_path_id: finnhub-etf-holdings
     provider_id: finnhub

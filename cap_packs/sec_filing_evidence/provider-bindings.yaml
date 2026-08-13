@@ -1,5 +1,0 @@
-access_paths:
-  - access_path_id: massive-stocks-risk-factors
-    provider_id: massive-stocks
-    canonical_interface: risk-factors
-    official_source: https://massive.com/docs/rest/stocks/filings/risk-factors

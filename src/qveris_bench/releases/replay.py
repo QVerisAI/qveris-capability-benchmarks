@@ -7,6 +7,10 @@ from typing import Any
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    validate_harbor_source,
+)
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
@@ -25,20 +29,11 @@ _REQUIRED_FILES = (
     "evidence.json",
     "release.json",
 )
+_PUBLIC_EVIDENCE_MANIFEST = "public-evidence-manifest.json"
 _CELLS_ADAPTER = TypeAdapter(tuple[RunCell, ...])
 _EVIDENCE_ADAPTER = TypeAdapter(tuple[EvidenceBundle, ...])
 _METRIC_REGISTRY_ADAPTER = TypeAdapter(tuple[MetricDefinition, ...])
 _EXECUTION_FIELDS = {"state", "failure_attribution"}
-_LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION = frozenset(
-    {
-        "sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f",
-        "sha256:a22d3dbcb47d094baac201a0c100e6ad87b6159d6780bdf29ea3c5f0e4a8abaf",
-        "sha256:5a159d6e5777b3829e57f861e18182a76540d94dc1f3b8c23ae4410207e5024e",
-        "sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b",
-        "sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57",
-        "sha256:f0535988872ec0b300de726a1ec3e6c28988ba39401ea6bdb04d8a739798f2b3",
-    }
-)
 
 
 class ReleaseReplayError(ValueError):
@@ -56,6 +51,7 @@ def replay_release_dir(
     release_dir: Path,
     *,
     expected_digest: str | None = None,
+    harbor_contracts_path: Path | None = None,
 ) -> ReplayResult:
     files = {name: _read_required_file(release_dir, name) for name in _REQUIRED_FILES}
     release = _validate_model(
@@ -92,24 +88,32 @@ def replay_release_dir(
         raise ReleaseReplayError(
             "run-plan.json suite fingerprint does not match release input"
         )
+    if run_plan.cap_sources != release.cap_sources:
+        raise ReleaseReplayError("run-plan CAP provenance does not match release input")
+    if (run_plan.cap_id, run_plan.cap_version) != (release.cap_id, release.cap_version):
+        raise ReleaseReplayError("run-plan CAP identity does not match release input")
+    if release.cap_sources:
+        for source in release.cap_sources:
+            contracts_path = _snapshot_contracts_path(
+                harbor_contracts_path or _find_harbor_contracts(release_dir),
+                source.catalog_snapshot_digest,
+            )
+            try:
+                validate_harbor_source(source, contracts_path)
+            except HarborSnapshotError as exc:
+                raise ReleaseReplayError("Harbor CAP provenance is invalid") from exc
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
+    _validate_public_evidence_manifest(release_dir, evidence)
 
     try:
         rebuilt = build_release(
             release,
             cells,
             evidence,
-            require_attribution=False,
+            require_attribution=True,
             metric_registry=metric_registry,
         )
-        if release_digest(rebuilt) not in _LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION:
-            rebuilt = build_release(
-                release,
-                cells,
-                evidence,
-                metric_registry=metric_registry,
-            )
     except ReleaseGateError as exc:
         raise ReleaseReplayError(
             f"release replay input validation failed: {exc}"
@@ -119,16 +123,6 @@ def replay_release_dir(
     published = files["release.json"]
     if rebuilt != published:
         raise ReleaseReplayError("rebuilt release does not match release.json")
-    if release.public_evidence_manifest_digest is not None:
-        _validate_public_evidence_manifest(
-            release_dir,
-            release.public_evidence_manifest_digest,
-            evidence,
-        )
-    if release.github_artifacts_manifest_digest is not None:
-        github_manifest = _read_required_file(release_dir, "github-artifacts.json")
-        if sha256_digest(github_manifest) != release.github_artifacts_manifest_digest:
-            raise ReleaseReplayError("GitHub artifacts manifest digest mismatch")
 
     published_digest = release_digest(published)
     if release_dir.name != release.release_id:
@@ -144,42 +138,23 @@ def replay_release_dir(
     )
 
 
-def _validate_public_evidence_manifest(
-    release_dir: Path,
-    expected_digest: str,
-    evidence: tuple[EvidenceBundle, ...],
-) -> None:
-    content = _read_required_file(release_dir, "public-evidence-manifest.json")
-    if sha256_digest(content) != expected_digest:
-        raise ReleaseReplayError("public evidence manifest digest mismatch")
-    document = _validate_json_object(content, "public-evidence-manifest.json")
-    entries = document.get("entries")
-    if not isinstance(entries, list):
-        raise ReleaseReplayError("invalid public evidence manifest entries")
-    expected = {item.evidence_id: item for item in evidence}
-    if {item.get("evidence_id") for item in entries if isinstance(item, dict)} != set(
-        expected
-    ):
-        raise ReleaseReplayError("public evidence manifest topology mismatch")
-    for entry in entries:
-        if not isinstance(entry, dict):
-            raise ReleaseReplayError("invalid public evidence manifest entry")
-        evidence_id = entry["evidence_id"]
-        item = expected[evidence_id]
-        if (
-            entry.get("public_digest") != item.public_digest
-            or entry.get("raw_digest") != item.raw_digest
-        ):
-            raise ReleaseReplayError("public evidence manifest facts mismatch")
-        path = (release_dir / str(entry.get("path"))).resolve()
-        if not path.is_relative_to(release_dir.parents[1].resolve()):
-            raise ReleaseReplayError("public evidence path escapes repository")
-        try:
-            public_bytes = path.read_bytes()
-        except OSError as exc:
-            raise ReleaseReplayError("missing public evidence bytes") from exc
-        if sha256_digest(public_bytes) != item.public_digest:
-            raise ReleaseReplayError("public evidence bytes digest mismatch")
+def _find_harbor_contracts(release_dir: Path) -> Path | None:
+    for ancestor in (release_dir, *release_dir.parents):
+        candidate = ancestor / "harbor_catalog" / "contracts.json"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def _snapshot_contracts_path(
+    contracts_path: Path | None, snapshot_digest: str
+) -> Path | None:
+    if contracts_path is None:
+        return None
+    snapshot = contracts_path.parent / "snapshots" / snapshot_digest / "contracts.json"
+    if snapshot.is_file():
+        return snapshot
+    return contracts_path
 
 
 def _read_required_file(release_dir: Path, filename: str) -> bytes:
@@ -268,3 +243,59 @@ def _validate_run_keys(run_plan: RunPlan) -> None:
         )
         if cell.run_key != expected_key:
             raise ReleaseReplayError("run key does not match its cell identity")
+
+
+def _validate_public_evidence_manifest(
+    release_dir: Path, evidence: tuple[EvidenceBundle, ...]
+) -> None:
+    path = release_dir / _PUBLIC_EVIDENCE_MANIFEST
+    if not path.is_file():
+        return
+    document = _validate_json_object(
+        _read_required_file(release_dir, _PUBLIC_EVIDENCE_MANIFEST),
+        _PUBLIC_EVIDENCE_MANIFEST,
+    )
+    entries = document.get("evidence")
+    historical_layout = entries is None
+    if historical_layout:
+        entries = document.get("entries")
+    if not isinstance(entries, list):
+        raise ReleaseReplayError("public evidence manifest is invalid")
+    expected = {
+        item.evidence_id: (item.run_key, str(item.public_digest)) for item in evidence
+    }
+    observed: dict[str, tuple[str, str]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ReleaseReplayError("public evidence manifest is invalid")
+        evidence_id = entry.get("evidence_id")
+        run_key = entry.get("run_key")
+        relative_path = entry.get("path")
+        digest = entry.get("public_digest")
+        if (
+            not isinstance(evidence_id, str)
+            or (not historical_layout and not isinstance(run_key, str))
+            or not isinstance(relative_path, str)
+            or not isinstance(digest, str)
+        ):
+            raise ReleaseReplayError("public evidence manifest is invalid")
+        artifact = (
+            release_dir / relative_path
+            if historical_layout
+            else release_dir.parent.parent / relative_path
+        )
+        if not artifact.is_file() or not artifact.resolve().is_relative_to(
+            release_dir.parent.parent.resolve()
+        ):
+            raise ReleaseReplayError("public evidence artifact is missing")
+        if sha256_digest(artifact.read_bytes()) != digest:
+            raise ReleaseReplayError("public evidence artifact digest does not match")
+        if evidence_id in observed:
+            raise ReleaseReplayError("public evidence manifest has duplicate evidence")
+        expected_run_key = expected.get(evidence_id, (None, None))[0]
+        observed[evidence_id] = (
+            expected_run_key if historical_layout else run_key,
+            digest,
+        )
+    if observed != expected:
+        raise ReleaseReplayError("public evidence manifest does not match release")

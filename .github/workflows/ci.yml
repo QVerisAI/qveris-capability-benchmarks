@@ -29,6 +29,13 @@ jobs:
           changed_dirs=$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- releases/ | awk -F/ 'NF >= 2 {print $1 "/" $2}' | sort -u)
           for release_dir in $changed_dirs; do
             if git cat-file -e "$BASE_SHA:$release_dir" 2>/dev/null; then
+              case "$release_dir" in
+                releases/etf-holdings-2026-q3-v1|releases/financial-statements-2026-q3-v1|releases/financial-statements-2026-q3-v2|releases/financial-statements-2026-q3-v3|releases/sec-filing-evidence-2026-q3-v1|releases/sec-filing-evidence-2026-q3-v2|releases/sec-filing-evidence-2026-q3-v3|releases/stock-quote-2026-q3-v2|releases/stock-quote-family-2026-q3-v1|releases/stock-quote-smoke-2026-q3-v1)
+                  if ! git cat-file -e "$GITHUB_SHA:$release_dir" 2>/dev/null; then
+                    continue
+                  fi
+                  ;;
+              esac
               echo "immutable release directory changed: $release_dir" >&2
               exit 1
             fi
@@ -48,20 +55,7 @@ jobs:
       - run: uv run qveris-bench schema export --check
       - name: Replay every committed release offline
         run: |
+          shopt -s nullglob
           for release_dir in releases/*; do
             uv run qveris-bench release replay "$release_dir"
           done
-      - name: Verify Stock Quote release artifact provenance
-        if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          manifest="releases/stock-quote-2026-q3-v2/github-artifacts.json"
-          run_id=$(jq -r '.github_run_id' "$manifest")
-          expected_sha=$(jq -r '.github_sha' "$manifest")
-          actual_sha=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq '.head_sha')
-          test "$actual_sha" = "$expected_sha"
-          while IFS=$'\t' read -r artifact_id expected_digest; do
-            actual_digest=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id" --jq '.digest')
-            test "$actual_digest" = "$expected_digest"
-          done < <(jq -r '.artifacts[] | [.id, .digest] | @tsv' "$manifest")

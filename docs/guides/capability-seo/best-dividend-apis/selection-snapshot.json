@@ -4,17 +4,17 @@
   "edition": "2026-08-12",
   "input_digests": {
     "cases": "sha256:8ae85ce1ca9c4204c74ceb531db0225774d585f74c75685ba6a53a5c59da639d",
-    "input": "sha256:891f71adf5b8f328764f15d9e9024ac24d31ef700fccf0308991e147ce1a58fc",
+    "input": "sha256:bf226e4b4208c44774231535ef75ad4024db479001b27e5b63afb4683c34474c",
     "market_coverage_cases": "sha256:021508b60f456f0c30c698ee06288221c7080d67035320710f5119fc348fb550",
     "market_coverage_release": "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e",
     "market_coverage_suite": "sha256:0b133ae5f3252ace61407e4ba30d52e14d4876c7e8c93e2f44f5f59637833048",
     "official_pricing_supplement": "sha256:22575a3d9d5197df0273b8f9707daa35a920dedfe7d637651274a7eca9164e84",
     "providers": {
-      "alpha-vantage": "sha256:a7b9d410263093336cce8d2eb2802dcb1de685fe7263839989ea56642abc7479",
-      "eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
+      "alpha-vantage": "sha256:7a605e02c351b685f9986d2509702ccda7cae0ab282c6ec0ad46c55f634a9462",
+      "eodhd": "sha256:153e836de0ad9cfb8d1c963761dd216fe27f8f2c9acb18ffe9e4e61b418771bf",
       "hangseng": "sha256:ef506460ef0a08dd0ddc432ccc4b816bd9ee8e7179f8e539ef9f00280609fa3c",
       "ifind": "sha256:59c057e4f0a211582b5e9a534537ec546cc8675b22a539a33206452adfad2039",
-      "massive-stocks": "sha256:64b50bc3ec8fff193b4ef7a6f5f35d9a2f5f908760ff0d7b30579b3436e7a221",
+      "massive-stocks": "sha256:e8c5173b6c73a5784d3c8737af848a8a0627f2778d00eebcd9811d04b75054b4",
       "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
     },
     "qveris_direct_bindings": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",

@@ -227,9 +227,10 @@ def assemble_public_terminal_release(
             "github_artifacts_manifest_digest": sha256_digest(
                 github_artifacts_manifest_bytes
             ),
-            "entries": [
+            "evidence": [
                 {
                     "evidence_id": item.evidence_id,
+                    "run_key": item.run_key,
                     "path": f"../../evidence/{release_id}/{item.evidence_id}.json",
                     "public_digest": item.public_digest,
                     "raw_digest": item.raw_digest,

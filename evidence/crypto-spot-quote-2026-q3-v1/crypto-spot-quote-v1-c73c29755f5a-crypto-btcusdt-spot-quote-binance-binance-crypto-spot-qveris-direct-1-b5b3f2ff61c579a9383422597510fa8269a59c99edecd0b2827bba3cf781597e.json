@@ -1,0 +1,19 @@
+{
+  "case_id": "crypto-btcusdt-spot-quote",
+  "facts": {
+    "currency": "USDT",
+    "exchange": "BINANCE",
+    "high": 64500.0,
+    "low": 63310.34,
+    "open": 63764.62,
+    "price": 63895.28,
+    "symbol": "BTCUSDT",
+    "timestamp": 1786604810009
+  },
+  "failure_attribution": null,
+  "gateway_latency_ms": 313.08,
+  "raw_digest": "sha256:6bd49ac9416eee97fe61ff63f974d7853524c3e56b66c10a0dde84bbe30abde3",
+  "round": 1,
+  "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:1",
+  "state": "completed"
+}

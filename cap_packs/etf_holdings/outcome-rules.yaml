@@ -1,2 +1,0 @@
-completion_requires: [symbol, holdings, weights]
-negative_control_requires: [validation_error]

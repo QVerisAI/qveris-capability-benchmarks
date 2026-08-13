@@ -1,0 +1,387 @@
+{
+  "cells": [
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 1,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 2,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 3,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 1,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 2,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-btcusdt-spot-quote",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "BTCUSDT"
+      },
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 3,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 1,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 2,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "binance",
+      "round": 3,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 1,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 2,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "crypto-invalid-spot-symbol",
+      "case_input": {
+        "market": "spot",
+        "quote_currency": "USDT",
+        "symbol": "NOTAPAIRXYZ"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "okx",
+      "round": 3,
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:3",
+      "state": "provider_negative"
+    }
+  ],
+  "evidence": [
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-btcusdt-spot-quote-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 313.08,
+      "license_status": "cleared",
+      "public_digest": "sha256:b5b3f2ff61c579a9383422597510fa8269a59c99edecd0b2827bba3cf781597e",
+      "raw_digest": "sha256:6bd49ac9416eee97fe61ff63f974d7853524c3e56b66c10a0dde84bbe30abde3",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:1",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-btcusdt-spot-quote-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 188.75,
+      "license_status": "cleared",
+      "public_digest": "sha256:fda532d2884b1d7599e95eea9305220ac0d0e07cdfe721153a5ff398053d7433",
+      "raw_digest": "sha256:610e9bf914c59d66ef70860025deed8d7e8e6d89eec27538efdfdf00ebb040ec",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:2",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-btcusdt-spot-quote-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 329.62,
+      "license_status": "cleared",
+      "public_digest": "sha256:ad9577f6ac3841c4dcc0981bb24b934d4349136dec10bf7d99bc6dfbcf5fed7b",
+      "raw_digest": "sha256:f937323c18aa8504531f71268ed3c92710d8b6f072fb863a7a48a8b3e35ddd6b",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:binance:binance-crypto-spot-qveris:direct:3",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-invalid-spot-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 638.54,
+      "license_status": "cleared",
+      "public_digest": "sha256:286fea441201a945551b6859e7b2478f03847455fe471ed0045f468e5ad0a5d0",
+      "raw_digest": "sha256:d8afbefdfd5eae1b1b7fbe1ae8e01cd87c056ee08a466eab2a4d8244b384372f",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:1",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-invalid-spot-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 189.47,
+      "license_status": "cleared",
+      "public_digest": "sha256:e47eaf9fe6301f39d5a524810c207d679ba80b41a59e20b350991f79179fa5af",
+      "raw_digest": "sha256:76d7364be603b98cf8cac2d74e278e50e98f7c571e965a90e5bdb73b6382a79c",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:2",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "binance-crypto-invalid-spot-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 290.71,
+      "license_status": "cleared",
+      "public_digest": "sha256:88e2073e21827a8d3248300b9c8f23247f53434bc8ce7dbde6fac0f1c93c7402",
+      "raw_digest": "sha256:9f12f210636ea3878836d75432a3a53f911f8a6898cd96e7bf02fcaca3402a7a",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:binance:binance-crypto-spot-qveris:direct:3",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-btcusdt-spot-quote-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 214.1,
+      "license_status": "cleared",
+      "public_digest": "sha256:3b1855eaa91953f71dffbfc7693318248d64fdaab7f3ee3559b3d6b77014e13f",
+      "raw_digest": "sha256:68b9228aca411f8ea1842e79b7a0890cca9809bb5ed2ce3d1774053156dc741f",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:1",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-btcusdt-spot-quote-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 285.82,
+      "license_status": "cleared",
+      "public_digest": "sha256:0af71a0b5794a1e7f152676a5d856cc9937ae6bcc1b7a42b68edbe64e6d54cff",
+      "raw_digest": "sha256:40bd4f2956f4c5843c305e13dfc6edfd25a3c3c82391a54a832b3dde6cc1df61",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:2",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-btcusdt-spot-quote-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 290.0,
+      "license_status": "cleared",
+      "public_digest": "sha256:005446a31fd84b9bdb141b13f3d6ea11e4e92cebbed695d9a01e5ebc3ee2695b",
+      "raw_digest": "sha256:c4d2b91e1bcf9bcd9738a35f9191a09fe996304bed2840a77bdba6fb6adffbbc",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-btcusdt-spot-quote:okx:okx-crypto-spot-qveris:direct:3",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-invalid-spot-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 333.39,
+      "license_status": "cleared",
+      "public_digest": "sha256:689e9b4b5b38a629dc07197ab72a9901ae8161daea8b314bf48489398ae9afe9",
+      "raw_digest": "sha256:7681e26dbe03837179ac13bb9e67cd7eda6dd3a324607bfbc9022b68022c874d",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:1",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-invalid-spot-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 211.67,
+      "license_status": "cleared",
+      "public_digest": "sha256:1a1e2e3f9f9f9370530054dd159d1aa177141eda62674911be0b00870c45099e",
+      "raw_digest": "sha256:cc54464908bb397513bcf9ece53b462c39d873b083f72e727808f98ebbf42e82",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:2",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    },
+    {
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "okx-crypto-invalid-spot-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 213.16,
+      "license_status": "cleared",
+      "public_digest": "sha256:263ae3602209439685cd6766ec0d8fd594ea91b22f84cecc773baa6a69361fc9",
+      "raw_digest": "sha256:37a0ed3a189d710f846702313788d7e430318e496c7e536769e04e5514234227",
+      "redaction_status": "sanitized",
+      "run_key": "crypto-spot-quote-v1:c73c29755f5a:crypto-invalid-spot-symbol:okx:okx-crypto-spot-qveris:direct:3",
+      "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364"
+    }
+  ],
+  "release": {
+    "cap_id": "crypto-spot-quote",
+    "cap_sources": [
+      {
+        "catalog_snapshot_digest": "e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe",
+        "contract_digest": "d3c6e7288bd57ecf12bfae4db720c632cabb58ae56f0d21303687f873dec2ef4",
+        "contract_version": 1,
+        "harbor_capability_id": "CRYPTO.SPOT.RT",
+        "source_type": "harbor_catalog"
+      }
+    ],
+    "cap_version": "1.0.0",
+    "developer_selection_facts": [],
+    "evidence_ids": [
+      "binance-crypto-btcusdt-spot-quote-round-1",
+      "binance-crypto-btcusdt-spot-quote-round-2",
+      "binance-crypto-btcusdt-spot-quote-round-3",
+      "okx-crypto-btcusdt-spot-quote-round-1",
+      "okx-crypto-btcusdt-spot-quote-round-2",
+      "okx-crypto-btcusdt-spot-quote-round-3",
+      "binance-crypto-invalid-spot-symbol-round-1",
+      "binance-crypto-invalid-spot-symbol-round-2",
+      "binance-crypto-invalid-spot-symbol-round-3",
+      "okx-crypto-invalid-spot-symbol-round-1",
+      "okx-crypto-invalid-spot-symbol-round-2",
+      "okx-crypto-invalid-spot-symbol-round-3"
+    ],
+    "limitations": [
+      "Two QVeris Access Paths; no native exchange API is tested.",
+      "The positive sample is BTC/USDT spot only, not broad pair coverage.",
+      "24-hour windows are exchange-defined and not a common market bar."
+    ],
+    "outcome_ids": [],
+    "provider_feedback_facts": {},
+    "release_id": "crypto-spot-quote-2026-q3-v1",
+    "run_plan_digest": "sha256:08d273cf8fd22eb61f88053113c69ac6c54a4b216dda0616e353d16d7235f4a7",
+    "suite_fingerprint": "c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364",
+    "version": "1.0.0"
+  }
+}

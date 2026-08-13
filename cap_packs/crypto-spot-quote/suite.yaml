@@ -1,0 +1,15 @@
+suite_id: crypto-spot-quote-v1
+version: 1.0.0
+cap_id: crypto-spot-quote
+cap_version: 1.0.0
+case_ids:
+  - crypto-btcusdt-spot-quote
+  - crypto-invalid-spot-symbol
+access_path_ids:
+  - binance-crypto-spot-qveris
+  - okx-crypto-spot-qveris
+modes: [direct]
+rounds: 3
+environment:
+  quote_window: exchange_rolling_24h
+  execution_via: qveris_connector

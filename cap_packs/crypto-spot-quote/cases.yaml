@@ -1,0 +1,26 @@
+cases:
+  - case_id: crypto-btcusdt-spot-quote
+    cap_id: crypto-spot-quote
+    question: Return the current BTC/USDT spot quote and the exchange 24-hour OHLC values.
+    input:
+      symbol: BTCUSDT
+      quote_currency: USDT
+      market: spot
+    expected_observations: [symbol, price, open, high, low]
+    completion_conditions:
+      - a matching spot symbol, price, open, high, and low are captured
+    disclosure_limits: [sanitized_public]
+    applicable_provider_ids: [binance, okx]
+  - case_id: crypto-invalid-spot-symbol
+    cap_id: crypto-spot-quote
+    question: Reject an invalid crypto spot symbol without returning quote values.
+    input:
+      symbol: NOTAPAIRXYZ
+      quote_currency: USDT
+      market: spot
+    negative_control: true
+    expected_observations: [provider_validation_error]
+    completion_conditions:
+      - an invalid spot symbol is rejected without quote values
+    disclosure_limits: [sanitized_public]
+    applicable_provider_ids: [binance, okx]

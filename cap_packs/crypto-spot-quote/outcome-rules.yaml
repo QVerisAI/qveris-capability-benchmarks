@@ -1,0 +1,4 @@
+completion_requires:
+  - a matching spot symbol, price, open, high, and low are captured
+negative_control_requires:
+  - an invalid spot symbol is rejected without quote values

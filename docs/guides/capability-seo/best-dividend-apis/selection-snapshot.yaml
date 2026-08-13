@@ -2,6 +2,9 @@ snapshot_id: dividend-events-selection-2026-q3-v1
 version: 1.0.0
 edition: "2026-08-12"
 cap_id: dividend-events
+historical_execution_contract:
+  suite_fingerprint: 60840566be2c080785ee64e5e56ca28782f66bad0c9b522a671cb2075d48b741
+  execution_contract_digest: sha256:0876afeb3bdc3a6326c394afcd4b7f2201ad6f47b2849907840142f8b6129ffc
 cap_release:
   release: releases/dividend-events-2026-q3-v1/release.json
   digest: sha256:ff44f0d4aa72553949d93910c78af57c29bf46dc39a206aacb97956a081049e0
@@ -21,6 +24,9 @@ market_coverage_release:
   digest: sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e
   suite: cap_packs/dividend_events/market-suite.yaml
   cases: cap_packs/dividend_events/market-cases.yaml
+  historical_execution_contract:
+    suite_fingerprint: 226e52c3f19f93ff8998842254bf62e6180b904926989b67c6fc1225cceddccf
+    execution_contract_digest: sha256:af016bd3677218f10a3f19d6fb0ab004311cb739b28c1fd4f224f6c6d935f00f
 limitations:
   - Market coverage uses one fixed representative symbol per market and is not comprehensive provider coverage.
   - A market is verified only when both Direct Test rounds complete the Dividend Event contract.
