@@ -29,6 +29,7 @@ _REQUIRED_FILES = (
     "evidence.json",
     "release.json",
 )
+_PUBLIC_EVIDENCE_MANIFEST = "public-evidence-manifest.json"
 _CELLS_ADAPTER = TypeAdapter(tuple[RunCell, ...])
 _EVIDENCE_ADAPTER = TypeAdapter(tuple[EvidenceBundle, ...])
 _METRIC_REGISTRY_ADAPTER = TypeAdapter(tuple[MetricDefinition, ...])
@@ -103,6 +104,7 @@ def replay_release_dir(
                 raise ReleaseReplayError("Harbor CAP provenance is invalid") from exc
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
+    _validate_public_evidence_manifest(release_dir, evidence)
 
     try:
         rebuilt = build_release(
@@ -241,3 +243,48 @@ def _validate_run_keys(run_plan: RunPlan) -> None:
         )
         if cell.run_key != expected_key:
             raise ReleaseReplayError("run key does not match its cell identity")
+
+
+def _validate_public_evidence_manifest(
+    release_dir: Path, evidence: tuple[EvidenceBundle, ...]
+) -> None:
+    path = release_dir / _PUBLIC_EVIDENCE_MANIFEST
+    if not path.is_file():
+        return
+    document = _validate_json_object(
+        _read_required_file(release_dir, _PUBLIC_EVIDENCE_MANIFEST),
+        _PUBLIC_EVIDENCE_MANIFEST,
+    )
+    entries = document.get("evidence")
+    if not isinstance(entries, list):
+        raise ReleaseReplayError("public evidence manifest is invalid")
+    expected = {
+        item.evidence_id: (item.run_key, str(item.public_digest)) for item in evidence
+    }
+    observed: dict[str, tuple[str, str]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ReleaseReplayError("public evidence manifest is invalid")
+        evidence_id = entry.get("evidence_id")
+        run_key = entry.get("run_key")
+        relative_path = entry.get("path")
+        digest = entry.get("public_digest")
+        if (
+            not isinstance(evidence_id, str)
+            or not isinstance(run_key, str)
+            or not isinstance(relative_path, str)
+            or not isinstance(digest, str)
+        ):
+            raise ReleaseReplayError("public evidence manifest is invalid")
+        artifact = release_dir.parent.parent / relative_path
+        if not artifact.is_file() or not artifact.resolve().is_relative_to(
+            release_dir.parent.parent.resolve()
+        ):
+            raise ReleaseReplayError("public evidence artifact is missing")
+        if sha256_digest(artifact.read_bytes()) != digest:
+            raise ReleaseReplayError("public evidence artifact digest does not match")
+        if evidence_id in observed:
+            raise ReleaseReplayError("public evidence manifest has duplicate evidence")
+        observed[evidence_id] = (run_key, digest)
+    if observed != expected:
+        raise ReleaseReplayError("public evidence manifest does not match release")

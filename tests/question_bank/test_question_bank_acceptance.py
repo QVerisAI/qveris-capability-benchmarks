@@ -26,7 +26,17 @@ def test_ac1_question_bank_contains_only_harbor_candidates() -> None:
         "govt-bond-yield",
         "realtime-financial-news",
     }, "AC1 candidates must come from the Harbor-selected CAP set"
-    assert {cap.lifecycle for cap in bank.capabilities} == {"candidate"}
+    lifecycle_by_cap = {
+        str(cap.cap_id): str(cap.lifecycle) for cap in bank.capabilities
+    }
+    assert lifecycle_by_cap == {
+        "crypto-spot-quote": "runnable",
+        "dividend-events": "candidate",
+        "financial-ratios": "candidate",
+        "fx-spot-rate": "candidate",
+        "govt-bond-yield": "candidate",
+        "realtime-financial-news": "candidate",
+    }, "AC1 only the formal crypto CAP may advance from Harbor candidate to runnable"
     assert {str(cap.source_id) for cap in bank.capabilities} == {
         "harbor-capability-catalog"
     }
