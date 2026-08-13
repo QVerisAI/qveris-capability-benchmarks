@@ -9,9 +9,6 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from qveris_bench.cap_packs.stock_quote_family.publication_charts import (
-    render_stock_quote_outcomes,
-)
 from qveris_bench.cap_packs.stock_quote_family.publication_selection import (
     build_stock_quote_selection_snapshot,
 )
@@ -71,6 +68,10 @@ class StockQuotePublicationAdapter:
         os.environ["MPLCONFIGDIR"] = str(cache_dir)
         os.environ["XDG_CACHE_HOME"] = str(cache_dir)
         try:
+            from qveris_bench.cap_packs.stock_quote_family.publication_charts import (
+                render_stock_quote_outcomes,
+            )
+
             generated = render_stock_quote_outcomes(committed_snapshot, chart_dir)
         finally:
             for name, value in previous.items():
