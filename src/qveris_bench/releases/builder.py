@@ -24,7 +24,7 @@ def build_release(
         metric_registry=metric_registry,
     )
     payload = {
-        "release": release.model_dump(mode="json"),
+        "release": release.model_dump(mode="json", exclude_none=True),
         "cells": [
             # 归因仅在已记录时序列化，保证历史 release 字节级可重建
             cell.model_dump(

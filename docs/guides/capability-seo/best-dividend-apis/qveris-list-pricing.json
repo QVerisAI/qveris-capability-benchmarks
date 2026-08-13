@@ -1,0 +1,50 @@
+{
+  "snapshot_id": "dividend-events-qveris-list-pricing-2026-08-12",
+  "version": "1.0.0",
+  "source": "qveris_inspect",
+  "inspected_at": "2026-08-12",
+  "extractor_version": "1.0.0",
+  "disclosure_level": "sanitized_public",
+  "license_status": "cleared",
+  "bindings_digest": "sha256:b9ce141e1109c19468a60a79be86a852e440252d779f101e97376b98849237c5",
+  "prices": [
+    {
+      "provider_id": "hangseng",
+      "access_path_id": "hangseng-dividends-qveris",
+      "tool_id": "hangseng_polysource.stock.dividend.query.v2.6174546b",
+      "inspect_response_digest": "sha256:62f89f7144d360ecedcf7270e9f040dff5342c6058ed8ef4131c941f75e3defe",
+      "amount_credits": 1
+    },
+    {
+      "provider_id": "twelve-data",
+      "access_path_id": "twelve-data-dividends-qveris",
+      "tool_id": "twelvedata.dividends.retrieve.v1.c0c9b142",
+      "snapshot_version": "website-default",
+      "inspect_response_digest": "sha256:a18bf0acaa59cb5e2798685ce544d1ac6c0e27075d74f12d021c428a1576f2d1",
+      "amount_credits": 2.37
+    },
+    {
+      "provider_id": "alpha-vantage",
+      "access_path_id": "alpha-vantage-dividends-qveris",
+      "tool_id": "alphavantage.dividends.list.v1.467a92c0",
+      "snapshot_version": "website-default",
+      "inspect_response_digest": "sha256:427b55d28bab007922b903bbc6a9f4a435cbc60ad006cdc8cb08604df093ead0",
+      "amount_credits": 1
+    },
+    {
+      "provider_id": "eodhd",
+      "access_path_id": "eodhd-dividends-qveris",
+      "tool_id": "eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a",
+      "snapshot_version": "website-default",
+      "inspect_response_digest": "sha256:0d83e13c43be94186a1aeedb15fc61f30c04909d0c0468a5754537f8a142d4f3",
+      "amount_credits": 2.81
+    },
+    {
+      "provider_id": "massive-stocks",
+      "access_path_id": "massive-stocks-dividends-qveris",
+      "tool_id": "polygon.stocks.dividends.list.v1.ea25c492",
+      "inspect_response_digest": "sha256:3354f97acf0bc5c31f3d5385b7cd060bea14e9bc44e3eed96e45da3c1949b890",
+      "amount_credits": 1
+    }
+  ]
+}

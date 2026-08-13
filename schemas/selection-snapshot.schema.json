@@ -1,0 +1,828 @@
+{
+  "$defs": {
+    "AccessPathType": {
+      "enum": [
+        "native_mcp",
+        "official_openapi",
+        "official_api",
+        "official_sdk",
+        "benchmark_wrapper",
+        "qveris_connector"
+      ],
+      "title": "AccessPathType",
+      "type": "string"
+    },
+    "AgentInterfaceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "invalid_input_handling": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "pagination": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "parameter_clarity": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "schema_stability": {
+          "$ref": "#/$defs/SelectionObservation"
+        },
+        "single_tool_completion": {
+          "$ref": "#/$defs/SelectionObservation"
+        }
+      },
+      "required": [
+        "invalid_input_handling",
+        "parameter_clarity",
+        "schema_stability",
+        "pagination",
+        "single_tool_completion"
+      ],
+      "title": "AgentInterfaceSnapshot",
+      "type": "object"
+    },
+    "GatewayMetricsSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Cost Evidence Refs",
+          "type": "array"
+        },
+        "cost_sample_size": {
+          "minimum": 0,
+          "title": "Cost Sample Size",
+          "type": "integer"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "latency_evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Latency Evidence Refs",
+          "type": "array"
+        },
+        "latency_max_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Max Ms"
+        },
+        "latency_median_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Median Ms"
+        },
+        "latency_min_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Min Ms"
+        },
+        "latency_sample_size": {
+          "minimum": 0,
+          "title": "Latency Sample Size",
+          "type": "integer"
+        },
+        "measurement_boundary": {
+          "const": "qveris_gateway",
+          "default": "qveris_gateway",
+          "title": "Measurement Boundary",
+          "type": "string"
+        },
+        "median_credits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Median Credits"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "latency_sample_size",
+        "cost_sample_size"
+      ],
+      "title": "GatewayMetricsSnapshot",
+      "type": "object"
+    },
+    "MarketCoverageResult": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability Reason"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "market": {
+          "pattern": "^[A-Z]{2,8}$",
+          "title": "Market",
+          "type": "string"
+        },
+        "passed_rounds": {
+          "minimum": 0,
+          "title": "Passed Rounds",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "verified",
+            "provider_negative",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "total_rounds": {
+          "minimum": 1,
+          "title": "Total Rounds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "market",
+        "state",
+        "passed_rounds",
+        "total_rounds"
+      ],
+      "title": "MarketCoverageResult",
+      "type": "object"
+    },
+    "MarketCoverageSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observation_date": {
+          "format": "date",
+          "title": "Observation Date",
+          "type": "string"
+        },
+        "release_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Release Digest",
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "$ref": "#/$defs/MarketCoverageResult"
+          },
+          "minItems": 1,
+          "title": "Results",
+          "type": "array"
+        }
+      },
+      "required": [
+        "release_digest",
+        "observation_date",
+        "results"
+      ],
+      "title": "MarketCoverageSnapshot",
+      "type": "object"
+    },
+    "ObservationWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "ObservationWindow",
+      "type": "object"
+    },
+    "OfficialPricingSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To"
+        },
+        "currencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Currencies",
+          "type": "array"
+        },
+        "disclosure_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disclosure Level"
+        },
+        "extractor_version": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extractor Version"
+        },
+        "free_tier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Free Tier"
+        },
+        "license_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Status"
+        },
+        "paid_plans": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paid Plans"
+        },
+        "pricing_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Id"
+        },
+        "pricing_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Url"
+        },
+        "source_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Digest"
+        },
+        "state": {
+          "enum": [
+            "declared",
+            "evidence_insufficient"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "suite_fingerprint": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suite Fingerprint"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified At"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "OfficialPricingSnapshot",
+      "type": "object"
+    },
+    "QVerisListPriceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "amount_credits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amount Credits"
+        },
+        "disclosure_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disclosure Level"
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Ref"
+        },
+        "extractor_version": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extractor Version"
+        },
+        "inspect_response_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inspect Response Digest"
+        },
+        "inspected_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inspected At"
+        },
+        "license_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Status"
+        },
+        "snapshot_version": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Version"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "const": "qveris_inspect",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "state": {
+          "enum": [
+            "declared",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "const": "per_call",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "QVerisListPriceSnapshot",
+      "type": "object"
+    },
+    "RunObservationsSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "planned_observations": {
+          "minimum": 0,
+          "title": "Planned Observations",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "terminal_observations": {
+          "minimum": 0,
+          "title": "Terminal Observations",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state",
+        "terminal_observations",
+        "planned_observations"
+      ],
+      "title": "RunObservationsSnapshot",
+      "type": "object"
+    },
+    "SelectionObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "passed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Passed"
+        },
+        "state": {
+          "enum": [
+            "measured",
+            "evidence_insufficient",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "SelectionObservation",
+      "type": "object"
+    },
+    "SelectionSnapshotRow": {
+      "additionalProperties": false,
+      "properties": {
+        "access_path_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Access Path Id",
+          "type": "string"
+        },
+        "access_path_type": {
+          "$ref": "#/$defs/AccessPathType"
+        },
+        "agent_interface": {
+          "$ref": "#/$defs/AgentInterfaceSnapshot"
+        },
+        "cap_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Cap Id",
+          "type": "string"
+        },
+        "gateway_metrics": {
+          "$ref": "#/$defs/GatewayMetricsSnapshot"
+        },
+        "market_coverage": {
+          "$ref": "#/$defs/MarketCoverageSnapshot"
+        },
+        "observation_window": {
+          "$ref": "#/$defs/ObservationWindow"
+        },
+        "official_pricing": {
+          "$ref": "#/$defs/OfficialPricingSnapshot"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_name": {
+          "minLength": 1,
+          "title": "Provider Name",
+          "type": "string"
+        },
+        "qveris_list_price": {
+          "$ref": "#/$defs/QVerisListPriceSnapshot"
+        },
+        "run_observations": {
+          "$ref": "#/$defs/RunObservationsSnapshot"
+        }
+      },
+      "required": [
+        "cap_id",
+        "provider_id",
+        "provider_name",
+        "access_path_id",
+        "access_path_type",
+        "observation_window",
+        "run_observations",
+        "gateway_metrics",
+        "qveris_list_price",
+        "official_pricing",
+        "market_coverage",
+        "agent_interface"
+      ],
+      "title": "SelectionSnapshotRow",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cap_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Cap Id",
+      "type": "string"
+    },
+    "cap_release_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Cap Release Digest",
+      "type": "string"
+    },
+    "edition": {
+      "format": "date",
+      "title": "Edition",
+      "type": "string"
+    },
+    "input_digests": {
+      "additionalProperties": true,
+      "title": "Input Digests",
+      "type": "object"
+    },
+    "limitations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "market_coverage_release_digest": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "title": "Market Coverage Release Digest",
+      "type": "string"
+    },
+    "rows": {
+      "items": {
+        "$ref": "#/$defs/SelectionSnapshotRow"
+      },
+      "minItems": 1,
+      "title": "Rows",
+      "type": "array"
+    },
+    "snapshot_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "version",
+    "edition",
+    "cap_id",
+    "cap_release_digest",
+    "market_coverage_release_digest",
+    "input_digests",
+    "rows"
+  ],
+  "title": "SelectionSnapshot",
+  "type": "object"
+}

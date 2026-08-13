@@ -256,6 +256,9 @@ def _validate_public_evidence_manifest(
         _PUBLIC_EVIDENCE_MANIFEST,
     )
     entries = document.get("evidence")
+    historical_layout = entries is None
+    if historical_layout:
+        entries = document.get("entries")
     if not isinstance(entries, list):
         raise ReleaseReplayError("public evidence manifest is invalid")
     expected = {
@@ -271,20 +274,35 @@ def _validate_public_evidence_manifest(
         digest = entry.get("public_digest")
         if (
             not isinstance(evidence_id, str)
-            or not isinstance(run_key, str)
+            or (not historical_layout and not isinstance(run_key, str))
             or not isinstance(relative_path, str)
             or not isinstance(digest, str)
         ):
             raise ReleaseReplayError("public evidence manifest is invalid")
-        artifact = release_dir.parent.parent / relative_path
+        if not historical_layout and not isinstance(run_key, str):
+            raise ReleaseReplayError("public evidence manifest is invalid")
+        artifact = (
+            release_dir / relative_path
+            if historical_layout
+            else release_dir.parent.parent / relative_path
+        )
         if not artifact.is_file() or not artifact.resolve().is_relative_to(
             release_dir.parent.parent.resolve()
         ):
             raise ReleaseReplayError("public evidence artifact is missing")
         if sha256_digest(artifact.read_bytes()) != digest:
-            raise ReleaseReplayError("public evidence artifact digest does not match")
+            raise ReleaseReplayError("public evidence bytes digest mismatch")
         if evidence_id in observed:
             raise ReleaseReplayError("public evidence manifest has duplicate evidence")
-        observed[evidence_id] = (run_key, digest)
+        if historical_layout:
+            expected_entry = expected.get(evidence_id)
+            if expected_entry is None:
+                raise ReleaseReplayError("public evidence manifest is invalid")
+            observed[evidence_id] = (expected_entry[0], digest)
+        else:
+            run_key_text = run_key
+            if not isinstance(run_key_text, str):
+                raise ReleaseReplayError("public evidence manifest is invalid")
+            observed[evidence_id] = (run_key_text, digest)
     if observed != expected:
         raise ReleaseReplayError("public evidence manifest does not match release")

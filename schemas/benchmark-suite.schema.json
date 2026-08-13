@@ -168,6 +168,12 @@
       "title": "Not Applicable",
       "type": "array"
     },
+    "outcome_rules_file": {
+      "default": "outcome-rules.yaml",
+      "pattern": "^[a-z0-9][a-z0-9.-]*\\.yaml$",
+      "title": "Outcome Rules File",
+      "type": "string"
+    },
     "rounds": {
       "minimum": 1,
       "title": "Rounds",

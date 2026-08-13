@@ -56,9 +56,9 @@ access_paths:
     authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
-      disposition: excluded
-      reason: No complete release evidence is bound to this Access Path.
-      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+      disposition: included
+      reason: A fixed QVeris dividend tool and successful legacy Direct probe qualify this path for Golden CAP execution.
+      evidence_digest: sha256:866f298ce03eb3cee4b0c806a3e7ed9223f5bc2079c94b1f4ef124145f3af947
   - access_path_id: twelve-data-etf-holdings
     provider_id: twelve-data
     path_type: qveris_connector

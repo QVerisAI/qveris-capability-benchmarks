@@ -2,11 +2,20 @@ import asyncio
 
 import pytest
 
-from qveris_bench.execution.streamable_mcp import build_bearer_headers
+from qveris_bench.execution.streamable_mcp import (
+    build_authorization_headers,
+    build_bearer_headers,
+)
 
 
 def test_ac1_streamable_mcp_uses_a_bearer_header() -> None:
     assert build_bearer_headers("test-key") == {"Authorization": "Bearer test-key"}
+
+
+def test_ac1_streamable_mcp_supports_provider_issued_raw_authorization() -> None:
+    assert build_authorization_headers("provider-token", bearer=False) == {
+        "Authorization": "provider-token"
+    }
 
 
 @pytest.mark.parametrize("api_key", ("", "   "))

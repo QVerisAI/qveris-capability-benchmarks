@@ -13,19 +13,26 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
-from chart_metrics import direct_metrics_by_access_path
+from matplotlib import font_manager
 from matplotlib.colors import ListedColormap
+from matplotlib.patches import Patch, Rectangle
 
 try:
-    from matplotlib import font_manager
+    from chart_metrics import direct_metrics_by_access_path
+except ModuleNotFoundError:
+    from scripts.chart_metrics import direct_metrics_by_access_path
 
-    for font_name in ("PingFang SC", "Arial Unicode MS", "Heiti SC"):
-        if any(f.name == font_name for f in font_manager.fontManager.ttflist):
-            plt.rcParams["font.sans-serif"] = [font_name]
-            break
-    plt.rcParams["axes.unicode_minus"] = False
-except Exception:
-    pass
+_FONT_ROOT = Path(__file__).resolve().parents[1] / "assets/fonts"
+_FONT_PATHS = (
+    _FONT_ROOT / "QVerisCharts-Regular.otf",
+    _FONT_ROOT / "QVerisCharts-Bold.otf",
+)
+for _font_path in _FONT_PATHS:
+    font_manager.fontManager.addfont(_font_path)
+_CHART_FONT_FAMILY = font_manager.FontProperties(fname=_FONT_PATHS[0]).get_name()
+plt.rcParams["font.family"] = ["sans-serif"]
+plt.rcParams["font.sans-serif"] = [_CHART_FONT_FAMILY]
+plt.rcParams["axes.unicode_minus"] = False
 
 
 def _latest_batch(path: Path) -> list[dict]:
@@ -42,6 +49,689 @@ def _latest_batch(path: Path) -> list[dict]:
 
 def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def _sha256_identity(path: Path) -> str:
+    return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+
+
+_DIVIDEND_PROVIDERS = {
+    "hangseng": "Hang Seng",
+    "ifind": "iFinD",
+    "alpha-vantage": "Alpha Vantage",
+    "twelve-data": "Twelve Data",
+    "eodhd": "EODHD",
+    "massive-stocks": "Massive",
+}
+
+
+def _directory_digest(path: Path) -> str:
+    digest = hashlib.sha256()
+    for item in sorted(path.glob("*.json")):
+        digest.update(item.name.encode())
+        digest.update(b"\0")
+        digest.update(item.read_bytes())
+    return f"sha256:{digest.hexdigest()}"
+
+
+def _field_status(
+    records: list[dict[str, object]],
+    field: str,
+    *,
+    identity_blocked: bool,
+    completed: bool,
+) -> str:
+    present = all(item.get("facts", {}).get(field) is not None for item in records)
+    if not present:
+        return "absent"
+    if identity_blocked or not completed:
+        return "blocked"
+    return "observed"
+
+
+def _dividend_evidence_rows(
+    release_path: Path,
+    evidence_dir: Path,
+) -> list[dict[str, object]]:
+    document = json.loads(release_path.read_text(encoding="utf-8"))
+    released_by_run_key = {item["run_key"]: item for item in document["evidence"]}
+    terminals: dict[str, dict[str, object]] = {}
+    for run_key, released in released_by_run_key.items():
+        evidence_path = evidence_dir / f"{released['evidence_id']}-terminal.json"
+        if _sha256_identity(evidence_path) != released["public_digest"]:
+            raise ValueError(f"public evidence digest mismatch: {evidence_path.name}")
+        terminals[run_key] = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    applicable = [
+        cell
+        for cell in document["cells"]
+        if cell["applicable"] and cell["mode"] == "direct"
+    ]
+    rows: list[dict[str, object]] = []
+    for provider_id, provider_label in _DIVIDEND_PROVIDERS.items():
+        positive_cells = [
+            cell
+            for cell in applicable
+            if cell["provider_id"] == provider_id
+            and cell["case_id"] != "invalid-dividend-symbol"
+        ]
+        negative_cells = [
+            cell
+            for cell in applicable
+            if cell["provider_id"] == provider_id
+            and cell["case_id"] == "invalid-dividend-symbol"
+        ]
+        if len(positive_cells) != 3 or len(negative_cells) != 3:
+            raise ValueError(
+                f"expected three positive and negative rounds: {provider_id}"
+            )
+        positive = [terminals[cell["run_key"]] for cell in positive_cells]
+        negative = [terminals[cell["run_key"]] for cell in negative_cells]
+        requested_symbol = positive_cells[0]["case_input"]["symbol"]
+        returned_symbols = {item.get("facts", {}).get("symbol") for item in positive}
+        identity_blocked = any(
+            symbol is not None and symbol != requested_symbol
+            for symbol in returned_symbols
+        )
+        completed = all(item["state"] == "completed" for item in positive)
+
+        transport = positive[0]["transport"]
+        access_path_label = "Native MCP" if transport == "native_mcp" else "QVeris"
+        market = "A 股" if positive_cells[0]["case_id"].startswith("cn-") else "美股"
+        rows.append(
+            {
+                "provider": provider_label,
+                "meta": f"{access_path_label} · {market} · {requested_symbol}",
+                "core": [
+                    _field_status(
+                        positive,
+                        "amount",
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    ),
+                    _field_status(
+                        positive,
+                        "effective_date",
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    ),
+                    (
+                        "observed"
+                        if all(item["state"] == "completed" for item in negative)
+                        else "blocked"
+                    ),
+                    "blocked" if identity_blocked else "unmeasured",
+                ],
+                "fields": [
+                    _field_status(
+                        positive,
+                        field,
+                        identity_blocked=identity_blocked,
+                        completed=completed,
+                    )
+                    for field in (
+                        "currency",
+                        "declaration_date",
+                        "record_date",
+                        "payment_date",
+                    )
+                ],
+            }
+        )
+    return rows
+
+
+def render_dividend_evidence_heatmap(
+    release_dir: Path,
+    evidence_dir: Path,
+    output_dir: Path,
+    *,
+    edition_date: str,
+) -> dict[str, object]:
+    release_path = release_dir / "release.json"
+    rows = _dividend_evidence_rows(release_path, evidence_dir)
+    columns = [
+        "单次金额\n语义",
+        "除权除息日",
+        "无效 symbol\n处理",
+        "证券身份\n一致性",
+        "响应内\n币种",
+        "公告日",
+        "登记日",
+        "支付日",
+    ]
+    status_values = {"absent": 0, "unmeasured": 1, "blocked": 2, "observed": 3}
+    status_text = {
+        "absent": "未观察",
+        "unmeasured": "未独立\n测量",
+        "blocked": "阻断",
+        "observed": "3/3",
+    }
+    matrix_statuses = [row["core"] + row["fields"] for row in rows]
+    matrix = [
+        [status_values[status] for status in row_statuses]
+        for row_statuses in matrix_statuses
+    ]
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_name = "dividend-evidence-heatmap.png"
+    chart_path = output_dir / chart_name
+    colors = ["#F1F5F9", "#DCEAF2", "#F79009", "#12B76A"]
+    fig, ax = plt.subplots(figsize=(14, 7.6), facecolor="#FFFFFF")
+    ax.set_facecolor("#FFFFFF")
+    ax.imshow(matrix, cmap=ListedColormap(colors), vmin=0, vmax=3, aspect="auto")
+    ax.set_xticks(range(len(columns)))
+    ax.set_xticklabels(columns, fontsize=12, color="#334155")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(
+        [f"{row['provider']}\n{row['meta']}" for row in rows],
+        fontsize=11,
+        color="#334155",
+    )
+    for row_index, row_statuses in enumerate(matrix_statuses):
+        for column_index, status in enumerate(row_statuses):
+            label = status_text[status]
+            if status == "blocked" and rows[row_index]["provider"] == "恒生聚源":
+                label = "身份\n阻断"
+            ax.text(
+                column_index,
+                row_index,
+                label,
+                ha="center",
+                va="center",
+                fontsize=11,
+                fontweight="bold",
+                color="#0F172A",
+            )
+    ax.axvline(3.5, color="#FFFFFF", linewidth=5)
+    ax.text(
+        0.25,
+        1.035,
+        "核心可用性",
+        transform=ax.transAxes,
+        ha="center",
+        color="#143F74",
+        fontsize=13,
+        fontweight="bold",
+    )
+    ax.text(
+        0.75,
+        1.035,
+        "响应字段丰富度",
+        transform=ax.transAxes,
+        ha="center",
+        color="#143F74",
+        fontsize=13,
+        fontweight="bold",
+    )
+    ax.set_title(
+        "6 条 Access Path 的 Dividend Event 证据并不相同",
+        color="#143F74",
+        fontsize=20,
+        fontweight="bold",
+        pad=52,
+    )
+    for spine in ax.spines.values():
+        spine.set_color("#E2E8F0")
+    ax.tick_params(length=0)
+    ax.set_xticks([index - 0.5 for index in range(1, len(columns))], minor=True)
+    ax.set_yticks([index - 0.5 for index in range(1, len(rows))], minor=True)
+    ax.grid(which="minor", color="#FFFFFF", linewidth=3)
+    ax.tick_params(which="minor", bottom=False, left=False)
+    legend = [
+        Patch(facecolor="#12B76A", label="3 轮均观察到"),
+        Patch(facecolor="#F79009", label="语义或身份阻断"),
+        Patch(facecolor="#DCEAF2", label="未独立测量"),
+        Patch(facecolor="#F1F5F9", edgecolor="#E2E8F0", label="未观察 / 未发布"),
+    ]
+    ax.legend(
+        handles=legend,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.17),
+        ncol=4,
+        frameon=False,
+        fontsize=11,
+    )
+    footer = f"数据来源：QVeris Research，{edition_date}；灰色不代表供应商没有该能力"
+    fig.text(
+        0.08,
+        0.025,
+        footer,
+        color="#475569",
+        fontsize=10.5,
+    )
+    fig.subplots_adjust(left=0.22, right=0.98, top=0.78, bottom=0.24)
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    chart_data = {
+        "scope": "固定样本证据，不代表全市场能力",
+        "footer": footer,
+        "columns": columns,
+        "rows": rows,
+    }
+    manifest: dict[str, object] = {
+        "release_id": json.loads(release_path.read_text(encoding="utf-8"))["release"][
+            "release_id"
+        ],
+        "charts": {chart_name: _sha256_identity(chart_path)},
+        "data": chart_data,
+        "input_digests": {
+            "release": _sha256_identity(release_path),
+            "public_evidence": _directory_digest(evidence_dir),
+        },
+        "rendered_at": edition_date,
+    }
+    (output_dir / "evidence-matrix-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def render_selection_tradeoff(
+    selection_snapshot_path: Path,
+    output_dir: Path,
+) -> dict[str, object]:
+    snapshot = json.loads(selection_snapshot_path.read_text(encoding="utf-8"))
+    rows = []
+    for item in snapshot["rows"]:
+        metrics = item["gateway_metrics"]
+        if metrics["state"] != "measured":
+            continue
+        list_price = item["qveris_list_price"]
+        if list_price["state"] != "declared":
+            raise ValueError("QVeris runtime chart requires inspect list pricing")
+        rows.append(
+            {
+                "provider": _DIVIDEND_PROVIDERS[item["provider_id"]],
+                "access_path": "QVeris",
+                "median_latency_ms": metrics["latency_median_ms"],
+                "min_latency_ms": metrics["latency_min_ms"],
+                "max_latency_ms": metrics["latency_max_ms"],
+                "list_price_credits": list_price["amount_credits"],
+                "price_inspected_at": list_price["inspected_at"],
+                "latency_samples": metrics["latency_sample_size"],
+            }
+        )
+    rows.sort(key=lambda item: item["median_latency_ms"])
+    sample_sizes = {item["latency_samples"] for item in rows}
+    if len(sample_sizes) != 1:
+        raise ValueError("selection chart requires consistent sample sizes")
+    latency_samples = next(iter(sample_sizes))
+    inspection_dates = {item["price_inspected_at"] for item in rows}
+    if len(inspection_dates) != 1:
+        raise ValueError("selection chart requires one inspect pricing snapshot")
+    inspection_date = next(iter(inspection_dates))
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_name = "dividend-runtime-tradeoff.png"
+    chart_path = output_dir / chart_name
+    colors = ["#2F78AD", "#6EB0C2", "#143F74", "#FF8C00", "#12B76A"]
+    fig, ax = plt.subplots(figsize=(11, 6.5), facecolor="#F8FAFC")
+    ax.set_facecolor("#F8FAFC")
+    for index, item in enumerate(rows):
+        median_latency = item["median_latency_ms"]
+        min_latency = item["min_latency_ms"]
+        max_latency = item["max_latency_ms"]
+        credits = item["list_price_credits"]
+        ax.errorbar(
+            median_latency,
+            credits,
+            xerr=[
+                [median_latency - min_latency],
+                [max_latency - median_latency],
+            ],
+            fmt="o",
+            markersize=11,
+            capsize=5,
+            color=colors[index % len(colors)],
+            ecolor="#94A3B8",
+            elinewidth=2,
+            zorder=3,
+        )
+        ax.annotate(
+            item["provider"],
+            (median_latency, credits),
+            textcoords="offset points",
+            xytext=(9, 10 if index % 2 == 0 else -18),
+            fontsize=11,
+            fontweight=700,
+            color="#0F172A",
+        )
+    ax.set_xlabel(
+        "Median QVeris gateway latency (ms; bar shows min-max)",
+        color="#334155",
+    )
+    ax.set_ylabel("QVeris list price (credits/call)", color="#334155")
+    ax.set_title(
+        "Dividend Event: latency vs QVeris list price",
+        color="#143F74",
+        fontsize=18,
+        fontweight=700,
+        pad=18,
+    )
+    ax.grid(True, color="#E2E8F0", linewidth=1)
+    for spine in ax.spines.values():
+        spine.set_color("#CBD5E1")
+    edition = snapshot["edition"]
+    fig.text(
+        0.09,
+        0.025,
+        f"QVeris gateway sample · {edition} · n={latency_samples} per path; "
+        f"list credits from qveris inspect ({inspection_date}), not account billing",
+        color="#475569",
+        fontsize=9.5,
+    )
+    fig.subplots_adjust(left=0.1, right=0.96, top=0.84, bottom=0.17)
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    provider_order = {
+        provider_id: index for index, provider_id in enumerate(_DIVIDEND_PROVIDERS)
+    }
+    snapshot_rows = sorted(
+        snapshot["rows"],
+        key=lambda item: (
+            provider_order.get(item["provider_id"], len(provider_order)),
+            item["provider_id"],
+            item["access_path_id"],
+        ),
+    )
+    market_rows = []
+    for item in snapshot_rows:
+        provider_id = item["provider_id"]
+        coverage = item["market_coverage"]
+        access_path_label = (
+            "Native MCP" if item["access_path_type"] == "native_mcp" else "QVeris"
+        )
+        market_rows.append(
+            {
+                "provider_id": provider_id,
+                "access_path_id": item["access_path_id"],
+                "provider": _DIVIDEND_PROVIDERS[provider_id],
+                "access_path_type": item["access_path_type"],
+                "access_path": access_path_label,
+                "label": (
+                    f"{_DIVIDEND_PROVIDERS[provider_id]} · {access_path_label} · "
+                    f"{item['access_path_id']}"
+                ),
+                "results": {result["market"]: result for result in coverage["results"]},
+            }
+        )
+    markets = ["US", "HK", "CN", "JP", "DE", "FR", "BR", "IN", "ES"]
+    if any(set(item["results"]) != set(markets) for item in market_rows):
+        raise ValueError("selection market chart requires the frozen market set")
+    observation_dates = {
+        item["market_coverage"]["observation_date"] for item in snapshot_rows
+    }
+    release_digests = {
+        item["market_coverage"]["release_digest"] for item in snapshot_rows
+    }
+    if len(observation_dates) != 1 or len(release_digests) != 1:
+        raise ValueError("selection market chart requires one market release")
+    observation_date = next(iter(observation_dates))
+    market_release_digest = next(iter(release_digests))
+    selection_digest = _sha256_identity(selection_snapshot_path)
+    total_rounds = {
+        result["total_rounds"]
+        for item in market_rows
+        for result in item["results"].values()
+    }
+    if len(total_rounds) != 1:
+        raise ValueError("selection market chart requires one round count")
+    round_count = next(iter(total_rounds))
+    market_title = (
+        "Dividend Event results: "
+        f"{len(markets)} representative markets × {len(market_rows)} Access Paths"
+    )
+    market_data = {
+        "title": market_title,
+        "edition": snapshot["edition"],
+        "observation_date": observation_date,
+        "release_digest": market_release_digest,
+        "markets": markets,
+        "rows": market_rows,
+    }
+    market_chart_name = "dividend-market-coverage.png"
+    market_chart_path = output_dir / market_chart_name
+    fig, ax = plt.subplots(figsize=(14, 7.4), facecolor="#FFFFFF")
+    state_colors = {
+        "verified": "#12B76A",
+        "provider_negative": "#F79009",
+        "not_applicable": "#E5EEF5",
+    }
+    for row_index, item in enumerate(market_rows):
+        for column_index, market in enumerate(markets):
+            state = item["results"][market]["state"]
+            result = item["results"][market]
+            label = (
+                "N/A"
+                if state == "not_applicable"
+                else f"{result['passed_rounds']}/{result['total_rounds']}"
+            )
+            ax.add_patch(
+                Rectangle(
+                    (column_index - 0.5, row_index - 0.5),
+                    1,
+                    1,
+                    facecolor=state_colors[state],
+                    edgecolor="#FFFFFF",
+                    linewidth=1.4,
+                )
+            )
+            ax.text(
+                column_index,
+                row_index,
+                label,
+                ha="center",
+                va="center",
+                color="#FFFFFF" if state != "not_applicable" else "#475569",
+                fontsize=11,
+                fontweight=700,
+            )
+    ax.set_xlim(-0.5, len(markets) - 0.5)
+    ax.set_ylim(len(market_rows) - 0.5, -0.5)
+    ax.set_xticks(range(len(markets)))
+    ax.set_xticklabels(markets, fontsize=11, color="#334155")
+    ax.set_yticks(range(len(market_rows)))
+    ax.set_yticklabels(
+        [item["label"].replace(" · ", "\n", 1) for item in market_rows],
+        fontsize=10,
+        color="#334155",
+    )
+    ax.tick_params(length=0)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    fig.suptitle(
+        market_title,
+        color="#143F74",
+        fontsize=20,
+        fontweight=700,
+        y=0.96,
+    )
+    fig.legend(
+        handles=[
+            Patch(
+                facecolor="#12B76A",
+                label=f"{round_count}/{round_count} sample passed",
+            ),
+            Patch(
+                facecolor="#F79009",
+                label=f"0/{round_count} sample did not pass",
+            ),
+            Patch(
+                facecolor="#E5EEF5",
+                edgecolor="#CBD5E1",
+                label="N/A · explicitly not applicable",
+            ),
+        ],
+        loc="lower center",
+        ncol=3,
+        frameon=False,
+        bbox_to_anchor=(0.5, 0.055),
+        fontsize=10,
+    )
+    fig.text(
+        0.08,
+        0.018,
+        f"Market Release {observation_date} · "
+        f"{round_count} rounds per applicable cell · "
+        f"{market_release_digest[:23]}… · Selection {selection_digest[:23]}… · "
+        "one representative symbol per market; not full-market coverage",
+        color="#475569",
+        fontsize=9.5,
+    )
+    fig.subplots_adjust(left=0.2, right=0.97, top=0.86, bottom=0.17)
+    fig.savefig(market_chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    manifest: dict[str, object] = {
+        "snapshot_id": snapshot["snapshot_id"],
+        "charts": {
+            chart_name: _sha256_identity(chart_path),
+            market_chart_name: _sha256_identity(market_chart_path),
+        },
+        "data": {"rows": rows, "market_coverage": market_data},
+        "input_digests": {
+            "selection_snapshot": selection_digest,
+        },
+        "rendered_at": edition,
+    }
+    (output_dir / "selection-charts-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def render_release_outcomes(
+    release_dir: Path,
+    cases_path: Path,
+    output_dir: Path,
+    *,
+    edition_date: str,
+) -> dict[str, object]:
+    release_path = release_dir / "release.json"
+    document = json.loads(release_path.read_text(encoding="utf-8"))
+    applicable = [cell for cell in document["cells"] if cell["applicable"]]
+    case_document = yaml.safe_load(cases_path.read_text(encoding="utf-8"))
+    case_roles = {
+        case["case_id"]: case["negative_control"] for case in case_document["cases"]
+    }
+    unknown_case_ids = {
+        cell["case_id"] for cell in applicable if cell["case_id"] not in case_roles
+    }
+    if unknown_case_ids:
+        joined = ", ".join(sorted(unknown_case_ids))
+        raise ValueError(f"release contains cases absent from CAP Pack: {joined}")
+    provider_labels = {
+        "hangseng": "恒生聚源\nQVeris",
+        "ifind": "同花顺 iFinD\nNative MCP",
+        "twelve-data": "Twelve Data\nQVeris",
+        "alpha-vantage": "Alpha Vantage\nQVeris",
+        "eodhd": "EODHD\nQVeris",
+        "massive-stocks": "Massive\nQVeris",
+    }
+    provider_order = [
+        provider_id
+        for provider_id in provider_labels
+        if any(cell["provider_id"] == provider_id for cell in applicable)
+    ]
+    results = {
+        provider_id: {
+            "positive_completed": 0,
+            "positive_total": 0,
+            "negative_completed": 0,
+            "negative_total": 0,
+        }
+        for provider_id in provider_order
+    }
+    for cell in applicable:
+        result = results[cell["provider_id"]]
+        kind = "negative" if case_roles[cell["case_id"]] else "positive"
+        result[f"{kind}_total"] += 1
+        if cell["state"] == "completed":
+            result[f"{kind}_completed"] += 1
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    positions = list(range(len(provider_order)))
+    width = 0.36
+    positive = [
+        results[provider_id]["positive_completed"] for provider_id in provider_order
+    ]
+    negative = [
+        results[provider_id]["negative_completed"] for provider_id in provider_order
+    ]
+    positive_total = [
+        results[provider_id]["positive_total"] for provider_id in provider_order
+    ]
+    negative_total = [
+        results[provider_id]["negative_total"] for provider_id in provider_order
+    ]
+
+    fig, ax = plt.subplots(figsize=(10, 5.8), facecolor="#F8FAFC")
+    ax.set_facecolor("#F8FAFC")
+    positive_bars = ax.bar(
+        [position - width / 2 for position in positions],
+        positive,
+        width,
+        label="正向用例完成轮次",
+        color="#2F78AD",
+    )
+    negative_bars = ax.bar(
+        [position + width / 2 for position in positions],
+        negative,
+        width,
+        label="负向控制完成轮次",
+        color="#6EB0C2",
+    )
+    for bars, values, totals in (
+        (positive_bars, positive, positive_total),
+        (negative_bars, negative, negative_total),
+    ):
+        for bar, value, total in zip(bars, values, totals, strict=True):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                value + 0.08,
+                f"{value}/{total}",
+                ha="center",
+                color="#0F172A",
+                fontsize=9,
+            )
+    ax.set_xticks(positions)
+    ax.set_xticklabels([provider_labels[item] for item in provider_order], fontsize=9)
+    ax.set_ylim(0, 3.65)
+    ax.set_ylabel("完成轮次（每项分母为 3）", color="#0F172A")
+    ax.set_title(
+        "分红事件 Direct Test：正向字段门槛与负向控制",
+        color="#143F74",
+        fontsize=14,
+        fontweight="bold",
+    )
+    ax.grid(axis="y", alpha=0.2, color="#94A3B8")
+    ax.legend(frameon=False, loc="upper center", ncol=2)
+    for spine in ax.spines.values():
+        spine.set_color("#CBD5E1")
+    fig.tight_layout()
+    chart_path = output_dir / "chart-direct-outcomes.png"
+    fig.savefig(chart_path, dpi=180, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+    manifest: dict[str, object] = {
+        "release_id": document["release"]["release_id"],
+        "charts": {chart_path.name: _sha256_identity(chart_path)},
+        "input_digests": {
+            "release": _sha256_identity(release_path),
+            "cases": _sha256_identity(cases_path),
+        },
+        "rendered_at": edition_date,
+    }
+    (output_dir / "charts-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -77,7 +767,31 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("docs/guides/capability-seo/best-dividend-apis/charts"),
     )
+    parser.add_argument("--release-dir", type=Path)
+    parser.add_argument("--selection-snapshot", type=Path)
+    parser.add_argument("--cases", type=Path)
+    parser.add_argument("--edition-date", default="2026-08-11")
     args = parser.parse_args(argv)
+
+    if args.selection_snapshot:
+        manifest = render_selection_tradeoff(
+            args.selection_snapshot,
+            args.output_dir,
+        )
+        print(json.dumps(manifest, ensure_ascii=False))
+        return 0
+
+    if args.release_dir:
+        if not args.cases:
+            parser.error("--cases is required with --release-dir")
+        manifest = render_release_outcomes(
+            args.release_dir,
+            args.cases,
+            args.output_dir,
+            edition_date=args.edition_date,
+        )
+        print(json.dumps(manifest, ensure_ascii=False))
+        return 0
 
     config = yaml.safe_load(args.data.read_text(encoding="utf-8"))
     suppliers = config["suppliers"]

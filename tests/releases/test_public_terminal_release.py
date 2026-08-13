@@ -1,0 +1,208 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import replace
+from pathlib import Path
+
+import pytest
+
+from qveris_bench.cap_packs.dividend_events.direct import (
+    validate_public_dividend_outcome,
+)
+from qveris_bench.execution.direct_binding import (
+    direct_binding_registry_digest,
+    load_direct_binding_registry,
+)
+from qveris_bench.models.run import RunPlan
+from qveris_bench.releases.public_terminal import (
+    PublicTerminalReleaseError,
+    assemble_public_terminal_release,
+)
+from qveris_bench.releases.replay import ReleaseReplayError, replay_release_dir
+from qveris_bench.suites.compiler import compile_suite
+from scripts.build_dividend_market_release import LIMITATIONS
+
+ROOT = Path(__file__).resolve().parents[2]
+PACK = ROOT / "cap_packs/dividend_events"
+PUBLIC_EVIDENCE = ROOT / "evidence/dividend-events-market-coverage-2026-q3-v1"
+RELEASE = ROOT / "releases/dividend-events-market-coverage-2026-q3-v1"
+EXPECTED_DIGEST = (
+    "sha256:52f432c581fc6e8868e9070be21ad1b210b59238fb4c26d252f2a13a2d93f70e"
+)
+ATTESTATION = json.loads((RELEASE / "github-artifacts.json").read_text())
+ATTESTATION_BYTES = (RELEASE / "github-artifacts.json").read_bytes()
+PROVENANCE = {
+    item["name"].removeprefix("dividend-market-"): (
+        item["public_digest"],
+        item["raw_digest"],
+    )
+    for item in ATTESTATION["artifacts"]
+}
+
+
+def _assemble(
+    paths: tuple[Path, ...] | None = None,
+    *,
+    provenance: dict[str, tuple[str, str]] | None = None,
+):
+    compiled = compile_suite(
+        PACK / "market-suite.yaml",
+        PACK / "market-cases.yaml",
+        ROOT / "providers",
+        PACK / "cap.yaml",
+    )
+    historical_plan = RunPlan.model_validate_json(
+        (RELEASE / "run-plan.json").read_text()
+    )
+    compiled = replace(
+        compiled,
+        fingerprint=historical_plan.suite_fingerprint,
+        run_plan=historical_plan,
+    )
+    registry_path = PACK / "market-direct-bindings.json"
+    return assemble_public_terminal_release(
+        compiled=compiled,
+        binding_registry=load_direct_binding_registry(registry_path),
+        binding_registry_digest=direct_binding_registry_digest(registry_path),
+        terminal_paths=paths or tuple(sorted(PUBLIC_EVIDENCE.glob("*.json"))),
+        release_id="dividend-events-market-coverage-2026-q3-v1",
+        version="1.0.0",
+        limitations=LIMITATIONS,
+        outcome_validator=lambda case, binding, facts: validate_public_dividend_outcome(
+            case, binding, facts, PACK / "observation-schema.yaml"
+        ),
+        expected_github_run_id=ATTESTATION["github_run_id"],
+        expected_github_sha=ATTESTATION["github_sha"],
+        expected_provenance=provenance or PROVENANCE,
+        github_artifacts_manifest_bytes=ATTESTATION_BYTES,
+    )
+
+
+def test_assembles_every_applicable_cell_and_preserves_negative_results() -> None:
+    artifacts = _assemble()
+
+    assert len(artifacts.run_plan.cells) == len(artifacts.cells) == 120
+    assert len(artifacts.evidence) == 66
+    assert sum(cell.applicable for cell in artifacts.cells) == 66
+    assert sum(cell.state.value == "not_applicable" for cell in artifacts.cells) == 54
+    assert sum(cell.state.value == "completed" for cell in artifacts.cells) == 50
+    assert (
+        sum(cell.state.value == "provider_negative" for cell in artifacts.cells) == 16
+    )
+    assert artifacts.release_bytes == artifacts.rebuild()
+
+
+def test_committed_market_release_exactly_matches_public_terminals() -> None:
+    replay = replay_release_dir(RELEASE, expected_digest=EXPECTED_DIGEST)
+    assert replay.expected_digest_verified
+
+
+def test_rejects_missing_terminal_evidence() -> None:
+    paths = tuple(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+
+    with pytest.raises(PublicTerminalReleaseError, match="terminal run keys"):
+        _assemble(paths[:-1])
+
+
+def test_rejects_terminal_identity_drift(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["provider_id"] = "wrong-provider"
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="cell identity"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_tampered_binding_registry_digest(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["binding_registry_digest"] = "sha256:" + "f" * 64
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="binding registry digest"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_provider_negative_relabelled_as_completed(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    target = next(path for path in paths if "eodhd-jp-7203" in path.name)
+    document = json.loads(target.read_text())
+    document.update(
+        {"state": "completed", "unmet_conditions": [], "failure_attribution": None}
+    )
+    changed = tmp_path / target.name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[paths.index(target)] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="CAP-owned evaluation"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_completed_terminal_with_wrong_canonical_symbol(
+    tmp_path: Path,
+) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    target = next(path for path in paths if "hangseng-cn-600519" in path.name)
+    document = json.loads(target.read_text())
+    document["facts"]["symbol"] = "WRONG"
+    document["facts"]["returned_symbol"] = "WRONG"
+    changed = tmp_path / target.name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[paths.index(target)] = changed
+    provenance = dict(PROVENANCE)
+    provenance[target.stem] = (
+        f"sha256:{hashlib.sha256(changed.read_bytes()).hexdigest()}",
+        document["raw_digest"],
+    )
+
+    with pytest.raises(PublicTerminalReleaseError, match="CAP-owned evaluation"):
+        _assemble(tuple(paths), provenance=provenance)
+
+
+def test_rejects_terminal_github_provenance_drift(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["github_sha"] = "f" * 40
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="GitHub provenance"):
+        _assemble(tuple(paths))
+
+
+def test_rejects_terminal_raw_digest_drift(tmp_path: Path) -> None:
+    paths = list(sorted(PUBLIC_EVIDENCE.glob("*.json")))
+    document = json.loads(paths[0].read_text())
+    document["raw_digest"] = "sha256:" + "f" * 64
+    changed = tmp_path / paths[0].name
+    changed.write_text(json.dumps(document), encoding="utf-8")
+    paths[0] = changed
+
+    with pytest.raises(PublicTerminalReleaseError, match="artifact provenance"):
+        _assemble(tuple(paths))
+
+
+def test_replay_rejects_tampered_public_terminal(tmp_path: Path) -> None:
+    release_dir = tmp_path / "releases" / RELEASE.name
+    release_dir.mkdir(parents=True)
+    for item in RELEASE.iterdir():
+        if item.is_file():
+            (release_dir / item.name).write_bytes(item.read_bytes())
+    evidence_dir = tmp_path / "evidence" / RELEASE.name
+    evidence_dir.mkdir(parents=True)
+    for item in PUBLIC_EVIDENCE.glob("*.json"):
+        (evidence_dir / item.name).write_bytes(item.read_bytes())
+    target = next(evidence_dir.glob("*.json"))
+    target.write_text("{}\n", encoding="utf-8")
+
+    with pytest.raises(
+        ReleaseReplayError, match="public evidence bytes digest mismatch"
+    ):
+        replay_release_dir(release_dir)

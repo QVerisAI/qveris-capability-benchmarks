@@ -7,7 +7,7 @@ capabilities:
     harbor_capability_id: NEWS.FIN.REALTIME
   - cap_id: dividend-events
     name: Dividend Events
-    lifecycle: candidate
+    lifecycle: runnable
     business_use: Select a provider for dated per-share dividend event records.
     source_id: harbor-capability-catalog
     harbor_capability_id: MKT.DIVIDENDS

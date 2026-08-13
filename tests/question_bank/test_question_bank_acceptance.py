@@ -31,12 +31,12 @@ def test_ac1_question_bank_contains_only_harbor_candidates() -> None:
     }
     assert lifecycle_by_cap == {
         "crypto-spot-quote": "runnable",
-        "dividend-events": "candidate",
+        "dividend-events": "runnable",
         "financial-ratios": "candidate",
         "fx-spot-rate": "candidate",
         "govt-bond-yield": "candidate",
         "realtime-financial-news": "candidate",
-    }, "AC1 only the formal crypto CAP may advance from Harbor candidate to runnable"
+    }, "AC1 runnable CAPs must have a formal Harbor-backed pack"
     assert {str(cap.source_id) for cap in bank.capabilities} == {
         "harbor-capability-catalog"
     }
@@ -51,10 +51,9 @@ def test_ac2_every_candidate_has_contract_derived_core_and_boundary_questions() 
             for question in bank.questions
             if question.cap_id == capability.cap_id
         ]
-        assert {question.role for question in questions} == {
-            "core_positive",
-            "boundary_negative",
-        }, f"AC2 {capability.cap_id} must retain the minimum CAP question pair"
+        assert {"core_positive", "boundary_negative"}.issubset(
+            {question.role for question in questions}
+        ), f"AC2 {capability.cap_id} must retain the minimum CAP question pair"
         source_ids = {
             str(source_id)
             for question in questions
@@ -139,5 +138,5 @@ def test_ac4_question_validate_runs_through_the_installed_cli() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "6 capabilities" in result.stdout
-    assert "12 questions" in result.stdout
-    assert result.stdout.endswith("12 questions.\n")
+    assert "14 questions" in result.stdout
+    assert result.stdout.endswith("14 questions.\n")

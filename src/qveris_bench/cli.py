@@ -26,6 +26,10 @@ from qveris_bench.models.provider import QualificationDecision
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunCell, RunPlan
 from qveris_bench.models.schema_export import check_schemas, export_schemas
+from qveris_bench.profiles.selection import (
+    SelectionSnapshotBuildError,
+    build_selection_snapshot,
+)
 from qveris_bench.providers.repository import (
     ProviderRegistryRepository,
     ProviderValidationError,
@@ -58,6 +62,7 @@ suite_app = typer.Typer(help="Freeze suites and compile Run Plans.")
 release_app = typer.Typer(help="Build and verify immutable benchmark releases.")
 qveris_app = typer.Typer(help="Discover QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
+selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
@@ -66,11 +71,28 @@ app.add_typer(suite_app, name="suite")
 app.add_typer(release_app, name="release")
 app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
+app.add_typer(selection_app, name="selection")
 
 
 @app.callback()
 def main() -> None:
     """Run QVeris capability benchmarks."""
+
+
+@selection_app.command("build")
+def selection_build(
+    input: Annotated[Path, typer.Option(help="Selection snapshot input YAML.")],
+    output: Annotated[Path, typer.Option(help="Immutable snapshot JSON output.")],
+) -> None:
+    """Build a scoped selection snapshot from pinned release facts."""
+    try:
+        built = build_selection_snapshot(input, _REPOSITORY_ROOT)
+    except SelectionSnapshotBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(built.json_bytes)
+    typer.echo(f"Built Selection Snapshot -> {output}")
 
 
 @question_app.command("validate")

@@ -1,55 +1,49 @@
 # 我们的方法论
 
-## 我们公布证据，不公布排名
+## 我们公布证据，不公布综合排名
 
-本榜单不回答"哪家供应商最好"——那是一个没有上下文的问题。它只回答一个可验证的问题：**在固定的用例、相同的环境、公开的判定规则下，每一家供应商的接口实际返回了什么。**
+每篇测评只回答一个有边界的问题：在冻结用例、固定 Access Path、公开判定规则和明确的 as-of 时间下，真实接口返回了什么。
 
-我们没有综合评分。一个总分会把"延迟低但自解释差"和"覆盖广但贵"压成一个数字，而那是两件不同的事。每个维度独立呈现，由你按自己产品的优先级裁决。
+Provider 与 Access Path 分开记录。Native API、Native MCP 和 QVeris 是不同的机器接口，即使背后是同一家供应商，也不会合并运行或结果。我们不发布供应商总分、跨 CAP 综合分或全局赢家；开发者应按自己的任务与约束读取各维度事实。
 
-> **我们不公布排名，我们公布证据。**
+> 我们不公布排名，我们公布可复核的事实。
 
----
+## Direct Test 是发布门槛
 
-## 全部结论来自真实调用，公开可复现
+每个适用的 Provider/Access Path 单元都必须真实调用 canonical tool。CAP Pack 负责定义：
 
-本文的每一条数字都来自**本平台真实调用**，不是供应商文档的自述，也不转述任何第三方评分：
+- 正向用例需要哪些业务字段、格式、语义和容差；
+- 负向控制怎样证明接口会返回空态或明确拒绝，而不是编造记录；
+- 哪些市场或用例不适用，以及 N/A 的理由；
+- 如何从供应商原始响应提取业务事实。
 
-- **Direct Test（直连测试）**：对每家供应商的 canonical 工具发起真实调用。每个 CAP 冻结固定用例——**正向用例**（真实标的检索，验证必填字段返回且取值合法）+ **负向控制**（无效输入，验证接口返回空态或明确报错、不编造数据）——每个适用单元执行 2 轮，2 轮稳定才算通过。
-- **AI 友好度探针**：让固定模型按真实任务调用工具，测四个环节——**入参**（能否按契约填对参数）、**失败自愈**（报错后能否修正重试）、**出参解读**（能否读出答案、不添油加醋）、**响应自解释**（仅凭响应能否确定数值、单位、币种、时间）。
+每个适用用例至少执行 3 轮。基础设施错误不会伪装成供应商失败；供应商侧的空数据或拒绝必须带可核验的失败归因。Direct Test 缺失时，该单元不能进入发布结论。
 
-所有固定用例、判定规则、冻结样本公开在 [QVeris Capability Benchmarks](https://github.com/QVerisAI/qveris-capability-benchmarks) 仓库，可复现。判定规则见 [AI 友好度协议](https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/docs/ai-friendliness-protocol.md)，证据披露见[证据与披露政策](https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/docs/evidence-and-disclosure-policy.md)。
+## 证据先于文章
 
----
+执行完成后，发布链路先生成 immutable release，再由文章引用 release 事实：
 
-## 判定规则对标公开标准
+1. 冻结 suite 生成 `run-plan.json` 与唯一 run key；
+2. 每个适用单元生成独立终态 cell、outcome 和 evidence ref；
+3. 公开证据经过脱敏、披露和来源许可检查；
+4. release 绑定 evidence digest、extractor version、suite fingerprint 与 run-plan digest；
+5. 离线 replay 重建完全相同的 `release.json` 字节。
 
-我们不发明标准。每一类判定都对照业界公开的规范，让我们的数字可以被任何第三方基准核验：
+原始证据默认私有，API key、个人信息和未经授权的响应不会进入仓库。文章不能用供应商声明补齐 release 没有测得的字段，也不能把 QVeris 网关侧延迟或 credits 写成 Native API 性能或官网价格。
 
-| 我们的判定 | 对标标准 | 出处 |
-|---|---|---|
-| 参数正确性（入参 / 失败重试） | 与公开函数调用基准同口径 | [BFCL — Berkeley Function-Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html) |
-| 货币标识 | ISO 4217 | [ISO 4217 currency codes](https://www.iso.org/iso-4217-currency-codes.html) |
-| 时间戳格式 | ISO 8601 | [ISO 8601 date and time format](https://www.iso.org/iso-8601-date-and-time-format.html) |
-| 工具调用契约 | MCP / function calling 规范 | [Model Context Protocol](https://modelcontextprotocol.io/) · [Anthropic tool use](https://docs.anthropic.com/en/docs/build-with-claude/tool-use) |
-| 负向控制不编造 | 负向测试标准实践 | [ISTQB](https://www.istqb.org/) |
-| 响应自解释性 | LLM-friendly API design 实践 | [awesome-agentic-patterns](https://github.com/nibzard/awesome-agentic-patterns/blob/main/patterns/llm-friendly-api-design.md) |
+## 状态怎么读
 
-凡响应缺失单位、币种、时区等自解释信息，我们在文章中如实标注，不替供应商补全。
-
----
-
-## 结果状态与资格
-
-| 状态 | 定义 |
+| 文章状态 | 含义 |
 |---|---|
-| **合格** | 正向必填字段全部返回且取值合法；负向控制返回空态或明确报错、不编造数据；2 轮结果稳定 |
-| **未完全达标** | 任一适用单元未通过上述判定 |
-| **未测** | 该供应商无 QVeris canonical 工具或本轮未授权，不计分、不排名 |
+| **Qualified** | 该 Access Path 的全部适用正向规则与负向控制在规定轮次内满足发布门槛 |
+| **Not qualified** | 至少一个适用单元没有满足 CAP 的公开规则；文章必须写明直接原因 |
+| **N/A** | 用例对该 Provider/Access Path 不适用，不计为通过或失败 |
+| **Evidence insufficient** | 尚无可发布证据，不从供应商文档、市场常识或其他 Access Path 推断 |
 
-第三方评估快照（如 Harbor 覆盖评估）只用于构建候选名单和异常对比，不作为本榜单的发布依据。当我们与第三方评估结论不一致时，以本平台可复现的实测为准。
+运行层的 `completed`、`provider_negative` 与基础设施失败用于描述单元如何结束，不等同于跨任务评价。Agent-interface 相关观察只有在 CAP 定义了独立测量且 release 携带证据时才展示，并保持参数清晰度、schema 稳定性、错误恢复、分页、语言映射和单工具完成等事实相互独立。
 
----
+## 更正、复测与供应商参与
 
-## 更正与复测
+历史 release 不原地覆盖。相同规则下的新执行生成新的证明；规则、suite 或结果发生实质变化时生成 successor release。离线 replay 只能证明仓库内文件一致，不能冒充一次新的供应商调用或社区复测。
 
-我们只发布可复现的实测结论，并保留全部固定输入用例。若你是供应商并认为某行不准确，请提交带可复现用例的事实更正；入选与排名均不可购买。每次出新版，我们以同一套固定用例重跑，2–4 小时刷新一轮。
+供应商可以通过 [Provider submission](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=provider-submission.yml) 提交官方 Access Path，开发者可以提出 [CAP 与方法改进](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=cap-method-proposal.yml)，任何人都可以用 [Result challenge](https://github.com/QVerisAI/qveris-capability-benchmarks/issues/new?template=result-challenge.yml) 对具体 release 事实提供反证。凭证始终通过私下的安全渠道安排，不能写入 Issue 或 PR。

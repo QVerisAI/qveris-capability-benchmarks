@@ -14,6 +14,7 @@ EXPECTED_SCHEMAS = {
     "evidence-bundle.schema.json",
     "provider-profile.schema.json",
     "run-plan.schema.json",
+    "selection-snapshot.schema.json",
     "task-outcome.schema.json",
 }
 

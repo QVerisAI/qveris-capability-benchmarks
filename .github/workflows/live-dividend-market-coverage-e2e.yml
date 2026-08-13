@@ -1,0 +1,76 @@
+name: Live Dividend Market Coverage Direct E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  direct:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-live-dividend-market-e2e'
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2]
+        binding_id:
+          - ifind-us-aapl-dividend-market
+          - ifind-hk-0700-dividend-market
+          - ifind-cn-600519-dividend-market
+          - ifind-invalid-dividend-market-symbol
+          - hangseng-cn-600519-dividend-market
+          - hangseng-invalid-dividend-market-symbol
+          - twelve-data-us-aapl-dividend-market
+          - twelve-data-hk-0700-dividend-market
+          - twelve-data-cn-600519-dividend-market
+          - twelve-data-jp-7203-dividend-market
+          - twelve-data-de-sap-dividend-market
+          - twelve-data-fr-mc-dividend-market
+          - twelve-data-br-petr4-dividend-market
+          - twelve-data-in-reliance-dividend-market
+          - twelve-data-es-san-dividend-market
+          - twelve-data-invalid-dividend-market-symbol
+          - alpha-vantage-us-aapl-dividend-market
+          - alpha-vantage-cn-600519-dividend-market
+          - alpha-vantage-fr-mc-dividend-market
+          - alpha-vantage-es-san-dividend-market
+          - alpha-vantage-invalid-dividend-market-symbol
+          - eodhd-us-aapl-dividend-market
+          - eodhd-hk-0700-dividend-market
+          - eodhd-cn-600519-dividend-market
+          - eodhd-jp-7203-dividend-market
+          - eodhd-de-sap-dividend-market
+          - eodhd-fr-mc-dividend-market
+          - eodhd-br-petr4-dividend-market
+          - eodhd-in-reliance-dividend-market
+          - eodhd-es-san-dividend-market
+          - eodhd-invalid-dividend-market-symbol
+          - massive-us-aapl-dividend-market
+          - massive-invalid-dividend-market-symbol
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: |
+          uv run pytest tests/e2e/test_live_dividend_events.py -q || \
+            uv run pytest tests/e2e/test_live_dividend_events.py -q
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          IFIND_MCP_API_KEY: ${{ secrets.IFIND_MCP_AUTH_TOKEN }}
+          RUN_LIVE_DIVIDEND_EVENTS: "1"
+          DIVIDEND_SUITE: market_coverage
+          DIVIDEND_BINDING_ID: ${{ matrix.binding_id }}
+          DIVIDEND_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dividend-market-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error

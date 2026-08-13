@@ -1,0 +1,187 @@
+{
+  "github_run_id": "31473641238",
+  "github_sha": "2f49f0125cfc63036d9c0b3d3a0f57ad11605552",
+  "github_head_sha": "90af041a72dfdcfc6442c7ca26acd32490655c67",
+  "artifacts": [
+    {
+      "id": 9094336321,
+      "name": "dividend-terminal-alpha-vantage-aapl-dividends-round-1",
+      "digest": "sha256:5836b4465c995785e23f84fd52bdaaa0ced780b75e5f226ea58d73cb031c7e17"
+    },
+    {
+      "id": 9094327219,
+      "name": "dividend-terminal-alpha-vantage-aapl-dividends-round-2",
+      "digest": "sha256:4276b45f3d0e599ec4d0a693fb5c603f16d2f6cc35f7763ea268d5ed8cfb0406"
+    },
+    {
+      "id": 9094338979,
+      "name": "dividend-terminal-alpha-vantage-aapl-dividends-round-3",
+      "digest": "sha256:aad69dc70f8c016f4dcd1e54c7169d579fc4d259b0712f1e57b3d6b052cbbc2b"
+    },
+    {
+      "id": 9094333776,
+      "name": "dividend-terminal-alpha-vantage-invalid-dividend-symbol-round-1",
+      "digest": "sha256:f2b3b3dac2d329c339c5983ab9041efb724edfd7097260cd04df2b557b6e0a35"
+    },
+    {
+      "id": 9094328530,
+      "name": "dividend-terminal-alpha-vantage-invalid-dividend-symbol-round-2",
+      "digest": "sha256:5c89ec1edc3ab30f948e8b2add3f8babb15eb8dec27859b9f401f4a0e18f2d16"
+    },
+    {
+      "id": 9094335571,
+      "name": "dividend-terminal-alpha-vantage-invalid-dividend-symbol-round-3",
+      "digest": "sha256:2d83ed79620f29030b6352e3ace80d79de74c5d5f1bc2241e6211c00280c7954"
+    },
+    {
+      "id": 9094337062,
+      "name": "dividend-terminal-eodhd-aapl-dividends-round-1",
+      "digest": "sha256:cfad27b8a411405dd5bdce30edafc0c3fcc5d9c640ecaf3342b15a0723f3233c"
+    },
+    {
+      "id": 9094327903,
+      "name": "dividend-terminal-eodhd-aapl-dividends-round-2",
+      "digest": "sha256:80ce5fb1da769b3b44f0ec1654452870344d412c73cabe9872b0f21cd9a357c3"
+    },
+    {
+      "id": 9094336220,
+      "name": "dividend-terminal-eodhd-aapl-dividends-round-3",
+      "digest": "sha256:2d56e53c9705499d0f965b3fdc5b2672ef712373824b9a6d24c4686694af1215"
+    },
+    {
+      "id": 9094326479,
+      "name": "dividend-terminal-eodhd-invalid-dividend-symbol-round-1",
+      "digest": "sha256:d995f7c47b142c99d4c20572908606eb307882c2a2a87c670425c09a9fa59e4e"
+    },
+    {
+      "id": 9094326796,
+      "name": "dividend-terminal-eodhd-invalid-dividend-symbol-round-2",
+      "digest": "sha256:32bca428f30a1991bcf8029895339ca846e8b246f891261ec831dfca18582cd1"
+    },
+    {
+      "id": 9094337193,
+      "name": "dividend-terminal-eodhd-invalid-dividend-symbol-round-3",
+      "digest": "sha256:81c1b55555383ee15aeba2c3600c9814ee6213bdc3da1c71fdf78224e0ccce65"
+    },
+    {
+      "id": 9094335193,
+      "name": "dividend-terminal-hangseng-cn-600519-dividends-round-1",
+      "digest": "sha256:af7ebae2ee3ea35cc5434748766099440581b92c5c090deb40c2f94c069ac6bb"
+    },
+    {
+      "id": 9094336389,
+      "name": "dividend-terminal-hangseng-cn-600519-dividends-round-2",
+      "digest": "sha256:0d7c0a8d6ac8e849db27639ac79acf1c596184c21ea5a58f900523c112d965e7"
+    },
+    {
+      "id": 9094335674,
+      "name": "dividend-terminal-hangseng-cn-600519-dividends-round-3",
+      "digest": "sha256:b63b8744d511672f92f7f3476f27b8d9bd6fd66f74e7040d26b8b91ff542028a"
+    },
+    {
+      "id": 9094327098,
+      "name": "dividend-terminal-hangseng-invalid-dividend-symbol-round-1",
+      "digest": "sha256:4fa5a6bba0eedc0ad72bde576e00e0308b60a3645e89e08168eccb85aa74a653"
+    },
+    {
+      "id": 9094328240,
+      "name": "dividend-terminal-hangseng-invalid-dividend-symbol-round-2",
+      "digest": "sha256:6ed28a9029f216347221a588196405a5c6565fdd1d466311caf20e080913fb17"
+    },
+    {
+      "id": 9094325295,
+      "name": "dividend-terminal-hangseng-invalid-dividend-symbol-round-3",
+      "digest": "sha256:465983af8a6fffd7c1b5c28ebfa5f18e247b9ff536757044690e84536ffc1a92"
+    },
+    {
+      "id": 9094342100,
+      "name": "dividend-terminal-ifind-cn-600519-dividends-round-1",
+      "digest": "sha256:d360ef48ae6746c07c48d5c4656d37f8d4d24b8155684f84db291442b060de7e"
+    },
+    {
+      "id": 9094329487,
+      "name": "dividend-terminal-ifind-cn-600519-dividends-round-2",
+      "digest": "sha256:68fe306b54e1dbf3d4725bd4979d7eb05091b5b52ae2162238557281c13d939d"
+    },
+    {
+      "id": 9094340077,
+      "name": "dividend-terminal-ifind-cn-600519-dividends-round-3",
+      "digest": "sha256:48aca5eb83f58174b34a2f776ba17450d46532f4581482c4058cf445c183abf9"
+    },
+    {
+      "id": 9094331560,
+      "name": "dividend-terminal-ifind-invalid-dividend-symbol-round-1",
+      "digest": "sha256:e7082766feb6cbbac8c6387c46a96dbd5bbe5f564c33a6045001b7d324af9915"
+    },
+    {
+      "id": 9094330229,
+      "name": "dividend-terminal-ifind-invalid-dividend-symbol-round-2",
+      "digest": "sha256:f22c31cb7820031793ca927c64db155beafd8ce9923c3fb0a16389a265cd7c75"
+    },
+    {
+      "id": 9094331750,
+      "name": "dividend-terminal-ifind-invalid-dividend-symbol-round-3",
+      "digest": "sha256:a46e434fcd839287a5d619e6ea37ef990ea5883c971b0c04f2a5f86e995d0e72"
+    },
+    {
+      "id": 9094327578,
+      "name": "dividend-terminal-massive-aapl-dividends-round-1",
+      "digest": "sha256:3df32d623c7e2dba062a5b03d6ff550ce1061babe0bfd8aa54d771db57930230"
+    },
+    {
+      "id": 9094327651,
+      "name": "dividend-terminal-massive-aapl-dividends-round-2",
+      "digest": "sha256:e864508726d9e418491ce986d3603a525336bfd54d24c324beb8181a680f6be5"
+    },
+    {
+      "id": 9094338955,
+      "name": "dividend-terminal-massive-aapl-dividends-round-3",
+      "digest": "sha256:8caa86c8cd0141e95f1f38400a69f2e94f4250c4678b9d5d4fb7e11e5abecda8"
+    },
+    {
+      "id": 9094325644,
+      "name": "dividend-terminal-massive-invalid-dividend-symbol-round-1",
+      "digest": "sha256:ef256fc2c9f785eca3d97cfd9f119585b9b5531a4f220c4cdeb21c4dac061c18"
+    },
+    {
+      "id": 9094327520,
+      "name": "dividend-terminal-massive-invalid-dividend-symbol-round-2",
+      "digest": "sha256:ce284e64849d8c02cbf351271287d6b5f71c559d4269fe1ff0da875e7dc20ad9"
+    },
+    {
+      "id": 9094334685,
+      "name": "dividend-terminal-massive-invalid-dividend-symbol-round-3",
+      "digest": "sha256:49b853e9c3130e75637392c3595e3a0181684923cb0404a32068c3d4c9173025"
+    },
+    {
+      "id": 9094334256,
+      "name": "dividend-terminal-twelve-data-aapl-dividends-round-1",
+      "digest": "sha256:063afc2a9619d215d0e06d3ad3b005eed73a1341d92b0041031525b57d0e3b0d"
+    },
+    {
+      "id": 9094326203,
+      "name": "dividend-terminal-twelve-data-aapl-dividends-round-2",
+      "digest": "sha256:8a30348be2bdd972e9fa52b258bfb8203dcb37dd65de4781bd7d6e2c542e84a2"
+    },
+    {
+      "id": 9094336827,
+      "name": "dividend-terminal-twelve-data-aapl-dividends-round-3",
+      "digest": "sha256:c59f791065ecd094e8352373a32e72dd26897112284c8bfe3a6a03fd5264cece"
+    },
+    {
+      "id": 9094327815,
+      "name": "dividend-terminal-twelve-data-invalid-dividend-symbol-round-1",
+      "digest": "sha256:2ba95176db92660d284e280617bdfe08c379647e27f766078edc81426a622c7b"
+    },
+    {
+      "id": 9094328919,
+      "name": "dividend-terminal-twelve-data-invalid-dividend-symbol-round-2",
+      "digest": "sha256:9bcee60e7ff3f428ed07e1ade61de141ffb96976f90b894fc48449a60998837a"
+    },
+    {
+      "id": 9094337591,
+      "name": "dividend-terminal-twelve-data-invalid-dividend-symbol-round-3",
+      "digest": "sha256:015d6f9f93b9f5da19a714de60e59bffced7b797a702e4ff13bb62d7aa570233"
+    }
+  ]
+}

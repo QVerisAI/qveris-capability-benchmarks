@@ -1,0 +1,16 @@
+cap_id: dividend-events
+version: 1.0.0
+name: Dividend Events
+business_use: Compare dated per-share cash dividend event retrieval for equity data integrations.
+scope:
+  - US and mainland-China listed equity cash dividend events within a fixed date window.
+exclusions:
+  - Dividend forecasts, yield calculations, fund distributions, splits, rights issues, and cross-CAP aggregate rankings.
+markets: [US, CN]
+asset_types: [EQUITY]
+sources:
+  - source_type: harbor_catalog
+    harbor_capability_id: MKT.DIVIDENDS
+    contract_version: 1
+    catalog_snapshot_digest: e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe
+    contract_digest: 1de71a9968a1cb04f26603e5af5479f255afcc962532e6bd6cbcb6f298931b37

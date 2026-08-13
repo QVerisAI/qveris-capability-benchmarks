@@ -76,9 +76,10 @@ Dimensions are generic operators instantiated by each CAP contract:
 | `agent_response_interpretation` | AI 出参解读 | question observations + response schema |
 | `agent_error_recovery` | AI 错误自愈 | 冻结失败响应 + 修正后重试（见 `docs/ai-friendliness-protocol.md`） |
 
-Market coverage for market_routing reuses Harbor SV (scope validation)
-outcomes as input where available; it is cross-checked by our own Direct Test
-rows before publication. Harbor grades are never copied into public copy.
+Market coverage for `market_routing` may reuse Harbor SV as preflight input for
+representative symbols and explicit unsupported scopes. Unknown, missing, or failed
+preflight results still run Direct Test. Published coverage states come only from
+our own immutable release; Harbor grades are never copied into public copy.
 
 ## 5. Evidence rule: Harbor is reference only
 

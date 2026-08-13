@@ -10,6 +10,7 @@ from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.provider import AccessPath, ProviderProfile
 from qveris_bench.models.release import BenchmarkRelease
 from qveris_bench.models.run import RunPlan, TaskOutcome
+from qveris_bench.models.selection import SelectionSnapshot
 from qveris_bench.models.suite import BenchmarkSuite
 
 SCHEMA_MODELS: dict[str, type[BaseModel]] = {
@@ -20,6 +21,7 @@ SCHEMA_MODELS: dict[str, type[BaseModel]] = {
     "evidence-bundle.schema.json": EvidenceBundle,
     "provider-profile.schema.json": ProviderProfile,
     "run-plan.schema.json": RunPlan,
+    "selection-snapshot.schema.json": SelectionSnapshot,
     "task-outcome.schema.json": TaskOutcome,
 }
 

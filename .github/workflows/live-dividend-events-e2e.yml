@@ -1,0 +1,52 @@
+name: Live Dividend Events Golden CAP Direct E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  direct:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-live-dividend-e2e'
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2, 3]
+        binding_id:
+          - ifind-cn-600519-dividends
+          - ifind-invalid-dividend-symbol
+          - hangseng-cn-600519-dividends
+          - hangseng-invalid-dividend-symbol
+          - twelve-data-aapl-dividends
+          - twelve-data-invalid-dividend-symbol
+          - alpha-vantage-aapl-dividends
+          - alpha-vantage-invalid-dividend-symbol
+          - eodhd-aapl-dividends
+          - eodhd-invalid-dividend-symbol
+          - massive-aapl-dividends
+          - massive-invalid-dividend-symbol
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: uv run pytest tests/e2e/test_live_dividend_events.py -q
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          IFIND_MCP_API_KEY: ${{ secrets.IFIND_MCP_AUTH_TOKEN }}
+          RUN_LIVE_DIVIDEND_EVENTS: "1"
+          DIVIDEND_BINDING_ID: ${{ matrix.binding_id }}
+          DIVIDEND_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dividend-terminal-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error

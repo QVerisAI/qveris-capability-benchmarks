@@ -46,6 +46,9 @@ class BenchmarkSuite(FrozenModel):
     modes: tuple[RunMode, ...] = Field(min_length=1)
     rounds: int = Field(ge=1)
     environment: dict[str, str] = Field(default_factory=dict)
+    outcome_rules_file: str = Field(
+        default="outcome-rules.yaml", pattern=r"^[a-z0-9][a-z0-9.-]*\.yaml$"
+    )
     agent_protocol: AgentProtocol | None = None
     not_applicable: tuple[ApplicabilityRule, ...] = ()
 

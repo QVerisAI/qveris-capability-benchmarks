@@ -630,6 +630,19 @@
       "title": "Evidence Ids",
       "type": "array"
     },
+    "github_artifacts_manifest_digest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Github Artifacts Manifest Digest"
+    },
     "limitations": {
       "default": [],
       "items": {
@@ -672,6 +685,19 @@
       },
       "title": "Provider Feedback Facts",
       "type": "object"
+    },
+    "public_evidence_manifest_digest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Public Evidence Manifest Digest"
     },
     "release_id": {
       "maxLength": 128,

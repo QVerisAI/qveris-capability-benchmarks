@@ -1,0 +1,220 @@
+{
+  "evidence": [
+    {
+      "evidence_id": "alpha-vantage-aapl-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-aapl-dividends-round-1-terminal.json",
+      "public_digest": "sha256:db7d5ad24aa0a6f67b6950594db85fee6d6a37d84b44b69eb96f5f21e3019ebe",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-aapl-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-aapl-dividends-round-2-terminal.json",
+      "public_digest": "sha256:db47caca833b2d8c70f12d5fe934953e5be90aee09730d4b7510b883abae1d83",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-aapl-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-aapl-dividends-round-3-terminal.json",
+      "public_digest": "sha256:74bbef735af28d5aebe617ad154efcb0033280a143b1a66ca5b730e644b6bd9c",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:alpha-vantage:alpha-vantage-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:f7e458a58117138595e719893a244a1f7e1022823e94df76abc8e732032e98a2",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:be62eb3461a854b986672d5559afe249106fa386a9e6ed045fab1ac9b5b080d6",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/alpha-vantage-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:fb15fc5ffc02097215a925f9c5407a2af25a3c0a09a018ddc9a7714b718e923d",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:alpha-vantage:alpha-vantage-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "eodhd-aapl-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-aapl-dividends-round-1-terminal.json",
+      "public_digest": "sha256:090505c024e56fe4304e4b73a0c05b0aa025a53cd0d262b9060670531224d7e5",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-aapl-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-aapl-dividends-round-2-terminal.json",
+      "public_digest": "sha256:71f353bfe03fc39905511e6a4b97a93cdd2955779443f1cd136e8291bbfb84dd",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-aapl-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-aapl-dividends-round-3-terminal.json",
+      "public_digest": "sha256:b3daa8ae531a3f2deec59600b0cf3ccd307c636ad3214386cdb1a13c3543d405",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:eodhd:eodhd-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "eodhd-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:f79f4e99ac802c04e7d4192151fa1b522f5857dc77fae368188cd1a5b7b6af18",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:5cce9c6ef9147f7e840c1a77e32bd14adf9fca91f708ad8ff974294b822b6467",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/eodhd-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:0c074fb42628cf14967e30b8984eb96a6579ba9624ac0d42c1b72d84ab4bec4a",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:eodhd:eodhd-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "hangseng-cn-600519-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-cn-600519-dividends-round-1-terminal.json",
+      "public_digest": "sha256:4eb6ed2fe0163e5bed8bc5bd0ce4df5a074c83c1288d61d4e9fafdfbd6fbd109",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "hangseng-cn-600519-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-cn-600519-dividends-round-2-terminal.json",
+      "public_digest": "sha256:d647d52a44b4780b7c2a80072bdbd19c685e3eba8dd2d0565888f97e9b69a762",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "hangseng-cn-600519-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-cn-600519-dividends-round-3-terminal.json",
+      "public_digest": "sha256:4f2bbbca398abf2c1db79e85a586b43c5362cd81d223ae09cdbdc504b950ffc2",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:hangseng:hangseng-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "hangseng-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:41d0ca23c3987891e3bdec4ee0520acf88012981b256f420b047e4dc04cde985",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "hangseng-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:70bc80b312c495002bacf9e2ae576661ac6de55b386fbb08b768939b7df25e32",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "hangseng-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/hangseng-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:b8db2a2ccdf679bbe2b878cc54a1d54c057747d40254d4e67f47848b2bac09e3",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:hangseng:hangseng-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "ifind-cn-600519-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-cn-600519-dividends-round-1-terminal.json",
+      "public_digest": "sha256:953aecd58c8561895c3b399d94a6876542b980ba391083d60761c427b1c7828a",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-cn-600519-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-cn-600519-dividends-round-2-terminal.json",
+      "public_digest": "sha256:c2d877992785d8b58900874072b84de0e688a5c8aff765cb0da56497f7a857a9",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "ifind-cn-600519-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-cn-600519-dividends-round-3-terminal.json",
+      "public_digest": "sha256:4c3d76be5e3ecfe7c2d10a6af26e7d63489dfa4f2ccae57095c745f00e5e5390",
+      "run_key": "dividend-events-v1:60840566be2c:cn-600519-dividends-fixed-window:ifind:ifind-native-mcp:direct:3"
+    },
+    {
+      "evidence_id": "ifind-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:a6589d28c60ee05d3a114d447baeebc822dea53ceeab5b5c50e8e523741dffd4",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:1"
+    },
+    {
+      "evidence_id": "ifind-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:52bac8cb79cdf496442b0f60764ecb802cfbc1183ac6bfa7c1737c6f7f9af73a",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:2"
+    },
+    {
+      "evidence_id": "ifind-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/ifind-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:c233b205451974fa570cbfb6f8b02887b80182cef7ed2dcac83d8eddbf9d6513",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:ifind:ifind-native-mcp:direct:3"
+    },
+    {
+      "evidence_id": "massive-aapl-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-aapl-dividends-round-1-terminal.json",
+      "public_digest": "sha256:85a3e4f511ea3446e9a2c3ef92a2709c712713d97b9f8b40eb10825c751bc54e",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-aapl-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-aapl-dividends-round-2-terminal.json",
+      "public_digest": "sha256:08926242dd2627a1c6120252e97f56ad4413d033ea4fb8605277d635c442cd59",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "massive-aapl-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-aapl-dividends-round-3-terminal.json",
+      "public_digest": "sha256:ff3a236ef498a4cef221961e6f0939a8018fa6425743dd1fbd62f14336e42934",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:massive-stocks:massive-stocks-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "massive-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:83e2da2a23060e219f3f3fea52dddd6940d09c4c824efa491216deffd086831a",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:5c5e9b4e02bcbda07c57adee27b26d39ee46114f011a86c2036c3c89cc1b22e2",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "massive-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/massive-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:2298942b126a122a41a009692281d3719cd02aca75356dc963f6f5a5dd075ea9",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:massive-stocks:massive-stocks-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "twelve-data-aapl-dividends-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-aapl-dividends-round-1-terminal.json",
+      "public_digest": "sha256:b3b53752b9a5f1b2c3af3bf05b71bc23376648b92f318c4e98522edebbce96a8",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-aapl-dividends-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-aapl-dividends-round-2-terminal.json",
+      "public_digest": "sha256:c6cfdb662327eabf98d280feb8e17e3505420a73f37517f41fd24fc5ba2c6899",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-aapl-dividends-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-aapl-dividends-round-3-terminal.json",
+      "public_digest": "sha256:a64becbb23864150f887b9bad105ba833aa57bafd45d8259175e8cc64fe0c613",
+      "run_key": "dividend-events-v1:60840566be2c:aapl-dividends-fixed-window:twelve-data:twelve-data-dividends-qveris:direct:3"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-dividend-symbol-round-1",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-invalid-dividend-symbol-round-1-terminal.json",
+      "public_digest": "sha256:42b40bccdca8e9bc603eaab480d1f595c3ee315185b2ed6f766adea8c0992913",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-dividend-symbol-round-2",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-invalid-dividend-symbol-round-2-terminal.json",
+      "public_digest": "sha256:30e7395da0e5c3299cd97901f5777e7cab5fc329eee54d4c9d8401a06d4a5ce5",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-dividend-symbol-round-3",
+      "path": "evidence/dividend-events-2026-q3-v1/twelve-data-invalid-dividend-symbol-round-3-terminal.json",
+      "public_digest": "sha256:91f90f88b2096b37cec02205ac39deba41b2149d04b6adea1510576cc3cff23c",
+      "run_key": "dividend-events-v1:60840566be2c:invalid-dividend-symbol:twelve-data:twelve-data-dividends-qveris:direct:3"
+    }
+  ]
+}
