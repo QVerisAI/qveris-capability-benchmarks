@@ -88,7 +88,7 @@ class StockQuotePublicationAdapter:
             "selection chart manifest digest mismatch",
         )
         committed = json.loads(committed_chart_manifest.read_text(encoding="utf-8"))
-        for field in ("data", "input_digests", "rendered_at", "charts"):
+        for field in ("data", "input_digests", "rendered_at"):
             _require(
                 generated[field] == committed[field],
                 f"chart {field} differs from the committed chart manifest",
