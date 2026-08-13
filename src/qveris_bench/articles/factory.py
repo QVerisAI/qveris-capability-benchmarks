@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,62 @@ class ArticleBuild:
     runtime_chart: Path
     market_chart: Path
     manifest: Path
+
+
+def reproduce_article_package(
+    selection_snapshot_path: Path,
+    profile_path: Path,
+    output_dir: Path,
+    *,
+    expected_manifest_digest: str | None = None,
+) -> None:
+    manifest_path = output_dir / "manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArticleBuildError(f"invalid article manifest: {exc}") from exc
+    if (
+        expected_manifest_digest is not None
+        and _digest(manifest_path.read_bytes()) != expected_manifest_digest
+    ):
+        raise ArticleBuildError(
+            "article manifest digest does not match expected digest"
+        )
+    expected_inputs = {
+        "selection_snapshot": _digest(selection_snapshot_path.read_bytes()),
+        "profile": _digest(profile_path.read_bytes()),
+    }
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("input_digests", {}).get("selection_snapshot")
+        != expected_inputs["selection_snapshot"]
+        or manifest.get("input_digests", {}).get("profile")
+        != expected_inputs["profile"]
+    ):
+        raise ArticleBuildError("article manifest input digest differs")
+    with tempfile.TemporaryDirectory(prefix="qveris-article-") as temporary:
+        rebuilt = build_article_package(
+            selection_snapshot_path,
+            profile_path,
+            Path(temporary),
+        )
+        artifacts = (
+            (output_dir / "article.md", rebuilt.article, "article"),
+            (output_dir / "article-facts.json", rebuilt.article_facts, "article facts"),
+            (
+                output_dir / "charts/latency-list-price-tradeoff.png",
+                rebuilt.runtime_chart,
+                "runtime chart",
+            ),
+            (
+                output_dir / "charts/market-coverage.png",
+                rebuilt.market_chart,
+                "market chart",
+            ),
+        )
+        for committed, fresh, name in artifacts:
+            if not committed.is_file() or committed.read_bytes() != fresh.read_bytes():
+                raise ArticleBuildError(f"{name} artifact differs from a fresh build")
 
 
 def build_article_package(

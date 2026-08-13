@@ -11,6 +11,7 @@ from typer.testing import CliRunner
 from qveris_bench.articles.factory import (
     ArticleBuildError,
     build_article_package,
+    reproduce_article_package,
 )
 from qveris_bench.cli import app
 
@@ -138,3 +139,37 @@ def test_ac6_cli_builds_the_offline_article_package(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     assert "Built article package" in result.output
     assert (tmp_path / "publication/article.md").is_file()
+
+
+def test_ac5_reproduction_rejects_a_tampered_article(tmp_path: Path) -> None:
+    output = tmp_path / "publication"
+    profile = _profile(tmp_path / "profile.yaml")
+    build_article_package(SNAPSHOT, profile, output)
+    article = output / "article.md"
+    article.write_text(article.read_text(encoding="utf-8") + "\nFalse claim.\n")
+
+    with pytest.raises(ArticleBuildError, match="article artifact differs"):
+        reproduce_article_package(SNAPSHOT, profile, output)
+
+
+def test_ac5_cli_reproduces_the_article_package_offline(tmp_path: Path) -> None:
+    output = tmp_path / "publication"
+    profile = _profile(tmp_path / "profile.yaml")
+    build_article_package(SNAPSHOT, profile, output)
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "article",
+            "reproduce",
+            "--selection-snapshot",
+            str(SNAPSHOT),
+            "--profile",
+            str(profile),
+            "--output-dir",
+            str(output),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Verified article package" in result.output

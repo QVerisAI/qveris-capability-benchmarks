@@ -129,6 +129,41 @@ def article_build(
     typer.echo(f"Built article package -> {built.article}")
 
 
+@article_app.command("reproduce")
+def article_reproduce(
+    selection_snapshot: Annotated[
+        Path, typer.Option(help="Frozen Selection Snapshot JSON.")
+    ],
+    profile: Annotated[
+        Path, typer.Option(help="CAP article publication profile YAML.")
+    ],
+    output_dir: Annotated[
+        Path, typer.Option(help="Existing article package directory.")
+    ],
+    expected_manifest_digest: Annotated[
+        str | None,
+        typer.Option(help="Trusted manifest digest from outside this checkout."),
+    ] = None,
+) -> None:
+    """Rebuild and verify an article package without provider API calls."""
+    from qveris_bench.articles.factory import (
+        ArticleBuildError,
+        reproduce_article_package,
+    )
+
+    try:
+        reproduce_article_package(
+            selection_snapshot,
+            profile,
+            output_dir,
+            expected_manifest_digest=expected_manifest_digest,
+        )
+    except ArticleBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Verified article package -> {output_dir}")
+
+
 @publication_app.command("reproduce")
 def publication_reproduce(
     package: Annotated[Path, typer.Option(help="Publication package manifest.")],
