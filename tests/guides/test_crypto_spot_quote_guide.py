@@ -57,6 +57,16 @@ def test_guide_derives_latency_recommendation_from_public_evidence() -> None:
     }
     assert latencies == {"binance": 313.08, "okx": 285.82}
     article = ARTICLE.read_text(encoding="utf-8")
+    result_rows = {
+        row.split("|")[1].strip(): row.split("|")
+        for row in article.splitlines()
+        if row.startswith("| ") and "/ QVeris Access Path" in row
+    }
+    for provider, latency in latencies.items():
+        display_name = "Binance" if provider == "binance" else "OKX"
+        assert result_rows[f"{display_name} / QVeris Access Path"][4].strip() == (
+            f"{round(latency):.0f} ms"
+        )
     assert "OKX was the lower-latency path" in article
     assert "or lower median gateway latency in this snapshot matter more" in article
 
