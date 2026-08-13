@@ -11,6 +11,7 @@ permissions:
 jobs:
   export:
     runs-on: ubuntu-latest
+    environment: harbor-catalog-export
     env:
       QVERIS_HARBOR_EXPLORE_KEY: ${{ secrets.QVERIS_HARBOR_EXPLORE_KEY }}
     steps:

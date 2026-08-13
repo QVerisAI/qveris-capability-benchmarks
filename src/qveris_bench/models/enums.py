@@ -2,13 +2,7 @@ from enum import StrEnum
 
 
 class SourceType(StrEnum):
-    EXTERNAL_REPOSITORY = "external_repository"
-    PUBLIC_BENCHMARK = "public_benchmark"
-    CUSTOMER_QUESTION = "customer_question"
-    DEVELOPER_QUERY = "developer_query"
-    PROVIDER_SUBMISSION = "provider_submission"
-    SEARCH_DEMAND = "search_demand"
-    QVERIS_ORIGINAL = "qveris_original"
+    HARBOR_CATALOG = "harbor_catalog"
 
 
 class AccessPathType(StrEnum):

@@ -19,29 +19,30 @@ from qveris_bench.models.run import TaskOutcome
 from qveris_bench.models.suite import AgentProtocol
 
 
-def _external_source() -> SourceReference:
+def _harbor_source() -> SourceReference:
     return SourceReference(
-        source_type=SourceType.EXTERNAL_REPOSITORY,
-        repository="https://github.com/QVerisAI/qveris-agent-harness",
-        commit="95179a8",
-        task_id="etf-holdings-001",
+        source_type=SourceType.HARBOR_CATALOG,
+        harbor_capability_id="MKT.DIVIDENDS",
+        contract_version=1,
+        catalog_snapshot_digest="a" * 64,
+        contract_digest="b" * 64,
     )
 
 
 def test_ac1_minimal_cap_definition_is_valid() -> None:
     cap = CapDefinition(
-        cap_id="etf-holdings",
+        cap_id="dividend-events",
         version="1.0.0",
-        name="ETF Holdings",
-        business_use="Select a provider for constituent-level ETF analysis.",
-        scope=("US-listed ETFs",),
+        name="Dividend Events",
+        business_use="Select a provider for dated dividend events.",
+        scope=("Dated issuer dividend events",),
         exclusions=("portfolio optimization",),
         markets=("US",),
-        asset_types=("ETF",),
-        sources=(_external_source(),),
+        asset_types=("EQUITY",),
+        sources=(_harbor_source(),),
     )
 
-    assert cap.cap_id == "etf-holdings", "AC1 valid CAP must retain its stable ID"
+    assert cap.cap_id == "dividend-events", "AC1 valid CAP must retain its stable ID"
 
 
 @pytest.mark.parametrize("cap_id", ["ETF_Holdings", "-etf", "etf--holdings", ""])
@@ -50,10 +51,10 @@ def test_ac2_invalid_stable_ids_are_rejected(cap_id: str) -> None:
         CapDefinition(
             cap_id=cap_id,
             version="1.0.0",
-            name="ETF Holdings",
+            name="Dividend Events",
             business_use="Compare constituent-level ETF data.",
             scope=("US ETFs",),
-            sources=(_external_source(),),
+            sources=(_harbor_source(),),
         )
 
 
@@ -61,22 +62,26 @@ def test_ac2_invalid_stable_ids_are_rejected(cap_id: str) -> None:
 def test_ac2_invalid_semantic_versions_are_rejected(version: str) -> None:
     with pytest.raises(ValidationError, match="version"):
         CapDefinition(
-            cap_id="etf-holdings",
+            cap_id="dividend-events",
             version=version,
-            name="ETF Holdings",
+            name="Dividend Events",
             business_use="Compare constituent-level ETF data.",
             scope=("US ETFs",),
-            sources=(_external_source(),),
+            sources=(_harbor_source(),),
         )
 
 
-@pytest.mark.parametrize("missing", ["repository", "commit", "task_id"])
-def test_ac3_external_sources_require_pinned_provenance(missing: str) -> None:
+@pytest.mark.parametrize(
+    "missing",
+    ["harbor_capability_id", "contract_version", "catalog_snapshot_digest", "contract_digest"],
+)
+def test_ac3_formal_caps_require_pinned_harbor_provenance(missing: str) -> None:
     values = {
-        "source_type": SourceType.EXTERNAL_REPOSITORY,
-        "repository": "https://github.com/example/source",
-        "commit": "abc1234",
-        "task_id": "task-1",
+        "source_type": SourceType.HARBOR_CATALOG,
+        "harbor_capability_id": "MKT.DIVIDENDS",
+        "contract_version": 1,
+        "catalog_snapshot_digest": "a" * 64,
+        "contract_digest": "b" * 64,
     }
     values.pop(missing)
 
