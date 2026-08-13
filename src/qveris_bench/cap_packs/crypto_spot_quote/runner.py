@@ -30,7 +30,7 @@ def assert_new_release_paths(public_root: Path, release_root: Path) -> None:
 
 
 def assert_publishable_terminal_matrix(
-    terminals: tuple[tuple[str, CellState], ...]
+    terminals: tuple[tuple[str, CellState], ...],
 ) -> None:
     for case_id, state in terminals:
         if case_id == "crypto-btcusdt-spot-quote":
