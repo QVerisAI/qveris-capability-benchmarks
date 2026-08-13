@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 import subprocess
 import zipfile
 from pathlib import Path
@@ -67,6 +68,10 @@ def test_ac6_wheel_cli_reproduces_from_outside_the_repository(tmp_path: Path) ->
 
         assert result.returncode == 0, result.stderr
         report = json.loads(result.stdout)
-        assert report["status"] == "verified"
+        assert report["status"] == (
+            "verified"
+            if platform.system() == "Linux"
+            else "verified_with_noncanonical_chart_bytes"
+        )
     assert "QVERIS_API_KEY" not in os.environ
     assert list(isolated_home.iterdir()) == []

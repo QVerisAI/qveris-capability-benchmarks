@@ -39,7 +39,7 @@ def test_guide_preserves_provider_and_access_path_identity() -> None:
     assert "Binance / QVeris Access Path" in article
     assert "OKX / QVeris Access Path" in article
     assert "[Try it in QVeris](https://qveris.ai/providers/binance)" in article
-    assert "[Try it in QVeris](https://qveris.ai/providers/okx)" in article
+    assert "[Try it in QVeris](https://qveris.ai/providers/okx_api_v5)" in article
     assert "not a native API benchmark" in article
 
 
@@ -60,7 +60,9 @@ def test_guide_derives_latency_recommendation_from_public_evidence() -> None:
     result_rows = {
         row.split("|")[1].strip(): row.split("|")
         for row in article.splitlines()
-        if row.startswith("| ") and "/ QVeris Access Path" in row
+        if row.startswith("| ")
+        and "/ QVeris Access Path" in row
+        and "credit/call" in row
     }
     for provider, latency in latencies.items():
         display_name = "Binance" if provider == "binance" else "OKX"
@@ -68,16 +70,16 @@ def test_guide_derives_latency_recommendation_from_public_evidence() -> None:
             f"{round(latency):.0f} ms"
         )
     assert "OKX was the lower-latency path" in article
-    assert "or lower median gateway latency in this snapshot matter more" in article
+    assert "OKX had the lower observed median gateway latency" in article
 
 
 def test_guide_uses_a_clear_buyer_flow_without_internal_implementation_terms() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     headings = [
-        "## Results",
-        "## How to choose",
-        "## What we tested",
-        "## Reproduce or contribute",
+        "## Results at a glance",
+        "## How developers should choose",
+        "## Tested asset scope",
+        "## Method, reproduction, and contribution",
         "## Limitations, disclosures, and corrections",
         "## FAQ",
     ]

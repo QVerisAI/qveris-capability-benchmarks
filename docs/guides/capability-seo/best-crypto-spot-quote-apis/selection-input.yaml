@@ -2,23 +2,24 @@ snapshot_id: crypto-spot-quote-selection-2026-q3-v1
 version: 1.0.0
 edition: "2026-08-13"
 cap_id: crypto-spot-quote
-release:
-  directory: releases/crypto-spot-quote-2026-q3-v1
+historical_execution_contract:
+  suite_fingerprint: c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364
+  execution_contract_digest: sha256:75de8f59f8195780d2ef345f71a2f26db32998be1f5337a495d4861ab9ed10d9
+cap_release:
+  release: releases/crypto-spot-quote-2026-q3-v1/release.json
   digest: sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f
-cap_pack: cap_packs/crypto-spot-quote
+suite: cap_packs/crypto-spot-quote/suite.yaml
+cases: cap_packs/crypto-spot-quote/cases.yaml
 providers_root: providers
-harbor_contracts: harbor_catalog/contracts.json
-qveris_list_pricing: docs/guides/capability-seo/best-crypto-spot-quote-apis/qveris-list-pricing.json
-provider_order: [binance, okx]
-qveris_provider_ids:
-  binance-crypto-spot-qveris: binance
-  okx-crypto-spot-qveris: okx_api_v5
-qveris_provider_pages:
-  binance-crypto-spot-qveris: https://qveris.ai/providers/binance
-  okx-crypto-spot-qveris: https://qveris.ai/providers/okx_api_v5
-symbol_dialects:
-  binance-crypto-spot-qveris: BTCUSDT
-  okx-crypto-spot-qveris: BTC-USDT
+qveris_list_pricing:
+  snapshot: docs/guides/capability-seo/best-crypto-spot-quote-apis/qveris-list-pricing.json
+  bindings: cap_packs/crypto-spot-quote/direct-bindings.json
+observation_window:
+  start: "2026-08-13"
+  end: "2026-08-13"
+gateway_latency_scope: positive_cases
+include_case_observations: true
+include_release_identity: true
 limitations:
   - Two QVeris Access Paths; no native exchange API is tested.
   - The positive sample is BTC/USDT spot only, not broad pair coverage.

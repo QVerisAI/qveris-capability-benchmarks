@@ -1,5 +1,6 @@
 {
   "disclosure_level": "sanitized_public",
+  "bindings_digest": "sha256:101de513ad8878e67b09424b2f27bc8a4cd1731a8d3ac706d9a0157fa1ed2a34",
   "extractor_version": "1.0.0",
   "inspected_at": "2026-08-13",
   "license_status": "cleared",

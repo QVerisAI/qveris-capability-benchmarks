@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import platform
 import shutil
 import socket
 from pathlib import Path
@@ -10,9 +11,11 @@ import pytest
 from typer.testing import CliRunner
 
 from qveris_bench.cap_packs.crypto_spot_quote.publication import (
+    _validate_crypto_public_facts,
     build_crypto_selection_snapshot,
 )
 from qveris_bench.cli import app
+from qveris_bench.models.selection import SelectionSnapshot
 from qveris_bench.publications.service import (
     PublicationReproductionError,
     reproduce_publication_package,
@@ -33,11 +36,12 @@ def _copy_repository(tmp_path: Path) -> Path:
         "docs/guides/capability-seo/best-crypto-spot-quote-apis",
         "evidence/crypto-spot-quote-2026-q3-v1",
         "harbor_catalog",
-        "providers/binance",
-        "providers/okx",
+        "providers",
         "releases/crypto-spot-quote-2026-q3-v1",
         "src/qveris_bench/cap_packs/crypto_spot_quote/publication.py",
         "src/qveris_bench/cap_packs/crypto_spot_quote/publication_charts.py",
+        "src/qveris_bench/profiles/selection.py",
+        "src/qveris_bench/models/selection.py",
     ):
         source = ROOT / relative
         target = copied / relative
@@ -58,9 +62,13 @@ def test_ac1_snapshot_is_deterministic_and_release_derived() -> None:
 
     assert built == committed
     snapshot = json.loads(built)
+    SelectionSnapshot.model_validate(snapshot)
     assert snapshot["cap_id"] == "crypto-spot-quote"
-    assert snapshot["release_id"] == "crypto-spot-quote-2026-q3-v1"
-    assert snapshot["total_live_calls"] == 12
+    assert snapshot["cap_release_digest"].endswith("b100f9af966987d917b200cd8638a111f")
+    assert (
+        sum(row["run_observations"]["planned_observations"] for row in snapshot["rows"])
+        == 12
+    )
     assert [
         (row["provider_id"], row["access_path_id"]) for row in snapshot["rows"]
     ] == [
@@ -68,9 +76,10 @@ def test_ac1_snapshot_is_deterministic_and_release_derived() -> None:
         ("okx", "okx-crypto-spot-qveris"),
     ]
     for row in snapshot["rows"]:
-        assert row["positive"] == {"passed": 3, "total": 3}
-        assert row["invalid_input"] == {"passed": 3, "total": 3}
-        assert row["evidence_ref_count"] == 6
+        cases = {item["case_id"]: item["outcome"] for item in row["case_observations"]}
+        assert cases["crypto-btcusdt-spot-quote"]["passed"] == 3
+        assert cases["crypto-invalid-spot-symbol"]["passed"] == 3
+        assert len(row["run_observations"]["evidence_refs"]) == 6
         assert row["qveris_list_price"]["amount_credits"] == 1
         assert row["gateway_metrics"]["latency_sample_size"] == 3
 
@@ -92,7 +101,11 @@ def test_ac2_package_reproduces_offline_without_credentials(
     assert result.exit_code == 0, result.output
     report = json.loads(result.output)
     assert report["package_id"] == "best-crypto-spot-quote-apis-2026-08-13"
-    assert report["status"] == "verified"
+    assert report["status"] == (
+        "verified"
+        if platform.system() == "Linux"
+        else "verified_with_noncanonical_chart_bytes"
+    )
     assert report["release_count"] == 1
     assert report["checks"] == [
         "releases",
@@ -140,7 +153,7 @@ def test_ac2_package_reproduces_offline_without_credentials(
             "docs/guides/capability-seo/best-crypto-spot-quote-apis/qveris-list-pricing.json",
             b'"amount_credits": 1',
             b'"amount_credits": 999',
-            "QVeris list pricing response mismatch",
+            "QVeris Inspect response provenance mismatch",
         ),
         (
             "docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-asset-scope.png",
@@ -223,6 +236,32 @@ def test_ac5_extra_contradictory_claim_is_rejected(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "Binance had a 99 ms median gateway latency in this edition.",
+        "The benchmark made 999 provider requests.",
+        "Binance is faster.",
+        "This is a native API benchmark.",
+        "Read http://example.com for details.",
+    ],
+)
+def test_ac5_unbound_material_claims_are_rejected(tmp_path: Path, claim: str) -> None:
+    repository = _copy_repository(tmp_path)
+    article = repository / "docs/guides/best-crypto-spot-quote-apis.md"
+    article.write_text(
+        article.read_text(encoding="utf-8").replace(
+            "\n\n## Results", f"\n\n{claim}\n\n## Results"
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(PublicationReproductionError):
+        reproduce_publication_package(
+            repository
+            / "docs/guides/capability-seo/best-crypto-spot-quote-apis/manifest.yaml"
+        )
+
+
 def test_ac6_public_pricing_snapshot_is_sanitized_and_scoped() -> None:
     pricing = json.loads(
         (PUBLICATION / "qveris-list-pricing.json").read_text(encoding="utf-8")
@@ -237,3 +276,75 @@ def test_ac6_public_pricing_snapshot_is_sanitized_and_scoped() -> None:
     assert "remaining_credits" not in serialized
     assert "search_id" not in serialized
     assert "api_key" not in serialized
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [
+        (b'"exchange": "BINANCE"', b'"exchange": "OKX"'),
+        (b'"currency": "USDT"', b'"currency": "USD"'),
+        (b'"price": 63895.28', b'"price": NaN'),
+    ],
+)
+def test_ac7_terminal_identity_and_finite_values_are_required(
+    tmp_path: Path, old: bytes, new: bytes
+) -> None:
+    repository = _copy_repository(tmp_path)
+    terminal = next(
+        (repository / "evidence/crypto-spot-quote-2026-q3-v1").glob(
+            "*binance*btc*round*"
+        ),
+        None,
+    )
+    if terminal is None:
+        terminal = next(
+            path
+            for path in (repository / "evidence/crypto-spot-quote-2026-q3-v1").glob(
+                "*.json"
+            )
+            if b'"exchange": "BINANCE"' in path.read_bytes()
+        )
+    content = terminal.read_bytes()
+    assert old in content
+    terminal.write_bytes(content.replace(old, new, 1))
+    with pytest.raises(PublicationReproductionError, match="terminal facts drifted"):
+        _validate_crypto_public_facts(
+            repository
+            / (
+                "docs/guides/capability-seo/best-crypto-spot-quote-apis/"
+                "selection-input.yaml"
+            ),
+            repository,
+        )
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [
+        (
+            "benchmark_id: crypto-spot-quote-2026-q3-v1",
+            "benchmark_id: crypto-spot-quote-2026-q3-v2",
+        ),
+        (
+            "article_slug: best-crypto-spot-quote-apis",
+            "article_slug: alternate-crypto-spot-quote-apis",
+        ),
+        ("direct_test_required: true", "direct_test_required: false"),
+        ("no_overall_winner: true", "no_overall_winner: false"),
+    ],
+)
+def test_ac8_manifest_identity_and_policy_are_cross_bound(
+    tmp_path: Path, old: str, new: str
+) -> None:
+    repository = _copy_repository(tmp_path)
+    package = (
+        repository
+        / "docs/guides/capability-seo/best-crypto-spot-quote-apis/manifest.yaml"
+    )
+    document = package.read_text(encoding="utf-8")
+    assert old in document
+    package.write_text(document.replace(old, new, 1), encoding="utf-8")
+    with pytest.raises(
+        PublicationReproductionError, match="publication identity or policy drifted"
+    ):
+        reproduce_publication_package(package)

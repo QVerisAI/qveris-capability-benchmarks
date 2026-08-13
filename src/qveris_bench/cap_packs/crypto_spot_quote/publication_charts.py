@@ -12,6 +12,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.patches import Rectangle
+from PIL import Image
 
 _FONT_ROOT = files("qveris_bench").joinpath("assets", "fonts")
 _FONT_PATHS = (
@@ -40,19 +41,18 @@ def render_crypto_publication_charts(
         raise ValueError("crypto charts require the frozen Provider order")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    scope_data = [
-        {
-            "provider_id": row["provider_id"],
-            "provider_name": row["provider_name"],
-            "access_path_id": row["access_path_id"],
-            "positive": row["positive"],
-            "invalid_input": row["invalid_input"],
-            "pair": row["asset_scope"]["pair"],
-            "market": row["asset_scope"]["market"],
-            "asset_type": row["asset_scope"]["asset_type"],
-        }
-        for row in rows
-    ]
+    scope_data = []
+    for row in rows:
+        cases = {item["case_id"]: item["outcome"] for item in row["case_observations"]}
+        scope_data.append(
+            {
+                "provider_id": row["provider_id"],
+                "provider_name": row["provider_name"],
+                "access_path_id": row["access_path_id"],
+                "positive": cases["crypto-btcusdt-spot-quote"],
+                "invalid_input": cases["crypto-invalid-spot-symbol"],
+            }
+        )
     _render_scope(scope_data, output_dir / "crypto-asset-scope.png")
 
     runtime_data = [
@@ -87,6 +87,7 @@ def render_crypto_publication_charts(
             "matplotlib": version("matplotlib"),
             "numpy": version("numpy"),
             "pillow": version("pillow"),
+            "png_encoder": "pillow-rgba-compress-9-v1",
         },
     }
 
@@ -148,6 +149,7 @@ def _render_scope(rows: list[dict[str, object]], output: Path) -> None:
     fig.subplots_adjust(left=0.25, right=0.96, top=0.78, bottom=0.2)
     fig.savefig(output, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)
+    _canonicalize_png(output)
 
 
 def _render_runtime(rows: list[dict[str, object]], output: Path) -> None:
@@ -213,6 +215,7 @@ def _render_runtime(rows: list[dict[str, object]], output: Path) -> None:
     fig.subplots_adjust(left=0.1, right=0.96, top=0.82, bottom=0.18)
     fig.savefig(output, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)
+    _canonicalize_png(output)
 
 
 def _number(row: dict[str, object], key: str) -> float:
@@ -220,3 +223,9 @@ def _number(row: dict[str, object], key: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"crypto runtime chart requires numeric {key}")
     return float(value)
+
+
+def _canonicalize_png(path: Path) -> None:
+    with Image.open(path) as source:
+        image = source.convert("RGBA")
+    image.save(path, format="PNG", compress_level=9, optimize=False)

@@ -1,21 +1,30 @@
 {
   "charts": {
-    "crypto-asset-scope.png": "sha256:88ecd7488025426be45c62acc6c7f8a919013871be817df6fb82c9af3780c440",
-    "crypto-latency-credits.png": "sha256:3000c7198448689efafa90314b93631d13a9770e945c27d66f341ed2cd13c9d2"
+    "crypto-asset-scope.png": "sha256:2ec1293c9b864ccac0feb9483dd74b26e8c25bd238e843d308efdcdadf4d7e9d",
+    "crypto-latency-credits.png": "sha256:19affc060ec67276d80f3bac9ce991b9732967630f9d1daa129c32e034011bc4"
   },
   "data": {
     "asset_scope": [
       {
         "access_path_id": "binance-crypto-spot-qveris",
-        "asset_type": "CRYPTO_SPOT",
         "invalid_input": {
+          "evidence_refs": [
+            "sha256:286fea441201a945551b6859e7b2478f03847455fe471ed0045f468e5ad0a5d0",
+            "sha256:88e2073e21827a8d3248300b9c8f23247f53434bc8ce7dbde6fac0f1c93c7402",
+            "sha256:e47eaf9fe6301f39d5a524810c207d679ba80b41a59e20b350991f79179fa5af"
+          ],
           "passed": 3,
+          "state": "measured",
           "total": 3
         },
-        "market": "GLOBAL",
-        "pair": "BTC/USDT",
         "positive": {
+          "evidence_refs": [
+            "sha256:ad9577f6ac3841c4dcc0981bb24b934d4349136dec10bf7d99bc6dfbcf5fed7b",
+            "sha256:b5b3f2ff61c579a9383422597510fa8269a59c99edecd0b2827bba3cf781597e",
+            "sha256:fda532d2884b1d7599e95eea9305220ac0d0e07cdfe721153a5ff398053d7433"
+          ],
           "passed": 3,
+          "state": "measured",
           "total": 3
         },
         "provider_id": "binance",
@@ -23,15 +32,24 @@
       },
       {
         "access_path_id": "okx-crypto-spot-qveris",
-        "asset_type": "CRYPTO_SPOT",
         "invalid_input": {
+          "evidence_refs": [
+            "sha256:1a1e2e3f9f9f9370530054dd159d1aa177141eda62674911be0b00870c45099e",
+            "sha256:263ae3602209439685cd6766ec0d8fd594ea91b22f84cecc773baa6a69361fc9",
+            "sha256:689e9b4b5b38a629dc07197ab72a9901ae8161daea8b314bf48489398ae9afe9"
+          ],
           "passed": 3,
+          "state": "measured",
           "total": 3
         },
-        "market": "GLOBAL",
-        "pair": "BTC/USDT",
         "positive": {
+          "evidence_refs": [
+            "sha256:005446a31fd84b9bdb141b13f3d6ea11e4e92cebbed695d9a01e5ebc3ee2695b",
+            "sha256:0af71a0b5794a1e7f152676a5d856cc9937ae6bcc1b7a42b68edbe64e6d54cff",
+            "sha256:3b1855eaa91953f71dffbfc7693318248d64fdaab7f3ee3559b3d6b77014e13f"
+          ],
           "passed": 3,
+          "state": "measured",
           "total": 3
         },
         "provider_id": "okx",
@@ -64,7 +82,7 @@
     ]
   },
   "input_digests": {
-    "selection_snapshot": "sha256:87c7a4a71851c7d89d0a3b26ef129c7039ce87e3ade447db6cb838d52eec0141"
+    "selection_snapshot": "sha256:cdc40b3c137b9fdbea67d32af52c4988e07cb065386cd96516a21f6869d227f8"
   },
   "rendered_at": "2026-08-13",
   "renderer": {
@@ -73,6 +91,7 @@
     "font_regular_digest": "sha256:2d39c7fb73ae26bb0642841dcdcfc0e35e0357b4ff4202e2295964a11017a253",
     "matplotlib": "3.11.1",
     "numpy": "2.5.2",
-    "pillow": "12.3.0"
+    "pillow": "12.3.0",
+    "png_encoder": "pillow-rgba-compress-9-v1"
   }
 }

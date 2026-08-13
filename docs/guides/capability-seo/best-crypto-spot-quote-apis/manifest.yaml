@@ -11,7 +11,9 @@ publication_package:
   adapter_sources:
     - src/qveris_bench/cap_packs/crypto_spot_quote/publication.py
     - src/qveris_bench/cap_packs/crypto_spot_quote/publication_charts.py
-  adapter_digest: sha256:1bec9bb8ac31095d50ae4538c2c58f677bc400e6ea48e6516ab3f63cbc2eb973
+    - src/qveris_bench/profiles/selection.py
+    - src/qveris_bench/models/selection.py
+  adapter_digest: sha256:c43a49936bbfa001cb6ed47011d726610e594db74e661bc4d7ad3b79fd5a0799
 release:
   directory: releases/crypto-spot-quote-2026-q3-v1
   digest: sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f
@@ -22,8 +24,8 @@ release:
   rounds_per_cell: 3
 selection_snapshot:
   id: crypto-spot-quote-selection-2026-q3-v1
-  input_digest: sha256:5ef5a7900b16851fd6b5d8c5eca381ead00b4f970898e6816705f8c897ee4bd8
-  digest: sha256:87c7a4a71851c7d89d0a3b26ef129c7039ce87e3ade447db6cb838d52eec0141
+  input_digest: sha256:33e3dc585f5385fb5fe10b72932ae4b3b6c963c9ba5023fd873ede4d504a2258
+  digest: sha256:cdc40b3c137b9fdbea67d32af52c4988e07cb065386cd96516a21f6869d227f8
 publication_policy:
   display_order: [binance-crypto-spot-qveris, okx-crypto-spot-qveris]
   direct_test_required: true
@@ -57,7 +59,7 @@ seo:
 artifacts:
   article: docs/guides/best-crypto-spot-quote-apis.md
   article_facts: docs/guides/capability-seo/best-crypto-spot-quote-apis/article-facts.json
-  article_facts_digest: sha256:d7b75221b4186ec1769a374ecdd7286005dd1c608f8124894bf1f7f81b001b01
+  article_facts_digest: sha256:62471c3c2db3feed614453758169c25472af9dd25904d2d7491b122a7978aa97
   publication_profile: docs/guides/capability-seo/best-crypto-spot-quote-apis/publication-profile.yaml
   selection_snapshot_input: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-input.yaml
   selection_snapshot: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-snapshot.json
@@ -66,4 +68,4 @@ artifacts:
     - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-asset-scope.png
     - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-latency-credits.png
   selection_charts_manifest: docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:77dd305781f8c48f7cb47a9660b4b768a1efb0f99743838a7be9b6ee17855efb
+  selection_charts_manifest_digest: sha256:bb27f475b44a7fb9a44cad33fd59a3cfd54f9d6fe88816bf2a2ea741dcd10773
