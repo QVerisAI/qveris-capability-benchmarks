@@ -6,7 +6,6 @@ from typing import Literal
 from pydantic import Field, HttpUrl, field_validator, model_validator
 
 from qveris_bench.models.base import FrozenModel, StableId
-from qveris_bench.models.scenario import DeveloperScenario, QuestionRole, ScenarioRef
 
 
 def _normalized_host(value: HttpUrl) -> str:
@@ -73,6 +72,10 @@ class CandidateCapability(FrozenModel):
     name: str = Field(min_length=1)
     lifecycle: Literal["runnable", "candidate"]
     business_use: str = Field(min_length=10)
+    source_id: Literal["harbor-capability-catalog"]
+    harbor_capability_id: str = Field(
+        pattern=r"^[A-Z][A-Z0-9]*(?:\.[A-Z][A-Z0-9_]*)+$", min_length=3
+    )
 
 
 class QuestionEvaluationContract(FrozenModel):
@@ -89,13 +92,19 @@ class QuestionEvaluationContract(FrozenModel):
 class BankQuestion(FrozenModel):
     question_id: StableId
     cap_id: StableId
-    role: QuestionRole
+    role: Literal[
+        "core_positive",
+        "boundary_negative",
+        "coverage",
+        "freshness_precision",
+        "shape_completeness",
+        "agent_contract",
+    ]
     task: str = Field(min_length=1)
     input: dict[str, object]
     required_observations: tuple[str, ...] = Field(min_length=1)
     completion_conditions: tuple[str, ...] = Field(min_length=1)
     source_ids: tuple[StableId, ...] = Field(min_length=1)
-    scenario_refs: tuple[ScenarioRef, ...] = ()
     evaluation_contract: QuestionEvaluationContract | None = None
     text_origin: Literal["qveris_curated"]
     selection_rationale: str = Field(min_length=10)
@@ -106,4 +115,3 @@ class QuestionBank(FrozenModel):
     sources: tuple[QuestionSource, ...]
     capabilities: tuple[CandidateCapability, ...]
     questions: tuple[BankQuestion, ...]
-    scenarios: tuple[DeveloperScenario, ...]

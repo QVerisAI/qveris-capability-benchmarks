@@ -113,9 +113,7 @@ def test_ac5_catalog_is_sorted_and_skips_template_directory(tmp_path: Path) -> N
     assert [cap.cap_id for cap in caps] == [
         "dividend-events",
         "realtime-financial-news",
-    ], (
-        "AC5 catalog output must be deterministic and exclude templates"
-    )
+    ], "AC5 catalog output must be deterministic and exclude templates"
 
 
 def test_ac6_non_harbor_cap_source_is_rejected(tmp_path: Path) -> None:

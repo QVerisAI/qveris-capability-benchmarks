@@ -1,5 +1,0 @@
-access_paths:
-  - access_path_id: fmp-income-statement
-    provider_id: financial-modeling-prep
-    canonical_interface: income-statement
-    official_source: https://financialmodelingprep.com/stable/income-statement

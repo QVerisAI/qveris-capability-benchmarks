@@ -1,2 +1,0 @@
-completion_requires: [symbol, price, timestamp]
-negative_control_requires: [validation_error]

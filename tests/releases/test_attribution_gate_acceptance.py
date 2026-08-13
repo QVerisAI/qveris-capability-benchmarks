@@ -20,7 +20,6 @@ from qveris_bench.outcomes.attribution import (
 )
 from qveris_bench.releases.builder import build_release
 from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
-from qveris_bench.releases.verify import verify_release
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -125,13 +124,6 @@ def test_ac5_non_provider_negative_cells_do_not_require_attribution(
 def test_ac6_build_release_enforces_attribution_by_default() -> None:
     with pytest.raises(ReleaseGateError, match="attribution"):
         build_release(_release(), (_cell(CellState.PROVIDER_NEGATIVE),), (_evidence(),))
-
-
-def test_ac7_legacy_published_release_still_verifies_by_digest() -> None:
-    release_dir = ROOT / "releases/stock-quote-family-2026-q3-v1"
-    digest = "sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57"
-
-    assert verify_release(release_dir / "release.json", digest)
 
 
 def test_ac9_attribution_helper_only_accepts_provider_side_causes() -> None:

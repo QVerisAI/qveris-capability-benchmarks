@@ -1,9 +1,0 @@
-access_paths:
-  - access_path_id: alpha-vantage-etf-holdings
-    provider_id: alpha-vantage
-    canonical_interface: ETF_PROFILE
-    official_source: https://www.alphavantage.co/documentation/
-  - access_path_id: fiu-etf-holdings
-    provider_id: fiu
-    canonical_interface: US_F10_FUND_CONSTITUENT
-    official_source: https://www.fundinsight.net/terms-of-service

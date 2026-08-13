@@ -11,8 +11,8 @@ selection evidence, start with `docs/product-strategy.md`.
 1. Start at `cap_packs/<cap>/cap.yaml`. It defines the business capability and
    its provenance. `cases.yaml`, `observation-schema.yaml`, `outcome-rules.yaml`,
    `provider-bindings.yaml`, and `suite.yaml` freeze the benchmark inputs.
-   Candidate capability questions and versioned Developer Scenarios live separately
-   in `question_bank/`; they have no suite, provider bindings, or executable outcome.
+   Candidate capability questions live separately in `question_bank/`; they have
+   no suite, provider bindings, or executable outcome.
 2. Read `src/qveris_bench/suites/`. It validates those inputs, creates the
    fingerprint, and expands a suite into `case × provider × access path × mode ×
    round` cells.
@@ -44,17 +44,13 @@ selection evidence, start with `docs/product-strategy.md`.
 | `src/qveris_bench/outcomes/` | Generic outcome evaluation and attribution | CAP response parsing |
 | `src/qveris_bench/evidence/` | Evidence hashing, redaction, public index | Public ranking logic |
 | `src/qveris_bench/releases/` | Deterministic build, gates, and verification | Live provider execution |
-| `src/qveris_bench/profiles/` | Deterministic Task Fit Profile builder | New provider or outcome semantics |
-| `profiles/` | Pinned scenario profile inputs and built manifests | Live provider execution |
-| `question_bank/` | Developer Scenarios, reviewed CAP question families, and public citations | Executable benchmark inputs |
+| `question_bank/` | Harbor-derived CAP candidates, question families, and public citations | Executable benchmark inputs |
 
 ## Current CAP locations
 
-| CAP | Versioned configuration | Domain extractors |
-|---|---|---|
-| ETF Holdings | `cap_packs/etf_holdings/` | `src/qveris_bench/cap_packs/etf_holdings/` |
-| Stock Quote smoke | `cap_packs/stock_quote_smoke/` | `src/qveris_bench/cap_packs/stock_quote_smoke/` |
-| Stock Quote production family | `cap_packs/stock_quote_family/` | `src/qveris_bench/cap_packs/stock_quote_family/` |
+The repository currently contains Harbor-derived candidates only. A formal CAP
+location appears here only after its pack is verified against a private Harbor
+contract export and has an immutable release.
 
 `evidence/` and `releases/` are committed public artifacts only. Private raw
 responses and credentials are intentionally outside this repository.

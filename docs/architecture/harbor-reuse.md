@@ -37,7 +37,7 @@ code dependency and not as a runtime service.
 | Owner | Owns | Does not own |
 |---|---|---|
 | Harbor (closed source) | Symbol/dialect/namespace/market operational truth; SV/IV verification | Benchmark conclusions, question judging, releases |
-| Benchmark platform | Questions, judging rules, Direct/Agent evidence, immutable releases, profiles | Symbol table maintenance, dialect engine, market claims |
+| Benchmark platform | Questions, judging rules, Direct/Agent evidence, immutable releases | Symbol table maintenance, dialect engine, market claims |
 | Export script | Harbor outputs to benchmark schema conversion; private snapshot and digest | Evaluation logic |
 
 ## Snapshot contents (v1)

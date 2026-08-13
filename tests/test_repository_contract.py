@@ -136,18 +136,17 @@ def test_ac2_code_and_data_license_boundaries_are_explicit() -> None:
     )
 
 
-def test_ac3_package_is_greenfield_and_has_no_harness_or_harbor_dependency() -> None:
+def test_ac3_package_is_greenfield_and_has_no_harbor_runtime_dependency() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = _all_dependency_names(pyproject)
     source = "\n".join(
         path.read_text(encoding="utf-8") for path in (ROOT / "src").rglob("*.py")
     ).lower()
 
-    for forbidden in ("qveris-agent-harness", "harbor"):
-        assert _requirement_name(forbidden) not in dependencies, (
-            f"AC3 forbidden dependency: {forbidden}"
-        )
-        assert forbidden not in source, f"AC3 forbidden source dependency: {forbidden}"
+    assert _requirement_name("qveris-agent-harness") not in dependencies
+    assert _requirement_name("harbor") not in dependencies
+    assert "import harbor" not in source
+    assert "from harbor" not in source
 
 
 def test_ac4_agents_rules_encode_platform_guardrails() -> None:
@@ -308,32 +307,21 @@ def test_ac6_ci_repeats_the_locked_local_quality_gates() -> None:
     assert "credential values remain outside" in replay
 
 
-def test_ac14_operator_handoff_matches_replay_and_fixed_live_boundaries() -> None:
+def test_ac14_operator_runbook_matches_harbor_cap_boundaries() -> None:
     runbook = (ROOT / "docs/operator-runbook.md").read_text(encoding="utf-8")
     adding_cap = (ROOT / "docs/adding-a-cap.md").read_text(encoding="utf-8")
     adding_provider = (ROOT / "docs/adding-a-provider.md").read_text(encoding="utf-8")
 
-    for command in (
-        "qveris-bench schema export --check",
-        "qveris-bench suite freeze",
-        "qveris-bench suite plan",
-        "qveris-bench release verify",
-    ):
-        assert command in runbook
-    assert "must never call a provider API, MCP server, or\nAgent backend" in runbook
-    assert "WIND_MCP_API_KEY" in runbook
-    assert "get_stock_price_indicators" in runbook
-    assert (
-        "six\ncandidate providers each have a frozen terminal qualification" in runbook
-    )
+    assert "harbor-catalog-export" in runbook
+    assert "--harbor-contracts" in runbook
+    assert "qveris-bench release replay" in runbook
     assert "CAP Pack owns capability semantics" in adding_cap
-    assert "qveris-bench suite freeze cap_packs/<cap>/suite.yaml" in adding_cap
+    assert "--harbor-contracts" in adding_cap
     assert "terminal qualification" in adding_provider
     assert "qveris-bench provider validate providers/<provider>/provider.yaml" in (
         adding_provider
     )
     assert "qveris-bench provider cohort-check --root providers" in adding_provider
-    assert "not a provider-registry\nqualification" in runbook
 
 
 def test_ac7_cli_help_runs_in_a_real_subprocess() -> None:

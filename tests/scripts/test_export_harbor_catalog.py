@@ -62,9 +62,10 @@ def test_export_writes_expected_files(
     stored = json.loads((tmp_path / "contracts.json").read_text(encoding="utf-8"))
     assert stored[0]["contract"]["standard_query"]["required"][0]["name"] == "symbol"
     meta = json.loads((tmp_path / "meta.json").read_text(encoding="utf-8"))
-    assert meta["catalog_snapshot_digest"] == hashlib.sha256(
-        (tmp_path / "contracts.json").read_bytes()
-    ).hexdigest(), "AC1 export must publish the exact private snapshot digest"
+    assert (
+        meta["catalog_snapshot_digest"]
+        == hashlib.sha256((tmp_path / "contracts.json").read_bytes()).hexdigest()
+    ), "AC1 export must publish the exact private snapshot digest"
     assert meta["contracts"][0] == {
         "capability_id": "MKT.BARS.EOD",
         "contract_version": None,
