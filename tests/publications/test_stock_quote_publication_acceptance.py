@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -111,6 +112,18 @@ def _copy_repository(tmp_path: Path) -> Path:
             b"Free plan with 60 API calls per minute",
             b"Free plan with 600 API calls per minute",
             "article pricing drifted",
+        ),
+        (
+            "docs/guides/stock-quote-api-test.md",
+            b"900 seconds old",
+            b"9 seconds old",
+            "article positive contract drifted",
+        ),
+        (
+            "docs/guides/stock-quote-api-test.md",
+            b"The negative control used `NOTASTOCK`.",
+            b"The negative control used `AAPL`.",
+            "article case inputs drifted",
         ),
         (
             "docs/guides/stock-quote-api-test.md",
@@ -226,3 +239,72 @@ def test_ac5_future_pricing_cannot_be_backdated(tmp_path: Path) -> None:
     result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
     assert result.exit_code == 1
     assert "official pricing is newer than edition" in result.output
+
+
+def test_ac6_github_run_metadata_is_bound(tmp_path: Path) -> None:
+    repository = _copy_repository(tmp_path)
+    selection_input = (
+        repository
+        / "docs/guides/capability-seo/stock-quote-api-test/selection-input.yaml"
+    )
+    selection_input.write_bytes(
+        selection_input.read_bytes().replace(
+            b'created_at: "2026-08-07', b'created_at: "2026-08-08'
+        )
+    )
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "GitHub run metadata mismatch" in result.output
+
+
+def test_ac7_coordinated_case_or_schema_drift_fails_closed(tmp_path: Path) -> None:
+    repository = _copy_repository(tmp_path)
+    schema = repository / "cap_packs/stock_quote_family/observation-schema.yaml"
+    schema.write_bytes(
+        schema.read_bytes().replace(b"positive: true", b"positive: false")
+    )
+    selection_input = (
+        repository
+        / "docs/guides/capability-seo/stock-quote-api-test/selection-input.yaml"
+    )
+    changed_digest = hashlib.sha256(schema.read_bytes()).hexdigest().encode()
+    content = selection_input.read_bytes()
+    content = content.replace(
+        b"dc43cf087b00d509d0eead24cd378e8a7b7f6a5da48d44ad8953db01d0e3196d",
+        changed_digest,
+    )
+    selection_input.write_bytes(content)
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "Stock Quote observation contract drifted" in result.output
+
+    repository = _copy_repository(tmp_path / "case")
+    cases = repository / "cap_packs/stock_quote_family/cases.yaml"
+    cases.write_bytes(
+        cases.read_bytes().replace(
+            b"input: {symbol: AAPL}", b"input: {symbol: MSFT}", 1
+        )
+    )
+    selection_input = (
+        repository
+        / "docs/guides/capability-seo/stock-quote-api-test/selection-input.yaml"
+    )
+    changed_digest = hashlib.sha256(cases.read_bytes()).hexdigest().encode()
+    selection_input.write_bytes(
+        selection_input.read_bytes().replace(
+            b"fbd41e802b6a7077502d6417faadd4841e52ca02a99301a2f45588ccc90584ae",
+            changed_digest,
+        )
+    )
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "Stock Quote case input drifted" in result.output

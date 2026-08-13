@@ -35,8 +35,8 @@ release:
   rounds_per_cell: 3
 selection_snapshot:
   id: stock-quote-api-test-2026-08-13
-  input_digest: sha256:c531c714dbd54cc236ada476230e0239a17a2d365b8f8d214a2eca9b8c322055
-  digest: sha256:59b7c43ece0f9aab46f8f4fcfe3c2d4082c9e1809054195796602c9d504c7ec4
+  input_digest: sha256:10159a9b442c663179a45989ee6b452aec291c2defc98eaf7e897dd2da4ace64
+  digest: sha256:895741866674a503aa5c76c661fbe98463013fa624c39f24c311af1b9e3b58e7
 seo:
   title: "Stock Quote API Test 2026: Finnhub vs EODHD"
   meta_description: "Compare Finnhub and EODHD Stock Quote API paths using 30 live calls, freshness checks, invalid-symbol controls, pricing, and reproducible evidence in 2026."
@@ -63,4 +63,4 @@ artifacts:
   charts:
     - docs/guides/capability-seo/stock-quote-api-test/charts/stock-quote-outcomes.png
   selection_charts_manifest: docs/guides/capability-seo/stock-quote-api-test/charts/stock-quote-charts-manifest.json
-  selection_charts_manifest_digest: sha256:46c0c44411f8e00facb2315f38c6d5b11d261914d606d9224ad1bff00229cd35
+  selection_charts_manifest_digest: sha256:15eaa057110669a6779705f2516e194e1910cb0b415874882026b2e018a32708

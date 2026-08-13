@@ -132,7 +132,7 @@ class StockQuotePublicationAdapter:
         _validate_manifest(document, artifacts, selection_input, committed_snapshot)
         article_path = _artifact(repository_root, artifacts, "article")
         article = article_path.read_text(encoding="utf-8")
-        _validate_article(article, snapshot, document)
+        _validate_article(article, snapshot, document, input_document)
         _validate_links(article, document, article_path, repository_root)
         return ("selection_snapshot", "charts", "article_facts", "links")
 
@@ -192,7 +192,10 @@ def _validate_manifest(
 
 
 def _validate_article(
-    article: str, snapshot: Mapping[str, Any], manifest: Mapping[str, Any]
+    article: str,
+    snapshot: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    selection_input: Mapping[str, Any],
 ) -> None:
     rows = snapshot.get("rows")
     if not isinstance(rows, list) or len(rows) != 2:
@@ -299,6 +302,29 @@ def _validate_article(
         f"stores {total_calls} terminal cells and {total_calls} public evidence records"
         in article,
         "article evidence count drifted",
+    )
+    _require(
+        "required `symbol`, a finite positive `price`, and an ISO 8601 timestamp "
+        "no more than 900 seconds old" in article,
+        "article positive contract drifted",
+    )
+    _require(
+        "The negative control used `NOTASTOCK`." in article
+        and "AAPL quote, AAPL timestamp freshness" in article
+        and "representative CN quote for `600519.SH`" in article,
+        "article case inputs drifted",
+    )
+    _require(
+        "negative control required a non-empty validation error and prohibited "
+        "invented quote fields" in article,
+        "article negative contract drifted",
+    )
+    github_run = _mapping(selection_input, "github_run")
+    _require(
+        github_run.get("run_id") == snapshot["github_run_id"]
+        and github_run.get("github_sha") == snapshot["github_sha"]
+        and github_run.get("conclusion") == "success",
+        "publication GitHub run metadata drifted",
     )
     _require(
         "Ranking their latency would reward fast failures" in article,

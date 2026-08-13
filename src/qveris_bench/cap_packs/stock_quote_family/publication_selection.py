@@ -83,11 +83,26 @@ def build_stock_quote_selection_snapshot(
     release_fingerprint = str(release_metadata.get("suite_fingerprint"))
     if not release_fingerprint:
         raise StockQuoteSelectionBuildError("release suite fingerprint is missing")
-    _validate_current_cap_inputs(suite_document, cases_document, schema_document)
+    _validate_current_cap_inputs(
+        suite_document, cases_document, schema_document, release_document
+    )
     github_manifest_path = release_path.with_name("github-artifacts.json")
     github_manifest = json.loads(github_manifest_path.read_bytes())
-    github_run_id = str(github_manifest.get("github_run_id"))
-    github_sha = str(github_manifest.get("github_sha"))
+    github_run = _mapping(config, "github_run")
+    github_run_id = _string(github_run, "run_id")
+    github_sha = _string(github_run, "github_sha")
+    if (
+        github_manifest.get("github_run_id") != github_run_id
+        or github_manifest.get("github_sha") != github_sha
+        or _string(github_run, "conclusion") != "success"
+        or not _string(github_run, "created_at").startswith(
+            _string(config, "observation_date")
+        )
+        or not _string(github_run, "completed_at").startswith(
+            _string(config, "observation_date")
+        )
+    ):
+        raise StockQuoteSelectionBuildError("GitHub run metadata mismatch")
     evidence_root = repository_root / _string(config, "public_evidence_root")
     public_by_digest = _load_public_evidence(
         evidence_root, release_fingerprint, github_run_id, github_sha
@@ -275,6 +290,7 @@ def _validate_current_cap_inputs(
     suite: dict[str, Any],
     cases_document: dict[str, Any],
     schema: dict[str, Any],
+    release: dict[str, Any],
 ) -> None:
     if (
         suite.get("suite_id") != "stock-quote-v3"
@@ -288,22 +304,56 @@ def _validate_current_cap_inputs(
     cases = cases_document.get("cases")
     if not isinstance(cases, list):
         raise StockQuoteSelectionBuildError("current Stock Quote cases are invalid")
+    case_mappings = {
+        str(case.get("case_id")): case for case in cases if isinstance(case, dict)
+    }
     roles = {
-        str(case.get("case_id")): (
+        case_id: (
             "negative_control" if case.get("negative_control") is True else "positive"
         )
-        for case in cases
-        if isinstance(case, dict)
+        for case_id, case in case_mappings.items()
     }
     if roles != _CASE_ROLES:
         raise StockQuoteSelectionBuildError("current Stock Quote case roles drifted")
-    if (
-        tuple(schema.get("required_fields", ())) != ("symbol", "price", "timestamp")
-        or _mapping(_mapping(schema, "field_constraints"), "timestamp").get(
-            "max_age_seconds"
-        )
-        != 900
+    release_cells = _list_of_mappings(release, "cells")
+    for case_id, case in case_mappings.items():
+        release_inputs = {
+            json.dumps(cell.get("case_input"), sort_keys=True)
+            for cell in release_cells
+            if cell.get("case_id") == case_id
+        }
+        if release_inputs != {json.dumps(case.get("input"), sort_keys=True)}:
+            raise StockQuoteSelectionBuildError("Stock Quote case input drifted")
+    expected_completion = {
+        "invalid-stock": ("validation_error",),
+        **{
+            case_id: ("symbol", "price", "timestamp")
+            for case_id in _CASE_ROLES
+            if case_id != "invalid-stock"
+        },
+    }
+    if any(
+        tuple(case_mappings[case_id].get("completion_conditions", ())) != conditions
+        for case_id, conditions in expected_completion.items()
     ):
+        raise StockQuoteSelectionBuildError("Stock Quote completion contract drifted")
+    expected_schema = {
+        "required_fields": ["symbol", "price", "timestamp"],
+        "field_types": {"symbol": "string", "price": "number", "timestamp": "string"},
+        "field_constraints": {
+            "symbol": {"non_empty": True},
+            "price": {"finite": True, "positive": True},
+            "timestamp": {"iso8601": True, "max_age_seconds": 900},
+        },
+        "additional_fields": True,
+        "negative_control": {
+            "required_fields": ["validation_error"],
+            "field_types": {"validation_error": "string"},
+            "field_constraints": {"validation_error": {"non_empty": True}},
+            "additional_fields": False,
+        },
+    }
+    if schema != expected_schema:
         raise StockQuoteSelectionBuildError("Stock Quote observation contract drifted")
 
 
@@ -343,7 +393,8 @@ def _validate_terminal_provenance(
         raise StockQuoteSelectionBuildError("public terminal binding mismatch")
     symbol = str(cell.get("case_input", {}).get("symbol"))
     requested = binding.parameters.get("symbol", binding.parameters.get("s"))
-    if not isinstance(requested, str) or not requested.startswith(symbol.split(".")[0]):
+    expected_symbol = _expected_vendor_symbol(binding.provider_id, symbol)
+    if requested != expected_symbol:
         raise StockQuoteSelectionBuildError("binding parameters do not match case")
 
 
@@ -352,6 +403,14 @@ def _binding_digest(binding: QverisDirectBinding) -> str:
         binding.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
     ).encode()
     return sha256_digest(canonical)
+
+
+def _expected_vendor_symbol(provider_id: str, canonical_symbol: str) -> str:
+    if provider_id == "eodhd" and canonical_symbol == "AAPL":
+        return "AAPL.US"
+    if provider_id == "eodhd" and canonical_symbol == "NOTASTOCK":
+        return "NOTASTOCK.US"
+    return canonical_symbol
 
 
 def _pricing(facts: tuple[Any, ...], access_path_id: str) -> OfficialPricingSnapshot:
