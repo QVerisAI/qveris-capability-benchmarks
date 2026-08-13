@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import urllib.error
 from threading import Barrier
 
 import pytest
@@ -57,6 +58,25 @@ def test_executor_reuses_one_discovery_for_repeated_frozen_tool_calls(
 
     assert sum(url.endswith("/search") for url, _ in requests) == 1
     assert len(requests) == 3
+
+
+def test_executor_caches_a_frozen_tool_discovery_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests = []
+
+    def urlopen(request, timeout):
+        requests.append((request.full_url, timeout))
+        raise urllib.error.HTTPError(request.full_url, 500, "error", {}, None)
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    execute = build_executor("https://qveris.ai/api/v1", "test-key")
+
+    for parameters in ({"symbol": "AAPL"}, {"symbol": "NOTASTOCK"}):
+        with pytest.raises(RuntimeError, match="search HTTP 500"):
+            execute("provider.splits", parameters)
+
+    assert len(requests) == 1
 
 
 def _case(**kwargs) -> Case:
