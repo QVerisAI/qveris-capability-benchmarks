@@ -1,0 +1,28 @@
+title: Best Dividend Event APIs for Developers
+meta_description: Evidence-backed comparison of dividend-event Access Paths with release-backed market observations, gateway latency, QVeris list credits, and Agent signals.
+cap_label: Dividend Event
+scope: Historical dividend-event retrieval through the tested QVeris and Native Access Paths.
+provider_links:
+  alpha-vantage:
+    name: Alpha Vantage
+    official: https://www.alphavantage.co/
+    qveris: https://qveris.ai/providers/alphavantage
+  eodhd:
+    name: EODHD
+    official: https://eodhd.com/
+    qveris: https://qveris.ai/providers/eodhd
+  hangseng:
+    name: Hang Seng
+    official: https://www.gildata.com/
+    qveris: https://qveris.ai/providers/hangseng_polysource
+  ifind:
+    name: iFinD
+    official: https://quantapi.51ifind.com/
+  massive-stocks:
+    name: Massive
+    official: https://massive.io/
+    qveris: https://qveris.ai/providers/massive_stocks
+  twelve-data:
+    name: Twelve Data
+    official: https://twelvedata.com/
+    qveris: https://qveris.ai/providers/twelvedata
