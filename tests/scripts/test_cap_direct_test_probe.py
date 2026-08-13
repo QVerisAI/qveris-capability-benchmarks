@@ -110,6 +110,24 @@ def test_ac5_execution_unauthorized_is_n_a() -> None:
     assert probe_state(results) == "n_a"
 
 
+def test_ac5_search_timeout_is_a_terminal_unavailable_observation() -> None:
+    def execute(tool_id, parameters):
+        raise TimeoutError("gateway search timed out")
+
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+
+    results = run_probe((probe,), execute, rounds=1)
+
+    assert results[0].state == "n_a"
+    assert "timed out" in results[0].notes
+
+
 def test_ac5_any_failed_or_unavailable_cell_fails_the_probe() -> None:
     assert (
         probe_state(

@@ -222,7 +222,7 @@ def run_probe(
                 try:
                     outcome = execute(probe.tool_id, case.parameters)
                     result = evaluate_cell(case, outcome)
-                except RuntimeError as exc:
+                except (RuntimeError, TimeoutError) as exc:
                     result = CellResult(
                         probe.supplier,
                         case.case_id,
