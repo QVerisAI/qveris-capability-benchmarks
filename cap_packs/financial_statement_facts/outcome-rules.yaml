@@ -1,2 +1,0 @@
-completion_requires: [symbol, fiscal_year, revenue]
-negative_control_requires: [validation_error]

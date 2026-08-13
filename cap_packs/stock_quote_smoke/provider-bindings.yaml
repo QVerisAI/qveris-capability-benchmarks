@@ -1,5 +1,0 @@
-access_paths:
-  - access_path_id: finnhub-stock-quote
-    provider_id: finnhub
-    canonical_interface: quote
-    official_source: https://finnhub.io/docs/api/quote

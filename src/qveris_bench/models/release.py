@@ -9,6 +9,7 @@ from qveris_bench.models.base import (
     Sha256,
     StableId,
 )
+from qveris_bench.models.cap import SourceReference
 from qveris_bench.models.enums import DimensionState, ReleaseFactType
 from qveris_bench.models.metric import (
     UNSTRUCTURED_METRIC_PROPERTY_NAMES_SCHEMA,
@@ -137,6 +138,9 @@ class BenchmarkRelease(FrozenModel):
     cap_version: SemanticVersion | None = Field(
         default=None, exclude_if=lambda value: value is None
     )
+    cap_sources: tuple[SourceReference, ...] = Field(
+        default=(), exclude_if=lambda value: not value
+    )
     metric_definitions: tuple[MetricDefinition, ...] = Field(
         default=(), exclude_if=lambda value: not value
     )
@@ -145,3 +149,11 @@ class BenchmarkRelease(FrozenModel):
         default_factory=dict
     )
     limitations: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_cap_provenance(self) -> BenchmarkRelease:
+        if self.cap_sources and (self.cap_id is None or self.cap_version is None):
+            raise ValueError("CAP provenance requires one CAP identity")
+        if self.cap_id is not None and not self.cap_sources:
+            raise ValueError("formal CAP releases require Harbor source provenance")
+        return self

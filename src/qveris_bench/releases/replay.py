@@ -7,6 +7,10 @@ from typing import Any
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    validate_harbor_source,
+)
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
@@ -29,16 +33,6 @@ _CELLS_ADAPTER = TypeAdapter(tuple[RunCell, ...])
 _EVIDENCE_ADAPTER = TypeAdapter(tuple[EvidenceBundle, ...])
 _METRIC_REGISTRY_ADAPTER = TypeAdapter(tuple[MetricDefinition, ...])
 _EXECUTION_FIELDS = {"state", "failure_attribution"}
-_LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION = frozenset(
-    {
-        "sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f",
-        "sha256:a22d3dbcb47d094baac201a0c100e6ad87b6159d6780bdf29ea3c5f0e4a8abaf",
-        "sha256:5a159d6e5777b3829e57f861e18182a76540d94dc1f3b8c23ae4410207e5024e",
-        "sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b",
-        "sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57",
-        "sha256:f0535988872ec0b300de726a1ec3e6c28988ba39401ea6bdb04d8a739798f2b3",
-    }
-)
 
 
 class ReleaseReplayError(ValueError):
@@ -56,6 +50,7 @@ def replay_release_dir(
     release_dir: Path,
     *,
     expected_digest: str | None = None,
+    harbor_contracts_path: Path | None = None,
 ) -> ReplayResult:
     files = {name: _read_required_file(release_dir, name) for name in _REQUIRED_FILES}
     release = _validate_model(
@@ -92,6 +87,20 @@ def replay_release_dir(
         raise ReleaseReplayError(
             "run-plan.json suite fingerprint does not match release input"
         )
+    if run_plan.cap_sources != release.cap_sources:
+        raise ReleaseReplayError("run-plan CAP provenance does not match release input")
+    if (run_plan.cap_id, run_plan.cap_version) != (release.cap_id, release.cap_version):
+        raise ReleaseReplayError("run-plan CAP identity does not match release input")
+    if release.cap_sources:
+        for source in release.cap_sources:
+            contracts_path = _snapshot_contracts_path(
+                harbor_contracts_path or _find_harbor_contracts(release_dir),
+                source.catalog_snapshot_digest,
+            )
+            try:
+                validate_harbor_source(source, contracts_path)
+            except HarborSnapshotError as exc:
+                raise ReleaseReplayError("Harbor CAP provenance is invalid") from exc
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
 
@@ -100,16 +109,9 @@ def replay_release_dir(
             release,
             cells,
             evidence,
-            require_attribution=False,
+            require_attribution=True,
             metric_registry=metric_registry,
         )
-        if release_digest(rebuilt) not in _LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION:
-            rebuilt = build_release(
-                release,
-                cells,
-                evidence,
-                metric_registry=metric_registry,
-            )
     except ReleaseGateError as exc:
         raise ReleaseReplayError(
             f"release replay input validation failed: {exc}"
@@ -132,6 +134,25 @@ def replay_release_dir(
         published_digest=published_digest,
         expected_digest_verified=expected_digest is not None,
     )
+
+
+def _find_harbor_contracts(release_dir: Path) -> Path | None:
+    for ancestor in (release_dir, *release_dir.parents):
+        candidate = ancestor / "harbor_catalog" / "contracts.json"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def _snapshot_contracts_path(
+    contracts_path: Path | None, snapshot_digest: str
+) -> Path | None:
+    if contracts_path is None:
+        return None
+    snapshot = contracts_path.parent / "snapshots" / snapshot_digest / "contracts.json"
+    if snapshot.is_file():
+        return snapshot
+    return contracts_path
 
 
 def _read_required_file(release_dir: Path, filename: str) -> bytes:

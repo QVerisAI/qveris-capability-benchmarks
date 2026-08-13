@@ -224,10 +224,11 @@ def test_ac6_execution_requires_path_authorization_and_agent_eligibility() -> No
         repository.validate_direct_test_authorization(
             [("alpha-vantage", "alpha-vantage-fx-spot-qveris")]
         )
-    repository.validate_direct_test_authorization(
-        [("rongjuhui", "rongjuhui-hkd-reference-rate")]
-    )
-    with pytest.raises(ProviderValidationError, match="Agent Trial is not eligible"):
+    with pytest.raises(ProviderValidationError, match="Direct Test is not authorized"):
+        repository.validate_direct_test_authorization(
+            [("rongjuhui", "rongjuhui-hkd-reference-rate")]
+        )
+    with pytest.raises(ProviderValidationError, match="Direct Test is not authorized"):
         repository.validate_agent_trial_eligibility(
             [("finnhub", "finnhub-stock-quote")]
         )

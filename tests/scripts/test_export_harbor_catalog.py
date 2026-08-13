@@ -2,11 +2,21 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 
 import pytest
 
-from scripts.export_harbor_catalog import build_contract_url, export_catalog, main
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    load_public_harbor_contracts,
+)
+from scripts.export_harbor_catalog import (
+    build_contract_url,
+    export_catalog,
+    main,
+    normalize_catalog,
+)
 
 
 def _catalog(items: list[dict]) -> dict:
@@ -60,10 +70,29 @@ def test_export_writes_expected_files(
     assert (tmp_path / "meta.json").exists()
     stored = json.loads((tmp_path / "contracts.json").read_text(encoding="utf-8"))
     assert stored[0]["contract"]["standard_query"]["required"][0]["name"] == "symbol"
-    assert result["digest"]
+    meta = json.loads((tmp_path / "meta.json").read_text(encoding="utf-8"))
+    assert meta["origin"] == "https://harbor.qveris.cloud"
+    assert meta["exporter_version"] == "1.0.0"
+    assert (
+        meta["catalog_snapshot_digest"]
+        == hashlib.sha256((tmp_path / "contracts.json").read_bytes()).hexdigest()
+    ), "AC1 export must publish the exact public snapshot digest"
+    assert meta["contracts"][0] == {
+        "capability_id": "MKT.BARS.EOD",
+        "contract_version": None,
+        "contract_digest": hashlib.sha256(
+            json.dumps(
+                contract_eod,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        ).hexdigest(),
+    }, "AC1 export must expose the per-contract provenance needed by a formal CAP"
+    assert result["digest"] == meta["catalog_snapshot_digest"]
 
 
-def test_export_contract_failure_is_recorded_not_fatal(tmp_path) -> None:
+def test_export_contract_failure_fails_closed(tmp_path) -> None:
     catalog = _catalog(
         [{"capability_id": "MKT.BARS.EOD"}, {"capability_id": "MKT.BARS.INTRADAY"}]
     )
@@ -73,11 +102,133 @@ def test_export_contract_failure_is_recorded_not_fatal(tmp_path) -> None:
             raise RuntimeError("GET ... -> HTTP 404")
         return catalog
 
-    result = export_catalog(
-        "https://harbor.qveris.cloud", "hbr_test", tmp_path, fetch=fetch
+    with pytest.raises(RuntimeError, match="incomplete"):
+        export_catalog("https://harbor.qveris.cloud", "hbr_test", tmp_path, fetch=fetch)
+
+
+def test_ac4_normalize_catalog_is_deterministic_and_rebuilds_public_metadata(
+    tmp_path,
+) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}]), indent=4),
+        encoding="utf-8",
     )
-    assert result["counts"] == {"catalog": 2, "contracts": 0, "errors": 2}
-    assert result["digest"]
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.L1.RT",
+                    "contract": {"capability_id": "MKT.L1.RT", "contract_version": 1},
+                }
+            ],
+            indent=4,
+        ),
+        encoding="utf-8",
+    )
+
+    first = normalize_catalog(tmp_path)
+    first_bytes = {
+        filename: (tmp_path / filename).read_bytes()
+        for filename in ("catalog.json", "contracts.json", "meta.json")
+    }
+    second = normalize_catalog(tmp_path)
+
+    assert first == second
+    assert first_bytes == {
+        filename: (tmp_path / filename).read_bytes() for filename in first_bytes
+    }, "AC4 unchanged Harbor responses must produce no catalog diff"
+
+
+def test_ac4_normalize_rejects_catalog_contract_membership_drift(tmp_path) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}])), encoding="utf-8"
+    )
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.OTHER",
+                    "contract": {
+                        "capability_id": "MKT.OTHER",
+                        "contract_version": 1,
+                    },
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="membership"):
+        normalize_catalog(tmp_path)
+
+
+def test_ac4_normalize_rejects_overwriting_an_existing_snapshot(tmp_path) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT", "name": "original"}])),
+        encoding="utf-8",
+    )
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.L1.RT",
+                    "contract": {"capability_id": "MKT.L1.RT", "contract_version": 1},
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    normalize_catalog(tmp_path)
+    catalog = json.loads((tmp_path / "catalog.json").read_text(encoding="utf-8"))
+    catalog["items"][0]["name"] = "changed"
+    (tmp_path / "catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="different content"):
+        normalize_catalog(tmp_path)
+
+
+def test_ac4_public_catalog_rejects_a_contract_with_a_different_inner_identity(
+    tmp_path,
+) -> None:
+    records = [
+        {
+            "capability_id": "MKT.L1.RT",
+            "contract": {"capability_id": "MKT.OTHER", "contract_version": 1},
+        }
+    ]
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}])), encoding="utf-8"
+    )
+    (tmp_path / "contracts.json").write_text(json.dumps(records), encoding="utf-8")
+    (tmp_path / "meta.json").write_text(
+        json.dumps(
+            {
+                "origin": "https://harbor.qveris.cloud",
+                "exporter_version": "1.0.0",
+                "catalog_snapshot_digest": hashlib.sha256(
+                    (tmp_path / "contracts.json").read_bytes()
+                ).hexdigest(),
+                "counts": {"catalog": 1, "contracts": 1, "errors": 0},
+                "contracts": [
+                    {
+                        "capability_id": "MKT.L1.RT",
+                        "contract_version": 1,
+                        "contract_digest": hashlib.sha256(
+                            json.dumps(
+                                records[0]["contract"],
+                                sort_keys=True,
+                                separators=(",", ":"),
+                            ).encode()
+                        ).hexdigest(),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(HarborSnapshotError, match="identity"):
+        load_public_harbor_contracts(tmp_path / "contracts.json")
 
 
 def test_contract_url_quotes_capability_id() -> None:

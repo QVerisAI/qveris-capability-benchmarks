@@ -12,14 +12,13 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Callable
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
 _DEFAULT_BASE_URL = "https://harbor.qveris.cloud"
 _KEY_ENV = "QVERIS_HARBOR_EXPLORE_KEY"
-_BASE_URL_ENV = "QVERIS_HARBOR_EXPLORE_BASE_URL"
 _TIMEOUT_SECONDS = 30
+_EXPORTER_VERSION = "1.0.0"
 
 
 def build_contract_url(base_url: str, capability_id: str) -> str:
@@ -39,13 +38,140 @@ def fetch_json(url: str, key: str) -> dict[str, Any]:
         raise RuntimeError(f"GET {url} -> HTTP {exc.code}") from exc
 
 
+def _canonical_json(value: object) -> bytes:
+    return (
+        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
+        + b"\n"
+    )
+
+
+def _canonical_records(records: object) -> list[dict[str, Any]]:
+    if not isinstance(records, list):
+        raise RuntimeError("Harbor contracts must be a list")
+    normalized: list[dict[str, Any]] = []
+    for record in records:
+        if not isinstance(record, dict):
+            raise RuntimeError("Harbor contract record must be an object")
+        capability_id = record.get("capability_id")
+        contract = record.get("contract")
+        if not isinstance(capability_id, str) or not isinstance(contract, dict):
+            raise RuntimeError("Harbor contract record is incomplete")
+        if contract.get("capability_id") != capability_id:
+            raise RuntimeError("Harbor contract identity does not match its record")
+        normalized.append({"capability_id": capability_id, "contract": contract})
+    return sorted(normalized, key=lambda record: record["capability_id"])
+
+
+def _canonical_catalog(catalog: object) -> dict[str, Any]:
+    if not isinstance(catalog, dict) or not isinstance(catalog.get("items"), list):
+        raise RuntimeError("Harbor catalog must contain an item list")
+    items = catalog["items"]
+    if not all(
+        isinstance(item, dict) and isinstance(item.get("capability_id"), str)
+        for item in items
+    ):
+        raise RuntimeError("Harbor catalog item is incomplete")
+    return {**catalog, "items": sorted(items, key=lambda item: item["capability_id"])}
+
+
+def _write_catalog(out_dir: Path, catalog: object, records: object) -> dict[str, Any]:
+    canonical_catalog = _canonical_catalog(catalog)
+    contracts = _canonical_records(records)
+    catalog_ids = [item["capability_id"] for item in canonical_catalog["items"]]
+    contract_ids = [record["capability_id"] for record in contracts]
+    if len(catalog_ids) != len(set(catalog_ids)):
+        raise RuntimeError("Harbor catalog has duplicate capability IDs")
+    if len(contract_ids) != len(set(contract_ids)):
+        raise RuntimeError("Harbor contracts have duplicate capability IDs")
+    if set(catalog_ids) != set(contract_ids):
+        raise RuntimeError("Harbor catalog and contracts membership does not match")
+    catalog_bytes = _canonical_json(canonical_catalog)
+    contracts_bytes = _canonical_json(contracts)
+    catalog_snapshot_digest = hashlib.sha256(contracts_bytes).hexdigest()
+    contract_provenance = [
+        {
+            "capability_id": record["capability_id"],
+            "contract_version": record["contract"].get("contract_version"),
+            "contract_digest": hashlib.sha256(
+                json.dumps(
+                    record["contract"],
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest(),
+        }
+        for record in contracts
+    ]
+    metadata = {
+        "origin": _DEFAULT_BASE_URL,
+        "exporter_version": _EXPORTER_VERSION,
+        "counts": {
+            "catalog": len(canonical_catalog["items"]),
+            "contracts": len(contracts),
+            "errors": 0,
+        },
+        "catalog_snapshot_digest": catalog_snapshot_digest,
+        "contracts": contract_provenance,
+    }
+    metadata_bytes = _canonical_json(metadata)
+    _write_snapshot(out_dir, catalog_bytes, contracts_bytes, metadata_bytes)
+    _write_immutable_snapshot(
+        out_dir / "snapshots" / catalog_snapshot_digest,
+        catalog_bytes,
+        contracts_bytes,
+        metadata_bytes,
+    )
+    return {
+        "counts": metadata["counts"],
+        "digest": catalog_snapshot_digest,
+        "output_dir": str(out_dir),
+    }
+
+
+def _write_snapshot(
+    directory: Path, catalog_bytes: bytes, contracts_bytes: bytes, metadata_bytes: bytes
+) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "catalog.json").write_bytes(catalog_bytes)
+    (directory / "contracts.json").write_bytes(contracts_bytes)
+    (directory / "meta.json").write_bytes(metadata_bytes)
+
+
+def _write_immutable_snapshot(
+    directory: Path, catalog_bytes: bytes, contracts_bytes: bytes, metadata_bytes: bytes
+) -> None:
+    expected = {
+        "catalog.json": catalog_bytes,
+        "contracts.json": contracts_bytes,
+        "meta.json": metadata_bytes,
+    }
+    if directory.exists():
+        if any(
+            not (directory / filename).is_file()
+            or (directory / filename).read_bytes() != content
+            for filename, content in expected.items()
+        ):
+            raise RuntimeError("Harbor snapshot digest already has different content")
+        return
+    _write_snapshot(directory, catalog_bytes, contracts_bytes, metadata_bytes)
+
+
+def normalize_catalog(out_dir: Path) -> dict[str, Any]:
+    try:
+        catalog = json.loads((out_dir / "catalog.json").read_bytes())
+        contracts = json.loads((out_dir / "contracts.json").read_bytes())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError("Harbor catalog directory is unreadable") from exc
+    return _write_catalog(out_dir, catalog, contracts)
+
+
 def export_catalog(
     base_url: str,
     key: str,
     out_dir: Path,
     fetch: Callable[[str, str], dict[str, Any]] = fetch_json,
 ) -> dict[str, Any]:
-    out_dir.mkdir(parents=True, exist_ok=True)
     catalog = fetch(f"{base_url}/api/v2/explore/catalog", key)
     items = catalog.get("items", [])
     contracts: list[dict[str, Any]] = []
@@ -60,28 +186,9 @@ def export_catalog(
         except RuntimeError as exc:
             errors.append({"capability_id": capability_id, "error": str(exc)})
 
-    counts = {
-        "catalog": len(items),
-        "contracts": len(contracts),
-        "errors": len(errors),
-    }
-    exported_at = datetime.now(UTC).isoformat()
-    (out_dir / "catalog.json").write_text(
-        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    (out_dir / "contracts.json").write_text(
-        json.dumps(contracts, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    (out_dir / "meta.json").write_text(
-        json.dumps(
-            {"exported_at": exported_at, "counts": counts},
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
-    digest = hashlib.sha256((out_dir / "contracts.json").read_bytes()).hexdigest()
-    return {"counts": counts, "digest": digest, "output_dir": str(out_dir)}
+    if errors:
+        raise RuntimeError("Harbor catalog export is incomplete")
+    return _write_catalog(out_dir, catalog, contracts)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -89,15 +196,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(".harbor-snapshots/catalog"),
-        help="Private output directory (must stay gitignored)",
+        default=Path("harbor_catalog"),
+        help="Versioned public catalog directory.",
     )
     parser.add_argument(
-        "--base-url",
-        default=os.getenv(_BASE_URL_ENV, _DEFAULT_BASE_URL),
-        help=f"Harbor explore base URL (default: {_DEFAULT_BASE_URL})",
+        "--normalize",
+        action="store_true",
+        help="Rebuild deterministic metadata from an existing catalog directory.",
     )
     args = parser.parse_args(argv)
+
+    if args.normalize:
+        result = normalize_catalog(args.output)
+        print(
+            f"normalized catalog={result['counts']['catalog']} "
+            f"contracts={result['counts']['contracts']} digest={result['digest']}"
+        )
+        return 0
 
     key = os.getenv(_KEY_ENV)
     if not key:
@@ -107,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2
 
-    result = export_catalog(args.base_url.rstrip("/"), key, args.output)
+    result = export_catalog(_DEFAULT_BASE_URL, key, args.output)
     print(
         f"exported catalog={result['counts']['catalog']} "
         f"contracts={result['counts']['contracts']} "

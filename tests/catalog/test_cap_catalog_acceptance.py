@@ -11,22 +11,23 @@ from qveris_bench.catalog.repository import CapCatalogRepository, DuplicateCapEr
 from qveris_bench.catalog.validation import CapValidationError, validate_cap_file
 
 
-def _cap_data(cap_id: str = "etf-holdings", version: str = "1.0.0") -> dict:
+def _cap_data(cap_id: str = "dividend-events", version: str = "1.0.0") -> dict:
     return {
         "cap_id": cap_id,
         "version": version,
-        "name": "ETF Holdings",
-        "business_use": "Compare constituent-level ETF data providers.",
-        "scope": ["US-listed ETFs"],
+        "name": "Dividend Events",
+        "business_use": "Compare provider paths for dated dividend events.",
+        "scope": ["Dated issuer dividend events"],
         "exclusions": ["portfolio optimization"],
         "markets": ["US"],
-        "asset_types": ["ETF"],
+        "asset_types": ["EQUITY"],
         "sources": [
             {
-                "source_type": "external_repository",
-                "repository": "https://github.com/QVerisAI/qveris-agent-harness",
-                "commit": "95179a8",
-                "task_id": "etf-holdings-001",
+                "source_type": "harbor_catalog",
+                "harbor_capability_id": "MKT.DIVIDENDS",
+                "contract_version": 1,
+                "catalog_snapshot_digest": "a" * 64,
+                "contract_digest": "b" * 64,
             }
         ],
     }
@@ -38,14 +39,14 @@ def _write_cap(path: Path, data: dict | None = None) -> None:
 
 
 def test_ac1_valid_local_cap_file_loads_as_typed_definition(tmp_path: Path) -> None:
-    path = tmp_path / "etf_holdings" / "cap.yaml"
+    path = tmp_path / "dividend_events" / "cap.yaml"
     _write_cap(path)
 
     cap = validate_cap_file(path)
 
-    assert cap.cap_id == "etf-holdings", "AC1 local CAP ID must round-trip"
-    assert str(cap.sources[0].repository).startswith("https://github.com/"), (
-        "AC1 external provenance must remain attached"
+    assert cap.cap_id == "dividend-events", "AC1 local CAP ID must round-trip"
+    assert cap.sources[0].harbor_capability_id == "MKT.DIVIDENDS", (
+        "AC1 formal CAP must retain its Harbor capability identity"
     )
 
 
@@ -53,19 +54,19 @@ def test_ac2_duplicate_cap_id_and_version_fail_closed(tmp_path: Path) -> None:
     _write_cap(tmp_path / "pack-a" / "cap.yaml")
     _write_cap(tmp_path / "pack-b" / "cap.yaml")
 
-    with pytest.raises(DuplicateCapError, match="etf-holdings@1.0.0"):
+    with pytest.raises(DuplicateCapError, match="dividend-events@1.0.0"):
         CapCatalogRepository(tmp_path).list()
 
 
 @pytest.mark.parametrize(
     ("field", "value"),
-    [("commit", "not-a-commit"), ("business_use", None)],
+    [("contract_digest", "not-a-digest"), ("business_use", None)],
 )
 def test_ac3_invalid_provenance_or_business_use_is_rejected(
     tmp_path: Path, field: str, value: str | None
 ) -> None:
     data = _cap_data()
-    if field == "commit":
+    if field == "contract_digest":
         data["sources"][0][field] = value
     else:
         data.pop(field)
@@ -96,11 +97,11 @@ def test_ac4_duplicate_yaml_keys_are_rejected(tmp_path: Path) -> None:
 def test_ac5_catalog_is_sorted_and_skips_template_directory(tmp_path: Path) -> None:
     _write_cap(
         tmp_path / "zeta" / "cap.yaml",
-        _cap_data(cap_id="stock-quote", version="1.0.0"),
+        _cap_data(cap_id="dividend-events", version="1.0.0"),
     )
     _write_cap(
         tmp_path / "alpha" / "cap.yaml",
-        _cap_data(cap_id="etf-holdings", version="1.0.0"),
+        _cap_data(cap_id="realtime-financial-news", version="1.0.0"),
     )
     _write_cap(
         tmp_path / "_template" / "cap.yaml",
@@ -109,14 +110,13 @@ def test_ac5_catalog_is_sorted_and_skips_template_directory(tmp_path: Path) -> N
 
     caps = CapCatalogRepository(tmp_path).list()
 
-    assert [cap.cap_id for cap in caps] == ["etf-holdings", "stock-quote"], (
-        "AC5 catalog output must be deterministic and exclude templates"
-    )
+    assert [cap.cap_id for cap in caps] == [
+        "dividend-events",
+        "realtime-financial-news",
+    ], "AC5 catalog output must be deterministic and exclude templates"
 
 
-def test_ac6_customer_question_uses_sanitized_internal_reference(
-    tmp_path: Path,
-) -> None:
+def test_ac6_non_harbor_cap_source_is_rejected(tmp_path: Path) -> None:
     data = _cap_data()
     data["sources"] = [
         {
@@ -127,15 +127,33 @@ def test_ac6_customer_question_uses_sanitized_internal_reference(
     path = tmp_path / "cap.yaml"
     _write_cap(path, data)
 
-    cap = validate_cap_file(path)
+    with pytest.raises(CapValidationError, match="source_type"):
+        validate_cap_file(path)
 
-    assert cap.sources[0].internal_reference.endswith("001"), (
-        "AC6 sanitized internal reference must be retained"
-    )
+
+@pytest.mark.parametrize(
+    "missing",
+    [
+        "harbor_capability_id",
+        "contract_version",
+        "catalog_snapshot_digest",
+        "contract_digest",
+    ],
+)
+def test_ac6_harbor_cap_requires_immutable_contract_provenance(
+    tmp_path: Path, missing: str
+) -> None:
+    data = _cap_data()
+    data["sources"][0].pop(missing)
+    path = tmp_path / "cap.yaml"
+    _write_cap(path, data)
+
+    with pytest.raises(CapValidationError, match=missing):
+        validate_cap_file(path)
 
 
 def test_ac7_installed_cli_validates_and_lists_caps(tmp_path: Path) -> None:
-    path = tmp_path / "etf_holdings" / "cap.yaml"
+    path = tmp_path / "dividend_events" / "cap.yaml"
     _write_cap(path)
     executable = shutil.which("qveris-bench")
     assert executable is not None, "AC7 installed CLI is required"
@@ -156,10 +174,10 @@ def test_ac7_installed_cli_validates_and_lists_caps(tmp_path: Path) -> None:
     assert validate_result.returncode == 0, (
         f"AC7 cap validate failed: {validate_result.stderr}"
     )
-    assert "etf-holdings@1.0.0" in validate_result.stdout, (
+    assert "dividend-events@1.0.0" in validate_result.stdout, (
         "AC7 validate output must identify the CAP version"
     )
     assert list_result.returncode == 0, f"AC7 cap list failed: {list_result.stderr}"
-    assert "etf-holdings@1.0.0" in list_result.stdout, (
+    assert "dividend-events@1.0.0" in list_result.stdout, (
         "AC7 list output must identify the CAP version"
     )

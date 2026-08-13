@@ -1,65 +1,37 @@
 capabilities:
-  - cap_id: etf-holdings
-    name: ETF Holdings
-    lifecycle: runnable
-    business_use: Select a provider for constituent-level ETF research.
-  - cap_id: stock-quote
-    name: Stock Quote
-    lifecycle: runnable
-    business_use: Select a provider for a current equity quote request.
-  - cap_id: historical-price-series
-    name: Historical Price Series
-    lifecycle: candidate
-    business_use: Select a provider for dated OHLCV market-history retrieval.
-  - cap_id: company-fundamentals
-    name: Company Fundamentals
-    lifecycle: candidate
-    business_use: Select a provider for comparable company fundamental metrics.
-  - cap_id: financial-statement-facts
-    name: Financial Statement Facts
-    lifecycle: runnable
-    business_use: Select a provider for period-specific issuer financial facts.
-  - cap_id: sec-filing-evidence
-    name: SEC Filing Evidence
-    lifecycle: runnable
-    business_use: Select a provider for cited evidence from SEC issuer filings.
-  - cap_id: financial-news-evidence
-    name: Financial News Evidence
-    lifecycle: candidate
-    business_use: Select a provider for dated and cited company-news evidence.
-  - cap_id: index-constituents
-    name: Index Constituents
-    lifecycle: candidate
-    business_use: Select a provider for index constituent membership and weights.
-  - cap_id: corporate-actions
-    name: Corporate Actions
-    lifecycle: candidate
-    business_use: Select a provider for verified issuer corporate-action events.
-  - cap_id: economic-time-series
-    name: Economic Time Series
-    lifecycle: candidate
-    business_use: Select a provider for dated macroeconomic series observations.
   - cap_id: realtime-financial-news
     name: Real-time Financial News
     lifecycle: candidate
-    business_use: Select a provider for current financial news with timestamps and linked tickers.
+    business_use: Select a provider for current financial news with timestamps.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: NEWS.FIN.REALTIME
   - cap_id: dividend-events
     name: Dividend Events
     lifecycle: candidate
     business_use: Select a provider for dated per-share dividend event records.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: MKT.DIVIDENDS
   - cap_id: crypto-spot-quote
     name: Crypto Spot Quote
     lifecycle: candidate
     business_use: Select a provider for a current cryptocurrency spot quote.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: CRYPTO.SPOT.RT
   - cap_id: financial-ratios
     name: Financial Ratios and Valuation
     lifecycle: candidate
     business_use: Select a provider for derived valuation and profitability ratios.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: FUNDAMENTALS.DERIVED_RATIOS
   - cap_id: fx-spot-rate
     name: FX Spot Rate
     lifecycle: candidate
     business_use: Select a provider for a current foreign-exchange spot rate.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: FX.SPOT
   - cap_id: govt-bond-yield
     name: Government Bond Yield
     lifecycle: candidate
     business_use: Select a provider for dated sovereign benchmark yield series.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: RATES.GOVT_BENCHMARK

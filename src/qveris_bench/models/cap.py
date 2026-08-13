@@ -2,36 +2,28 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from pydantic import Field, HttpUrl, model_validator
+from pydantic import Field, model_validator
 
-from qveris_bench.models.base import FrozenModel, SemanticVersion, StableId
+from qveris_bench.models.base import FrozenModel, SemanticVersion, Sha256, StableId
 from qveris_bench.models.enums import SourceType
 
-CommitRef = Annotated[str, Field(pattern=r"^[0-9a-f]{7,64}$")]
+HarborCapabilityId = Annotated[
+    str,
+    Field(pattern=r"^[A-Z][A-Z0-9]*(?:\.[A-Z][A-Z0-9_]*)+$", min_length=3),
+]
 
 
 class SourceReference(FrozenModel):
     source_type: SourceType
-    repository: HttpUrl | None = None
-    commit: CommitRef | None = None
-    task_id: str | None = Field(default=None, min_length=1)
-    internal_reference: str | None = Field(default=None, min_length=1)
+    harbor_capability_id: HarborCapabilityId
+    contract_version: int = Field(ge=1)
+    catalog_snapshot_digest: Sha256
+    contract_digest: Sha256
 
     @model_validator(mode="after")
     def require_source_provenance(self) -> SourceReference:
-        if self.source_type is SourceType.EXTERNAL_REPOSITORY:
-            missing = [
-                name
-                for name in ("repository", "commit", "task_id")
-                if getattr(self, name) is None
-            ]
-            if missing:
-                raise ValueError("external source requires " + ", ".join(missing))
-        if (
-            self.source_type is SourceType.CUSTOMER_QUESTION
-            and not self.internal_reference
-        ):
-            raise ValueError("customer source requires internal_reference")
+        if self.source_type is not SourceType.HARBOR_CATALOG:
+            raise ValueError("formal CAP source must be the Harbor catalog")
         return self
 
 
