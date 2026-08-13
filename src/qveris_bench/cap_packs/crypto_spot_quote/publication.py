@@ -192,11 +192,37 @@ def _build_article_facts(
     evidence_records = sum(
         len(_mapping(row, "run_observations").get("evidence_refs", [])) for row in rows
     )
+    fastest_name = str(fastest["provider_name"])
+    official_sources = _mapping(_mapping(manifest, "seo"), "official_sources")
     return {
         "access_path_count": len(rows),
         "edition": snapshot["edition"],
         "package_id": _mapping(manifest, "publication_package")["package_id"],
         "provider_count": len({row["provider_id"] for row in rows}),
+        "protected_provider_claims": [
+            "For a BTC/USDT spot-price workflow, both tested paths returned the "
+            "required price and 24-hour OHLC fields in all three fixed samples, "
+            "and both rejected the invalid-pair control in all three samples. "
+            f"{fastest_name} was the lower-latency path in this small test. This "
+            "is a comparison of the tested QVeris Access Paths, not a native API "
+            "benchmark or a general ranking of either exchange.",
+            "Choose the exchange whose venue-specific quote your application needs. "
+            "In this frozen sample both paths met the same minimum contract and had "
+            "the same public QVeris list price; "
+            f"{fastest_name} had the lower observed median gateway latency. That is "
+            "a narrow latency observation, not an overall winner.",
+            "This is a two-path, BTC/USDT-only sample. It does not establish wider "
+            "pair coverage, reliability over time, native API behavior, or an "
+            "overall “best crypto API.” Both rows use QVeris-managed connector "
+            "access; no personal provider credential or account-specific discount "
+            "is disclosed. Official exchange documentation is available from "
+            f"[Binance]({official_sources['Binance Spot API market data']}) and "
+            f"[OKX]({official_sources['OKX market ticker API']}).",
+            "Neither. In this fixed BTC/USDT test, both tested QVeris paths passed "
+            "the required-field and invalid-pair checks. "
+            f"{fastest_name} had the lower median gateway latency in this snapshot.",
+            "### Does 3/3 mean Binance or OKX supports all crypto pairs?",
+        ],
         "recommendations": {
             "fastest_observed_path": {
                 "access_path_id": fastest["access_path_id"],
@@ -503,8 +529,18 @@ def _validate_article(
     )
     if material_numbers != expected_numbers:
         raise PublicationReproductionError("unexpected material claim")
-    if re.search(r"Binance.{0,80}(?:faster|lower[- ]latency)", article, re.I):
-        raise PublicationReproductionError("unexpected material claim")
+    provider_claims = [
+        line
+        for line in article.splitlines()
+        if ("Binance" in line or "OKX" in line)
+        and not line.startswith("|")
+        and not line.startswith("title:")
+        and not line.startswith("description:")
+        and not line.startswith("# ")
+    ]
+    protected = facts.get("protected_provider_claims")
+    if not isinstance(protected, list) or provider_claims != protected:
+        raise PublicationReproductionError("unbound Provider claim")
     forbidden = profile.get("forbidden_claims")
     if not isinstance(forbidden, list):
         raise PublicationReproductionError("publication profile is invalid")

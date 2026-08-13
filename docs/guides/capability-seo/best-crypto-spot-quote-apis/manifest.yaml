@@ -13,7 +13,7 @@ publication_package:
     - src/qveris_bench/cap_packs/crypto_spot_quote/publication_charts.py
     - src/qveris_bench/profiles/selection.py
     - src/qveris_bench/models/selection.py
-  adapter_digest: sha256:c43a49936bbfa001cb6ed47011d726610e594db74e661bc4d7ad3b79fd5a0799
+  adapter_digest: sha256:f09974e2809411a838cab08d31d5925b409fa308ca17ded4fa0bb24308f6e302
 release:
   directory: releases/crypto-spot-quote-2026-q3-v1
   digest: sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f
@@ -59,7 +59,7 @@ seo:
 artifacts:
   article: docs/guides/best-crypto-spot-quote-apis.md
   article_facts: docs/guides/capability-seo/best-crypto-spot-quote-apis/article-facts.json
-  article_facts_digest: sha256:62471c3c2db3feed614453758169c25472af9dd25904d2d7491b122a7978aa97
+  article_facts_digest: sha256:b5c19e804779ec686ee8f08474b2ccdf665c16bd972eb76957bf8e095ffcf94e
   publication_profile: docs/guides/capability-seo/best-crypto-spot-quote-apis/publication-profile.yaml
   selection_snapshot_input: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-input.yaml
   selection_snapshot: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-snapshot.json
@@ -68,4 +68,4 @@ artifacts:
     - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-asset-scope.png
     - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-latency-credits.png
   selection_charts_manifest: docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:bb27f475b44a7fb9a44cad33fd59a3cfd54f9d6fe88816bf2a2ea741dcd10773
+  selection_charts_manifest_digest: sha256:033e6f32c3a003b2b7180a4a1c51cebe489e4e71e5af852f0123fd1d777532a3

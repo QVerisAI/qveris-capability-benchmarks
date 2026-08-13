@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import struct
+import zlib
 from importlib.metadata import version
 from importlib.resources import files
 from pathlib import Path
@@ -87,7 +89,7 @@ def render_crypto_publication_charts(
             "matplotlib": version("matplotlib"),
             "numpy": version("numpy"),
             "pillow": version("pillow"),
-            "png_encoder": "pillow-rgba-compress-9-v1",
+            "png_encoder": "rgba-filter0-zlib9-v1",
         },
     }
 
@@ -228,4 +230,22 @@ def _number(row: dict[str, object], key: str) -> float:
 def _canonicalize_png(path: Path) -> None:
     with Image.open(path) as source:
         image = source.convert("RGBA")
-    image.save(path, format="PNG", compress_level=9, optimize=False)
+    width, height = image.size
+    pixels = image.tobytes()
+    stride = width * 4
+    scanlines = b"".join(
+        b"\x00" + pixels[offset : offset + stride]
+        for offset in range(0, len(pixels), stride)
+    )
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        checksum = zlib.crc32(kind + data) & 0xFFFFFFFF
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", checksum)
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    path.write_bytes(
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(scanlines, level=9))
+        + chunk(b"IEND", b"")
+    )

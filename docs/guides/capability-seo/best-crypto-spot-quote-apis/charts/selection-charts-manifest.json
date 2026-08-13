@@ -1,7 +1,7 @@
 {
   "charts": {
-    "crypto-asset-scope.png": "sha256:2ec1293c9b864ccac0feb9483dd74b26e8c25bd238e843d308efdcdadf4d7e9d",
-    "crypto-latency-credits.png": "sha256:19affc060ec67276d80f3bac9ce991b9732967630f9d1daa129c32e034011bc4"
+    "crypto-asset-scope.png": "sha256:b8018ea01b9bfe6e0f430f7a8b8564a9405cd639393366ac94a7ef527c54e4cd",
+    "crypto-latency-credits.png": "sha256:db36efa1ad1057b6aa1fdedffbd48f5b28b295c9ebaa657a75c9ecc33363eddf"
   },
   "data": {
     "asset_scope": [
@@ -92,6 +92,6 @@
     "matplotlib": "3.11.1",
     "numpy": "2.5.2",
     "pillow": "12.3.0",
-    "png_encoder": "pillow-rgba-compress-9-v1"
+    "png_encoder": "rgba-filter0-zlib9-v1"
   }
 }
