@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from threading import Barrier
+
 import pytest
 
 from scripts.cap_direct_test_probe import (
@@ -171,6 +173,33 @@ def test_ac5_search_timeout_is_a_terminal_unavailable_observation() -> None:
 
     assert results[0].state == "n_a"
     assert "timed out" in results[0].notes
+
+
+def test_direct_test_runs_independent_provider_paths_concurrently() -> None:
+    barrier = Barrier(2)
+
+    def execute(_tool_id, _parameters):
+        barrier.wait(timeout=1)
+        return {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        }
+
+    probes = tuple(
+        SupplierProbe(
+            supplier=supplier,
+            provider_id=provider_id,
+            access_path_id=f"{provider_id}-corporate-actions-qveris",
+            tool_id=f"{provider_id}.splits",
+            cases=(_case(),),
+        )
+        for supplier, provider_id in (("Alpha", "alpha"), ("Beta", "beta"))
+    )
+
+    results = run_probe(probes, execute, rounds=1)
+
+    assert [result.provider_id for result in results] == ["alpha", "beta"]
+    assert all(result.state == "passed" for result in results)
 
 
 def test_ac5_any_failed_or_unavailable_cell_fails_the_probe() -> None:

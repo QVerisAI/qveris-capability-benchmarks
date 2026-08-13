@@ -10,6 +10,7 @@ import sys
 import urllib.parse
 import urllib.request
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -220,8 +221,8 @@ def run_probe(
     *,
     rounds: int = 2,
 ) -> list[CellResult]:
-    results: list[CellResult] = []
-    for probe in probes:
+    def run_supplier(probe: SupplierProbe) -> list[CellResult]:
+        results: list[CellResult] = []
         for case in probe.cases:
             for round_index in range(1, rounds + 1):
                 try:
@@ -251,7 +252,12 @@ def run_probe(
                         cost_credits=result.cost_credits,
                     )
                 )
-    return results
+        return results
+
+    with ThreadPoolExecutor(max_workers=len(probes)) as pool:
+        return [
+            result for results in pool.map(run_supplier, probes) for result in results
+        ]
 
 
 def probe_state(cells: list[CellResult]) -> str:
