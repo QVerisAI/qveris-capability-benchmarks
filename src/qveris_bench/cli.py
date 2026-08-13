@@ -10,7 +10,6 @@ import httpx
 import typer
 from pydantic import TypeAdapter, ValidationError
 
-from qveris_bench.articles.factory import ArticleBuildError, build_article_package
 from qveris_bench.catalog.service import CapCatalogService
 from qveris_bench.catalog.validation import CapValidationError
 from qveris_bench.evidence.store import RawArtifactStore
@@ -120,6 +119,8 @@ def article_build(
     ],
 ) -> None:
     """Build an English article and charts without calling provider APIs."""
+    from qveris_bench.articles.factory import ArticleBuildError, build_article_package
+
     try:
         built = build_article_package(selection_snapshot, profile, output_dir)
     except ArticleBuildError as exc:

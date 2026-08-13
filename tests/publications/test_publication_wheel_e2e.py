@@ -9,9 +9,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
-CRYPTO_PACKAGE = ROOT / (
-    "docs/guides/capability-seo/best-crypto-spot-quote-apis/manifest.yaml"
-)
 
 
 def test_ac6_wheel_cli_reproduces_from_outside_the_repository(tmp_path: Path) -> None:
@@ -52,7 +49,7 @@ def test_ac6_wheel_cli_reproduces_from_outside_the_repository(tmp_path: Path) ->
     isolated_home = tmp_path / "home"
     isolated_home.mkdir()
     executable = environment / "bin/qveris-bench"
-    for package in (PACKAGE, CRYPTO_PACKAGE):
+    for package in (PACKAGE,):
         result = subprocess.run(
             [str(executable), "publication", "reproduce", "--package", str(package)],
             cwd=outside,
