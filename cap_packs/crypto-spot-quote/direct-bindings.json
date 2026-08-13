@@ -1,0 +1,52 @@
+{
+  "bindings": [
+    {
+      "binding_id": "binance-crypto-btcusdt-spot-quote",
+      "suite_id": "crypto-spot-quote-v1",
+      "version": "1.0.0",
+      "case_id": "crypto-btcusdt-spot-quote",
+      "access_path_id": "binance-crypto-spot-qveris",
+      "provider_id": "binance",
+      "transport": "qveris_connector",
+      "source_digest": "sha256:c7cdef5ecddb1b62cb09831a98849dda075441d8be551465740ec859570ff97a",
+      "tool_id": "binance.ticker.24hr.retrieve.v1",
+      "parameters": {"symbol": "BTCUSDT", "type": "FULL"}
+    },
+    {
+      "binding_id": "binance-crypto-invalid-spot-symbol",
+      "suite_id": "crypto-spot-quote-v1",
+      "version": "1.0.0",
+      "case_id": "crypto-invalid-spot-symbol",
+      "access_path_id": "binance-crypto-spot-qveris",
+      "provider_id": "binance",
+      "transport": "qveris_connector",
+      "source_digest": "sha256:c7cdef5ecddb1b62cb09831a98849dda075441d8be551465740ec859570ff97a",
+      "tool_id": "binance.ticker.24hr.retrieve.v1",
+      "parameters": {"symbol": "NOTAPAIRXYZ", "type": "FULL"}
+    },
+    {
+      "binding_id": "okx-crypto-btcusdt-spot-quote",
+      "suite_id": "crypto-spot-quote-v1",
+      "version": "1.0.0",
+      "case_id": "crypto-btcusdt-spot-quote",
+      "access_path_id": "okx-crypto-spot-qveris",
+      "provider_id": "okx",
+      "transport": "qveris_connector",
+      "source_digest": "sha256:c7cdef5ecddb1b62cb09831a98849dda075441d8be551465740ec859570ff97a",
+      "tool_id": "okx_api_v5.market.ticker.retrieve.v5.e878da46",
+      "parameters": {"instId": "BTC-USDT"}
+    },
+    {
+      "binding_id": "okx-crypto-invalid-spot-symbol",
+      "suite_id": "crypto-spot-quote-v1",
+      "version": "1.0.0",
+      "case_id": "crypto-invalid-spot-symbol",
+      "access_path_id": "okx-crypto-spot-qveris",
+      "provider_id": "okx",
+      "transport": "qveris_connector",
+      "source_digest": "sha256:c7cdef5ecddb1b62cb09831a98849dda075441d8be551465740ec859570ff97a",
+      "tool_id": "okx_api_v5.market.ticker.retrieve.v5.e878da46",
+      "parameters": {"instId": "NOT-A-PAIR"}
+    }
+  ]
+}

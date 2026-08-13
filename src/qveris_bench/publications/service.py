@@ -147,7 +147,11 @@ def reproduce_publication_package(
     return PublicationReproductionReport(
         package_id=manifest.publication_package.package_id,
         package_digest=package_digest,
-        status="verified",
+        status=(
+            "verified"
+            if platform.system() == "Linux"
+            else "verified_with_noncanonical_chart_bytes"
+        ),
         release_count=len(release_dirs),
         checks=("releases", *checks),
         canonical_chart_bytes_verified=platform.system() == "Linux",
