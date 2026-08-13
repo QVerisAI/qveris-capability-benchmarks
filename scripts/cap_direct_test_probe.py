@@ -75,10 +75,14 @@ def _observation_present(data: Any, observation: str) -> bool:
 
 def _negative_ok(data: Any, status_code: int) -> bool:
     return (
-        status_code in (200, 204)
+        _is_negative_control_response(status_code)
         and not _has_event_rows(data)
         and _has_explicit_provider_rejection(data)
     )
+
+
+def _is_negative_control_response(status_code: int) -> bool:
+    return status_code in (200, 204, 404) or status_code >= 1000
 
 
 def _has_explicit_provider_rejection(value: Any) -> bool:
@@ -99,12 +103,14 @@ def _has_explicit_provider_rejection(value: Any) -> bool:
                 and nested.strip()
             ):
                 return True
-            if _has_explicit_provider_rejection(nested):
+            if isinstance(nested, (dict, list)) and _has_explicit_provider_rejection(
+                nested
+            ):
                 return True
         return False
     if isinstance(value, list):
         return any(_has_explicit_provider_rejection(item) for item in value)
-    return False
+    return isinstance(value, str) and bool(value.strip())
 
 
 def _has_event_rows(value: Any) -> bool:
@@ -227,6 +233,18 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             raw_digest=outcome.get("raw_digest"),
             raw_content=outcome.get("raw_content"),
         )
+    if case.negative_control and _negative_ok(data, status_code):
+        return CellResult(
+            "",
+            case.case_id,
+            0,
+            "passed",
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
+        )
     if status_code not in (200, 204):
         return CellResult(
             "",
@@ -241,13 +259,12 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             raw_content=outcome.get("raw_content"),
         )
     if case.negative_control:
-        passed = _negative_ok(data, status_code)
         return CellResult(
             "",
             case.case_id,
             0,
-            "passed" if passed else "failed",
-            notes=("" if passed else "negative control returned data"),
+            "failed",
+            notes="negative control returned data or no explicit rejection",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
             raw_document=outcome.get("raw_document"),

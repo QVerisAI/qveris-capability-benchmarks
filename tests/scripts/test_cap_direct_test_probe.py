@@ -204,6 +204,18 @@ def test_ac4_negative_control_gateway_or_http_errors_are_unavailable(
     assert result.state == "n_a"
 
 
+@pytest.mark.parametrize("status_code", [404, 4042])
+def test_ac4_explicit_invalid_symbol_rejection_passes_on_provider_error_code(
+    status_code: int,
+) -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": status_code, "data": "Symbol not found"},
+    )
+
+    assert result.state == "passed"
+
+
 def test_ac4_negative_control_empty_response_is_not_an_explicit_rejection() -> None:
     result = evaluate_cell(
         _case(negative_control=True, expected_observations=()),
