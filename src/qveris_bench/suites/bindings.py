@@ -18,6 +18,7 @@ class ProviderBinding(FrozenModel):
     provider_id: StableId
     canonical_interface: str = Field(min_length=1)
     official_source: HttpUrl
+    direct_test_authorized: bool = False
 
 
 class ProviderBindings(FrozenModel):

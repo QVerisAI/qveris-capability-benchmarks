@@ -19,6 +19,7 @@ def test_ac1_question_bank_contains_only_harbor_candidates() -> None:
     bank = load_question_bank(ROOT / "question_bank")
 
     assert {str(cap.cap_id) for cap in bank.capabilities} == {
+        "corporate-actions",
         "crypto-spot-quote",
         "dividend-events",
         "financial-ratios",
@@ -30,6 +31,7 @@ def test_ac1_question_bank_contains_only_harbor_candidates() -> None:
         str(cap.cap_id): str(cap.lifecycle) for cap in bank.capabilities
     }
     assert lifecycle_by_cap == {
+        "corporate-actions": "runnable",
         "crypto-spot-quote": "runnable",
         "dividend-events": "runnable",
         "financial-ratios": "candidate",
@@ -137,6 +139,6 @@ def test_ac4_question_validate_runs_through_the_installed_cli() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "6 capabilities" in result.stdout
-    assert "14 questions" in result.stdout
-    assert result.stdout.endswith("14 questions.\n")
+    assert "7 capabilities" in result.stdout
+    assert "16 questions" in result.stdout
+    assert result.stdout.endswith("16 questions.\n")

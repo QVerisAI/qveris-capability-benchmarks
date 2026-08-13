@@ -87,6 +87,28 @@ questions:
     text_origin: qveris_curated
     selection_rationale: Exercises a negative control for the crypto quote contract.
     review_status: approved
+  - question_id: corporate-actions-aapl-splits
+    cap_id: corporate-actions
+    role: core_positive
+    task: Return AAPL stock split events with a symbol, action type, and event date.
+    input: {symbol: AAPL, start_date: 2020-01-01, end_date: 2026-08-13}
+    required_observations: [symbol, action_type, date]
+    completion_conditions: [symbol, action_type, date]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Derived from MKT.CORPORATE_ACTIONS required event fields and fixed split workflow.
+    review_status: approved
+  - question_id: corporate-actions-invalid-symbol
+    cap_id: corporate-actions
+    role: boundary_negative
+    task: Reject an invalid equity symbol without inventing corporate-action events.
+    input: {symbol: NOTASTOCK}
+    required_observations: [validation_error]
+    completion_conditions: [validation_error]
+    source_ids: [harbor-capability-catalog]
+    text_origin: qveris_curated
+    selection_rationale: Exercises the Corporate Actions contract boundary without inventing event records.
+    review_status: approved
   - question_id: financial-ratios-msft
     cap_id: financial-ratios
     role: core_positive

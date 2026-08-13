@@ -79,7 +79,9 @@ def _resolve_cases(
 
 
 def _resolve_access_paths(
-    suite: BenchmarkSuite, records: tuple[ProviderRegistryEntry, ...]
+    suite: BenchmarkSuite,
+    records: tuple[ProviderRegistryEntry, ...],
+    direct_test_authorized: frozenset[str],
 ) -> tuple[AccessPath, ...]:
     path_index: dict[str, tuple[AccessPath, ProviderRegistryEntry]] = {}
     for record in records:
@@ -93,7 +95,7 @@ def _resolve_access_paths(
     resolved = []
     for path_id in suite.access_path_ids:
         access_path, record = path_index[path_id]
-        if (
+        if path_id not in direct_test_authorized and (
             access_path.qualification is None
             or access_path.qualification.disposition
             is not QualificationDisposition.INCLUDED
@@ -127,7 +129,7 @@ def _snapshot(
         "cases": [case.model_dump(mode="json") for case in cases],
         "access_paths": [path.model_dump(mode="json") for path in access_paths],
         "provider_cohort": [record.model_dump(mode="json") for record in records],
-        "provider_bindings": bindings.model_dump(mode="json"),
+        "provider_bindings": bindings.model_dump(mode="json", exclude_defaults=True),
         "outcome_rules": outcome_rules.model_dump(mode="json"),
     }
 
@@ -170,7 +172,15 @@ def compile_suite(
     except ValueError as exc:
         raise SuiteCompilationError(str(exc)) from exc
     records = ProviderRegistryRepository(providers_root).cohort_check()
-    access_paths = _resolve_access_paths(suite, records)
+    access_paths = _resolve_access_paths(
+        suite,
+        records,
+        frozenset(
+            binding.access_path_id
+            for binding in bindings.access_paths
+            if binding.direct_test_authorized
+        ),
+    )
     try:
         validate_provider_bindings(bindings, access_paths)
     except ValueError as exc:
