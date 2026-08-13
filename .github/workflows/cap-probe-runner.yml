@@ -97,5 +97,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cap-probe-evidence-${{ inputs.fixture_prefix }}
-          path: evidence/private/*.jsonl
+          path: evidence/private
           if-no-files-found: error
