@@ -55,11 +55,11 @@ access_paths:
     protocol: https_rest
     endpoint_url: null
     authentication: Managed access; no credential reference is stored in the public registry.
-    authorization: Frozen qualification evidence authorizes benchmark execution for this Access Path.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
     agent_trial_eligible: false
     qualification:
-      disposition: included
-      reason: Frozen Direct Test evidence supports this Access Path.
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
       evidence_digest: sha256:82f684e2810970b0fe369dbd6d6e039d654e2311bcec4f82590467ec92814c87
   - access_path_id: massive-stocks-official-rest
     provider_id: massive-stocks

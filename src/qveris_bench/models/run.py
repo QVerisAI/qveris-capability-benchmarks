@@ -6,6 +6,7 @@ from typing import Any
 from pydantic import Field
 
 from qveris_bench.models.base import EvidenceRef, FrozenModel, Sha256, StableId
+from qveris_bench.models.cap import SourceReference
 from qveris_bench.models.enums import (
     CellState,
     FailureAttribution,
@@ -31,6 +32,7 @@ class RunCell(FrozenModel):
 class RunPlan(FrozenModel):
     suite_id: StableId
     suite_fingerprint: Sha256
+    cap_sources: tuple[SourceReference, ...] = ()
     cells: tuple[RunCell, ...]
 
 

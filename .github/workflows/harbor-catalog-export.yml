@@ -21,8 +21,3 @@ jobs:
           python-version: "3.12"
       - name: Export Harbor catalog and contracts
         run: python scripts/export_harbor_catalog.py --output .harbor-snapshots/catalog
-      - uses: actions/upload-artifact@v4
-        with:
-          name: harbor-catalog
-          path: .harbor-snapshots/catalog
-          if-no-files-found: error

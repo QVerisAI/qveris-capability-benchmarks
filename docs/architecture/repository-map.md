@@ -23,9 +23,9 @@ selection evidence, start with `docs/product-strategy.md`.
    events, normalizes transport errors, and maintains resumable cell state.
    `src/qveris_bench/agents/` is separate because an Agent Trial is limited to one
    suite-frozen canonical tool.
-5. Read `src/qveris_bench/cap_packs/<cap>/extractors.py`. These are the only
-   domain-specific response interpreters. They turn persisted raw responses into
-   comparable facts; they do not decide a provider score.
+5. A formal CAP adds a versioned CAP-owned adapter for domain-specific response
+   interpretation. It turns persisted raw responses into comparable facts; it
+   does not decide a provider score.
 6. Read `src/qveris_bench/outcomes/`. It applies generic categorical completion
    rules and failure attribution to those facts.
 7. Read `src/qveris_bench/evidence/` and `src/qveris_bench/releases/`. They
@@ -36,11 +36,10 @@ selection evidence, start with `docs/product-strategy.md`.
 
 | Directory | Owns | Must not own |
 |---|---|---|
-| `src/qveris_bench/models/` | Versioned domain and Developer Scenario contracts | CAP field vocabulary |
+| `src/qveris_bench/models/` | Versioned generic contracts | CAP field vocabulary |
 | `src/qveris_bench/catalog/` | CAP source provenance | Execution behavior |
 | `src/qveris_bench/suites/` | Freeze, fingerprint, and run matrix | Provider conclusions |
 | `src/qveris_bench/execution/` | Transport, retries, state, trace capture | ETF, quote, or other domain semantics |
-| `src/qveris_bench/cap_packs/` | CAP-specific extractors | Shared orchestration |
 | `src/qveris_bench/outcomes/` | Generic outcome evaluation and attribution | CAP response parsing |
 | `src/qveris_bench/evidence/` | Evidence hashing, redaction, public index | Public ranking logic |
 | `src/qveris_bench/releases/` | Deterministic build, gates, and verification | Live provider execution |

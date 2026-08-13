@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from qveris_bench.models.cap import SourceReference
 from qveris_bench.models.enums import (
     CellState,
     DimensionState,
@@ -9,6 +10,7 @@ from qveris_bench.models.enums import (
     LicenseStatus,
     RedactionStatus,
     ReleaseFactType,
+    SourceType,
 )
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.metric import (
@@ -23,6 +25,16 @@ from qveris_bench.releases.gate import ReleaseGateError, validate_release_inputs
 SUITE_FINGERPRINT = "c" * 64
 METHOD_DIGEST = "sha256:" + "d" * 64
 COHORT_DIGEST = "sha256:" + "e" * 64
+
+
+def _harbor_source() -> SourceReference:
+    return SourceReference(
+        source_type=SourceType.HARBOR_CATALOG,
+        harbor_capability_id="MKT.L1.RT",
+        contract_version=1,
+        catalog_snapshot_digest="a" * 64,
+        contract_digest="b" * 64,
+    )
 
 
 def _definition() -> MetricDefinition:
@@ -131,6 +143,7 @@ def _release(*facts: ReleaseFact) -> BenchmarkRelease:
         evidence_ids=tuple(f"evidence-{index}" for index in range(1, cohort_size + 1)),
         cap_id="stock-quote",
         cap_version="2.0.0",
+        cap_sources=(_harbor_source(),),
         metric_definitions=(_definition(),),
         developer_selection_facts=normalized_facts,
     )

@@ -62,6 +62,8 @@ def test_export_writes_expected_files(
     stored = json.loads((tmp_path / "contracts.json").read_text(encoding="utf-8"))
     assert stored[0]["contract"]["standard_query"]["required"][0]["name"] == "symbol"
     meta = json.loads((tmp_path / "meta.json").read_text(encoding="utf-8"))
+    assert meta["origin"] == "https://harbor.qveris.cloud"
+    assert meta["exporter_version"] == "1.0.0"
     assert (
         meta["catalog_snapshot_digest"]
         == hashlib.sha256((tmp_path / "contracts.json").read_bytes()).hexdigest()
@@ -81,7 +83,7 @@ def test_export_writes_expected_files(
     assert result["digest"] == meta["catalog_snapshot_digest"]
 
 
-def test_export_contract_failure_is_recorded_not_fatal(tmp_path) -> None:
+def test_export_contract_failure_fails_closed(tmp_path) -> None:
     catalog = _catalog(
         [{"capability_id": "MKT.BARS.EOD"}, {"capability_id": "MKT.BARS.INTRADAY"}]
     )
@@ -91,11 +93,8 @@ def test_export_contract_failure_is_recorded_not_fatal(tmp_path) -> None:
             raise RuntimeError("GET ... -> HTTP 404")
         return catalog
 
-    result = export_catalog(
-        "https://harbor.qveris.cloud", "hbr_test", tmp_path, fetch=fetch
-    )
-    assert result["counts"] == {"catalog": 2, "contracts": 0, "errors": 2}
-    assert result["digest"]
+    with pytest.raises(RuntimeError, match="incomplete"):
+        export_catalog("https://harbor.qveris.cloud", "hbr_test", tmp_path, fetch=fetch)
 
 
 def test_contract_url_quotes_capability_id() -> None:

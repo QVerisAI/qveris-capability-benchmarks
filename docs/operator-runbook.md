@@ -2,8 +2,9 @@
 
 ## Create a formal CAP Pack
 
-1. Run the protected `harbor-catalog-export` workflow or export the catalog locally
-   with `QVERIS_HARBOR_EXPLORE_KEY`.
+1. Run the protected `harbor-catalog-export` workflow into private storage or export
+   the catalog locally with `QVERIS_HARBOR_EXPLORE_KEY`. Do not upload the private
+   snapshot to this public repository or its Actions artifacts.
 2. Keep `.harbor-snapshots/catalog/` private. Select a contract from its
    `contracts.json` and copy its catalog and contract digests from `meta.json`.
 3. Create the CAP Pack with that exact Harbor provenance and freeze it with:

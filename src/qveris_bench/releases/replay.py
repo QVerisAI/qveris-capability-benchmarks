@@ -29,16 +29,6 @@ _CELLS_ADAPTER = TypeAdapter(tuple[RunCell, ...])
 _EVIDENCE_ADAPTER = TypeAdapter(tuple[EvidenceBundle, ...])
 _METRIC_REGISTRY_ADAPTER = TypeAdapter(tuple[MetricDefinition, ...])
 _EXECUTION_FIELDS = {"state", "failure_attribution"}
-_LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION = frozenset(
-    {
-        "sha256:62df52047ecb0bcf66fce96a0240f97f29c1bc9e55066ca9e06ae0f878d00c0f",
-        "sha256:a22d3dbcb47d094baac201a0c100e6ad87b6159d6780bdf29ea3c5f0e4a8abaf",
-        "sha256:5a159d6e5777b3829e57f861e18182a76540d94dc1f3b8c23ae4410207e5024e",
-        "sha256:7e7ff0ebf2c72e96e6bb1544c07da4195f82154378b686d544667b922d5a6e4b",
-        "sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57",
-        "sha256:f0535988872ec0b300de726a1ec3e6c28988ba39401ea6bdb04d8a739798f2b3",
-    }
-)
 
 
 class ReleaseReplayError(ValueError):
@@ -92,6 +82,8 @@ def replay_release_dir(
         raise ReleaseReplayError(
             "run-plan.json suite fingerprint does not match release input"
         )
+    if run_plan.cap_sources != release.cap_sources:
+        raise ReleaseReplayError("run-plan CAP provenance does not match release input")
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
 
@@ -103,13 +95,6 @@ def replay_release_dir(
             require_attribution=False,
             metric_registry=metric_registry,
         )
-        if release_digest(rebuilt) not in _LEGACY_RELEASE_DIGESTS_WITHOUT_ATTRIBUTION:
-            rebuilt = build_release(
-                release,
-                cells,
-                evidence,
-                metric_registry=metric_registry,
-            )
     except ReleaseGateError as exc:
         raise ReleaseReplayError(
             f"release replay input validation failed: {exc}"

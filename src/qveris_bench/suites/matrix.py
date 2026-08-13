@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from qveris_bench.models.cap import SourceReference
 from qveris_bench.models.enums import CellState, RunMode
 from qveris_bench.models.provider import AccessPath
 from qveris_bench.models.run import RunCell, RunPlan
@@ -56,6 +57,7 @@ def expand_run_plan(
     cases: tuple[BenchmarkCase, ...],
     access_paths: tuple[AccessPath, ...],
     fingerprint: str,
+    cap_sources: tuple[SourceReference, ...] = (),
 ) -> RunPlan:
     cells = []
     for case in cases:
@@ -93,6 +95,7 @@ def expand_run_plan(
     return RunPlan(
         suite_id=suite.suite_id,
         suite_fingerprint=fingerprint,
+        cap_sources=cap_sources,
         cells=_require_unique_run_keys(cells),
     )
 

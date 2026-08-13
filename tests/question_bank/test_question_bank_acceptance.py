@@ -65,6 +65,40 @@ def test_ac3_question_bank_rejects_non_harbor_candidate_source(tmp_path: Path) -
         load_question_bank(bank_root)
 
 
+def test_ac3_question_bank_rejects_an_orphan_executable_cap_pack(
+    tmp_path: Path,
+) -> None:
+    bank_root = tmp_path / "question_bank"
+    packs_root = tmp_path / "cap_packs"
+    shutil.copytree(ROOT / "question_bank", bank_root)
+    orphan = packs_root / "orphan" / "cap.yaml"
+    orphan.parent.mkdir(parents=True)
+    orphan.write_text(
+        yaml.safe_dump(
+            {
+                "cap_id": "orphan-cap",
+                "version": "1.0.0",
+                "name": "Orphan CAP",
+                "business_use": "This CAP must be declared in the candidate catalog.",
+                "scope": ["Test scope"],
+                "sources": [
+                    {
+                        "source_type": "harbor_catalog",
+                        "harbor_capability_id": "MKT.ORPHAN",
+                        "contract_version": 1,
+                        "catalog_snapshot_digest": "a" * 64,
+                        "contract_digest": "b" * 64,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(QuestionBankValidationError, match="missing from the Harbor"):
+        load_question_bank(bank_root, packs_root)
+
+
 def test_ac4_question_validate_runs_through_the_installed_cli() -> None:
     executable = shutil.which("qveris-bench")
     assert executable is not None

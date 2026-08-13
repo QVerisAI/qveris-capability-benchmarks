@@ -135,6 +135,12 @@ def _validate_cross_references(
                 + ", ".join(sorted(missing_roles))
             )
     cap_packs_by_id = _cap_packs_by_id(cap_packs_root)
+    orphan_packs = set(cap_packs_by_id) - capability_ids
+    if orphan_packs:
+        raise QuestionBankValidationError(
+            "executable CAP packs are missing from the Harbor candidate catalog: "
+            + ", ".join(sorted(orphan_packs))
+        )
     providers_root = cap_packs_root.parent / "providers"
     for capability in capabilities:
         cap_id = str(capability.cap_id)

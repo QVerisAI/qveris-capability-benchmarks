@@ -7,6 +7,8 @@ from typing import Any
 
 from qveris_bench.models.cap import SourceReference
 
+_HARBOR_EXPLORE_ORIGIN = "https://harbor.qveris.cloud"
+
 
 class HarborSnapshotError(ValueError):
     pass
@@ -36,6 +38,7 @@ def validate_harbor_source(
         raise HarborSnapshotError(
             "Harbor contract snapshot must contain a contract list"
         )
+    _validate_snapshot_metadata(contracts_path, payload)
     snapshot_digest = hashlib.sha256(payload).hexdigest()
     if snapshot_digest != source.catalog_snapshot_digest:
         raise HarborSnapshotError(
@@ -53,6 +56,8 @@ def validate_harbor_source(
             "Harbor contract snapshot must contain exactly one CAP contract"
         )
     contract = matches[0]["contract"]
+    if contract.get("capability_id") != source.harbor_capability_id:
+        raise HarborSnapshotError("Harbor contract identity does not match its record")
     if contract.get("contract_version") != source.contract_version:
         raise HarborSnapshotError(
             "Harbor contract version does not match CAP provenance"
@@ -61,3 +66,20 @@ def validate_harbor_source(
         raise HarborSnapshotError(
             "Harbor contract digest does not match CAP provenance"
         )
+
+
+def _validate_snapshot_metadata(contracts_path: Path, payload: bytes) -> None:
+    try:
+        metadata = json.loads(contracts_path.with_name("meta.json").read_bytes())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HarborSnapshotError(
+            "Harbor contract snapshot metadata is unreadable"
+        ) from exc
+    if not isinstance(metadata, dict):
+        raise HarborSnapshotError("Harbor contract snapshot metadata must be an object")
+    if metadata.get("origin") != _HARBOR_EXPLORE_ORIGIN:
+        raise HarborSnapshotError("Harbor contract snapshot has an untrusted origin")
+    if metadata.get("exporter_version") != "1.0.0":
+        raise HarborSnapshotError("Harbor contract snapshot exporter is unsupported")
+    if metadata.get("catalog_snapshot_digest") != hashlib.sha256(payload).hexdigest():
+        raise HarborSnapshotError("Harbor contract snapshot metadata digest is invalid")

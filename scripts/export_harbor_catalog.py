@@ -18,8 +18,8 @@ from typing import Any, cast
 
 _DEFAULT_BASE_URL = "https://harbor.qveris.cloud"
 _KEY_ENV = "QVERIS_HARBOR_EXPLORE_KEY"
-_BASE_URL_ENV = "QVERIS_HARBOR_EXPLORE_BASE_URL"
 _TIMEOUT_SECONDS = 30
+_EXPORTER_VERSION = "1.0.0"
 
 
 def build_contract_url(base_url: str, capability_id: str) -> str:
@@ -65,6 +65,8 @@ def export_catalog(
         "contracts": len(contracts),
         "errors": len(errors),
     }
+    if errors:
+        raise RuntimeError("Harbor catalog export is incomplete")
     exported_at = datetime.now(UTC).isoformat()
     contracts_bytes = json.dumps(contracts, ensure_ascii=False, indent=2).encode(
         "utf-8"
@@ -93,6 +95,8 @@ def export_catalog(
         json.dumps(
             {
                 "exported_at": exported_at,
+                "origin": _DEFAULT_BASE_URL,
+                "exporter_version": _EXPORTER_VERSION,
                 "counts": counts,
                 "catalog_snapshot_digest": catalog_snapshot_digest,
                 "contracts": contract_provenance,
@@ -117,11 +121,6 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(".harbor-snapshots/catalog"),
         help="Private output directory (must stay gitignored)",
     )
-    parser.add_argument(
-        "--base-url",
-        default=os.getenv(_BASE_URL_ENV, _DEFAULT_BASE_URL),
-        help=f"Harbor explore base URL (default: {_DEFAULT_BASE_URL})",
-    )
     args = parser.parse_args(argv)
 
     key = os.getenv(_KEY_ENV)
@@ -132,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2
 
-    result = export_catalog(args.base_url.rstrip("/"), key, args.output)
+    result = export_catalog(_DEFAULT_BASE_URL, key, args.output)
     print(
         f"exported catalog={result['counts']['catalog']} "
         f"contracts={result['counts']['contracts']} "

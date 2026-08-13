@@ -169,6 +169,15 @@ def _write_inputs(
     harbor_contracts = root / ".harbor-snapshots" / "catalog" / "contracts.json"
     harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
     harbor_contracts.write_bytes(contracts_bytes)
+    (harbor_contracts.parent / "meta.json").write_text(
+        json.dumps(
+            {
+                "origin": "https://harbor.qveris.cloud",
+                "exporter_version": "1.0.0",
+                "catalog_snapshot_digest": snapshot_digest,
+            }
+        )
+    )
 
     suite = {
         "suite_id": "etf-holdings-v1",
@@ -263,6 +272,11 @@ def test_ac0_suite_freeze_requires_matching_harbor_contract_snapshot(
     assert compiled.snapshot["cap"]["sources"][0]["harbor_capability_id"] == (
         "MKT.ETF_HOLDINGS"
     ), "AC0 frozen suite must retain Harbor provenance"
+    assert [
+        source.model_dump(mode="json") for source in compiled.run_plan.cap_sources
+    ] == compiled.snapshot["cap"]["sources"], (
+        "AC0 run plan must preserve the CAP provenance used for execution"
+    )
 
 
 def test_ac1_matrix_expands_every_case_path_mode_and_round(tmp_path: Path) -> None:

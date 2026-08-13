@@ -176,7 +176,7 @@ def compile_suite(
         outcome_rules,
     )
     fingerprint = suite_fingerprint(snapshot)
-    run_plan = expand_run_plan(suite, cases, access_paths, fingerprint)
+    run_plan = expand_run_plan(suite, cases, access_paths, fingerprint, cap.sources)
     return CompiledSuite(
         suite=suite,
         cases=cases,
