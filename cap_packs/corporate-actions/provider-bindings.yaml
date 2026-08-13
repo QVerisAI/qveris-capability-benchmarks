@@ -1,0 +1,17 @@
+access_paths:
+  - access_path_id: eodhd-corporate-actions-qveris
+    provider_id: eodhd
+    canonical_interface: splits
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+  - access_path_id: twelve-data-corporate-actions-qveris
+    provider_id: twelve-data
+    canonical_interface: splits
+    official_source: https://twelvedata.com/docs#splits
+  - access_path_id: alpha-vantage-corporate-actions-qveris
+    provider_id: alpha-vantage
+    canonical_interface: SPLITS
+    official_source: https://www.alphavantage.co/documentation/#splits
+  - access_path_id: massive-stocks-corporate-actions-qveris
+    provider_id: massive-stocks
+    canonical_interface: splits
+    official_source: https://massive.com/docs/rest/stocks/corporate-actions/splits

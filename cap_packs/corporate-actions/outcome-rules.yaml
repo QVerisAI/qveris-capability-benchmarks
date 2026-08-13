@@ -1,0 +1,4 @@
+completion_requires:
+  - a matching AAPL split event contains a symbol, split action type, and event date
+negative_control_requires:
+  - an invalid symbol is rejected without a corporate-action event
