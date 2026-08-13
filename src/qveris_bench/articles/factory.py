@@ -212,9 +212,10 @@ def _article_facts(
     profile: dict[str, Any],
 ) -> dict[str, Any]:
     coverage_rows = _market_rows(rows)
-    all_markets = tuple(
-        item.market for item in coverage_rows[0].market_coverage.results
-    )  # type: ignore[union-attr]
+    first_coverage = coverage_rows[0].market_coverage
+    if first_coverage is None:
+        raise ArticleBuildError("market chart requires release-backed market coverage")
+    all_markets = tuple(item.market for item in first_coverage.results)
     records: list[dict[str, Any]] = []
     for row in rows:
         coverage = row.market_coverage
