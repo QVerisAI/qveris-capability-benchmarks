@@ -1,0 +1,69 @@
+schema_version: 1
+benchmark_id: crypto-spot-quote-2026-q3-v1
+article_slug: best-crypto-spot-quote-apis
+edition: "2026-08-13"
+publication_package:
+  package_id: best-crypto-spot-quote-apis-2026-08-13
+  adapter_id: crypto-spot-quote-v1
+  adapter_version: 1.0.0
+  cap_id: crypto-spot-quote
+  release_sections: [release]
+  adapter_sources:
+    - src/qveris_bench/cap_packs/crypto_spot_quote/publication.py
+    - src/qveris_bench/cap_packs/crypto_spot_quote/publication_charts.py
+  adapter_digest: sha256:1bec9bb8ac31095d50ae4538c2c58f677bc400e6ea48e6516ab3f63cbc2eb973
+release:
+  directory: releases/crypto-spot-quote-2026-q3-v1
+  digest: sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f
+  suite_fingerprint: c73c29755f5ad8f230e0f43ee59fe72a719f45625eba420370e3adc6bf54e364
+  planned_cells: 12
+  applicable_cells: 12
+  public_evidence_records: 12
+  rounds_per_cell: 3
+selection_snapshot:
+  id: crypto-spot-quote-selection-2026-q3-v1
+  input_digest: sha256:5ef5a7900b16851fd6b5d8c5eca381ead00b4f970898e6816705f8c897ee4bd8
+  digest: sha256:87c7a4a71851c7d89d0a3b26ef129c7039ce87e3ade447db6cb838d52eec0141
+publication_policy:
+  display_order: [binance-crypto-spot-qveris, okx-crypto-spot-qveris]
+  direct_test_required: true
+  no_overall_winner: true
+  scope_claim: BTC/USDT spot sample only
+seo:
+  title: "Best Crypto Spot Quote APIs 2026: Binance vs OKX"
+  meta_description: "Compare Binance and OKX crypto spot quote API paths using 12 live calls: BTC/USDT fields, invalid-pair handling, latency, pricing, and offline replay."
+  primary_keyword: crypto spot quote API
+  secondary_keywords: [crypto price API, cryptocurrency market data API]
+  publication_action: new_page
+  inventory_checked_at: "2026-08-13"
+  provider_inventory_checked_at: "2026-08-13"
+  target_slug: best-crypto-spot-quote-apis
+  competing_urls: []
+  supplier_sites:
+    Binance: https://www.binance.com/
+    OKX: https://www.okx.com/
+  provider_pages:
+    Binance: https://qveris.ai/providers/binance
+    OKX: https://qveris.ai/providers/okx_api_v5
+  official_sources:
+    Binance Spot API market data: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
+    OKX market ticker API: https://www.okx.com/docs-v5/en/#rest-api-market-data-get-ticker
+  related_guides:
+    Crypto market data API for AI agents: https://qveris.ai/guides/crypto-market-data-api-for-ai-agents/
+    Cryptocurrency price API for AI agents: https://qveris.ai/guides/cryptocurrency-price-api-for-ai-agents/
+  github_links:
+    - https://github.com/QVerisAI/qveris-capability-benchmarks
+    - https://github.com/QVerisAI/qveris-capability-benchmarks/blob/master/CONTRIBUTING.md
+artifacts:
+  article: docs/guides/best-crypto-spot-quote-apis.md
+  article_facts: docs/guides/capability-seo/best-crypto-spot-quote-apis/article-facts.json
+  article_facts_digest: sha256:d7b75221b4186ec1769a374ecdd7286005dd1c608f8124894bf1f7f81b001b01
+  publication_profile: docs/guides/capability-seo/best-crypto-spot-quote-apis/publication-profile.yaml
+  selection_snapshot_input: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-input.yaml
+  selection_snapshot: docs/guides/capability-seo/best-crypto-spot-quote-apis/selection-snapshot.json
+  qveris_list_pricing: docs/guides/capability-seo/best-crypto-spot-quote-apis/qveris-list-pricing.json
+  charts:
+    - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-asset-scope.png
+    - docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/crypto-latency-credits.png
+  selection_charts_manifest: docs/guides/capability-seo/best-crypto-spot-quote-apis/charts/selection-charts-manifest.json
+  selection_charts_manifest_digest: sha256:77dd305781f8c48f7cb47a9660b4b768a1efb0f99743838a7be9b6ee17855efb

@@ -1,0 +1,122 @@
+{
+  "access_path_count": 2,
+  "edition": "2026-08-13",
+  "package_id": "best-crypto-spot-quote-apis-2026-08-13",
+  "provider_count": 2,
+  "recommendations": {
+    "fastest_observed_path": {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "provider_name": "OKX"
+    },
+    "same_qveris_list_price": true
+  },
+  "release": {
+    "applicable_cells": 12,
+    "negative_control_cells": 6,
+    "observation_date": "2026-08-13",
+    "planned_cells": 12,
+    "positive_case_cells": 6,
+    "public_evidence_records": 12,
+    "release_digest": "sha256:82f79c8f44283bfd395d8d0bf92b7b3b100f9af966987d917b200cd8638a111f",
+    "release_id": "crypto-spot-quote-2026-q3-v1",
+    "rounds_per_cell": 3
+  },
+  "rows": [
+    {
+      "access_path_id": "binance-crypto-spot-qveris",
+      "access_path_type": "qveris_connector",
+      "evidence_ref_count": 6,
+      "evidence_refs_digest": "sha256:daf13b055284e4e10a1499e12a4cb70badfb4f282c68637cb564a71b6d02175c",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "latency_median_ms": 313.08,
+      "official_pricing": {
+        "applies_to": [
+          "binance-crypto-spot-qveris"
+        ],
+        "currencies": [
+          "NONE"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Public market-data documentation does not state a subscription charge for this endpoint.",
+        "license_status": "cleared",
+        "paid_plans": "No provider-paid plan claim is used for the managed QVeris Access Path.",
+        "pricing_id": "binance-public-market-data",
+        "pricing_url": "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints",
+        "source_digest": "49ea6809243fc7fb426e07f2fe662097736c7bb405bd2da5eef637d715427999",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-13"
+      },
+      "positive": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "binance",
+      "provider_name": "Binance",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "evidence_ref": "sha256:d3a23832f5b71659e3b15f387742479a687288168cae5d9895739c13bd2ce6ab",
+        "inspect_response_digest": "sha256:61b37ee63b2f14a31c1c3216707036bd9e281652d6838d0800588aa3c4ddc591",
+        "inspected_at": "2026-08-13",
+        "qveris_provider_id": "binance",
+        "source": "qveris_inspect",
+        "tool_id": "binance.ticker.24hr.retrieve.v1",
+        "unit": "per_call"
+      },
+      "qveris_provider_page": "https://qveris.ai/providers/binance",
+      "symbol_dialect": "BTCUSDT"
+    },
+    {
+      "access_path_id": "okx-crypto-spot-qveris",
+      "access_path_type": "qveris_connector",
+      "evidence_ref_count": 6,
+      "evidence_refs_digest": "sha256:9f4e7f58c7058f08858fed6c463c8baf04f0b40f79614553c934bf2fd98da5e3",
+      "invalid_input": {
+        "passed": 3,
+        "total": 3
+      },
+      "latency_median_ms": 285.82,
+      "official_pricing": {
+        "applies_to": [
+          "okx-crypto-spot-qveris"
+        ],
+        "currencies": [
+          "NONE"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Public market-data documentation does not state a subscription charge for this endpoint.",
+        "license_status": "cleared",
+        "paid_plans": "No provider-paid plan claim is used for the managed QVeris Access Path.",
+        "pricing_id": "okx-public-market-data",
+        "pricing_url": "https://www.okx.com/docs-v5/en/#rest-api-market-data-get-ticker",
+        "source_digest": "b65fc4909587094ececca5915e7aa68a046717f14a0ec803268e509b429696f5",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-13"
+      },
+      "positive": {
+        "passed": 3,
+        "total": 3
+      },
+      "provider_id": "okx",
+      "provider_name": "OKX",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "evidence_ref": "sha256:d3a23832f5b71659e3b15f387742479a687288168cae5d9895739c13bd2ce6ab",
+        "inspect_response_digest": "sha256:c03a2790b518f278cc01eea39d871fef2a903a177ed226c740a87e9d60639c68",
+        "inspected_at": "2026-08-13",
+        "qveris_provider_id": "okx_api_v5",
+        "source": "qveris_inspect",
+        "tool_id": "okx_api_v5.market.ticker.retrieve.v5.e878da46",
+        "unit": "per_call"
+      },
+      "qveris_provider_page": "https://qveris.ai/providers/okx_api_v5",
+      "symbol_dialect": "BTC-USDT"
+    }
+  ],
+  "schema_version": 1,
+  "total_live_calls": 12
+}

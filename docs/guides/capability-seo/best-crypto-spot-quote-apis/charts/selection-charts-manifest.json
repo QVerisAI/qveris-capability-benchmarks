@@ -1,0 +1,78 @@
+{
+  "charts": {
+    "crypto-asset-scope.png": "sha256:88ecd7488025426be45c62acc6c7f8a919013871be817df6fb82c9af3780c440",
+    "crypto-latency-credits.png": "sha256:3000c7198448689efafa90314b93631d13a9770e945c27d66f341ed2cd13c9d2"
+  },
+  "data": {
+    "asset_scope": [
+      {
+        "access_path_id": "binance-crypto-spot-qveris",
+        "asset_type": "CRYPTO_SPOT",
+        "invalid_input": {
+          "passed": 3,
+          "total": 3
+        },
+        "market": "GLOBAL",
+        "pair": "BTC/USDT",
+        "positive": {
+          "passed": 3,
+          "total": 3
+        },
+        "provider_id": "binance",
+        "provider_name": "Binance"
+      },
+      {
+        "access_path_id": "okx-crypto-spot-qveris",
+        "asset_type": "CRYPTO_SPOT",
+        "invalid_input": {
+          "passed": 3,
+          "total": 3
+        },
+        "market": "GLOBAL",
+        "pair": "BTC/USDT",
+        "positive": {
+          "passed": 3,
+          "total": 3
+        },
+        "provider_id": "okx",
+        "provider_name": "OKX"
+      }
+    ],
+    "latency_and_list_price": [
+      {
+        "access_path_id": "binance-crypto-spot-qveris",
+        "amount_credits": 1.0,
+        "inspected_at": "2026-08-13",
+        "latency_max_ms": 329.62,
+        "latency_median_ms": 313.08,
+        "latency_min_ms": 188.75,
+        "latency_sample_size": 3,
+        "provider_id": "binance",
+        "provider_name": "Binance"
+      },
+      {
+        "access_path_id": "okx-crypto-spot-qveris",
+        "amount_credits": 1.0,
+        "inspected_at": "2026-08-13",
+        "latency_max_ms": 290.0,
+        "latency_median_ms": 285.82,
+        "latency_min_ms": 214.1,
+        "latency_sample_size": 3,
+        "provider_id": "okx",
+        "provider_name": "OKX"
+      }
+    ]
+  },
+  "input_digests": {
+    "selection_snapshot": "sha256:87c7a4a71851c7d89d0a3b26ef129c7039ce87e3ade447db6cb838d52eec0141"
+  },
+  "rendered_at": "2026-08-13",
+  "renderer": {
+    "font_bold_digest": "sha256:74216fc2fa7dfbd3954ec33cb4f39db7c7f36f04aa4efd461914d125ccc780d5",
+    "font_family": "Noto Sans CJK SC",
+    "font_regular_digest": "sha256:2d39c7fb73ae26bb0642841dcdcfc0e35e0357b4ff4202e2295964a11017a253",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "pillow": "12.3.0"
+  }
+}

@@ -33,6 +33,7 @@ dependencies = [
 qveris-bench = "qveris_bench.cli:app"
 
 [project.entry-points."qveris_bench.publication_adapters"]
+crypto-spot-quote-v1 = "qveris_bench.cap_packs.crypto_spot_quote.publication:CryptoSpotQuotePublicationAdapter"
 dividend-events-v1 = "qveris_bench.cap_packs.dividend_events.publication:DividendEventsPublicationAdapter"
 
 [dependency-groups]

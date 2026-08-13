@@ -1,0 +1,20 @@
+profile_id: crypto-spot-quote-article-v1
+version: 1.0.0
+reader: Developers choosing an exchange-specific BTC/USDT spot quote Access Path.
+buyer_decision: Choose between the two released QVeris paths for one frozen BTC/USDT quote contract.
+evidence_classes: [live_test, official_source, editorial_interpretation]
+required_flow:
+  - Results at a glance
+  - How developers should choose
+  - Tested asset scope
+  - Latency and pricing trade-off
+  - Agent integration notes
+  - Method, reproduction, and contribution
+  - Limitations, disclosures, and corrections
+  - FAQ
+forbidden_claims:
+  - native API benchmark
+  - broad pair coverage
+  - overall best crypto API
+  - Agent-friendly score
+material_claim_policy: Every number, provider recommendation, Provider × Access Path identity, Release digest, and link is validated against the Selection Snapshot or manifest allowlist.
