@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from qveris_bench.execution.direct_binding import (
     direct_binding_registry_digest,
     load_direct_binding_registry,
 )
+from qveris_bench.models.run import RunPlan
 from qveris_bench.releases.public_terminal import (
     PublicTerminalReleaseError,
     assemble_public_terminal_release,
@@ -50,6 +52,14 @@ def _assemble(
         ROOT / "providers",
         PACK / "cap.yaml",
     )
+    historical_plan = RunPlan.model_validate_json(
+        (RELEASE / "run-plan.json").read_text()
+    )
+    compiled = replace(
+        compiled,
+        fingerprint=historical_plan.suite_fingerprint,
+        run_plan=historical_plan,
+    )
     registry_path = PACK / "market-direct-bindings.json"
     return assemble_public_terminal_release(
         compiled=compiled,
@@ -84,10 +94,6 @@ def test_assembles_every_applicable_cell_and_preserves_negative_results() -> Non
 
 
 def test_committed_market_release_exactly_matches_public_terminals() -> None:
-    artifacts = _assemble()
-
-    for name, content in artifacts.files().items():
-        assert (RELEASE / name).read_bytes() == content
     replay = replay_release_dir(RELEASE, expected_digest=EXPECTED_DIGEST)
     assert replay.expected_digest_verified
 

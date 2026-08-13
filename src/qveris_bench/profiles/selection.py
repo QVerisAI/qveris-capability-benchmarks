@@ -742,9 +742,9 @@ def _execution_contract_digest(snapshot: dict[str, Any]) -> str:
     cap = dict(execution_snapshot["cap"])
     cap.pop("sources", None)
     execution_snapshot["cap"] = cap
-    return "sha256:" + hashlib.sha256(
-        canonical_json_bytes(execution_snapshot)
-    ).hexdigest()
+    return (
+        "sha256:" + hashlib.sha256(canonical_json_bytes(execution_snapshot)).hexdigest()
+    )
 
 
 def _validate_suite_contract(

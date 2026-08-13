@@ -279,6 +279,8 @@ def _validate_public_evidence_manifest(
             or not isinstance(digest, str)
         ):
             raise ReleaseReplayError("public evidence manifest is invalid")
+        if not historical_layout and not isinstance(run_key, str):
+            raise ReleaseReplayError("public evidence manifest is invalid")
         artifact = (
             release_dir / relative_path
             if historical_layout
@@ -289,13 +291,18 @@ def _validate_public_evidence_manifest(
         ):
             raise ReleaseReplayError("public evidence artifact is missing")
         if sha256_digest(artifact.read_bytes()) != digest:
-            raise ReleaseReplayError("public evidence artifact digest does not match")
+            raise ReleaseReplayError("public evidence bytes digest mismatch")
         if evidence_id in observed:
             raise ReleaseReplayError("public evidence manifest has duplicate evidence")
-        expected_run_key = expected.get(evidence_id, (None, None))[0]
-        observed[evidence_id] = (
-            expected_run_key if historical_layout else run_key,
-            digest,
-        )
+        if historical_layout:
+            expected_entry = expected.get(evidence_id)
+            if expected_entry is None:
+                raise ReleaseReplayError("public evidence manifest is invalid")
+            observed[evidence_id] = (expected_entry[0], digest)
+        else:
+            run_key_text = run_key
+            if not isinstance(run_key_text, str):
+                raise ReleaseReplayError("public evidence manifest is invalid")
+            observed[evidence_id] = (run_key_text, digest)
     if observed != expected:
         raise ReleaseReplayError("public evidence manifest does not match release")

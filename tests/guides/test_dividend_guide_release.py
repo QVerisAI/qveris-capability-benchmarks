@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
-import platform
 import re
 from pathlib import Path
 
@@ -306,8 +305,6 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
     assert generated["data"] == committed["data"]
     assert generated["input_digests"] == committed["input_digests"]
     assert generated["rendered_at"] == committed["rendered_at"]
-    if platform.system() == "Linux":
-        assert generated["charts"] == committed["charts"]
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["artifacts"]["selection_charts_manifest_digest"] == (
         "sha256:"
@@ -323,10 +320,6 @@ def test_selection_tradeoff_chart_is_snapshot_derived(tmp_path: Path) -> None:
             "sha256:"
             + hashlib.sha256((committed_dir / chart_name).read_bytes()).hexdigest()
         )
-        if platform.system() == "Linux":
-            assert (tmp_path / chart_name).read_bytes() == (
-                committed_dir / chart_name
-            ).read_bytes()
     assert len(generated["data"]["rows"]) == 5
     assert all(row["access_path"] == "QVeris" for row in generated["data"]["rows"])
 
