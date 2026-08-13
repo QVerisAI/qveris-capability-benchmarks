@@ -248,6 +248,9 @@ def assemble_public_terminal_release(
         github_artifacts_manifest_digest=sha256_digest(github_artifacts_manifest_bytes),
         evidence_ids=tuple(sorted(item.evidence_id for item in evidence)),
         outcome_ids=tuple(sorted(outcome_ids)),
+        cap_id=compiled.run_plan.cap_id,
+        cap_version=compiled.run_plan.cap_version,
+        cap_sources=compiled.run_plan.cap_sources,
         limitations=limitations,
     )
     ordered_cells = tuple(sorted(cells, key=lambda item: item.run_key))

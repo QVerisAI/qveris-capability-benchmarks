@@ -58,7 +58,13 @@ def _assemble(
     compiled = replace(
         compiled,
         fingerprint=historical_plan.suite_fingerprint,
-        run_plan=historical_plan,
+        run_plan=historical_plan.model_copy(
+            update={
+                "cap_id": compiled.run_plan.cap_id,
+                "cap_version": compiled.run_plan.cap_version,
+                "cap_sources": compiled.run_plan.cap_sources,
+            }
+        ),
     )
     registry_path = PACK / "market-direct-bindings.json"
     return assemble_public_terminal_release(
@@ -90,6 +96,9 @@ def test_assembles_every_applicable_cell_and_preserves_negative_results() -> Non
     assert (
         sum(cell.state.value == "provider_negative" for cell in artifacts.cells) == 16
     )
+    assert artifacts.release.cap_id == "dividend-events"
+    assert artifacts.release.cap_version == "1.0.0"
+    assert artifacts.release.cap_sources == artifacts.run_plan.cap_sources
     assert artifacts.release_bytes == artifacts.rebuild()
 
 
