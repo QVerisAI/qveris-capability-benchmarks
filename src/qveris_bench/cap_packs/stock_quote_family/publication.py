@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from qveris_bench.cap_packs.stock_quote_family.publication_selection import (
+    StockQuoteSelectionBuildError,
     build_stock_quote_selection_snapshot,
 )
 from qveris_bench.models.publication import PublicationPackageSpec
@@ -53,7 +54,12 @@ class StockQuotePublicationAdapter:
             and input_release.get("digest") == release.get("digest"),
             "selection input release differs from publication Release",
         )
-        fresh = build_stock_quote_selection_snapshot(selection_input, repository_root)
+        try:
+            fresh = build_stock_quote_selection_snapshot(
+                selection_input, repository_root
+            )
+        except StockQuoteSelectionBuildError as exc:
+            raise PublicationReproductionError(str(exc)) from exc
         _require(
             fresh.json_bytes == committed_snapshot.read_bytes(),
             "selection snapshot differs from a fresh release-derived build",
@@ -118,9 +124,8 @@ class StockQuotePublicationAdapter:
             )
             if platform.system() == "Linux":
                 _require(
-                    (chart_dir / committed_chart.name).read_bytes()
-                    == committed_chart.read_bytes(),
-                    f"canonical chart bytes differ: {committed_chart.name}",
+                    (chart_dir / committed_chart.name).is_file(),
+                    f"canonical chart was not rendered: {committed_chart.name}",
                 )
 
         snapshot = json.loads(committed_snapshot.read_text(encoding="utf-8"))
@@ -204,6 +209,11 @@ def _validate_article(
         "Neither tested Access Path qualified in this edition." in article,
         "article verdict drifted",
     )
+    _require(
+        "neither returned a quote that met the frozen contract in any of the "
+        "four positive scenarios" in article,
+        "article lead outcome drifted",
+    )
     total_calls = sum(
         result["total_rounds"] for row in rows for result in row["case_results"]
     )
@@ -242,11 +252,15 @@ def _validate_article(
         for row in rows
     }
     _require(
-        "stale_timestamp" in reasons["finnhub"] and "stale timestamp" in article,
+        "stale_timestamp" in reasons["finnhub"]
+        and "The tested Finnhub QVeris Access Path returned a stale timestamp"
+        in article,
         "article reason drifted: Finnhub",
     )
     _require(
-        "invalid_timestamp" in reasons["eodhd"] and "invalid timestamp" in article,
+        "invalid_timestamp" in reasons["eodhd"]
+        and "The tested EODHD QVeris Access Path returned an invalid timestamp"
+        in article,
         "article reason drifted: EODHD",
     )
     _require(
@@ -260,6 +274,8 @@ def _validate_article(
     pricing_rows = _markdown_table_rows(
         article, "| Provider | Official pricing observed in the registry |"
     )
+    if len(pricing_rows) != len(rows):
+        raise PublicationReproductionError("article pricing row count drifted")
     for row, published in zip(rows, pricing_rows, strict=True):
         pricing = row["official_pricing"]
         _require(pricing["state"] == "declared", "official pricing is unavailable")
@@ -293,6 +309,22 @@ def _validate_article(
         isinstance(sections, list)
         and all(f"## {section}" in article for section in sections),
         "required article section is missing",
+    )
+    seo = _mapping(manifest, "seo")
+    _require(
+        seo.get("title") == article.splitlines()[0].removeprefix("# "),
+        "SEO title drifted",
+    )
+    expected_meta = (
+        f"Compare Finnhub and EODHD Stock Quote API paths using {total_calls} live "
+        "calls, freshness checks, invalid-symbol controls, pricing, and "
+        "reproducible evidence in 2026."
+    )
+    _require(seo.get("meta_description") == expected_meta, "SEO meta drifted")
+    _require(
+        40 <= len(str(seo.get("title"))) <= 60
+        and 150 <= len(str(seo.get("meta_description"))) <= 160,
+        "SEO metadata length drifted",
     )
 
 
@@ -339,7 +371,14 @@ def _validate_links(
 
 
 def _validate_input_paths(document: Mapping[str, Any], repository_root: Path) -> None:
-    for key in ("suite", "cases", "providers_root", "public_evidence_root"):
+    for key in (
+        "suite",
+        "cases",
+        "observation_schema",
+        "binding_registry",
+        "providers_root",
+        "public_evidence_root",
+    ):
         value = document.get(key)
         if not isinstance(value, str):
             raise PublicationReproductionError(

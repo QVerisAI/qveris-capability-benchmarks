@@ -12,6 +12,11 @@ from qveris_bench.cap_packs.stock_quote_family.publication_models import (
     StockQuoteSelectionRow,
     StockQuoteSelectionSnapshot,
 )
+from qveris_bench.evidence.hashing import sha256_digest
+from qveris_bench.execution.qveris_binding import (
+    QverisDirectBinding,
+    load_registered_qveris_direct_binding,
+)
 from qveris_bench.models.enums import AccessPathType, CellState, RunMode
 from qveris_bench.models.selection import OfficialPricingSnapshot
 from qveris_bench.providers.repository import ProviderRegistryRepository
@@ -52,9 +57,16 @@ def build_stock_quote_selection_snapshot(
         replay_release_dir(release_path.parent, expected_digest=actual_release_digest)
         suite_path = repository_root / _string(config, "suite")
         cases_path = repository_root / _string(config, "cases")
+        schema_path = repository_root / _string(config, "observation_schema")
+        binding_registry_path = repository_root / _string(config, "binding_registry")
         providers_root = repository_root / _string(config, "providers_root")
+        _validate_pinned_file(config, "suite_digest", suite_path)
+        _validate_pinned_file(config, "cases_digest", cases_path)
+        _validate_pinned_file(config, "observation_schema_digest", schema_path)
+        _validate_pinned_file(config, "binding_registry_digest", binding_registry_path)
         suite_document = load_yaml_mapping(suite_path)
         cases_document = load_yaml_mapping(cases_path)
+        schema_document = load_yaml_mapping(schema_path)
         release_document = json.loads(release_bytes)
     except (
         OSError,
@@ -71,7 +83,7 @@ def build_stock_quote_selection_snapshot(
     release_fingerprint = str(release_metadata.get("suite_fingerprint"))
     if not release_fingerprint:
         raise StockQuoteSelectionBuildError("release suite fingerprint is missing")
-    _validate_current_cap_inputs(suite_document, cases_document)
+    _validate_current_cap_inputs(suite_document, cases_document, schema_document)
     github_manifest_path = release_path.with_name("github-artifacts.json")
     github_manifest = json.loads(github_manifest_path.read_bytes())
     github_run_id = str(github_manifest.get("github_run_id"))
@@ -90,6 +102,7 @@ def build_stock_quote_selection_snapshot(
     expected_public_digests = {str(item["public_digest"]) for item in evidence}
     if set(public_by_digest) != expected_public_digests:
         raise StockQuoteSelectionBuildError("public evidence topology mismatch")
+    binding_registry_digest = sha256_digest(binding_registry_path.read_bytes())
 
     registry = {
         record.provider_id: record
@@ -156,6 +169,13 @@ def build_stock_quote_selection_snapshot(
                     raise StockQuoteSelectionBuildError(
                         "public terminal outcome mismatch"
                     )
+                _validate_terminal_provenance(
+                    terminal,
+                    bundle,
+                    cell,
+                    binding_registry_path,
+                    binding_registry_digest,
+                )
                 terminals.append(terminal)
                 refs.append(public_digest)
             passed = sum(
@@ -180,6 +200,12 @@ def build_stock_quote_selection_snapshot(
                 )
             )
         pricing = _pricing(record.provider.official_pricing, str(access_path_id))
+        if pricing.verified_at is not None and pricing.verified_at > date.fromisoformat(
+            _string(config, "edition")
+        ):
+            raise StockQuoteSelectionBuildError(
+                "official pricing is newer than edition"
+            )
         rows.append(
             StockQuoteSelectionRow(
                 provider_id=str(provider_id),
@@ -206,6 +232,8 @@ def build_stock_quote_selection_snapshot(
             "selection_input": _digest(input_path.read_bytes()),
             "suite": _digest(suite_path.read_bytes()),
             "cases": _digest(cases_path.read_bytes()),
+            "observation_schema": _digest(schema_path.read_bytes()),
+            "binding_registry": _digest(binding_registry_path.read_bytes()),
             "github_artifacts": _digest(github_manifest_path.read_bytes()),
             "public_evidence": _directory_digest(evidence_root),
             **{f"provider:{key}": value for key, value in provider_digests.items()},
@@ -244,7 +272,9 @@ def _load_public_evidence(
 
 
 def _validate_current_cap_inputs(
-    suite: dict[str, Any], cases_document: dict[str, Any]
+    suite: dict[str, Any],
+    cases_document: dict[str, Any],
+    schema: dict[str, Any],
 ) -> None:
     if (
         suite.get("suite_id") != "stock-quote-v3"
@@ -267,6 +297,61 @@ def _validate_current_cap_inputs(
     }
     if roles != _CASE_ROLES:
         raise StockQuoteSelectionBuildError("current Stock Quote case roles drifted")
+    if (
+        tuple(schema.get("required_fields", ())) != ("symbol", "price", "timestamp")
+        or _mapping(_mapping(schema, "field_constraints"), "timestamp").get(
+            "max_age_seconds"
+        )
+        != 900
+    ):
+        raise StockQuoteSelectionBuildError("Stock Quote observation contract drifted")
+
+
+def _validate_pinned_file(config: dict[str, Any], key: str, path: Path) -> None:
+    if _string(config, key) != _digest(path.read_bytes()):
+        raise StockQuoteSelectionBuildError(f"{key} mismatch")
+
+
+def _validate_terminal_provenance(
+    terminal: dict[str, Any],
+    bundle: dict[str, Any],
+    cell: dict[str, Any],
+    registry_path: Path,
+    registry_digest: str,
+) -> None:
+    expected = (
+        ("raw_digest", bundle.get("raw_digest")),
+        ("suite_fingerprint", bundle.get("suite_fingerprint")),
+        ("extractor_version", bundle.get("extractor_version")),
+        ("redaction_status", bundle.get("redaction_status")),
+        ("disclosure_level", bundle.get("disclosure_level")),
+        ("license_status", bundle.get("license_status")),
+        ("binding_registry_digest", registry_digest),
+    )
+    if any(terminal.get(key) != value for key, value in expected):
+        raise StockQuoteSelectionBuildError("public terminal provenance mismatch")
+    binding_id = terminal.get("binding_id")
+    if not isinstance(binding_id, str):
+        raise StockQuoteSelectionBuildError("public terminal binding is missing")
+    binding = load_registered_qveris_direct_binding(registry_path, binding_id)
+    if (
+        binding.provider_id != cell["provider_id"]
+        or binding.access_path_id != cell["access_path_id"]
+        or binding.suite_id != "stock-quote-v3"
+        or terminal.get("binding_digest") != _binding_digest(binding)
+    ):
+        raise StockQuoteSelectionBuildError("public terminal binding mismatch")
+    symbol = str(cell.get("case_input", {}).get("symbol"))
+    requested = binding.parameters.get("symbol", binding.parameters.get("s"))
+    if not isinstance(requested, str) or not requested.startswith(symbol.split(".")[0]):
+        raise StockQuoteSelectionBuildError("binding parameters do not match case")
+
+
+def _binding_digest(binding: QverisDirectBinding) -> str:
+    canonical = json.dumps(
+        binding.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
+    ).encode()
+    return sha256_digest(canonical)
 
 
 def _pricing(facts: tuple[Any, ...], access_path_id: str) -> OfficialPricingSnapshot:

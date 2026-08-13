@@ -181,13 +181,15 @@
     ]
   },
   "input_digests": {
+    "binding_registry": "sha256:1422dca1c594e7e98b4503d73ab15e5e1b4ba112962a94a7fadc3461b10289d2",
     "cases": "sha256:fbd41e802b6a7077502d6417faadd4841e52ca02a99301a2f45588ccc90584ae",
     "github_artifacts": "sha256:3fa94e1721d3af540f30de6fabba563bbbdc6c0ae2012b55cb44559220bbd4ea",
+    "observation_schema": "sha256:dc43cf087b00d509d0eead24cd378e8a7b7f6a5da48d44ad8953db01d0e3196d",
     "provider:eodhd": "sha256:46cef77e8aaf259e7580713f1adbfb4d5c02d5610e6475ff99b6e65cff466ad7",
     "provider:finnhub": "sha256:b980c5729a1a11370c7f906996ca2939b739559215987e0bce572b68598478e0",
     "public_evidence": "sha256:57c5d6f35740b3b67d427e43426a8066782b0faa1e594098829e0befd9e090d6",
-    "selection_input": "sha256:68cebcbe58e36bf7f2775e23042bf30cdf905c00da546b6e5dbe7c0614da6af3",
-    "selection_snapshot": "sha256:b59b191e16bc3c105d789a19b7581fef5a09cd20b6942aeca0ed4a0fe334c646",
+    "selection_input": "sha256:c531c714dbd54cc236ada476230e0239a17a2d365b8f8d214a2eca9b8c322055",
+    "selection_snapshot": "sha256:59b7c43ece0f9aab46f8f4fcfe3c2d4082c9e1809054195796602c9d504c7ec4",
     "suite": "sha256:b52c6e4c6d4958948e222817e8a90272cb719c141f54213fef71365b3b7e3633"
   },
   "rendered_at": "2026-08-13"

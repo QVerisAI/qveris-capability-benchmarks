@@ -6,7 +6,13 @@ release:
   path: releases/stock-quote-family-2026-q3-v1/release.json
   digest: sha256:2984a796bee2e9242c818f3336927972fe93030ca13f01f459e7333d5d509f57
 suite: cap_packs/stock_quote_family/suite.yaml
+suite_digest: sha256:b52c6e4c6d4958948e222817e8a90272cb719c141f54213fef71365b3b7e3633
 cases: cap_packs/stock_quote_family/cases.yaml
+cases_digest: sha256:fbd41e802b6a7077502d6417faadd4841e52ca02a99301a2f45588ccc90584ae
+observation_schema: cap_packs/stock_quote_family/observation-schema.yaml
+observation_schema_digest: sha256:dc43cf087b00d509d0eead24cd378e8a7b7f6a5da48d44ad8953db01d0e3196d
+binding_registry: cap_packs/qveris-direct-bindings-stock-quote-family.json
+binding_registry_digest: sha256:1422dca1c594e7e98b4503d73ab15e5e1b4ba112962a94a7fadc3461b10289d2
 providers_root: providers
 public_evidence_root: evidence/stock-quote-family-2026-q3-v1
 display_order:

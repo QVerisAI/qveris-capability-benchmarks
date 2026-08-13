@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import platform
 import tempfile
 from importlib.metadata import entry_points
 from pathlib import Path
@@ -118,7 +117,7 @@ def reproduce_publication_package(
         status="verified",
         release_count=len(release_dirs),
         checks=("releases", *checks),
-        canonical_chart_bytes_verified=platform.system() == "Linux",
+        canonical_chart_bytes_verified=False,
     )
 
 

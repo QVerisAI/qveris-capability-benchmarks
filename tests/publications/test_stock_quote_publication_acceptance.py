@@ -56,10 +56,11 @@ def test_ac2_stock_quote_package_reproduces_offline(
 
 def _copy_repository(tmp_path: Path) -> Path:
     copied = tmp_path / "repository"
-    copied.mkdir()
+    copied.mkdir(parents=True)
     shutil.copy2(ROOT / "pyproject.toml", copied / "pyproject.toml")
     for relative in (
         "cap_packs/stock_quote_family",
+        "cap_packs/qveris-direct-bindings-stock-quote-family.json",
         "docs/guides/capability-seo/stock-quote-api-test",
         "evidence/stock-quote-family-2026-q3-v1",
         "providers",
@@ -68,7 +69,10 @@ def _copy_repository(tmp_path: Path) -> Path:
         source = ROOT / relative
         target = copied / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(source, target)
+        if source.is_dir():
+            shutil.copytree(source, target)
+        else:
+            shutil.copy2(source, target)
     article = copied / "docs/guides/stock-quote-api-test.md"
     article.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / "docs/guides/stock-quote-api-test.md", article)
@@ -95,6 +99,12 @@ def _copy_repository(tmp_path: Path) -> Path:
             b"stale timestamp",
             b"fastest response",
             "article reason drifted",
+        ),
+        (
+            "docs/guides/stock-quote-api-test.md",
+            b"neither returned a quote that met the frozen contract",
+            b"both returned quotes that met the frozen contract",
+            "article lead outcome drifted",
         ),
         (
             "docs/guides/stock-quote-api-test.md",
@@ -125,6 +135,18 @@ def _copy_repository(tmp_path: Path) -> Path:
             b"rounds_per_cell: 3",
             b"rounds_per_cell: 9",
             "release round count mismatch",
+        ),
+        (
+            "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml",
+            b"Stock Quote API Test 2026: Finnhub vs EODHD",
+            b"Best Stock Quote API: Finnhub Wins in 2026",
+            "SEO title drifted",
+        ),
+        (
+            "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml",
+            b"using 30 live calls",
+            b"using 3,000 live calls",
+            "SEO meta drifted",
         ),
         (
             "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml",
@@ -160,3 +182,47 @@ def test_ac3_material_drift_fails_closed(
 
     assert result.exit_code == 1
     assert message in result.output
+
+
+def test_ac4_frozen_contract_and_binding_registry_are_pinned(tmp_path: Path) -> None:
+    repository = _copy_repository(tmp_path)
+    cases = repository / "cap_packs/stock_quote_family/cases.yaml"
+    cases.write_bytes(
+        cases.read_bytes().replace(b"max_age_seconds: 900", b"max_age_seconds: 9")
+    )
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "cases_digest mismatch" in result.output
+
+    repository = _copy_repository(tmp_path / "binding")
+    registry = repository / "cap_packs/qveris-direct-bindings-stock-quote-family.json"
+    registry.write_bytes(
+        registry.read_bytes().replace(
+            b'"provider_id": "finnhub"', b'"provider_id": "eodhd"', 1
+        )
+    )
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "binding_registry_digest mismatch" in result.output
+
+
+def test_ac5_future_pricing_cannot_be_backdated(tmp_path: Path) -> None:
+    repository = _copy_repository(tmp_path)
+    provider = repository / "providers/finnhub/provider.yaml"
+    provider.write_bytes(
+        provider.read_bytes().replace(
+            b"verified_at: 2026-08-10", b"verified_at: 2027-08-10"
+        )
+    )
+    package = (
+        repository / "docs/guides/capability-seo/stock-quote-api-test/manifest.yaml"
+    )
+    result = RUNNER.invoke(app, ["publication", "reproduce", "--package", str(package)])
+    assert result.exit_code == 1
+    assert "official pricing is newer than edition" in result.output
