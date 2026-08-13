@@ -738,9 +738,7 @@ def _sha256(path: Path) -> str:
 
 
 def _execution_contract_digest(snapshot: dict[str, Any]) -> str:
-    return (
-        "sha256:" + hashlib.sha256(canonical_json_bytes(snapshot)).hexdigest()
-    )
+    return "sha256:" + hashlib.sha256(canonical_json_bytes(snapshot)).hexdigest()
 
 
 def _validate_suite_contract(

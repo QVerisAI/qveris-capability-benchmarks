@@ -276,7 +276,7 @@ def test_ac6_provider_negative_is_not_an_agent_signal_pass() -> None:
 def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
-            "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a",
+        "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a",
         "sha256:" + "0" * 64,
     )
     input_path.write_text(text, encoding="utf-8")
@@ -288,7 +288,7 @@ def test_ac1_snapshot_rejects_release_digest_drift(tmp_path: Path) -> None:
 def test_ac3_snapshot_rejects_market_release_digest_drift(tmp_path: Path) -> None:
     input_path = tmp_path / "selection.yaml"
     text = INPUT.read_text(encoding="utf-8").replace(
-            "sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead",
+        "sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead",
         "sha256:" + "0" * 64,
     )
     input_path.write_text(text, encoding="utf-8")
