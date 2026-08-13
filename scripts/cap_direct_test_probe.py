@@ -125,21 +125,26 @@ def load_fixture(
 def build_executor(
     base_url: str, api_key: str
 ) -> Callable[[str, dict[str, Any]], dict[str, Any]]:
+    search_ids: dict[str, str] = {}
+
     def execute(tool_id: str, parameters: dict[str, Any]) -> dict[str, Any]:
-        search_request = urllib.request.Request(
-            f"{base_url}/search",
-            data=json.dumps({"query": tool_id, "limit": 1}).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(search_request, timeout=30) as response:
-                search_id = json.loads(response.read().decode("utf-8"))["search_id"]
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"search HTTP {exc.code}") from exc
+        search_id = search_ids.get(tool_id)
+        if search_id is None:
+            search_request = urllib.request.Request(
+                f"{base_url}/search",
+                data=json.dumps({"query": tool_id, "limit": 1}).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(search_request, timeout=90) as response:
+                    search_id = json.loads(response.read().decode("utf-8"))["search_id"]
+            except urllib.error.HTTPError as exc:
+                raise RuntimeError(f"search HTTP {exc.code}") from exc
+            search_ids[tool_id] = search_id
         execute_request = urllib.request.Request(
             f"{base_url}/tools/execute?tool_id={urllib.parse.quote(tool_id)}",
             data=json.dumps({"search_id": search_id, "parameters": parameters}).encode(

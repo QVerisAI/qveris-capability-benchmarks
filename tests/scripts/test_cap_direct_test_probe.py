@@ -5,11 +5,54 @@ from __future__ import annotations
 from scripts.cap_direct_test_probe import (
     Case,
     SupplierProbe,
+    build_executor,
     evaluate_cell,
     load_fixture,
     probe_state,
     run_probe,
 )
+
+
+def test_executor_reuses_one_discovery_for_repeated_frozen_tool_calls(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests = []
+
+    class Response:
+        def __init__(self, body: dict) -> None:
+            self.body = body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self) -> bytes:
+            import json
+
+            return json.dumps(self.body).encode("utf-8")
+
+    def urlopen(request, timeout):
+        requests.append((request.full_url, timeout))
+        if request.full_url.endswith("/search"):
+            return Response({"search_id": "frozen-search"})
+        return Response(
+            {
+                "result": {"status_code": 200, "data": {"Date": "2020-08-31"}},
+                "billing": {"list_amount_credits": 1},
+                "elapsed_time_ms": 100,
+            }
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    execute = build_executor("https://qveris.ai/api/v1", "test-key")
+
+    execute("provider.splits", {"symbol": "AAPL"})
+    execute("provider.splits", {"symbol": "NOTASTOCK"})
+
+    assert sum(url.endswith("/search") for url, _ in requests) == 1
+    assert len(requests) == 3
 
 
 def _case(**kwargs) -> Case:
