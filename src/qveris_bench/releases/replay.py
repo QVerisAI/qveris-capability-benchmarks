@@ -89,9 +89,14 @@ def replay_release_dir(
         )
     if run_plan.cap_sources != release.cap_sources:
         raise ReleaseReplayError("run-plan CAP provenance does not match release input")
+    if (run_plan.cap_id, run_plan.cap_version) != (release.cap_id, release.cap_version):
+        raise ReleaseReplayError("run-plan CAP identity does not match release input")
     if release.cap_sources:
-        contracts_path = harbor_contracts_path or _find_harbor_contracts(release_dir)
         for source in release.cap_sources:
+            contracts_path = _snapshot_contracts_path(
+                harbor_contracts_path or _find_harbor_contracts(release_dir),
+                source.catalog_snapshot_digest,
+            )
             try:
                 validate_harbor_source(source, contracts_path)
             except HarborSnapshotError as exc:
@@ -104,7 +109,7 @@ def replay_release_dir(
             release,
             cells,
             evidence,
-            require_attribution=False,
+            require_attribution=True,
             metric_registry=metric_registry,
         )
     except ReleaseGateError as exc:
@@ -137,6 +142,17 @@ def _find_harbor_contracts(release_dir: Path) -> Path | None:
         if candidate.is_file():
             return candidate
     return None
+
+
+def _snapshot_contracts_path(
+    contracts_path: Path | None, snapshot_digest: str
+) -> Path | None:
+    if contracts_path is None:
+        return None
+    snapshot = contracts_path.parent / "snapshots" / snapshot_digest / "contracts.json"
+    if snapshot.is_file():
+        return snapshot
+    return contracts_path
 
 
 def _read_required_file(release_dir: Path, filename: str) -> bytes:

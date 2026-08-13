@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from pydantic import ValidationError
 
+from qveris_bench.catalog.harbor_snapshot import (
+    HarborSnapshotError,
+    load_public_harbor_contracts,
+)
 from qveris_bench.catalog.validation import CapValidationError, validate_cap_file
 from qveris_bench.question_bank.models import (
     BankQuestion,
@@ -63,28 +66,11 @@ def _cap_packs_by_id(cap_packs_root: Path) -> dict[str, tuple[Path, ...]]:
 
 def _public_harbor_capability_ids(contracts_path: Path) -> set[str]:
     try:
-        records = json.loads(contracts_path.read_bytes())
-    except (OSError, json.JSONDecodeError) as exc:
+        return set(load_public_harbor_contracts(contracts_path))
+    except HarborSnapshotError as exc:
         raise QuestionBankValidationError(
-            "public Harbor contracts are unreadable"
+            "public Harbor contracts are invalid"
         ) from exc
-    if not isinstance(records, list):
-        raise QuestionBankValidationError("public Harbor contracts must be a list")
-    capability_ids: set[str] = set()
-    for record in records:
-        if not isinstance(record, dict):
-            continue
-        capability_id = record.get("capability_id")
-        contract = record.get("contract")
-        if (
-            isinstance(capability_id, str)
-            and isinstance(contract, dict)
-            and contract.get("capability_id") == capability_id
-        ):
-            capability_ids.add(capability_id)
-    if len(capability_ids) != len(records):
-        raise QuestionBankValidationError("public Harbor contracts are invalid")
-    return capability_ids
 
 
 def _require_compilable_cap_pack(

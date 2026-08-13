@@ -95,6 +95,8 @@ def expand_run_plan(
     return RunPlan(
         suite_id=suite.suite_id,
         suite_fingerprint=fingerprint,
+        cap_id=suite.cap_id,
+        cap_version=suite.cap_version,
         cap_sources=cap_sources,
         cells=_require_unique_run_keys(cells),
     )

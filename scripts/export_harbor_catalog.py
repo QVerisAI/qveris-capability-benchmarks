@@ -77,6 +77,14 @@ def _canonical_catalog(catalog: object) -> dict[str, Any]:
 def _write_catalog(out_dir: Path, catalog: object, records: object) -> dict[str, Any]:
     canonical_catalog = _canonical_catalog(catalog)
     contracts = _canonical_records(records)
+    catalog_ids = [item["capability_id"] for item in canonical_catalog["items"]]
+    contract_ids = [record["capability_id"] for record in contracts]
+    if len(catalog_ids) != len(set(catalog_ids)):
+        raise RuntimeError("Harbor catalog has duplicate capability IDs")
+    if len(contract_ids) != len(set(contract_ids)):
+        raise RuntimeError("Harbor contracts have duplicate capability IDs")
+    if set(catalog_ids) != set(contract_ids):
+        raise RuntimeError("Harbor catalog and contracts membership does not match")
     catalog_bytes = _canonical_json(canonical_catalog)
     contracts_bytes = _canonical_json(contracts)
     catalog_snapshot_digest = hashlib.sha256(contracts_bytes).hexdigest()
@@ -106,10 +114,15 @@ def _write_catalog(out_dir: Path, catalog: object, records: object) -> dict[str,
         "catalog_snapshot_digest": catalog_snapshot_digest,
         "contracts": contract_provenance,
     }
-    out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "catalog.json").write_bytes(catalog_bytes)
-    (out_dir / "contracts.json").write_bytes(contracts_bytes)
-    (out_dir / "meta.json").write_bytes(_canonical_json(metadata))
+    metadata_bytes = _canonical_json(metadata)
+    for directory in (
+        out_dir,
+        out_dir / "snapshots" / catalog_snapshot_digest,
+    ):
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "catalog.json").write_bytes(catalog_bytes)
+        (directory / "contracts.json").write_bytes(contracts_bytes)
+        (directory / "meta.json").write_bytes(metadata_bytes)
     return {
         "counts": metadata["counts"],
         "digest": catalog_snapshot_digest,

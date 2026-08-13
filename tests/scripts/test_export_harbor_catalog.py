@@ -135,6 +135,29 @@ def test_ac4_normalize_catalog_is_deterministic_and_rebuilds_public_metadata(
     }, "AC4 unchanged Harbor responses must produce no catalog diff"
 
 
+def test_ac4_normalize_rejects_catalog_contract_membership_drift(tmp_path) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT"}])), encoding="utf-8"
+    )
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.OTHER",
+                    "contract": {
+                        "capability_id": "MKT.OTHER",
+                        "contract_version": 1,
+                    },
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="membership"):
+        normalize_catalog(tmp_path)
+
+
 def test_contract_url_quotes_capability_id() -> None:
     assert (
         build_contract_url("https://harbor.qveris.cloud", "MKT.BARS.EOD")

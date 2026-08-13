@@ -1,0 +1,2742 @@
+{
+  "items": [
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.APP_USAGE",
+      "category": "alt.web",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Mobile app download counts, app store rankings, and DAU/MAU usage metrics.",
+        "zh": "移动应用的下载量、应用商店排名、日活/月活等使用指标。不包括：网站流量数据（见ALT.WEB_TRAFFIC）、应用内营收数据、社交媒体内容。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "App Downloads & Usage",
+        "zh": "App下载/排名/活跃度"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.CONSUMER_SPEND",
+      "category": "alt.consumer",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Aggregated credit/debit card consumer spending data reflecting retail industry, category, or merchant spending trends.",
+        "zh": "基于信用卡/借记卡交易的消费支出聚合数据，反映零售行业、品类或商户的消费趋势。不包括：个人消费者级别交易明细、宏观零售销售统计（见MACRO域）、供应链数据。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Consumer Spending & Retail",
+        "zh": "信用卡消费/零售"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.GOVT_CONTRACTS",
+      "category": "alt.govt",
+      "coverage": "none",
+      "data_type": "filing",
+      "description": {
+        "en": "Government contract and public procurement data including awarded companies, contract values, signing dates, and document links.",
+        "zh": "政府合同与公共采购公告数据，包括中标公司、合同金额、签约日期、文件链接等。不包括：政府财政预算数据、政策法规文本、游说活动记录。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Government Contracts & Procurement",
+        "zh": "政府合同/采购"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.JOB_POSTINGS",
+      "category": "alt.jobs",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Corporate job posting data used to infer company expansion direction and headcount changes.",
+        "zh": "企业招聘岗位发布数据，用于推断公司扩张方向、人员规模变化等信号。不包括：薪资调查报告、宏观就业统计（见MACRO.EMPLOYMENT）、员工离职率数据。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Job Postings Data",
+        "zh": "招聘数据"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.PATENTS",
+      "category": "alt.ip",
+      "coverage": "full",
+      "data_type": "filing",
+      "description": {
+        "en": "Company patent filing data including submission dates, document types, and SEC-linked filings.",
+        "zh": "公司专利与知识产权申报数据，包括专利提交日期、文件类型、SEC关联文件等。不包括：专利全文内容解析、专利引用网络分析、商标/版权数据。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Patents & Intellectual Property",
+        "zh": "专利/知识产权"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.PHARMA_PIPELINE",
+      "category": "alt.pharma",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "Drug development pipeline and FDA approval calendar data including drug name, clinical stage, approval status, and indications.",
+        "zh": "药品研发管线与FDA审批日历数据，包括药物名称、临床阶段、审批状态、适应症等。不包括：药品销售数据、生物专利信息（见ALT.PATENTS）、公司财务数据。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Pharma Pipeline & FDA",
+        "zh": "药品管线/FDA"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.SATELLITE",
+      "category": "alt.satellite",
+      "coverage": "pending",
+      "data_type": "indicator",
+      "description": {
+        "en": "Satellite and geospatial observation data for monitoring parking lot traffic, oil tank storage, crop growth, and other alternative signals.",
+        "zh": "卫星遥感与地理空间观测数据，用于监测停车场车流、油罐储量、农作物长势等另类信号。不包括：AIS船舶追踪（见ALT.SHIPPING_AIS）、气象预报数据。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Satellite & Remote Sensing",
+        "zh": "卫星/遥感数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.SHIPPING_AIS",
+      "category": "alt.shipping",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Global vessel real-time position tracking via AIS signals, including coordinates, speed, heading, and destination port.",
+        "zh": "基于AIS信号的全球船舶实时位置追踪数据，包括经纬度、航速、航向、目的港等。不包括：港口吞吐量统计、集装箱运价指数、贸易流向分析。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Shipping & AIS Tracking",
+        "zh": "航运/AIS追踪"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.SUPPLY_CHAIN",
+      "category": "alt.supply",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Corporate supply chain upstream/downstream relationship tracking including suppliers, customers, and partner mapping.",
+        "zh": "企业供应链上下游关系追踪，包括供应商、客户、合作伙伴的关联映射。不包括：航运物流追踪（见ALT.SHIPPING_AIS）、供应链金融产品数据、股权关系（见REF.EQUITY_STRUCTURE）。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Supply Chain Tracking",
+        "zh": "供应链追踪"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "ALT.WEB_TRAFFIC",
+      "category": "alt.web",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Website traffic and SEO metrics including visits, bounce rate, average session duration, and traffic source distribution.",
+        "zh": "网站流量与SEO指标数据，包括访问量、跳出率、平均停留时长、流量来源分布等。不包括：App使用数据（见ALT.APP_USAGE）、社交媒体互动数据（见NON_FIN.SOCIAL_MEDIA）、网页内容抓取。"
+      },
+      "domain": "ALT",
+      "name": {
+        "en": "Website Traffic & SEO",
+        "zh": "网站流量/SEO"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.ATR",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "平均真实波幅",
+        "zh": "提供平均真实波幅（ATR）技术指标的时间序列数据，用于衡量价格波动幅度和短期波动水平"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "平均真实波幅",
+        "zh": "平均真实波幅"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.BBANDS",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "布林带",
+        "zh": "提供布林带（BBANDS）技术指标的时间序列数据，包括上轨、中轨、下轨等带状输出"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "布林带",
+        "zh": "布林带"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.CCI",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "顺势指标",
+        "zh": "提供顺势指标（CCI）技术指标的时间序列数据，用于衡量价格相对统计均值的偏离程度"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "顺势指标",
+        "zh": "顺势指标"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.EMA",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "指数移动平均",
+        "zh": "提供指数移动平均（EMA）技术指标的时间序列数据，适用于股票、ETF、指数、期货、加密等标的"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "指数移动平均",
+        "zh": "指数移动平均"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.MACD",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "平滑异同移动平均",
+        "zh": "提供平滑异同移动平均（MACD）技术指标的时间序列数据，包括主线以及相关辅助输出"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "平滑异同移动平均",
+        "zh": "平滑异同移动平均"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.RSI",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "相对强弱指标",
+        "zh": "提供相对强弱指标（RSI）技术指标的时间序列数据，用于衡量超买超卖状态和价格动量强弱"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "相对强弱指标",
+        "zh": "相对强弱指标"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.SMA",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "简单移动平均",
+        "zh": "提供简单移动平均（SMA）技术指标的时间序列数据，适用于股票、ETF、指数、期货、加密等标的"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "简单移动平均",
+        "zh": "简单移动平均"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.STOCH",
+      "category": "TECHNICAL_ANALYSIS",
+      "coverage": "full",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "随机指标",
+        "zh": "提供随机指标（STOCH）技术指标的时间序列数据，用于刻画价格在区间中的相对位置和短期振荡特征"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "随机指标",
+        "zh": "随机指标"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ANALYTICS.TECH_INDICATORS",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Technical analysis indicator calculations including MA, RSI, MACD, Bollinger Bands, with indicator values, signals, and parameter configurations.",
+        "zh": "证券技术分析指标计算结果，如MA、RSI、MACD、布林带等，含指标名称、数值、信号及参数配置。不包括：原始价格K线数据、基本面财务比率、情绪/舆情信号。"
+      },
+      "domain": "ANALYTICS",
+      "name": {
+        "en": "Technical Indicators",
+        "zh": "技术指标"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "COMPLIANCE.SANCTIONS_PEP",
+      "category": "compliance",
+      "coverage": "none",
+      "data_type": "reference",
+      "description": {
+        "en": "Global sanctions lists and Politically Exposed Persons (PEP) databases for KYC/AML compliance screening.",
+        "zh": "全球制裁名单与政治敏感人物(PEP)数据库，用于KYC/AML合规筛查。不包括：企业信用评级、反洗钱交易监控、公司尽调报告。"
+      },
+      "domain": "COMPLIANCE",
+      "name": {
+        "en": "Sanctions & PEP Lists",
+        "zh": "制裁/PEP名单"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "CREDIT.MATURITY",
+      "category": "company.credit",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Corporate debt maturity schedule (maturity wall) showing repayment pressure across future years.",
+        "zh": "企业或主体的债务到期时间分布（Maturity Wall），展示未来各年度的债务偿还压力。不包括：偿债能力比率（见CREDIT.SOLVENCY）、信用评级、单笔债券发行信息。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Debt Maturity Profile",
+        "zh": "债务到期分布"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "CREDIT.SOLVENCY",
+      "category": "company.credit",
+      "coverage": "full",
+      "data_type": "ratio",
+      "description": {
+        "en": "Corporate solvency financial ratios including interest coverage ratio (ICR), D/E ratio, net debt/EBITDA, and current/quick ratios.",
+        "zh": "企业偿债能力财务比率，包括利息保障倍数(ICR)、资产负债率(D/E)、净债务/EBITDA、流动/速动比率等。不包括：信用评级（见CREDIT域其他能力）、债务到期分布（见CREDIT.MATURITY）、现金流量表明细。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Solvency Ratios",
+        "zh": "偿债能力指标"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.BARS.HISTORY",
+      "category": "crypto.quote",
+      "coverage": "full",
+      "data_type": "time_series",
+      "description": {
+        "en": "Cryptocurrency spot historical OHLCV bar data at daily/weekly/monthly granularity.",
+        "zh": "加密货币现货的历史OHLCV K线数据，支持日/周/月等多个时间粒度。不包括：实时行情报价、合约/永续期货K线、链上数据。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Historical Bars",
+        "zh": "加密货币历史K线"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.CEX_FLOWS",
+      "category": "crypto.flow",
+      "coverage": "none",
+      "data_type": "flow",
+      "description": {
+        "en": "Centralized exchange (CEX) cryptocurrency net inflow/outflow data by exchange and token.",
+        "zh": "中心化交易所(CEX)的加密货币资金净流入/流出数据，按交易所和代币维度统计。不包括：巨鲸钱包链上转账（见CRYPTO.WHALE）、DEX交易量、交易所储备金证明。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "CEX Exchange Flows",
+        "zh": "CEX交易所资金流"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.DERIV.FUNDING_OI",
+      "category": "crypto.derivatives",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Cryptocurrency derivatives (perpetual/futures) funding rate and open interest data.",
+        "zh": "加密货币衍生品(永续合约/期货)的资金费率和未平仓合约量(Open Interest)数据。不包括：现货行情、合约K线价格、链上数据、期权Greeks。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Funding Rate & Open Interest",
+        "zh": "合约资金费率/OI"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.FGI",
+      "category": "crypto.sentiment",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Crypto market Fear & Greed Index combining volatility, volume, social media, and other dimensions to quantify market sentiment.",
+        "zh": "加密货币市场恐慌与贪婪指数(Fear & Greed Index)，综合波动率、交易量、社交媒体等维度量化市场情绪。不包括：个币情绪分析、社交媒体原始数据（见NON_FIN.SOCIAL_MEDIA）、传统市场VIX指数（见INDEX.VIX）。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Fear & Greed Index",
+        "zh": "恐慌贪婪指数"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.GAS",
+      "category": "crypto.onchain",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Ethereum and other blockchain network gas fee data including gas price (Gwei), base fee, and priority fee.",
+        "zh": "以太坊等区块链网络的Gas费实时与历史数据，包括Gas价格(Gwei)、基础费、优先费等。不包括：巨鲸钱包追踪（见CRYPTO.WHALE）、链上交易量统计、DeFi协议费用。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Gas Fee Tracking",
+        "zh": "Gas费追踪"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.MARKET_RANKINGS",
+      "category": "crypto.quote",
+      "coverage": "full",
+      "data_type": "screening",
+      "description": {
+        "en": "Cryptocurrency market cap rankings with price, market cap, change percentage, and volume for each coin.",
+        "zh": "加密货币的市值排行榜数据，按市值排序列出币种及其价格、市值、涨跌幅、成交量等。不包括：单币种详细行情、历史K线、链上活跃度排名。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Market Rankings",
+        "zh": "加密货币排行"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.ONCHAIN.BASIC",
+      "category": "crypto.onchain",
+      "coverage": "none",
+      "data_type": "onchain",
+      "description": {
+        "en": "Blockchain on-chain basic data including active addresses, transaction count, hash rate, and transfer volume.",
+        "zh": "区块链链上基础数据，包括活跃地址数、交易笔数、哈希率、转账量等网络层指标。不包括：现货/合约行情价格、DeFi协议TVL等应用层数据、钱包地址持仓追踪。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "On-chain Basic Metrics",
+        "zh": "链上基础数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.OPTIONS",
+      "category": "crypto.derivatives",
+      "coverage": "none",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Cryptocurrency options quotes and trading data including call/put prices, strike prices, implied volatility, and open interest.",
+        "zh": "加密货币期权合约的报价与交易数据，包括看涨/看跌期权的行权价、隐含波动率、持仓量等。不包括：永续合约数据（见CRYPTO.PERP）、现货行情、传统金融期权数据。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Options",
+        "zh": "加密期权"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.PERP",
+      "category": "crypto.derivatives",
+      "coverage": "none",
+      "data_type": "time_series",
+      "description": {
+        "en": "Cryptocurrency perpetual futures data including bars, funding rates, open interest, and liquidation volumes.",
+        "zh": "加密货币永续合约行情与衍生品数据，包括K线、资金费率、持仓量、爆仓量等。不包括：现货行情（见CRYPTO.SPOT域）、期权数据（见CRYPTO.OPTIONS）、链上交易数据。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Perpetual Futures & Liquidations",
+        "zh": "永续合约/爆仓数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.REF_MASTER",
+      "category": "crypto.quote",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Cryptocurrency reference data including coin name, symbol, genesis date, platform/chain, category tags, and description.",
+        "zh": "加密货币币种的基础参考信息(主数据)，包括币种名称、代号、创世日期、所属平台/公链、分类标签、简介等静态属性。不包括：实时价格/行情、历史K线、链上指标。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Asset Master",
+        "zh": "加密币种主数据"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.SPOT.RT",
+      "category": "crypto.quote",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Cryptocurrency spot real-time/near-real-time quotes including last price, OHLC, change percentage, and volume.",
+        "zh": "加密货币现货的实时/近实时行情报价，包括最新价、开高低收、涨跌幅、成交量等。不包括：加密货币历史K线、合约/衍生品行情、链上交易数据。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Crypto Real-time Quotes",
+        "zh": "加密货币实时行情"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "CRYPTO",
+      "capability_id": "CRYPTO.WHALE",
+      "category": "crypto.onchain",
+      "coverage": "full",
+      "data_type": "transaction",
+      "description": {
+        "en": "Large-value on-chain transfer tracking for crypto whale wallets, including wallet addresses, amounts, token types, and transaction hashes.",
+        "zh": "加密货币巨鲸钱包的大额链上转账追踪，包括钱包地址、转账金额、代币类型、交易哈希等。不包括：交易所资金流（见CRYPTO.CEX_FLOWS）、Gas费数据（见CRYPTO.GAS）、小额链上交易。"
+      },
+      "domain": "CRYPTO",
+      "name": {
+        "en": "Whale Wallet Tracking",
+        "zh": "巨鲸钱包追踪"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "DERIVATIVES",
+      "capability_id": "DERIV.FUTURES.BARS",
+      "category": "equity.derivatives",
+      "coverage": "none",
+      "data_type": "time_series",
+      "description": {
+        "en": "Historical daily OHLCV bar time series for commodity and financial futures, including volume, open interest, and settlement price.",
+        "zh": "商品及金融期货合约的历史日K线时间序列，包括开高低收、成交量、持仓量、结算价。不包括：期货实时行情(见DERIV.FUTURES.MARKET)、期权行情、加密货币合约行情。"
+      },
+      "domain": "DERIVATIVES",
+      "name": {
+        "en": "Futures Historical Daily Bars",
+        "zh": "期货历史日线"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "DERIVATIVES",
+      "capability_id": "DERIV.FUTURES.MARKET",
+      "category": "equity.derivatives",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Commodity and financial futures real-time/delayed quotes including last price, OHLC, change, volume, and bid/ask.",
+        "zh": "商品及金融期货合约的实时/延迟行情数据，包括最新价、开高低收、涨跌幅、成交量、买卖价等。不包括：期权行情(见OPT.CHAIN)、加密货币合约行情(见CRYPTO.DERIV.FUNDING_OI)、期货合约主数据(到期日/交割规则等)。"
+      },
+      "domain": "DERIVATIVES",
+      "name": {
+        "en": "Futures Market Quotes",
+        "zh": "期货行情"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "EARNINGS.ACTUAL_SURPRISE",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "ESTIMATE",
+      "description": {
+        "en": "Post-earnings actual vs. expected comparison including actual EPS, consensus EPS estimate, and surprise magnitude.",
+        "zh": "上市公司财报发布后的盈利实绩与预期对比，包括实际EPS、分析师预期EPS均值、惊喜幅度（绝对值和百分比）。不包括：前瞻性一致预期（见ESTIMATES.CONSENSUS）、财报原始报表数据（见FUNDAMENTALS.*）、财报发布日历。"
+      },
+      "domain": "EARNINGS",
+      "name": {
+        "en": "Earnings Surprise",
+        "zh": "盈利实绩与惊喜"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ESG.CARBON",
+      "category": "esg",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Corporate carbon emission data including Scope 1/2/3 GHG emissions, carbon intensity, reduction targets, and progress.",
+        "zh": "企业碳排放量化数据，包括Scope 1/2/3温室气体排放量、碳强度、减排目标及达成进度等。不包括：ESG综合评分(见ESG.SCORES)、ESG争议事件、环境合规处罚记录。"
+      },
+      "domain": "ESG",
+      "name": {
+        "en": "Carbon Emissions Data",
+        "zh": "碳排放数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ESG.CONTROVERSY",
+      "category": "esg",
+      "coverage": "full",
+      "data_type": "news",
+      "description": {
+        "en": "ESG controversy event reports for companies including environmental violations, labor disputes, and governance scandals with sentiment scoring.",
+        "zh": "上市公司涉及的ESG争议性事件报道，如环境污染、劳工纠纷、公司治理丑闻等负面事件的新闻聚合及情绪评分。不包括：ESG综合评分(见ESG.SCORES)、碳排放数据(见ESG.CARBON)、一般性财经新闻。"
+      },
+      "domain": "ESG",
+      "name": {
+        "en": "ESG Controversies",
+        "zh": "ESG争议事件"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "ESG.SCORES",
+      "category": "esg",
+      "coverage": "none",
+      "data_type": "ratio",
+      "description": {
+        "en": "Company ESG composite and pillar scores (Environmental/Social/Governance) with rating agency, industry rank, and controversy level.",
+        "zh": "上市公司的ESG综合评分及E(环境)/S(社会)/G(治理)分项评分，包括评级机构、行业排名、争议等级等。不包括：碳排放具体数值(见ESG.CARBON)、ESG争议事件新闻(见ESG.CONTROVERSY)、信用评级。"
+      },
+      "domain": "ESG",
+      "name": {
+        "en": "ESG Scores",
+        "zh": "ESG综合评分"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "ESTIMATES.CONSENSUS",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "ESTIMATE",
+      "description": {
+        "en": "Sell-side analyst consensus estimates for future periods including EPS and revenue mean/high/low forecasts, analyst count, and revision trends.",
+        "zh": "卖方分析师对上市公司未来各期的一致预期数据，包括EPS和营收的均值/最高/最低预期、分析师人数、预期修正趋势等。不包括：已发布财报的盈利惊喜（见EARNINGS.ACTUAL_SURPRISE）、分析师评级与目标价（见ESTIMATES.RATINGS_TARGETS）、财报原始数据。"
+      },
+      "domain": "ESTIMATES",
+      "name": {
+        "en": "Consensus Estimates",
+        "zh": "一致预期"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "ESTIMATES.RATINGS_TARGETS",
+      "category": "company.analyst",
+      "coverage": "full",
+      "data_type": "RATING",
+      "description": {
+        "en": "Sell-side analyst investment ratings (buy/hold/sell distribution) and price target summaries including consensus rating and average target.",
+        "zh": "卖方分析师对上市公司的投资评级（买入/持有/卖出分布）和目标价汇总，包括综合评级、目标价均值、评分等。不包括：EPS/营收一致预期（见ESTIMATES.CONSENSUS）、盈利惊喜数据、财务报表数据。"
+      },
+      "domain": "ESTIMATES",
+      "name": {
+        "en": "Analyst Ratings & Targets",
+        "zh": "分析师评级目标价"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.FLOWS.AUM",
+      "category": "fund.etf",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "ETF fund flow and AUM data including net inflows/outflows, AUM, share changes, and NAV, at daily/weekly/monthly granularity.",
+        "zh": "ETF的资金流向和资产管理规模（AUM）数据，包括净流入/流出金额、AUM、份额变动、净值等，支持日/周/月维度。不包括：ETF持仓明细（见ETF.HOLDINGS）、ETF行情K线、共同基金数据。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Flows & AUM",
+        "zh": "ETF资金流"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.FLOWS.MARKET",
+      "category": "fund.etf",
+      "coverage": "none",
+      "data_type": "flow",
+      "description": {
+        "en": "Aggregate ETF market flow data by category (equity, bond, commodity). Excludes single-ETF flows (see ETF.FLOWS.AUM).",
+        "zh": "ETF市场资金流聚合数据，按ETF分类（股票型、债券型、商品型等）汇总的净流入、AUM等指标。不包括：单只ETF资金流（见ETF.FLOWS.AUM）。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Market Flow",
+        "zh": "ETF市场资金流"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.HOLDINGS",
+      "category": "fund.etf",
+      "coverage": "full",
+      "data_type": "holdings",
+      "description": {
+        "en": "ETF underlying holdings detail including each holding's ticker, name, weight, shares, and market value.",
+        "zh": "ETF的底层持仓明细，包括每只持仓证券的代码、名称、权重、持仓股数、市值等。不包括：ETF资金流向（见ETF.FLOWS.AUM）、ETF基础信息（见ETF.REF_MASTER）、指数成分股（见INDEX.CONSTITUENTS）。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Holdings",
+        "zh": "ETF持仓"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.HOLDINGS.HISTORY",
+      "category": "fund.etf",
+      "coverage": "full",
+      "data_type": "holdings",
+      "description": {
+        "en": "ETF historical holdings snapshots at each reporting period, including constituent tickers, names, weights, quantities, and market values.",
+        "zh": "ETF基金在历史各报告期的持仓明细，包括成分股/债券代码、名称、权重、持有数量及市值。不包括：当日申赎篮子(PCF)、ETF净值/行情数据、主动管理型公募基金持仓。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Historical Holdings",
+        "zh": "ETF历史持仓"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.NAV.IOPV",
+      "category": "fund.etf",
+      "coverage": "none",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "ETF unit NAV and intraday indicative value (IOPV) data including real-time price, change, and premium/discount.",
+        "zh": "ETF基金的单位净值(NAV)与盘中参考净值(IOPV)数据，包括实时价格、涨跌幅、折溢价等。不包括：ETF持仓明细、ETF申赎清单(PCF)、普通开放式基金净值。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF NAV & Premium/Discount",
+        "zh": "ETF净值/折溢价"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.PCF",
+      "category": "fund.etf",
+      "coverage": "none",
+      "data_type": "holdings",
+      "description": {
+        "en": "ETF daily Portfolio Composition File (PCF) listing the basket of securities for in-kind creation/redemption with codes, quantities, and weights.",
+        "zh": "ETF每日公布的申购赎回清单(Portfolio Composition File)，列出一篮子股票的代码、数量和权重，用于实物申赎。不包括：ETF历史持仓快照、ETF净值/行情数据、基金定期报告持仓。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Creation/Redemption Basket",
+        "zh": "ETF申购赎回篮子"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "ETF.REF_MASTER",
+      "category": "fund.etf",
+      "coverage": "full",
+      "data_type": "profile",
+      "description": {
+        "en": "ETF product reference data including fund name, exchange, currency, benchmark, asset class, fund size, and manager.",
+        "zh": "ETF产品的基础档案信息，包括基金名称、交易所、币种、跟踪标的、资产类别、基金规模、管理人等静态描述。不包括：ETF持仓明细（见ETF.HOLDINGS）、ETF资金流向（见ETF.FLOWS.AUM）、ETF行情数据。"
+      },
+      "domain": "ETF",
+      "name": {
+        "en": "ETF Reference Master",
+        "zh": "ETF主数据"
+      },
+      "provider_count": 6
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "EVENT.CALENDAR.CORP",
+      "category": "events.corporate",
+      "coverage": "full",
+      "data_type": "CALENDER",
+      "description": {
+        "en": "Corporate event calendar covering dividends, splits, shareholder meetings, and other planned corporate events with key dates.",
+        "zh": "上市公司综合事件日历，涵盖分红派息、拆股、股东大会等公司层面的计划性事件及其关键日期。不包括：财报发布日历（见EVENT.CALENDAR.EARNINGS）、IPO日历、宏观经济事件、历史已执行的公司行动记录（见MKT.CORPORATE_ACTIONS）。"
+      },
+      "domain": "EVENT",
+      "name": {
+        "en": "Corporate Event Calendar",
+        "zh": "公司事件日历"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "EVENT.CALENDAR.EARNINGS",
+      "category": "events.corporate",
+      "coverage": "full",
+      "data_type": "CALENDAR",
+      "description": {
+        "en": "Earnings release calendar with confirmed/expected report dates, pre/post-market timing, and expected EPS and revenue.",
+        "zh": "上市公司财报发布日历，标注各公司预计或已确认的财报发布日期、盘前/盘后、预期EPS和营收等。不包括：财报实际数据（见FUNDAMENTALS.*）、盈利惊喜（见EARNINGS.ACTUAL_SURPRISE）、其他公司事件。"
+      },
+      "domain": "EVENT",
+      "name": {
+        "en": "Earnings Calendar",
+        "zh": "财报日历"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "EVENT.CALENDAR.IPO",
+      "category": "events.corporate",
+      "coverage": "full",
+      "data_type": "CALENDAR",
+      "description": {
+        "en": "IPO calendar with company name, expected listing date, price range, underwriters, and offering size.",
+        "zh": "新股上市（IPO）日历，包含拟上市公司名称、预期上市日期、发行价格区间、承销商、募资规模等信息。不包括：已上市公司的公司概况、二级市场行情、增发/配股等再融资事件。"
+      },
+      "domain": "EVENT",
+      "name": {
+        "en": "IPO Calendar",
+        "zh": "IPO日历"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "EVENT.CALENDAR.MACRO",
+      "category": "events.macro",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "Global macroeconomic event calendar for GDP, CPI, PMI, NFP, central bank rate decisions, with release times, forecasts, and actuals.",
+        "zh": "全球宏观经济事件日历，包括GDP、CPI、PMI、非农就业、央行利率决议等关键经济指标的发布时间、预期值、前值和实际值。不包括：宏观指标历史时间序列（见MACRO.INDICATORS）、公司层面事件、金融市场行情。"
+      },
+      "domain": "EVENT",
+      "name": {
+        "en": "Macro Event Calendar",
+        "zh": "宏观事件日历"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "EVENT.EARNINGS_PREANNOUNCEMENT",
+      "category": "earnings_event",
+      "coverage": "full",
+      "data_type": "EVENT",
+      "description": {
+        "en": "业绩预告与快报",
+        "zh": "公司正式披露的业绩预告、业绩快报及相关前置财报事件"
+      },
+      "domain": "EVENT",
+      "name": {
+        "en": "业绩预告与快报",
+        "zh": "业绩预告与快报"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.CDS_SPREAD",
+      "category": "fi.credit",
+      "coverage": "none",
+      "data_type": "spot_price",
+      "description": {
+        "en": "Credit Default Swap (CDS) spread quotes reflecting market pricing of issuer credit risk.",
+        "zh": "信用违约互换(CDS)利差报价数据，反映市场对发行人信用风险的定价。不包括：债券现券价格与收益率、信用评级、违约事件记录（见FI.DEFAULT_RECORDS）。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "CDS Spreads",
+        "zh": "CDS利差"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.CONVERTIBLE",
+      "category": "fi.credit",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Convertible bond data including conversion price, underlying stock, maturity, coupon rate, conversion premium, and call/put trigger prices.",
+        "zh": "可转换债券(可转债)的专项数据，包括转股价、正股代码、到期日、票面利率、转股溢价率、强赎/回售触发价等条款信息。不包括：普通信用债主数据、可转债历史K线行情(归入行情类)、正股基本面数据。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Convertible Bonds",
+        "zh": "可转债"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.CURVES.GOVT",
+      "category": "fi.govt",
+      "coverage": "none",
+      "data_type": "time_series",
+      "description": {
+        "en": "Government bond yield curve cross-sectional data at multiple tenors (3M/1Y/2Y/5Y/10Y/30Y) for a given date.",
+        "zh": "国债收益率曲线的多期限截面数据(如3M/1Y/2Y/5Y/10Y/30Y)，展示同一时点不同到期期限的收益率水平。不包括：单一期限国债收益率时间序列(见RATES.GOVT_BENCHMARK)、企业债/信用债利差曲线、央行政策利率。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Government Yield Curve",
+        "zh": "国债收益率曲线"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.DEFAULT_RECORDS",
+      "category": "fi.credit",
+      "coverage": "none",
+      "data_type": "calendar",
+      "description": {
+        "en": "Historical bond/credit default event records including defaulting entity, default date, and default type.",
+        "zh": "债券或信贷违约事件的历史记录，包括违约主体、违约日期、违约类型等。不包括：CDS利差（见FI.CDS_SPREAD）、信用评级变动、偿债能力指标（见CREDIT.SOLVENCY）。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Default Records",
+        "zh": "违约记录"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.PRICING.EVALUATED",
+      "category": "fi.credit",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Third-party evaluated bond pricing data including theoretical prices and yield-to-maturity from valuation agencies.",
+        "zh": "债券的估值定价数据，通常由第三方估值机构(如中债估值、中证估值)提供的理论价格/到期收益率。不包括：债券实际成交价格(见FI.TRADES.POSTTRADE)、信用评级、债券主数据(发行条款等)。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Evaluated Bond Pricing",
+        "zh": "债券估值价格"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.RATINGS",
+      "category": "fi.credit",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Bond or issuer credit ratings from S&P, Moody's, Fitch, including rating grades, outlooks, and rating change history.",
+        "zh": "债券或发行主体的信用评级数据，包括标普、穆迪、惠誉等评级机构给出的信用等级、评级展望及变动历史。不包括：ESG评分、股票分析师评级/推荐、债券价格或收益率数据。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Credit Ratings",
+        "zh": "信用评级"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.REF_MASTER",
+      "category": "fi.credit",
+      "coverage": "none",
+      "data_type": "reference",
+      "description": {
+        "en": "Bond reference data including issuer, coupon rate, maturity date, coupon frequency, face value, issue size, and bond type.",
+        "zh": "债券品种的基础参考数据(主数据)，包括发行人、票面利率、到期日、付息频率、面值、发行规模、债券类型等静态属性。不包括：债券实时/估值价格、信用评级、债券成交记录。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Bond Reference Master",
+        "zh": "债券主数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "FI.TRADES.POSTTRADE",
+      "category": "fi.credit",
+      "coverage": "none",
+      "data_type": "transaction",
+      "description": {
+        "en": "Bond market post-trade reporting data (e.g., TRACE) including trade date, price, volume, and trade direction.",
+        "zh": "债券市场的事后成交报告数据(如TRACE)，包括成交日期、价格、数量及交易方向。不包括：债券估值定价(见FI.PRICING.EVALUATED)、债券主数据(发行条款)、股票大宗交易。"
+      },
+      "domain": "FI",
+      "name": {
+        "en": "Bond Post-trade Reports",
+        "zh": "债券成交报告"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FILINGS.REGULATORY.METADATA",
+      "category": "company.filings",
+      "coverage": "full",
+      "data_type": "filing",
+      "description": {
+        "en": "Regulatory filing index metadata including SEC EDGAR form types (10-K/10-Q/8-K), filing dates, CIK, and document URLs.",
+        "zh": "上市公司向监管机构提交的披露文件索引信息，包括SEC EDGAR的表格类型(10-K/10-Q/8-K等)、提交日期、CIK、文件URL等元数据。不包括：披露文件的全文内容、XBRL结构化财务数据、财务报表数值。"
+      },
+      "domain": "FILINGS",
+      "name": {
+        "en": "Regulatory Filing Index",
+        "zh": "披露索引"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FILINGS.REGULATORY.RAW",
+      "category": "company.filings",
+      "coverage": "none",
+      "data_type": "text_content",
+      "description": {
+        "en": "Raw full-text content of regulatory filings such as SEC 10-K/10-Q/8-K in HTML or plain text format.",
+        "zh": "监管披露文件的原始全文内容，如SEC 10-K/10-Q/8-K等HTML或纯文本格式的完整文档。不包括：文件索引元数据(见FILINGS.REGULATORY.METADATA)、从文件中提取的结构化XBRL数据、标准化财务报表数值。"
+      },
+      "domain": "FILINGS",
+      "name": {
+        "en": "Regulatory Filing Full Text",
+        "zh": "披露原文"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FILINGS.STRUCTURED.XBRL",
+      "category": "company.filings",
+      "coverage": "full",
+      "data_type": "filing",
+      "description": {
+        "en": "XBRL-tagged structured data extracted from regulatory filings, mapping financial statement items to standardized taxonomies.",
+        "zh": "从监管披露文件中提取的XBRL(可扩展商业报告语言)结构化标签数据，将财务报表项映射为机器可读的标准化分类。不包括：披露文件原始全文(见FILINGS.REGULATORY.RAW)、文件索引元数据、已标准化的财务报表行项目(见FUNDAMENTALS系列)。"
+      },
+      "domain": "FILINGS",
+      "name": {
+        "en": "XBRL Structured Data",
+        "zh": "XBRL结构化数据"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.CROSS_BORDER",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "Cross-border capital flow data including Stock Connect (northbound/southbound), QFII/RQFII net buy/sell amounts.",
+        "zh": "跨境资金流动数据，包括沪深港通(北向/南向)、QFII/RQFII等渠道的净买入净卖出金额。不包括：境内市场板块资金流向、个股级别资金流、外汇汇率数据。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Cross-border Capital Flow",
+        "zh": "跨境资金"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.DRAGON_TIGER",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "A-share Dragon & Tiger list showing top 5 buy/sell broker seats for stocks with abnormal trading, with amounts and listing reasons.",
+        "zh": "A股龙虎榜数据，即异常波动个股的买卖前五营业部席位明细，包括上榜原因、买卖金额等。不包括：大单资金流统计（见FLOW.LARGE_ORDER）、大宗交易（见MKT.CN.BLOCK_TRADES）、融资融券数据。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Dragon & Tiger List (Top Broker Seats)",
+        "zh": "龙虎榜"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.LARGE_ORDER",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "Per-stock capital flow data by order size (super-large, large, medium, small). Merged from FLOW.STOCK.MONEY_FLOW.",
+        "zh": "个股按订单规模分类的资金净流入数据，区分超大单、大单、中单、小单的买卖净额。合并原 FLOW.STOCK.MONEY_FLOW。不包括：北向资金流向、龙虎榜营业部数据、板块级别资金流。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Stock Capital Flow",
+        "zh": "个股资金流"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.MARKET.CAPITAL",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "Market-level capital flow data by order size. Excludes sector/industry flows (see FLOW.SECTOR.CAPITAL).",
+        "zh": "大盘指数层面的资金净流入流出数据，按超大单/大单/中单/小单分层统计。不包括：概念板块/行业板块资金流（见FLOW.SECTOR.CAPITAL）、个股资金流、跨境资金。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Market Capital Flow",
+        "zh": "市场资金流"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.NORTHBOUND",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "Stock Connect (northbound/southbound) daily net flow data including buy/sell amounts and top 10 most actively traded stocks.",
+        "zh": "沪深港通（陆股通）北向/南向资金的每日净流入数据，包括买卖金额、十大成交活跃股等。不包括：QFII/RQFII持仓数据、个股大单资金流（见FLOW.LARGE_ORDER）、港股通个股持仓变动。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Northbound/Southbound (Stock Connect)",
+        "zh": "南北向资金/沪深港通"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "FLOW.SECTOR.CAPITAL",
+      "category": "equity.flow",
+      "coverage": "full",
+      "data_type": "flow",
+      "description": {
+        "en": "Net capital flow data by concept/industry sector. Excludes market-level flows (see FLOW.MARKET.CAPITAL).",
+        "zh": "概念板块/行业板块的资金净流入数据，按板块汇总的买卖净额。不包括：大盘指数资金流（见FLOW.MARKET.CAPITAL）、个股资金流。"
+      },
+      "domain": "FLOW",
+      "name": {
+        "en": "Sector Capital Flow",
+        "zh": "板块资金流"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "FUND.CLASSIFICATION",
+      "category": "fund.mutual",
+      "coverage": "none",
+      "data_type": "reference",
+      "description": {
+        "en": "Fund classification taxonomy by investment strategy (equity/bond/balanced/money market), Morningstar/Galaxy/Wind categories, and investment style (large-cap growth/small-cap value).",
+        "zh": "基金产品的分类标签体系，包括按投资策略(股票型/债券型/混合型/货币型)、晨星/银河/Wind分类、投资风格(大盘成长/小盘价值)等维度的分类信息。不包括：基金主数据(管理人/费率)、基金净值、基金持仓。"
+      },
+      "domain": "FUND",
+      "name": {
+        "en": "Fund Classification",
+        "zh": "基金分类"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "FUND.MUTUAL.HOLDINGS",
+      "category": "fund.mutual",
+      "coverage": "full",
+      "data_type": "holdings",
+      "description": {
+        "en": "Mutual fund (non-ETF) periodic report holdings detail including held securities, names, weights, quantities, and market values.",
+        "zh": "公募基金(非ETF)定期报告中披露的持仓明细，包括持有证券代码、名称、权重、数量和市值。不包括：ETF持仓(见ETF.HOLDINGS.HISTORY)、基金净值数据、机构投资者对基金本身的持有情况。"
+      },
+      "domain": "FUND",
+      "name": {
+        "en": "Mutual Fund Holdings",
+        "zh": "基金持仓"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "FUND.MUTUAL.NAV",
+      "category": "fund.mutual",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Open-end mutual fund unit NAV and cumulative NAV data with daily values and change percentages.",
+        "zh": "开放式公募基金的单位净值和累计净值数据，包括每日净值、涨跌幅等。不包括：ETF盘中参考净值(IOPV)、基金持仓明细、基金主数据(管理人/费率等)。"
+      },
+      "domain": "FUND",
+      "name": {
+        "en": "Mutual Fund NAV",
+        "zh": "基金净值"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "FUND.MUTUAL.REF_MASTER",
+      "category": "fund.mutual",
+      "coverage": "full",
+      "data_type": "profile",
+      "description": {
+        "en": "Mutual fund product reference data including fund name, manager, custodian, inception date, fee structure, investment strategy, and benchmark.",
+        "zh": "公募基金产品的基础参考数据(主数据)，包括基金名称、管理人、托管人、成立日期、费率、投资策略、基准指数等静态属性。不包括：基金净值/行情、基金持仓明细、基金分类体系。"
+      },
+      "domain": "FUND",
+      "name": {
+        "en": "Mutual Fund Reference Master",
+        "zh": "基金主数据"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "FUND",
+      "capability_id": "FUND.MUTUAL_AUM",
+      "category": "fund.mutual",
+      "coverage": "full",
+      "data_type": "METRIC",
+      "description": {
+        "en": "公募基金规模",
+        "zh": "公募基金资产管理规模数据，包括指定日期的基金规模（AUM）、份额规模及相关披露日期。不包括：基金静态主数据、基金净值序列、基金持仓明细"
+      },
+      "domain": "FUND",
+      "name": {
+        "en": "公募基金规模",
+        "zh": "公募基金规模"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FUNDAMENTALS.BS",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "financial_statement",
+      "description": {
+        "en": "Quarterly/annual balance sheet data including total assets, total liabilities, shareholders' equity, and line items (cash, receivables, inventory, long-term debt).",
+        "zh": "上市公司资产负债表（Balance Sheet）财务数据，按季度或年度披露，包含总资产、总负债、股东权益及各细分科目（现金、应收、存货、长期负债等）。不包括：利润表（见FUNDAMENTALS.IS）、现金流量表（见FUNDAMENTALS.CF）、估值比率。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Balance Sheet",
+        "zh": "资产负债表"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FUNDAMENTALS.CF",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "financial_statement",
+      "description": {
+        "en": "Quarterly/annual cash flow statement data covering operating, investing, and financing cash flows, plus free cash flow and capex.",
+        "zh": "上市公司现金流量表（Cash Flow Statement）财务数据，按季度或年度披露，包含经营/投资/融资三大类现金流及自由现金流、资本开支等明细。不包括：利润表（见FUNDAMENTALS.IS）、资产负债表（见FUNDAMENTALS.BS）、估值比率。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Cash Flow Statement",
+        "zh": "现金流量表"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FUNDAMENTALS.DERIVED_RATIOS",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "ratio",
+      "description": {
+        "en": "Derived financial ratios and valuation metrics including PE, PB, PS, EV multiples, profitability (ROE/ROA/margins), risk (Beta, short ratio), and capital structure (dividend yield, D/E).",
+        "zh": "基于财务报表和市场数据计算的衍生财务比率与估值指标，涵盖估值（PE/PB/PS/EV）、盈利能力（ROE/ROA/利润率）、风险（Beta/短空比）、资本结构（股息率/负债率）等。不包括：原始财务报表科目（见FUNDAMENTALS.IS/BS/CF）、技术分析指标（如RSI/MACD）、分析师评级。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Financial Ratios & Valuation",
+        "zh": "估值指标"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FUNDAMENTALS.IS",
+      "category": "company.fundamentals",
+      "coverage": "full",
+      "data_type": "financial_statement",
+      "description": {
+        "en": "Quarterly/annual income statement data including revenue, gross profit, operating income, net income, and EPS.",
+        "zh": "上市公司利润表（Income Statement）财务数据，按季度或年度披露，包含营收、毛利、营业利润、净利润、EPS等核心损益科目。不包括：资产负债表（见FUNDAMENTALS.BS）、现金流量表（见FUNDAMENTALS.CF）、衍生财务比率。"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Income Statement",
+        "zh": "利润表"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "FUNDAMENTALS.SEGMENT",
+      "category": "company.fundamentals",
+      "coverage": "none",
+      "data_type": "FINANCIAL_STATEMENT",
+      "description": {
+        "en": "Revenue breakdown by geographic region or country, showing how much revenue is contributed by different locations. Excludes full business segment financials, consolidated income statements, industry classification, and ETF holdings",
+        "zh": "上市公司按地区或国家划分的营收分布数据，反映不同地理区域的收入贡献。不包括：完整业务分部财务、合并口径利润表、行业分类或ETF持仓明细"
+      },
+      "domain": "FUNDAMENTALS",
+      "name": {
+        "en": "Revenue by Geography",
+        "zh": "地理营收分布"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "FX",
+      "capability_id": "FX.SPOT",
+      "category": "macro.fx",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Foreign exchange spot rate quotes including real-time/delayed bid/ask prices and change percentages.",
+        "zh": "外汇货币对的即期汇率报价，包括实时/延迟报价、买卖价(bid/ask)、涨跌幅等。不包括：外汇远期/掉期/期权定价、汇率历史K线时间序列、央行中间价。"
+      },
+      "domain": "RATES",
+      "name": {
+        "en": "FX Spot Rates",
+        "zh": "外汇汇率"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "GOVERNANCE.EXECUTIVES",
+      "category": "management",
+      "coverage": "full",
+      "data_type": "REFERENCE",
+      "description": {
+        "en": "公司高管",
+        "zh": "公司高管、管理层成员及其职位等基础信息"
+      },
+      "domain": "GOVERNANCE",
+      "name": {
+        "en": "公司高管",
+        "zh": "公司高管"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.BOND",
+      "category": "index.other",
+      "coverage": "none",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Bond market composite index quotes and performance data, such as Bloomberg Barclays Aggregate Bond Index.",
+        "zh": "债券市场综合指数的报价与行情数据，如彭博巴克莱综合债券指数等。不包括：单只债券价格与收益率、国债收益率曲线、信用利差指数（见FI.CDS_SPREAD）。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Bond Index",
+        "zh": "债券指数"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.CONSTITUENTS",
+      "category": "index.equity",
+      "coverage": "full",
+      "data_type": "holdings",
+      "description": {
+        "en": "Current index constituent lists with weights, including ticker, name, weight, and sector for each component.",
+        "zh": "股票指数的当前成分股列表及权重信息，包括成分股代码、名称、权重、所属板块等。不包括：指数点位行情（见INDEX.LEVELS）、指数调仓历史事件（见INDEX.REBALANCE_EVENTS）、ETF持仓。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Index Constituents",
+        "zh": "指数成分"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.LEVELS",
+      "category": "index.equity",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Real-time or delayed stock index quotes (e.g., S&P 500, Dow Jones) including current level, change, and previous close.",
+        "zh": "股票指数（如S&P 500、道琼斯、纳斯达克等）的实时或延迟点位行情，包含当前点位、涨跌幅、前收盘等。不包括：指数成分股列表（见INDEX.CONSTITUENTS）、指数历史K线、个股行情。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Index Levels & Quotes",
+        "zh": "指数点位"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.METADATA",
+      "category": "index.equity",
+      "coverage": "none",
+      "data_type": "reference",
+      "description": {
+        "en": "Index reference information including name, methodology (cap-weighted/equal/price), base date, publisher, and coverage scope.",
+        "zh": "指数的基础元信息，包括指数名称、编制方法（市值加权/等权/价格加权）、基期、发布机构、覆盖范围等静态描述。不包括：指数实时点位（见INDEX.LEVELS）、成分股列表、指数历史行情。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Index Metadata",
+        "zh": "指数元数据"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.REBALANCE_EVENTS",
+      "category": "index.equity",
+      "coverage": "none",
+      "data_type": "calendar",
+      "description": {
+        "en": "Index rebalance event records with additions/deletions, effective dates, and rebalance reasons.",
+        "zh": "指数定期或临时调仓事件记录，包括纳入/剔除的成分股、调仓生效日期、调仓原因等。不包括：当前成分股列表（见INDEX.CONSTITUENTS）、指数点位行情、公司层面的资本行动。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Index Rebalance Events",
+        "zh": "指数调仓事件"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "INDEX",
+      "capability_id": "INDEX.VIX",
+      "category": "index.other",
+      "coverage": "none",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "VIX and other volatility index real-time quotes, reflecting market expectations of 30-day forward volatility.",
+        "zh": "VIX等波动率指数的实时报价，反映市场对未来30天波动率的预期（恐慌指数）。不包括：加密货币恐慌贪婪指数（见CRYPTO.FGI）、个股隐含波动率、历史波动率计算。"
+      },
+      "domain": "INDEX",
+      "name": {
+        "en": "Volatility Index (VIX)",
+        "zh": "波动率指数"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "MACRO.ACTUAL_VS_FORECAST",
+      "category": "macro.indicators",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Post-release comparison of actual macroeconomic data versus market consensus forecasts, measuring economic surprises.",
+        "zh": "宏观经济指标发布后的实际值与市场预期值对比数据，用于衡量经济数据是否超预期或不及预期。不包括：宏观指标历史时间序列（见MACRO.INDICATORS）、事件日历（见EVENT.CALENDAR.MACRO）、公司盈利惊喜。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Actual vs. Forecast",
+        "zh": "实际vs预测"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "COMMODITY",
+      "capability_id": "MACRO.COMMODITY_BENCHMARK",
+      "category": "commodity.spot",
+      "coverage": "full",
+      "data_type": "spot_price",
+      "description": {
+        "en": "Major commodity benchmark spot/futures prices including crude oil (WTI/Brent), gold, silver, natural gas, and agricultural products.",
+        "zh": "主要大宗商品的基准现货/期货价格数据，包括原油（WTI/Brent）、黄金、白银、天然气、农产品等的价格和计价单位。不包括：宏观经济指标（见MACRO.INDICATORS）、商品期货合约明细、商品ETF持仓。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Commodity Benchmark Prices",
+        "zh": "大宗商品价格"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "MACRO.EMPLOYMENT",
+      "category": "macro.indicators",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Labor market data including non-farm payrolls, unemployment rate, labor participation rate, and average hourly earnings.",
+        "zh": "宏观就业市场数据，包括非农就业人数、失业率、劳动参与率、平均时薪等指标。不包括：企业招聘岗位数据（见ALT.JOB_POSTINGS）、人口统计（见MACRO.POPULATION）、GDP/通胀等其他宏观指标。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Employment & Wages",
+        "zh": "就业与工资"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "MACRO.INDICATORS",
+      "category": "macro.indicators",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Historical single-series data for a finite core macro set: real GDP, real GDP per capita, CPI level, CPI year-over-year inflation rate, retail sales level, durable goods orders level, unemployment rate, and total nonfarm payroll employment, organized by country and frequency. Excludes rates, indicator packages outside the dataset_code enum, macro calendars, actual-versus-forecast data, and commodities.",
+        "zh": "有限核心宏观单序列的历史数据：实际 GDP、实际人均 GDP、CPI 水平、CPI 同比通胀率、零售销售水平、耐用品订单水平、失业率和非农就业总量，按国家和频率组织。不包括利率、PMI/PPI/M2 等未纳入 dataset_code 枚举的指标包、宏观事件日历、实际与预测、大宗商品价格。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Macroeconomic Indicators",
+        "zh": "宏观指标"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "MACRO.POPULATION",
+      "category": "macro.indicators",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Country/region-level population statistics including total population, growth rate, age distribution, and urbanization rate.",
+        "zh": "国家或地区层面的人口统计数据，包括总人口、人口增长率、年龄结构、城镇化率等。不包括：就业数据（见MACRO.EMPLOYMENT）、消费者信心指数、移民政策数据。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Population Demographics",
+        "zh": "人口"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "MACRO.REAL_ESTATE",
+      "category": "macro.indicators",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Macro real estate market indicators including home price indices, housing starts, building permits, and home sales data.",
+        "zh": "宏观房地产市场指标，包括房价指数、新屋开工、建筑许可、房屋销售数据等。不包括：REITs行情数据、商业地产个案估值、房贷利率（属于利率数据）。"
+      },
+      "domain": "MACRO",
+      "name": {
+        "en": "Real Estate Indicators",
+        "zh": "房地产指标"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.AFTER_HOURS",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Pre-market and after-hours trading session quotes for US equities, including price, change, and timestamps.",
+        "zh": "美股盘前（Pre-market）和盘后（After-hours）交易时段的实时或延迟行情数据，包括价格、涨跌幅、时间戳。不包括：常规交易时段行情（见MKT.L1.RT）、历史K线、停牌状态信息。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Pre/Post-Market Quotes",
+        "zh": "盘前盘后行情"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.BARS.ADJUSTED",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "time_series",
+      "description": {
+        "en": "Historical price time series adjusted for stock splits and dividends, including adjusted OHLC, adjustment factors, and dividend data.",
+        "zh": "经拆股和分红复权处理的历史价格时间序列，包含复权后的开高低收、复权因子与分红数据，适用于长周期回测。不包括：未复权原始价格（见MKT.BARS.EOD）、日内分钟级K线、实时行情。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Split & Dividend Adjusted Prices",
+        "zh": "复权价格"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.BARS.EOD",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "time_series",
+      "description": {
+        "en": "Daily closing OHLCV bar time series for equities/ETFs, with optional adjusted prices and dividend/split data.",
+        "zh": "股票/ETF等证券的每日收盘K线时间序列，包括开高低收、成交量，可选含复权价格与分红/拆股信息。不包括：日内分钟级K线、实时行情快照、纯复权专用接口（见MKT.BARS.ADJUSTED）。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "End-of-Day OHLCV Bars",
+        "zh": "日线行情"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.BARS.INTRADAY",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "time_series",
+      "description": {
+        "en": "Intraday minute-level (1m/5m/15m/30m/60m) OHLCV bar time series for equities/ETFs.",
+        "zh": "股票/ETF等证券的日内分钟级（1min/5min/15min/30min/60min等）K线时间序列，包括开高低收、成交量。不包括：日线及更长周期K线、实时行情快照、复权价格。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Intraday OHLCV Bars",
+        "zh": "分钟级K线"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.BREADTH.INTERNALS",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Market breadth indicators measuring overall participation, such as advance/decline line, new highs/lows, and limit-up/down ratios.",
+        "zh": "衡量市场整体参与广度的内部指标，如涨跌家数比（A/D Line）、新高新低数、涨停跌停比例等市场宽度数据。不包括：个股行情、指数点位（见INDEX.LEVELS）、技术分析指标（如RSI/MACD）。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Market Breadth Internals",
+        "zh": "市场宽度"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CN.BLOCK_TRADES",
+      "category": "equity.cn",
+      "coverage": "full",
+      "data_type": "transaction",
+      "description": {
+        "en": "A-share block trade (negotiated transfer) records including price, volume, buyer/seller broker, and premium/discount rate.",
+        "zh": "A股大宗交易（协议转让）逐笔数据，包括成交价格、成交量、买卖方营业部、溢折价率等。不包括：龙虎榜数据（见FLOW.DRAGON_TIGER）、融资融券交易（见MKT.MARGIN）、普通二级市场逐笔成交。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "A-share Block Trades",
+        "zh": "大宗交易数据"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CN.BONUS",
+      "category": "equity.cn",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "A-share bonus share, stock dividend, and cash dividend plan data including ex-date, per-share dividend, and bonus/transfer ratios.",
+        "zh": "A股高送转、现金分红与股票股利预案数据，包括除权除息日、每股股利、送股/转增比例等。不包括：公司回购计划、股权激励方案、基金分红数据。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Bonus & Dividend Plans",
+        "zh": "高送转/分红预案"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CN.CONCEPT",
+      "category": "equity.cn",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "A-share concept/thematic sector data including sector change percentages, constituent counts, leading stocks, and net capital inflow.",
+        "zh": "A股概念板块与题材分类数据，包括板块涨跌幅、成分股数量、领涨股、资金净流入等。不包括：行业板块分类（属于标准行业分类）、个股行情数据、北向资金流向（见FLOW.NORTHBOUND）。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "A-share Concept Sectors",
+        "zh": "概念板块/题材分类"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CN.IPO_SUB",
+      "category": "equity.cn",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "A-share new share IPO subscription and allocation data including issue price, subscription code, allocation rate, and listing date.",
+        "zh": "A股新股发行申购与中签数据，包括发行价、申购代码、中签率、上市日期等。不包括：限售股解禁（见MKT.CN.LOCK_UP）、再融资/增发数据、港股/美股IPO。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "A-share IPO Subscription",
+        "zh": "新股申购/中签"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CN.LOCK_UP",
+      "category": "equity.cn",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "A-share restricted share lock-up expiry calendar with unlock dates, share quantities, lock-up types, and holder information.",
+        "zh": "A股限售股解禁日历，包括解禁日期、解禁股数、解禁比例、限售类型及持有人信息。不包括：大宗交易减持（见MKT.CN.BLOCK_TRADES）、股东增减持公告、IPO申购日历（见MKT.CN.IPO_SUB）。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Lock-up Expiry Calendar",
+        "zh": "限售股解禁日历"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.CORPORATE_ACTIONS",
+      "category": "events.corporate",
+      "coverage": "full",
+      "data_type": "calendar",
+      "description": {
+        "en": "Corporate action event records including dividends, stock splits, rights offerings, with key dates (ex-date, record date, pay date).",
+        "zh": "上市公司的资本行动事件记录，包括分红派息、拆股/合股、配股等，含除权日、登记日、支付日等关键日期。不包括：财报发布日历（见EVENT.CALENDAR.EARNINGS）、IPO事件、宏观经济事件。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Corporate Actions",
+        "zh": "公司行动"
+      },
+      "provider_count": 9
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.DIVIDENDS",
+      "category": "CORPORATE_ACTIONS",
+      "coverage": "full",
+      "data_type": "EVENT",
+      "description": {
+        "en": "分红事件",
+        "zh": "提供股票或相关证券的分红事件数据，包括分红方案日期、除权除息日、派息日和每股分红金额等信息"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "分红事件",
+        "zh": "分红事件"
+      },
+      "provider_count": 6
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.L1.RT",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Real-time or near-real-time Level 1 quote snapshots for equities/ETFs, including last price, bid/ask, change percentage, and volume.",
+        "zh": "股票/ETF等证券的实时或近实时Level 1行情快照，包括最新价、买卖盘口、涨跌幅、成交量等。不包括：历史K线数据、盘前盘后行情、日内分钟级时间序列、期货/期权行情。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Real-time Level 1 Quotes",
+        "zh": "实时L1行情"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.LIQUIDITY",
+      "category": "equity.execution",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Security liquidity assessment metrics including bid-ask spread, market depth, and volume distribution.",
+        "zh": "证券流动性评估指标，包括买卖价差、市场深度、成交量分布等流动性度量。不包括：交易成本分析（见MKT.TCA）、实时订单簿数据、融资融券余额（见MKT.MARGIN）。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Liquidity Scores",
+        "zh": "流动性评分"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.MARGIN",
+      "category": "equity.margin",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Margin trading (securities lending & borrowing) balance and transaction data including margin buys, short sells, and balance changes.",
+        "zh": "融资融券（两融）余额与交易数据，包括融资买入额、融券卖出量、两融余额变化等。不包括：大宗交易（见MKT.CN.BLOCK_TRADES）、股票质押数据、场外配资信息。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Margin Trading Data",
+        "zh": "融资融券数据"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.MARGIN_AGGREGATE",
+      "category": "EQUITY_MARGIN",
+      "coverage": "full",
+      "data_type": "INDICATOR",
+      "description": {
+        "en": "融资融券市场级统计",
+        "zh": "按市场或交易所维度聚合的融资融券统计数据，包括融资余额、融券余额、融资买入额、融券卖出量及两融余额变化等。不包括个股级融资融券明细；个股级查询应归入 MKT.MARGIN"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "融资融券市场级统计",
+        "zh": "融资融券市场级统计"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.PRICE_LIMIT",
+      "category": "cn_market_rules",
+      "coverage": "none",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "A股涨跌停价",
+        "zh": " 提供 A 股证券逐日涨跌停价格及相关限制规则信息，用于历史回测中的可交易性判断与价格限制约束分析"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "A股涨跌停价",
+        "zh": "A股涨跌停价"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.SPLITS",
+      "category": "CORPORATE_ACTIONS",
+      "coverage": "full",
+      "data_type": "EVENT",
+      "description": {
+        "en": "拆股事件",
+        "zh": "提供股票拆股、合股等股本调整事件数据，包括生效日期和拆分比例等信息"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "拆股事件",
+        "zh": "拆股事件"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.TCA",
+      "category": "equity.execution",
+      "coverage": "none",
+      "data_type": "indicator",
+      "description": {
+        "en": "Transaction Cost Analysis (TCA) metrics measuring execution quality including slippage, market impact, and VWAP deviation.",
+        "zh": "交易成本分析(Transaction Cost Analysis)指标，衡量订单执行质量，包括滑点、冲击成本、VWAP偏差等。不包括：实时行情报价、流动性评分（见MKT.LIQUIDITY）、佣金费率数据。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Transaction Cost Analysis",
+        "zh": "交易成本分析"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.TOP_MOVERS",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "screening",
+      "description": {
+        "en": "Daily market gainers/losers leaderboard, ranked by price change or trading activity, with ticker, price, market cap, and sector info.",
+        "zh": "当日市场涨幅/跌幅排行榜，按涨跌幅或成交活跃度筛选排序的证券列表，包含代码、价格、市值、板块等信息。不包括：个股历史行情、自定义多条件选股筛选器、指数成分股列表。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Top Movers",
+        "zh": "涨跌排行"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.TRADES_TICK",
+      "category": "cn_market_microstructure",
+      "coverage": "none",
+      "data_type": "TIME_SERIES",
+      "description": {
+        "en": "A股逐笔成交",
+        "zh": "提供 A 股证券逐笔成交明细，用于高频成交行为分析、微观结构研究和tick级因子构建"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "A股逐笔成交",
+        "zh": "A股逐笔成交"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.TRADING.AGGREGATE",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Aggregate market trading activity: total volume, turnover, trades, market cap. Complements MKT.BREADTH.INTERNALS (advance/decline).",
+        "zh": "全市场交易活跃度聚合数据，包括总成交量、成交额、成交笔数、总市值。与MKT.BREADTH.INTERNALS（涨跌家数/市场宽度）互补。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Market Trading Statistics",
+        "zh": "市场交易统计"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "MKT.TRADING_HALTS_FEED",
+      "category": "equity.quote",
+      "coverage": "none",
+      "data_type": "calendar",
+      "description": {
+        "en": "Exchange-issued trading halt/resumption event feed with halt reason, halt time, and expected resumption time.",
+        "zh": "交易所发布的个股停牌/复牌事件流，包括停牌原因、停牌时间、预计复牌时间等。不包括：交易所休市日历（见REF.EXCHANGE_CALENDAR）、涨跌停信息、公司行动事件。"
+      },
+      "domain": "MKT",
+      "name": {
+        "en": "Trading Halts Feed",
+        "zh": "停牌事件"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "NEWS.DEDUP.CLUSTER",
+      "category": "news.realtime",
+      "coverage": "full",
+      "data_type": "news",
+      "description": {
+        "en": "Multi-source news deduplication and clustering that merges duplicate reports into single event clusters.",
+        "zh": "对同一事件的多源新闻进行去重和聚类，将重复报道归并为单一事件簇，返回去重后的代表性新闻列表。不包括：原始新闻全量流（见NEWS.FIN.REALTIME）、情绪分析评分、全文内容抓取。"
+      },
+      "domain": "NEWS",
+      "name": {
+        "en": "News Deduplication & Clustering",
+        "zh": "新闻去重聚类"
+      },
+      "provider_count": 6
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "NEWS.FIN.REALTIME",
+      "category": "news.realtime",
+      "coverage": "full",
+      "data_type": "news",
+      "description": {
+        "en": "Real-time financial news feed with headlines, summaries, sources, timestamps, and linked tickers, optionally including sentiment scores and full text.",
+        "zh": "实时财经新闻流，包括标题、摘要、来源、发布时间、关联标的，可选含情绪评分和全文内容。不包括：新闻去重聚类处理（见NEWS.DEDUP.CLUSTER）、财报电话会纪要、社交媒体帖子。"
+      },
+      "domain": "NEWS",
+      "name": {
+        "en": "Real-time Financial News",
+        "zh": "实时财经新闻"
+      },
+      "provider_count": 7
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "NEWS.FIN.TAGGED",
+      "category": "news.realtime",
+      "coverage": "full",
+      "data_type": "news",
+      "description": {
+        "en": "Tagged and sentiment-analyzed financial news with topic labels, sentiment scores (positive/negative/neutral), and per-ticker sentiment annotations.",
+        "zh": "经过标签化和情绪分析处理的财经新闻，在原始新闻基础上附加主题标签、情绪评分（正面/负面/中性）、关联标的级情绪等结构化标注。不包括：原始无标注新闻流（见NEWS.FIN.REALTIME）、新闻去重聚类、社交媒体情绪。"
+      },
+      "domain": "NEWS",
+      "name": {
+        "en": "Tagged News with Sentiment",
+        "zh": "新闻标签/情绪"
+      },
+      "provider_count": 9
+    },
+    {
+      "asset_class": "NON_FINANCIAL",
+      "capability_id": "NON_FIN.DOC_CONVERT",
+      "category": "non_fin",
+      "coverage": "none",
+      "data_type": "reference",
+      "description": {
+        "en": "Document format conversion service supporting PDF, Word, Excel, and 200+ format conversions.",
+        "zh": "文档格式转换服务，支持PDF、Word、Excel等200+格式间的相互转换。不包括：文档内容提取/解析、OCR图像文字识别、网页抓取（见NON_FIN.WEB_SCRAPE）。"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "Document Conversion",
+        "zh": "文档转换"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "NON_FINANCIAL",
+      "capability_id": "NON_FIN.SOCIAL_MEDIA",
+      "category": "non_fin",
+      "coverage": "full",
+      "data_type": "news",
+      "description": {
+        "en": "Social media platform (e.g., X/Twitter) post monitoring including financial KOL posts and sentiment scores.",
+        "zh": "社交媒体平台（如X/Twitter）的帖子监控，包括金融KOL发言、情绪评分等。不包括：新闻媒体报道（见NEWS域）、网页搜索（见NON_FIN.WEB_SEARCH）、论坛/Reddit数据。"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "Social Media Monitoring",
+        "zh": "社交媒体监控"
+      },
+      "provider_count": 6
+    },
+    {
+      "asset_class": "NON_FINANCIAL",
+      "capability_id": "NON_FIN.WEB_SCRAPE",
+      "category": "non_fin",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "URL-based web content scraping and parsing, converting web pages into structured text.",
+        "zh": "指定URL的网页内容抓取与解析，将网页转换为结构化文本。不包括：搜索引擎查询（见NON_FIN.WEB_SEARCH）、PDF/文档格式转换（见NON_FIN.DOC_CONVERT）、动态JavaScript渲染页面的深度交互。"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "Web Scraping",
+        "zh": "网页抓取"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "NON_FINANCIAL",
+      "capability_id": "NON_FIN.WEB_SEARCH",
+      "category": "non_fin",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "General web search capability returning search result links, titles, and snippets.",
+        "zh": "通用网页搜索能力，返回搜索结果链接、标题、摘要等。不包括：网页全文内容抓取（见NON_FIN.WEB_SCRAPE）、金融专业数据库查询、学术论文搜索。"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "Web Search",
+        "zh": "网页搜索"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "NON_FINANCIAL",
+      "capability_id": "NON_FIN.YOUTUBE_TRANSCRIPT",
+      "category": "non_fin",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "YouTube video speech-to-text transcription service providing full text transcripts with title, duration, and channel metadata.",
+        "zh": "YouTube视频的语音转文字服务，提取视频的完整文字稿，包括标题、时长、频道等元数据。不包括：视频内容分析/摘要生成、其他视频平台转录、播客音频转录。"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "YouTube Video Transcripts",
+        "zh": "YouTube视频转录"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "NONE",
+      "capability_id": "NON_FIN.YOUTUBE_TRANSCRIPT_URL",
+      "category": "YOUTUBE_TRANSCRIPT",
+      "coverage": "full",
+      "data_type": "LINK",
+      "description": {
+        "en": "YouTube 字幕链接",
+        "zh": "提供 YouTube 视频字幕资源的可访问链接或字幕定位信息，不要求直接返回字幕正文内容"
+      },
+      "domain": "NON_FIN",
+      "name": {
+        "en": "YouTube 字幕链接",
+        "zh": "YouTube 字幕链接"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "DERIVATIVES",
+      "capability_id": "OPT.CHAIN",
+      "category": "equity.derivatives",
+      "coverage": "full",
+      "data_type": "realtime_quote",
+      "description": {
+        "en": "Complete options chain data by expiration and strike price, listing all call/put quotes (last price, bid/ask, volume, open interest).",
+        "zh": "股票/指数期权的完整期权链数据，按到期日和行权价列出所有看涨/看跌合约的报价(最新价、买卖价、成交量、持仓量等)。不包括：期权Greeks/隐含波动率计算(见OPT.GREEKS.IV)、期权合约主数据、标的证券行情。"
+      },
+      "domain": "DERIVATIVES",
+      "name": {
+        "en": "Options Chain",
+        "zh": "期权链"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "DERIVATIVES",
+      "capability_id": "OPT.GREEKS.IV",
+      "category": "equity.derivatives",
+      "coverage": "full",
+      "data_type": "indicator",
+      "description": {
+        "en": "Options Greeks (Delta, Gamma, Theta, Vega, Rho) and implied volatility (IV) data for each contract.",
+        "zh": "期权合约的Greeks风险敏感度指标(Delta、Gamma、Theta、Vega、Rho)和隐含波动率(IV)数据。不包括：期权链报价(价格/成交量，见OPT.CHAIN)、期权合约主数据、历史波动率。"
+      },
+      "domain": "DERIVATIVES",
+      "name": {
+        "en": "Options Greeks & IV",
+        "zh": "期权Greeks/IV"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "DERIVATIVES",
+      "capability_id": "OPT.REF_MASTER",
+      "category": "equity.derivatives",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Options contract reference data including contract code, underlying asset, strike price, expiration, multiplier, exercise style, and call/put type.",
+        "zh": "期权合约的基础参考数据(主数据)，包括合约代码、标的资产、行权价、到期日、合约乘数、期权类型(美式/欧式)、看涨/看跌等静态属性。不包括：期权实时报价(见OPT.CHAIN)、Greeks/IV计算值、标的证券主数据。"
+      },
+      "domain": "DERIVATIVES",
+      "name": {
+        "en": "Options Reference Master",
+        "zh": "期权主数据"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "OWNERSHIP.INSIDER_TRADES",
+      "category": "equity.ownership",
+      "coverage": "full",
+      "data_type": "TRANSACTION",
+      "description": {
+        "en": "Corporate insider (officers, directors, major shareholders) stock transaction records with trade date, quantity, price, and direction.",
+        "zh": "上市公司内部人(高管、董事、大股东)的股票买卖交易记录，包括交易日期、数量、价格、交易方向等。不包括：机构投资者持仓(13F)、大宗交易、股权质押信息。"
+      },
+      "domain": "OWNERSHIP",
+      "name": {
+        "en": "Insider Trades",
+        "zh": "内部人交易"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "OWNERSHIP.INSTITUTIONAL",
+      "category": "equity.ownership",
+      "coverage": "full",
+      "data_type": "OWNERSHIP",
+      "description": {
+        "en": "Institutional investor holdings data (e.g., 13F filings) showing fund/pension/insurance ownership percentages and share changes.",
+        "zh": "机构投资者对上市公司的持股数据，如13F披露的基金/保险/养老金持仓比例和持股数量变动。不包括：内部人交易记录、散户持股统计、空头仓位数据。"
+      },
+      "domain": "OWNERSHIP",
+      "name": {
+        "en": "Institutional Holdings",
+        "zh": "机构持仓"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "OWNERSHIP.PLEDGE",
+      "category": "ownership_events",
+      "coverage": "full",
+      "data_type": "EVENT",
+      "description": {
+        "en": "股权质押",
+        "zh": "上市公司或股东层面的股权质押、解押及质押状态信息"
+      },
+      "domain": "OWNERSHIP",
+      "name": {
+        "en": "股权质押",
+        "zh": "股权质押"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "OWNERSHIP.SHARE_STRUCTURE",
+      "category": "equity.ownership",
+      "coverage": "full",
+      "data_type": "REFERENCE",
+      "description": {
+        "en": "Company share structure data including total shares, free float, restricted shares, and A/B/H share classification.",
+        "zh": "上市公司股本结构数据，包括总股本、流通股本、限售股、A/B/H股分类等。不包括：股权持有人明细（见REF.EQUITY_STRUCTURE）、机构持仓变动、实际控制人信息。"
+      },
+      "domain": "OWNERSHIP",
+      "name": {
+        "en": "Share Structure",
+        "zh": "股本结构"
+      },
+      "provider_count": 5
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "OWNERSHIP.SHORT_INTEREST",
+      "category": "equity.ownership",
+      "coverage": "full",
+      "data_type": "INDICATOR",
+      "description": {
+        "en": "Short interest statistics including shares shorted, short ratio, short percentage of float, and days to cover.",
+        "zh": "个股的空头(做空)仓位统计，包括空头股数、空头比率(short ratio)、流通股空头占比、回补天数等。不包括：机构多头持仓、内部人交易、融券余额明细。"
+      },
+      "domain": "OWNERSHIP",
+      "name": {
+        "en": "Short Interest",
+        "zh": "空头仓位"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "RATES.GOVT_BENCHMARK",
+      "category": "fi.govt",
+      "coverage": "full",
+      "data_type": "time_series",
+      "description": {
+        "en": "Sovereign bond yield time series at key tenors (e.g., US 10Y, China 10Y treasury yields).",
+        "zh": "主权政府债券(国债)各期限的到期收益率时间序列，如美国10年期国债、中国10年期国债收益率。不包括：完整收益率曲线多期限截面数据(见FI.CURVES.GOVT)、央行政策利率、企业债收益率。"
+      },
+      "domain": "RATES",
+      "name": {
+        "en": "Government Bond Yields",
+        "zh": "国债收益率"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "FIXED_INCOME",
+      "capability_id": "RATES.INTERBANK_BENCHMARK",
+      "category": "macro.rates",
+      "coverage": "full",
+      "data_type": "spot_price",
+      "description": {
+        "en": "Interbank market benchmark rates including LIBOR, SOFR, SHIBOR, and Euribor at various tenors.",
+        "zh": "银行间市场基准利率，如LIBOR、SOFR、SHIBOR、Euribor等各期限报价。不包括：央行政策利率(见RATES.POLICY)、国债收益率、商业银行存贷款利率。"
+      },
+      "domain": "RATES",
+      "name": {
+        "en": "Interbank Benchmark Rates",
+        "zh": "银行间利率"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MACRO",
+      "capability_id": "RATES.POLICY",
+      "category": "macro.rates",
+      "coverage": "full",
+      "data_type": "spot_price",
+      "description": {
+        "en": "Central bank policy rate data including Fed Funds rate, ECB refinancing rate, China LPR, with rate values and adjustment dates.",
+        "zh": "各国央行政策利率数据，如美联储联邦基金利率、欧央行再融资利率、中国LPR等，含利率值及调整日期。不包括：市场化银行间利率(LIBOR/SHIBOR)、国债收益率、商业贷款利率。"
+      },
+      "domain": "RATES",
+      "name": {
+        "en": "Policy Interest Rates",
+        "zh": "政策利率"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "REF.CLASSIFICATION.INDUSTRY",
+      "category": "company.profile",
+      "coverage": "full",
+      "data_type": "REFERENCE",
+      "description": {
+        "en": "Standard industry classification for securities including sector, industry, sub-industry, with optional SIC/NAICS codes.",
+        "zh": "证券的标准行业分类信息，包括板块(sector)、行业(industry)、子行业(sub-industry)，可选含SIC/NAICS等分类标准编码。不包括：公司详细概况（见REF.COMPANY_PROFILE）、主题/概念分类（见REF.CLASSIFICATION.THEME）、指数成分股。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Industry Classification",
+        "zh": "行业分类"
+      },
+      "provider_count": 10
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "REF.CLASSIFICATION.THEME",
+      "category": "company.profile",
+      "coverage": "full",
+      "data_type": "REFERENCE",
+      "description": {
+        "en": "Thematic/concept tags for securities such as AI, clean energy, metaverse, beyond traditional industry classifications.",
+        "zh": "证券的主题/概念标签分类，如AI概念、新能源、元宇宙等非传统行业分类维度的标签体系。不包括：标准行业分类（见REF.CLASSIFICATION.INDUSTRY）、公司概况、新闻主题标签。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Thematic Classification",
+        "zh": "主题分类"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "REF.COMPANY_PROFILE",
+      "category": "company.profile",
+      "coverage": "full",
+      "data_type": "PROFILE",
+      "description": {
+        "en": "Company overview including name, exchange, industry/sector, country, CEO, employee count, description, and website.",
+        "zh": "上市公司基础概况信息，包括公司名称、交易所、所属行业/板块、注册国家、CEO、员工数、公司简介、官网等静态档案。不包括：财务报表数据（见FUNDAMENTALS.*）、实时行情、行业分类标准编码（见REF.CLASSIFICATION.INDUSTRY）。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Company Profile",
+        "zh": "公司概况"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.COUNTRY_REGION_MAP",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Country-to-region mapping reference data including country codes, continent/region classification, and developed/emerging market categorization.",
+        "zh": "国家与地区的映射参考数据，包括国家代码、所属大洲/区域、发达/新兴分类等地理归属信息。不包括：币种主数据（见REF.CURRENCY_MASTER）、交易所信息、宏观经济指标。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Country & Region Mapping",
+        "zh": "国家地区映射"
+      },
+      "provider_count": 4
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.CURRENCY_MASTER",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Global currency master data including ISO 4217 codes, names, associated countries, and decimal precision.",
+        "zh": "全球币种的主数据表，包括币种代码（ISO 4217）、名称、所属国家、小数精度等静态参考信息。不包括：外汇汇率行情、货币对历史K线、宏观货币政策数据。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Currency Master",
+        "zh": "币种主数据"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.ENTITY_HIERARCHY",
+      "category": "company.ref",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Parent-subsidiary corporate hierarchy data describing ownership structure and reporting relationships within corporate groups.",
+        "zh": "法人主体之间的母子公司/控股层级关系数据，描述企业集团内的股权架构和隶属层级。不包括：法人主体基础注册信息（见REF.ENTITY_MASTER）、证券主数据、公司概况。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Entity Hierarchy",
+        "zh": "实体层级"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.ENTITY_MASTER",
+      "category": "company.ref",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Legal entity master data including LEI code, jurisdiction, legal name, and registration information.",
+        "zh": "法人主体（Legal Entity）主数据，记录公司法律实体层面的注册信息，如LEI编码、注册地、法律名称等。不包括：上市证券信息（见REF.SECURITY_MASTER）、公司业务概况（见REF.COMPANY_PROFILE）、母子公司层级关系。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Legal Entity Master",
+        "zh": "法人主体"
+      },
+      "provider_count": 8
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.ENTITY_RELATIONSHIP",
+      "category": "company.ref",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Inter-company relationship mapping including parent-subsidiary, equity investments, joint ventures, and associates.",
+        "zh": "企业间关联关系映射，包括母子公司、参控股公司、合营联营等实体关系图谱。不包括：股权比例明细（见REF.EQUITY_STRUCTURE）、供应链上下游关系（见REF.SUPPLY_CHAIN）、高管人员关系。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Entity Relationships",
+        "zh": "实体关系"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "REF.EQUITY_STRUCTURE",
+      "category": "company.ref",
+      "coverage": "none",
+      "data_type": "REFERENCE",
+      "description": {
+        "en": "Corporate equity ownership structure showing ultimate beneficial owners, control chains, and shareholding percentages.",
+        "zh": "企业股权层级结构数据，展示实际控制人、控股链条、持股比例等穿透信息。不包括：股本结构/股份分类（见OWNERSHIP.SHARE_STRUCTURE）、实体间非股权关联关系（见REF.ENTITY_RELATIONSHIP）、机构投资者持仓。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Equity Structure",
+        "zh": "股权结构"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.EXCHANGE_CALENDAR",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Global exchange trading calendar data including trading days, holidays, half-days, and market closures.",
+        "zh": "全球交易所的交易日历数据，包括交易日/休市日、半日交易、节假日安排等。不包括：个股停牌事件（见MKT.TRADING_HALTS_FEED）、宏观事件日历、交易时段内的行情数据。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Exchange Calendar",
+        "zh": "交易所日历"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "REF.HALT_EVENTS",
+      "category": "TRADING_STATUS",
+      "coverage": "full",
+      "data_type": "EVENT",
+      "description": {
+        "en": "停牌事件",
+        "zh": "提供证券停牌相关事件数据，包括停牌时间、停牌原因及相关事件信息，不要求覆盖完整交易状态主数据"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "停牌事件",
+        "zh": "停牌事件"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.SECURITY_MASTER",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "profile",
+      "description": {
+        "en": "Security master data table with core identifiers and attributes including ticker, name, exchange, currency, asset type, and CIK.",
+        "zh": "证券主数据表，记录每只证券的核心标识和属性，包括代码、名称、交易所、币种、资产类型、CIK等静态信息，作为全局证券参考数据。不包括：标识符跨体系映射（见REF.SYMBOLOGY）、公司业务概况（见REF.COMPANY_PROFILE）、行情数据。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Security Master",
+        "zh": "证券主数据"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "ALT_DATA",
+      "capability_id": "REF.SUPPLY_CHAIN",
+      "category": "alt.supply",
+      "coverage": "pending",
+      "data_type": "reference",
+      "description": {
+        "en": "Corporate supply chain upstream/downstream customer and supplier relationship data for value chain and risk contagion analysis.",
+        "zh": "企业供应链上下游客户与供应商关系数据，用于分析产业链依赖与风险传导。不包括：航运物流追踪（见ALT.SHIPPING_AIS）、另类消费数据（见ALT.CONSUMER_SPEND）、实体关联关系（见REF.ENTITY_RELATIONSHIP）。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Supply Chain Relationships",
+        "zh": "供应链"
+      },
+      "provider_count": 0
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.SYMBOLOGY",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Cross-system security identifier mapping supporting Ticker, ISIN, CUSIP, SEDOL, FIGI, and CIK lookups and conversions.",
+        "zh": "证券标识符跨体系映射表，支持Ticker、ISIN、CUSIP、SEDOL、FIGI、CIK等多种标识之间的相互查找与转换。不包括：证券静态属性（见REF.SECURITY_MASTER）、公司概况、行情数据。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Identifier Symbology Mapping",
+        "zh": "标识映射"
+      },
+      "provider_count": 3
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "REF.TRADING_STATUS",
+      "category": "infra",
+      "coverage": "full",
+      "data_type": "reference",
+      "description": {
+        "en": "Current trading status for securities including normal trading, halted, delisted, or suspended, with effective timestamps.",
+        "zh": "证券当前的交易状态信息，如正常交易、停牌、退市、暂停上市等状态标识及生效时间。不包括：停牌事件流（见MKT.TRADING_HALTS_FEED）、交易所日历、实时行情。"
+      },
+      "domain": "REF",
+      "name": {
+        "en": "Trading Status",
+        "zh": "交易状态"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "RESEARCH.ANALYST_REPORTS",
+      "category": "company.analyst",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "Equity/industry research reports from sell-side analysts, including investment ratings, target prices, and research summaries.",
+        "zh": "证券分析师或研究机构发布的个股/行业研究报告，包含投资评级、目标价、研究摘要等。不包括：公司自身发布的业绩快报/公告、财报电话会议纪要、新闻报道。"
+      },
+      "domain": "RESEARCH",
+      "name": {
+        "en": "Analyst Research Reports",
+        "zh": "研报获取/摘要"
+      },
+      "provider_count": 7
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "RESEARCH.EXPERT_CALLS",
+      "category": "news.research",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "Expert network interview transcripts providing firsthand industry practitioner insights on trends and company operations.",
+        "zh": "专家网络(Expert Network)提供的行业专家访谈纪要或通话记录，获取一线从业者对行业趋势、公司运营等的深度见解。不包括：卖方分析师研报(见RESEARCH.ANALYST_REPORTS)、财报电话会议纪要、新闻媒体采访。"
+      },
+      "domain": "RESEARCH",
+      "name": {
+        "en": "Expert Network Calls",
+        "zh": "专家访谈/专家网络"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "RISK.BETA",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "RATIO",
+      "description": {
+        "en": "Security beta versus a specified benchmark with auditable observation window, sampling interval, and return convention.",
+        "zh": "证券相对指定基准的 Beta，明确返回观察窗口、采样频率和收益率口径。"
+      },
+      "domain": "RISK",
+      "name": {
+        "en": "Beta",
+        "zh": "Beta"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "EQUITY",
+      "capability_id": "RISK.VOLATILITY",
+      "category": "equity.quote",
+      "coverage": "full",
+      "data_type": "RATIO",
+      "description": {
+        "en": "Historical realized volatility with auditable observation window, sampling interval, return convention, and annualization.",
+        "zh": "证券历史实现波动率，明确返回观察窗口、采样频率、收益率和年化口径。"
+      },
+      "domain": "RISK",
+      "name": {
+        "en": "Realized Volatility",
+        "zh": "波动率"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "SENTIMENT.TEXT_SIGNALS",
+      "category": "news.signals",
+      "coverage": "full",
+      "data_type": "NEWS",
+      "description": {
+        "en": "Structured signals derived from news text, including titles, timestamps, sources, and relevant text cues. Useful for event discovery and media monitoring, without guaranteed sentiment scoring",
+        "zh": "基于新闻等文本来源的结构化信号，包含标题、时间、来源及相关文本线索。可用于事件发现与舆情跟踪，但不保证提供情绪评分"
+      },
+      "domain": "SENTIMENT",
+      "name": {
+        "en": "News Text Signal",
+        "zh": "新闻文本信号"
+      },
+      "provider_count": 9
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "TRANSCRIPTS.CONFERENCE",
+      "category": "news.research",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "Non-earnings conference transcripts including industry summits, investor days, and strategic presentations.",
+        "zh": "非财报类会议的文字记录/纪要，如行业峰会、投资者日、战略发布会等活动的演讲及问答内容。不包括：财报电话会议纪要(归入FUNDAMENTALS/EARNINGS相关能力)、分析师研报、媒体视频转录。"
+      },
+      "domain": "RESEARCH",
+      "name": {
+        "en": "Conference & Event Transcripts",
+        "zh": "非财报会议纪要"
+      },
+      "provider_count": 1
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "TRANSCRIPTS.EARNINGS_CALL",
+      "category": "news.research",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "Quarterly/annual earnings call transcripts or verbatim records with speaker identification, content, and dates.",
+        "zh": "上市公司季度/年度财报电话会议的文字纪要或逐字稿，包含发言人、正文内容、日期等。不包括：实时财经新闻（见NEWS.FIN.REALTIME）、SEC监管文件、分析师评级报告。"
+      },
+      "domain": "NEWS",
+      "name": {
+        "en": "Earnings Call Transcripts",
+        "zh": "财报电话会纪要"
+      },
+      "provider_count": 2
+    },
+    {
+      "asset_class": "MULTI_ASSET",
+      "capability_id": "TRANSCRIPTS.MEDIA_VIDEO",
+      "category": "news.research",
+      "coverage": "full",
+      "data_type": "text_content",
+      "description": {
+        "en": "Speech-to-text transcriptions of financial media programs, YouTube videos, and podcasts with duration and source metadata.",
+        "zh": "财经媒体节目、YouTube视频、播客等音视频内容的文字转录，含时长、平台来源等元数据。不包括：公司官方会议纪要(见TRANSCRIPTS.CONFERENCE)、分析师研报文本、新闻文章。"
+      },
+      "domain": "RESEARCH",
+      "name": {
+        "en": "Media & Video Transcripts",
+        "zh": "媒体/视频转录"
+      },
+      "provider_count": 2
+    }
+  ],
+  "total": 161
+}

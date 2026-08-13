@@ -169,6 +169,10 @@ def _write_inputs(
     harbor_contracts = root / "harbor_catalog" / "contracts.json"
     harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
     harbor_contracts.write_bytes(contracts_bytes)
+    (harbor_contracts.parent / "catalog.json").write_text(
+        json.dumps({"items": [{"capability_id": "MKT.ETF_HOLDINGS"}]}),
+        encoding="utf-8",
+    )
     (harbor_contracts.parent / "meta.json").write_text(
         json.dumps(
             {
