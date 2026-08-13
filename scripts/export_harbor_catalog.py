@@ -115,19 +115,46 @@ def _write_catalog(out_dir: Path, catalog: object, records: object) -> dict[str,
         "contracts": contract_provenance,
     }
     metadata_bytes = _canonical_json(metadata)
-    for directory in (
-        out_dir,
+    _write_snapshot(out_dir, catalog_bytes, contracts_bytes, metadata_bytes)
+    _write_immutable_snapshot(
         out_dir / "snapshots" / catalog_snapshot_digest,
-    ):
-        directory.mkdir(parents=True, exist_ok=True)
-        (directory / "catalog.json").write_bytes(catalog_bytes)
-        (directory / "contracts.json").write_bytes(contracts_bytes)
-        (directory / "meta.json").write_bytes(metadata_bytes)
+        catalog_bytes,
+        contracts_bytes,
+        metadata_bytes,
+    )
     return {
         "counts": metadata["counts"],
         "digest": catalog_snapshot_digest,
         "output_dir": str(out_dir),
     }
+
+
+def _write_snapshot(
+    directory: Path, catalog_bytes: bytes, contracts_bytes: bytes, metadata_bytes: bytes
+) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "catalog.json").write_bytes(catalog_bytes)
+    (directory / "contracts.json").write_bytes(contracts_bytes)
+    (directory / "meta.json").write_bytes(metadata_bytes)
+
+
+def _write_immutable_snapshot(
+    directory: Path, catalog_bytes: bytes, contracts_bytes: bytes, metadata_bytes: bytes
+) -> None:
+    expected = {
+        "catalog.json": catalog_bytes,
+        "contracts.json": contracts_bytes,
+        "meta.json": metadata_bytes,
+    }
+    if directory.exists():
+        if any(
+            not (directory / filename).is_file()
+            or (directory / filename).read_bytes() != content
+            for filename, content in expected.items()
+        ):
+            raise RuntimeError("Harbor snapshot digest already has different content")
+        return
+    _write_snapshot(directory, catalog_bytes, contracts_bytes, metadata_bytes)
 
 
 def normalize_catalog(out_dir: Path) -> dict[str, Any]:

@@ -162,6 +162,31 @@ def test_ac4_normalize_rejects_catalog_contract_membership_drift(tmp_path) -> No
         normalize_catalog(tmp_path)
 
 
+def test_ac4_normalize_rejects_overwriting_an_existing_snapshot(tmp_path) -> None:
+    (tmp_path / "catalog.json").write_text(
+        json.dumps(_catalog([{"capability_id": "MKT.L1.RT", "name": "original"}])),
+        encoding="utf-8",
+    )
+    (tmp_path / "contracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "capability_id": "MKT.L1.RT",
+                    "contract": {"capability_id": "MKT.L1.RT", "contract_version": 1},
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    normalize_catalog(tmp_path)
+    catalog = json.loads((tmp_path / "catalog.json").read_text(encoding="utf-8"))
+    catalog["items"][0]["name"] = "changed"
+    (tmp_path / "catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="different content"):
+        normalize_catalog(tmp_path)
+
+
 def test_ac4_public_catalog_rejects_a_contract_with_a_different_inner_identity(
     tmp_path,
 ) -> None:
@@ -183,6 +208,7 @@ def test_ac4_public_catalog_rejects_a_contract_with_a_different_inner_identity(
                 "catalog_snapshot_digest": hashlib.sha256(
                     (tmp_path / "contracts.json").read_bytes()
                 ).hexdigest(),
+                "counts": {"catalog": 1, "contracts": 1, "errors": 0},
                 "contracts": [
                     {
                         "capability_id": "MKT.L1.RT",

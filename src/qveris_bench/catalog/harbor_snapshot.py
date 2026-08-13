@@ -129,6 +129,15 @@ def _validate_snapshot_metadata(contracts_path: Path, payload: bytes) -> None:
     catalog_items = catalog.get("items") if isinstance(catalog, dict) else None
     if not isinstance(catalog_items, list):
         raise HarborSnapshotError("Harbor catalog snapshot must contain an item list")
+    if catalog.get("total") != len(catalog_items):
+        raise HarborSnapshotError("Harbor catalog snapshot total is invalid")
+    counts = metadata.get("counts")
+    if not isinstance(counts, dict) or counts != {
+        "catalog": len(catalog_items),
+        "contracts": len(records),
+        "errors": 0,
+    }:
+        raise HarborSnapshotError("Harbor contract snapshot counts are invalid")
     catalog_ids = [
         item.get("capability_id")
         for item in catalog_items

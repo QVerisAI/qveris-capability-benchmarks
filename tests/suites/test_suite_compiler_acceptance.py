@@ -170,7 +170,7 @@ def _write_inputs(
     harbor_contracts.parent.mkdir(parents=True, exist_ok=True)
     harbor_contracts.write_bytes(contracts_bytes)
     (harbor_contracts.parent / "catalog.json").write_text(
-        json.dumps({"items": [{"capability_id": "MKT.ETF_HOLDINGS"}]}),
+        json.dumps({"total": 1, "items": [{"capability_id": "MKT.ETF_HOLDINGS"}]}),
         encoding="utf-8",
     )
     (harbor_contracts.parent / "meta.json").write_text(
@@ -179,6 +179,7 @@ def _write_inputs(
                 "origin": "https://harbor.qveris.cloud",
                 "exporter_version": "1.0.0",
                 "catalog_snapshot_digest": snapshot_digest,
+                "counts": {"catalog": 1, "contracts": 1, "errors": 0},
                 "contracts": [
                     {
                         "capability_id": "MKT.ETF_HOLDINGS",

@@ -44,7 +44,7 @@ def test_ac3_replay_rejects_a_formal_release_when_public_harbor_contract_drifts(
     contracts_path.parent.mkdir()
     contracts_path.write_bytes(contracts_bytes)
     (contracts_path.parent / "catalog.json").write_bytes(
-        canonical_release_bytes({"items": [{"capability_id": "MKT.L1.RT"}]})
+        canonical_release_bytes({"total": 1, "items": [{"capability_id": "MKT.L1.RT"}]})
     )
     (contracts_path.parent / "meta.json").write_bytes(
         canonical_release_bytes(
@@ -52,6 +52,7 @@ def test_ac3_replay_rejects_a_formal_release_when_public_harbor_contract_drifts(
                 "origin": "https://harbor.qveris.cloud",
                 "exporter_version": "1.0.0",
                 "catalog_snapshot_digest": source.catalog_snapshot_digest,
+                "counts": {"catalog": 1, "contracts": 1, "errors": 0},
                 "contracts": [
                     {
                         "capability_id": "MKT.L1.RT",
@@ -156,7 +157,9 @@ def test_ac3_replay_uses_the_content_addressed_harbor_snapshot(
     snapshot_root.mkdir(parents=True)
     for directory in (catalog_root, snapshot_root):
         (directory / "catalog.json").write_bytes(
-            canonical_release_bytes({"items": [{"capability_id": "MKT.L1.RT"}]})
+            canonical_release_bytes(
+                {"total": 1, "items": [{"capability_id": "MKT.L1.RT"}]}
+            )
         )
         (directory / "contracts.json").write_bytes(contracts_bytes)
         (directory / "meta.json").write_bytes(
@@ -165,6 +168,7 @@ def test_ac3_replay_uses_the_content_addressed_harbor_snapshot(
                     "origin": "https://harbor.qveris.cloud",
                     "exporter_version": "1.0.0",
                     "catalog_snapshot_digest": snapshot_digest,
+                    "counts": {"catalog": 1, "contracts": 1, "errors": 0},
                     "contracts": [
                         {
                             "capability_id": "MKT.L1.RT",
