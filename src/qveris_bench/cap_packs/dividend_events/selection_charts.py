@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from importlib.metadata import version
 from importlib.resources import files
 from pathlib import Path
 
@@ -304,6 +305,14 @@ def render_selection_tradeoff(
         "data": {"rows": rows, "market_coverage": market_data},
         "input_digests": {
             "selection_snapshot": selection_digest,
+        },
+        "renderer": {
+            "backend": "Agg",
+            "dpi": 180,
+            "font_digests": [_sha256_identity(path) for path in _FONT_PATHS],
+            "matplotlib": matplotlib.__version__,
+            "numpy": version("numpy"),
+            "pillow": version("pillow"),
         },
         "rendered_at": edition,
     }

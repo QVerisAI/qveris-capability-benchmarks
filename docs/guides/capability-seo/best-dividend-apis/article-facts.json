@@ -1,0 +1,46 @@
+{
+  "access_path_count": 6,
+  "baseline_release": {
+    "applicable_cells": 36,
+    "negative_control_cells": 6,
+    "not_applicable_cells": 18,
+    "observation_date": "2026-08-11",
+    "planned_cells": 54,
+    "positive_case_cells": 6,
+    "public_evidence_records": 36,
+    "release_digest": "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a",
+    "release_id": "dividend-events-2026-q3-v5",
+    "rounds_per_cell": 3
+  },
+  "edition": "2026-08-12",
+  "latency_sample_size": 6,
+  "market_release": {
+    "applicable_cells": 66,
+    "negative_control_cells": 6,
+    "not_applicable_cells": 54,
+    "observation_date": "2026-08-12",
+    "planned_cells": 120,
+    "positive_case_cells": 27,
+    "public_evidence_records": 66,
+    "release_digest": "sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead",
+    "release_id": "dividend-events-market-coverage-2026-q3-v5",
+    "rounds_per_cell": 2
+  },
+  "markets": [
+    "US",
+    "HK",
+    "CN",
+    "JP",
+    "DE",
+    "FR",
+    "BR",
+    "IN",
+    "ES"
+  ],
+  "package_id": "best-dividend-apis-2026-08-12",
+  "pricing_observed_at": "2026-08-12",
+  "provider_count": 6,
+  "qveris_access_path_count": 5,
+  "schema_version": 1,
+  "total_live_calls": 102
+}

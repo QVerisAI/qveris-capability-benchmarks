@@ -8,6 +8,10 @@ publication_package:
   adapter_version: 1.0.0
   cap_id: dividend-events
   release_sections: [release, market_coverage_release]
+  adapter_sources:
+    - src/qveris_bench/cap_packs/dividend_events/publication.py
+    - src/qveris_bench/cap_packs/dividend_events/selection_charts.py
+  adapter_digest: sha256:be1339066a57a05e81ce5983b55702eeba5d6ae06dd2b96f695ee3cb76712935
 search_intent: Compare dividend APIs by event semantics, observed gateway latency, pricing, and representative-market evidence for a single developer capability.
 primary_capability_ids: [MKT.DIVIDENDS]
 related_capability_ids: [MKT.CORPORATE_ACTIONS]
@@ -121,6 +125,8 @@ seo:
     Massive: https://qveris.ai/providers/massive_stocks
 artifacts:
   article: docs/guides/best-dividend-apis.md
+  article_facts: docs/guides/capability-seo/best-dividend-apis/article-facts.json
+  article_facts_digest: sha256:9c6d0c5991f4ca4dbba6254751c76ae3242b6ce7803e9d45a48cfe532453dccf
   cases: cap_packs/dividend_events/cases.yaml
   release: releases/dividend-events-2026-q3-v5/release.json
   public_evidence: evidence/dividend-events-2026-q3-v1
@@ -140,4 +146,4 @@ artifacts:
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-runtime-tradeoff.png
     - docs/guides/capability-seo/best-dividend-apis/charts/dividend-market-coverage.png
   selection_charts_manifest: docs/guides/capability-seo/best-dividend-apis/charts/selection-charts-manifest.json
-  selection_charts_manifest_digest: sha256:24ffff730d5fa8bc88cc13d7e26a06c4f08ff9023fe38f59b89497a83e519345
+  selection_charts_manifest_digest: sha256:1c35175fdcc204dc5caeec95097c2b715745c4b08cdc13bf58c343301c307344

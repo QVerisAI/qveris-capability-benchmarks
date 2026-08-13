@@ -3,12 +3,25 @@
     "PublicationPackageSpec": {
       "additionalProperties": false,
       "properties": {
+        "adapter_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "title": "Adapter Digest",
+          "type": "string"
+        },
         "adapter_id": {
           "maxLength": 128,
           "minLength": 1,
           "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
           "title": "Adapter Id",
           "type": "string"
+        },
+        "adapter_sources": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Adapter Sources",
+          "type": "array"
         },
         "adapter_version": {
           "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
@@ -45,7 +58,9 @@
         "adapter_id",
         "adapter_version",
         "cap_id",
-        "release_sections"
+        "release_sections",
+        "adapter_sources",
+        "adapter_digest"
       ],
       "title": "PublicationPackageSpec",
       "type": "object"

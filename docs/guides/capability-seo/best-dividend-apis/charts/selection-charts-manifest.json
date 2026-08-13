@@ -1,8 +1,8 @@
 {
   "snapshot_id": "dividend-events-selection-2026-q3-v1",
   "charts": {
-    "dividend-runtime-tradeoff.png": "sha256:18bbb29a797a4309b0988b8ce72c1dc52128ad8006307894b94ab1716e034d15",
-    "dividend-market-coverage.png": "sha256:68d6f0f4604310ea8c66d7cb19b22b1d68f39248eb4bc3bc966484a374eda9d5"
+    "dividend-runtime-tradeoff.png": "sha256:6d6dcb0ed7010281c463909d705ff92fd00831fbf9c18b1dd89230bb93e64d81",
+    "dividend-market-coverage.png": "sha256:406fe841507d920c8ab329767b6acd9bd771260b651aa46e618ff8b4c9f32255"
   },
   "data": {
     "rows": [
@@ -652,6 +652,17 @@
   },
   "input_digests": {
     "selection_snapshot": "sha256:c519276549e6e9c45a88817050fbde86a1e98b30f7ac754e84074ad2c1571a36"
+  },
+  "renderer": {
+    "backend": "Agg",
+    "dpi": 180,
+    "font_digests": [
+      "sha256:2d39c7fb73ae26bb0642841dcdcfc0e35e0357b4ff4202e2295964a11017a253",
+      "sha256:74216fc2fa7dfbd3954ec33cb4f39db7c7f36f04aa4efd461914d125ccc780d5"
+    ],
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "pillow": "12.3.0"
   },
   "rendered_at": "2026-08-12"
 }

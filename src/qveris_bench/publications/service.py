@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import platform
 import tempfile
@@ -62,6 +63,10 @@ def reproduce_publication_package(
                 f"invalid publication release section: {section_name}"
             ) from exc
         release_dir = resolve_repository_path(repository_root, release_ref.directory)
+        if not (release_dir / "public-evidence-manifest.json").is_file():
+            raise PublicationReproductionError(
+                f"public evidence manifest is required for {section_name}"
+            )
         try:
             replayed = replay_release_dir(
                 release_dir,
@@ -71,6 +76,7 @@ def reproduce_publication_package(
             raise PublicationReproductionError(
                 f"release reproduction failed for {section_name}: {exc}"
             ) from exc
+        _validate_public_evidence_file_set(release_dir, repository_root)
         if replayed.release_id in release_ids:
             raise PublicationReproductionError(
                 "publication release identities must be unique"
@@ -94,20 +100,48 @@ def reproduce_publication_package(
 
     adapter = _load_adapter(manifest.publication_package.adapter_id)
     if (
-        adapter.adapter_version != manifest.publication_package.adapter_version
+        adapter.adapter_id != manifest.publication_package.adapter_id
+        or adapter.adapter_version != manifest.publication_package.adapter_version
         or adapter.cap_id != manifest.publication_package.cap_id
     ):
         raise PublicationReproductionError(
-            "publication adapter version or CAP identity mismatch"
+            "publication adapter identity, version, or CAP mismatch"
+        )
+    adapter_digest = _source_digest(
+        repository_root,
+        manifest.publication_package.adapter_sources,
+    )
+    if adapter_digest != manifest.publication_package.adapter_digest:
+        raise PublicationReproductionError("publication adapter digest mismatch")
+    adapter_source = inspect.getsourcefile(type(adapter))
+    expected_sources = {
+        resolve_repository_path(repository_root, source)
+        for source in manifest.publication_package.adapter_sources
+    }
+    if adapter_source is None:
+        raise PublicationReproductionError(
+            "loaded publication adapter does not match its bound source"
+        )
+    loaded_source = Path(adapter_source).resolve(strict=True).read_bytes()
+    if all(source.read_bytes() != loaded_source for source in expected_sources):
+        raise PublicationReproductionError(
+            "loaded publication adapter does not match its bound source"
         )
     with tempfile.TemporaryDirectory(prefix="qveris-publication-") as temporary:
-        checks = adapter.reproduce(
-            repository_root=repository_root,
-            package_path=resolved_package,
-            package=manifest.publication_package,
-            document=document,
-            output_dir=Path(temporary),
-        )
+        try:
+            checks = adapter.reproduce(
+                repository_root=repository_root,
+                package_path=resolved_package,
+                package=manifest.publication_package,
+                document=document,
+                output_dir=Path(temporary),
+            )
+        except PublicationReproductionError:
+            raise
+        except (IndexError, KeyError, OSError, TypeError, ValueError) as exc:
+            raise PublicationReproductionError(
+                f"publication validation failed: {exc}"
+            ) from exc
     if checks != _EXPECTED_CHECKS:
         raise PublicationReproductionError(
             "publication adapter did not complete every required check"
@@ -183,7 +217,17 @@ def _package_digest(
     artifacts = document.get("artifacts")
     if not isinstance(artifacts, dict):
         raise PublicationReproductionError("publication artifacts must be a mapping")
-    targets = {package_path, *release_dirs}
+    package = document.get("publication_package")
+    if not isinstance(package, dict):
+        raise PublicationReproductionError("publication package must be a mapping")
+    adapter_sources = package.get("adapter_sources")
+    if not isinstance(adapter_sources, list):
+        raise PublicationReproductionError("publication adapter sources must be a list")
+    targets = {
+        package_path,
+        *release_dirs,
+        *(resolve_repository_path(repository_root, value) for value in adapter_sources),
+    }
     for value in artifacts.values():
         values = value if isinstance(value, list) else [value]
         for path_value in values:
@@ -208,3 +252,50 @@ def _package_digest(
         digest.update(b"\0")
         digest.update(resolved.read_bytes())
     return f"sha256:{digest.hexdigest()}"
+
+
+def _source_digest(repository_root: Path, sources: tuple[str, ...]) -> str:
+    digest = hashlib.sha256()
+    for source in sorted(sources):
+        path = resolve_repository_path(repository_root, source)
+        if not path.is_file():
+            raise PublicationReproductionError(
+                "publication adapter source must be a file"
+            )
+        digest.update(source.encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+    return f"sha256:{digest.hexdigest()}"
+
+
+def _validate_public_evidence_file_set(
+    release_dir: Path,
+    repository_root: Path,
+) -> None:
+    try:
+        document = json.loads(
+            (release_dir / "public-evidence-manifest.json").read_text(encoding="utf-8")
+        )
+        entries = document["evidence"]
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise PublicationReproductionError(
+            "public evidence manifest is invalid"
+        ) from exc
+    if not isinstance(entries, list):
+        raise PublicationReproductionError("public evidence manifest is invalid")
+    expected: set[Path] = set()
+    parents: set[Path] = set()
+    for entry in entries:
+        if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+            raise PublicationReproductionError("public evidence manifest is invalid")
+        path = resolve_repository_path(repository_root, entry["path"])
+        expected.add(path)
+        parents.add(path.parent)
+    observed = {
+        path.resolve(strict=True)
+        for parent in parents
+        for path in parent.glob("*.json")
+        if path.is_file()
+    }
+    if observed != expected:
+        raise PublicationReproductionError("public evidence file set differs")

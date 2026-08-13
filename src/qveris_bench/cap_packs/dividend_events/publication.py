@@ -6,8 +6,11 @@ import os
 import platform
 import re
 from collections.abc import Mapping
+from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
+
+from PIL import Image, ImageChops
 
 from qveris_bench.models.publication import PublicationPackageSpec
 from qveris_bench.profiles.selection import build_selection_snapshot
@@ -32,6 +35,20 @@ _MANIFEST_PROVIDER_NAMES = {
     "twelve-data": "Twelve Data",
     "eodhd": "EODHD",
     "massive-stocks": "Massive",
+}
+_MARKET_ORDER = ("US", "HK", "CN", "JP", "DE", "FR", "BR", "IN", "ES")
+_NUMBER_WORDS = {
+    0: "zero",
+    1: "one",
+    2: "two",
+    3: "three",
+    4: "four",
+    5: "five",
+    6: "six",
+    7: "seven",
+    8: "eight",
+    9: "nine",
+    10: "ten",
 }
 
 
@@ -83,7 +100,7 @@ class DividendEventsPublicationAdapter:
                 "selection chart manifest digest mismatch"
             )
         committed = json.loads(committed_chart_manifest.read_text(encoding="utf-8"))
-        for field in ("data", "input_digests", "rendered_at"):
+        for field in ("data", "input_digests", "rendered_at", "renderer"):
             if generated[field] != committed[field]:
                 raise PublicationReproductionError(
                     f"chart {field} differs from the committed chart manifest"
@@ -115,6 +132,10 @@ class DividendEventsPublicationAdapter:
                     f"committed chart digest mismatch: {committed_chart.name}"
                 )
             generated_chart = chart_dir / committed_chart.name
+            if not _same_chart_pixels(generated_chart, committed_chart):
+                raise PublicationReproductionError(
+                    f"canonical chart pixels differ: {committed_chart.name}"
+                )
             if platform.system() == "Linux" and (
                 generated_chart.read_bytes() != committed_chart.read_bytes()
             ):
@@ -136,7 +157,22 @@ class DividendEventsPublicationAdapter:
         )
         article = _artifact(repository_root, artifacts, "article")
         article_text = article.read_text(encoding="utf-8")
-        _validate_article_facts(article_text, snapshot, document, repository_root)
+        article_facts_path = _artifact(repository_root, artifacts, "article_facts")
+        article_facts = _build_article_facts(snapshot, document, repository_root)
+        expected_article_facts = _canonical_json(article_facts)
+        if article_facts_path.read_bytes() != expected_article_facts:
+            raise PublicationReproductionError(
+                "article facts differ from fresh release-derived facts"
+            )
+        if artifacts.get("article_facts_digest") != _digest(expected_article_facts):
+            raise PublicationReproductionError("article facts digest mismatch")
+        _validate_article_facts(
+            article_text,
+            snapshot,
+            document,
+            repository_root,
+            article_facts,
+        )
         _validate_links(article_text, document, article, repository_root)
         return ("selection_snapshot", "charts", "article_facts", "links")
 
@@ -165,6 +201,227 @@ def _render_selection_tradeoff(
                 os.environ.pop(name, None)
             else:
                 os.environ[name] = value
+
+
+def _same_chart_pixels(generated: Path, committed: Path) -> bool:
+    with (
+        Image.open(generated) as generated_image,
+        Image.open(committed) as committed_image,
+    ):
+        left = generated_image.convert("RGBA")
+        right = committed_image.convert("RGBA")
+        return (
+            left.size == right.size
+            and ImageChops.difference(left, right).getbbox() is None
+        )
+
+
+def _build_article_facts(
+    snapshot: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    repository_root: Path,
+) -> dict[str, object]:
+    rows = snapshot.get("rows")
+    if not isinstance(rows, list) or not rows:
+        raise PublicationReproductionError("selection snapshot has no rows")
+    baseline = _release_article_facts(manifest, "release", repository_root)
+    market = _release_article_facts(
+        manifest,
+        "market_coverage_release",
+        repository_root,
+    )
+    baseline_dates = {
+        str(_mapping(row, "observation_window").get("end")) for row in rows
+    }
+    market_dates = {
+        str(_mapping(row, "market_coverage").get("observation_date")) for row in rows
+    }
+    if len(baseline_dates) != 1 or len(market_dates) != 1:
+        raise PublicationReproductionError(
+            "article facts require one observation date per Release"
+        )
+    markets = {
+        str(result["market"])
+        for row in rows
+        for result in _mapping(row, "market_coverage")["results"]
+    }
+    if markets != set(_MARKET_ORDER):
+        raise PublicationReproductionError("article facts market set drifted")
+    measured_rows = [
+        row
+        for row in rows
+        if _mapping(row, "gateway_metrics").get("state") == "measured"
+    ]
+    latency_sample_sizes = {
+        int(_mapping(row, "gateway_metrics")["latency_sample_size"])
+        for row in measured_rows
+    }
+    pricing_dates = {
+        str(_mapping(row, "qveris_list_price")["inspected_at"]) for row in measured_rows
+    }
+    if len(latency_sample_sizes) != 1 or len(pricing_dates) != 1:
+        raise PublicationReproductionError(
+            "article facts require one runtime sample size and pricing date"
+        )
+    return {
+        "schema_version": 1,
+        "package_id": _mapping(manifest, "publication_package")["package_id"],
+        "edition": str(manifest["edition"]),
+        "provider_count": len({str(row["provider_id"]) for row in rows}),
+        "access_path_count": len(rows),
+        "qveris_access_path_count": len(measured_rows),
+        "latency_sample_size": latency_sample_sizes.pop(),
+        "pricing_observed_at": pricing_dates.pop(),
+        "markets": list(_MARKET_ORDER),
+        "total_live_calls": cast(int, baseline["public_evidence_records"])
+        + cast(int, market["public_evidence_records"]),
+        "baseline_release": {
+            **baseline,
+            "observation_date": baseline_dates.pop(),
+        },
+        "market_release": {
+            **market,
+            "observation_date": market_dates.pop(),
+        },
+    }
+
+
+def _release_article_facts(
+    manifest: Mapping[str, Any],
+    section_key: str,
+    repository_root: Path,
+) -> dict[str, object]:
+    metadata = _mapping(manifest, section_key)
+    release_path = resolve_repository_path(
+        repository_root,
+        f"{metadata['directory']}/release.json",
+    )
+    release = json.loads(release_path.read_text(encoding="utf-8"))
+    cells = release["cells"]
+    applicable = [cell for cell in cells if cell["applicable"]]
+    combinations = {
+        (cell["provider_id"], cell["access_path_id"], cell["case_id"])
+        for cell in applicable
+    }
+    return {
+        "release_id": release["release"]["release_id"],
+        "release_digest": metadata["digest"],
+        "planned_cells": len(cells),
+        "applicable_cells": len(applicable),
+        "not_applicable_cells": len(cells) - len(applicable),
+        "public_evidence_records": len(release["evidence"]),
+        "rounds_per_cell": len({cell["round"] for cell in applicable}),
+        "positive_case_cells": sum("invalid" not in item[2] for item in combinations),
+        "negative_control_cells": sum("invalid" in item[2] for item in combinations),
+    }
+
+
+def _canonical_json(document: Mapping[str, Any]) -> bytes:
+    return (json.dumps(document, indent=2, sort_keys=True) + "\n").encode()
+
+
+def _format_article_date(value: object) -> str:
+    parsed = date.fromisoformat(str(value))
+    return f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}"
+
+
+def _number_word(value: int) -> str:
+    return _NUMBER_WORDS.get(value, str(value))
+
+
+def _round_phrase(value: int) -> str:
+    if value == 1:
+        return "once"
+    if value == 2:
+        return "twice"
+    return f"{_number_word(value)} times"
+
+
+def _validate_material_claims(
+    article: str,
+    facts: Mapping[str, Any],
+) -> None:
+    baseline = _mapping(facts, "baseline_release")
+    market = _mapping(facts, "market_release")
+    markets = facts["markets"]
+    if not isinstance(markets, list):
+        raise PublicationReproductionError("article facts markets must be a list")
+    market_list = ", ".join(str(value) for value in markets[:-1])
+    market_list += f", and {markets[-1]}"
+    access_path_count = int(facts["access_path_count"])
+    market_count = len(markets)
+    baseline_date = _format_article_date(baseline["observation_date"])
+    market_date = _format_article_date(market["observation_date"])
+    access_path_word = _number_word(access_path_count)
+    claims = (
+        (
+            f"We made {facts['total_live_calls']} live calls across two test suites, "
+            "including invalid-symbol controls and representative symbols from "
+            f"{market_list}. These **representative market sample results** are not "
+            "claims about every security, date range, entitlement, or market a "
+            "provider covers."
+        ),
+        (
+            f"The baseline test ran on {baseline_date}. "
+            "Each applicable Access Path had one positive security sample and one "
+            "invalid-symbol negative control, each repeated "
+            f"{_round_phrase(int(baseline['rounds_per_cell']))}: "
+            f"{baseline['public_evidence_records']} live calls. The market test ran "
+            f"on {market_date}. It included "
+            f"{market['positive_case_cells']} applicable positive cells plus one "
+            f"negative control for each of the {access_path_word} paths, "
+            f"repeated {_round_phrase(int(market['rounds_per_cell']))}: "
+            f"{market['public_evidence_records']} live calls. The two Releases remain "
+            "separate and are not combined into a score."
+        ),
+        (
+            "The market Release contains "
+            f"{market['planned_cells']} planned test cells. "
+            f"All {market['applicable_cells']} applicable cells have sanitized public "
+            f"evidence, while the other {market['not_applicable_cells']} retain an "
+            "explicit not-applicable reason. Unknown states, temporary failures, and "
+            "missing evidence cannot be relabeled as not applicable."
+        ),
+        (
+            f"The package pins the baseline Release `{baseline['release_id']}` at "
+            f"`{baseline['release_digest']}` and the market Release "
+            f"`{market['release_id']}` at `{market['release_digest']}`; the same "
+            "command verifies both."
+        ),
+    )
+    for index, claim in enumerate(claims, start=1):
+        if article.count(claim) != 1:
+            raise PublicationReproductionError(
+                f"article facts drifted: material claim {index}"
+            )
+    latency_samples = int(facts["latency_sample_size"])
+    latency_word = _number_word(latency_samples)
+    qveris_path_count = int(facts["qveris_access_path_count"])
+    qveris_path_word = _number_word(qveris_path_count)
+    snippets = (
+        f"across {latency_word} calls",
+        f"{latency_word.title()} calls can prioritize a reproduction test",
+        f"A {latency_word}-call median is not a Native API performance ranking or SLA.",
+        "- **Baseline repeatability:** "
+        f"{_number_word(int(baseline['rounds_per_cell']))} rounds per applicable case; "
+        "Direct Test is mandatory.",
+        "- **Market extension:** one representative symbol for each of "
+        f"{_number_word(market_count)} markets, with "
+        f"{_number_word(int(market['rounds_per_cell']))} rounds per applicable cell.",
+        f"runs {_number_word(int(baseline['rounds_per_cell']))} baseline rounds.",
+        f"runs {_number_word(int(market['rounds_per_cell']))} rounds for each "
+        "applicable market binding:",
+        f"- {qveris_path_word} QVeris Access Paths use `QVERIS_API_KEY`;",
+        "QVeris credits are the public Inspect prices observed on "
+        f"{_format_article_date(facts['pricing_observed_at'])};",
+    )
+    for snippet in snippets:
+        if article.count(snippet) != 1:
+            raise PublicationReproductionError("article facts drifted")
+    _require(
+        market_count == 9,
+        "article facts market count drifted",
+    )
 
 
 def _validate_selection_release_refs(
@@ -304,6 +561,7 @@ def _validate_article_facts(
     snapshot: Mapping[str, Any],
     manifest: Mapping[str, Any],
     repository_root: Path,
+    article_facts: Mapping[str, Any],
 ) -> None:
     rows = snapshot.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -330,19 +588,19 @@ def _validate_article_facts(
         article,
         "| Provider and Access Path | Required event fields |",
     )
-    expected_names = [_PROVIDER_NAMES[str(row["provider_id"])] for row in ordered_rows]
+    expected_identities = [
+        (
+            _PROVIDER_NAMES[str(row["provider_id"])],
+            "Native MCP" if row["access_path_type"] == "native_mcp" else "QVeris",
+        )
+        for row in ordered_rows
+    ]
     for table in (overview, pricing, market, agent):
-        try:
-            published_names = [
-                next(name for name in expected_names if name in table_row[0])
-                for table_row in table
-            ]
-        except StopIteration as exc:
+        published_identities = [_row_identity(table_row[0]) for table_row in table]
+        if published_identities != expected_identities:
             raise PublicationReproductionError(
-                "article contains an unknown Provider row"
-            ) from exc
-        if published_names != expected_names:
-            raise PublicationReproductionError("article Provider order drifted")
+                "article Provider and Access Path identity drifted"
+            )
 
     for row in ordered_rows:
         provider = _PROVIDER_NAMES[str(row["provider_id"])]
@@ -413,19 +671,25 @@ def _validate_article_facts(
             f"Agent facts drifted: {provider}",
         )
 
-    release_sections = manifest["publication_package"]["release_sections"]
-    releases = [
-        json.loads(
-            resolve_repository_path(
-                repository_root,
-                str(_mapping(manifest, section)["directory"]) + "/release.json",
-            ).read_text(encoding="utf-8")
-        )
-        for section in release_sections
-    ]
-    total_calls = sum(len(release["evidence"]) for release in releases)
+    _validate_material_claims(article, article_facts)
+    seo = _mapping(manifest, "seo")
+    provider_count = int(article_facts["provider_count"])
+    access_path_count = int(article_facts["access_path_count"])
+    market_count = len(article_facts["markets"])
     _require(
-        f"We made {total_calls} live calls" in article, "article call total drifted"
+        seo.get("title")
+        == f"Best Dividend APIs for Developers in 2026: {provider_count} Providers",
+        "SEO title drifted",
+    )
+    _require(
+        seo.get("meta_description")
+        == (
+            f"Compare {access_path_count} dividend API Access Paths using "
+            f"{article_facts['total_live_calls']} live calls: event fields, "
+            "invalid-symbol handling, QVeris pricing, "
+            f"{_number_word(market_count)} markets, and reproducible evidence."
+        ),
+        "SEO meta description drifted",
     )
     _require(
         article.splitlines()[0]
@@ -518,6 +782,14 @@ def _validate_links(
         for row in snapshot["rows"]
         if row["official_pricing"]["state"] == "declared"
     )
+    local_chart_paths = artifacts.get("charts")
+    if not isinstance(local_chart_paths, list):
+        raise PublicationReproductionError("publication charts must be declared")
+    allowed_local = {
+        resolve_repository_path(repository_root, value)
+        for value in local_chart_paths
+        if isinstance(value, str)
+    }
     overview = _markdown_table_rows(article, "| Provider and Access Path |")
     supplier_sites = _mapping(seo, "supplier_sites")
     provider_pages = _mapping(seo, "provider_pages")
@@ -542,8 +814,10 @@ def _validate_links(
                 target in allowed_external, f"external link is not allowed: {target}"
             )
             continue
-        if target.startswith(("mailto:", "#")):
+        if target.startswith("#"):
             continue
+        if target.startswith("mailto:"):
+            raise PublicationReproductionError("article mail links are not allowed")
         resolved = (article_path.parent / target.split("#", 1)[0]).resolve()
         try:
             relative = resolved.relative_to(repository_root.resolve())
@@ -551,7 +825,14 @@ def _validate_links(
             raise PublicationReproductionError(
                 "article link must stay inside the repository"
             ) from exc
-        resolve_repository_path(repository_root, str(relative))
+        resolved = resolve_repository_path(repository_root, str(relative))
+        _require(resolved in allowed_local, "article local link is not declared")
+    for target in re.findall(r"(?:https?://|mailto:)[^\s)<]+", article):
+        normalized = target.rstrip(".,;")
+        _require(
+            normalized in allowed_external,
+            f"external link is not allowed: {normalized}",
+        )
 
 
 def _expected_overview_outcome(row: Mapping[str, Any]) -> str:
@@ -598,26 +879,48 @@ def _agent_expected_cells(
     repository_root: Path,
 ) -> tuple[str, str, str, str]:
     provider_id = str(row["provider_id"])
-    artifacts = _mapping(manifest, "artifacts")
-    evidence_key = (
-        "market_coverage_public_evidence"
-        if provider_id == "hangseng"
-        else "public_evidence"
+    access_path_id = str(row["access_path_id"])
+    section_key = "market_coverage_release" if provider_id == "hangseng" else "release"
+    release = _mapping(manifest, section_key)
+    release_dir = resolve_repository_path(repository_root, str(release["directory"]))
+    evidence_manifest = json.loads(
+        (release_dir / "public-evidence-manifest.json").read_text(encoding="utf-8")
     )
-    evidence_dir = _artifact(repository_root, artifacts, evidence_key)
+    entries = evidence_manifest.get("evidence")
+    if not isinstance(entries, list):
+        raise PublicationReproductionError("public evidence manifest is invalid")
     terminals = []
-    for path in evidence_dir.glob("*.json"):
-        terminal = json.loads(path.read_text(encoding="utf-8"))
-        run_key = terminal.get("run_key")
-        if not isinstance(run_key, str):
-            continue
-        is_cn_market_sample = ":cn-600519-dividend-market:" in run_key
-        if (
-            terminal.get("provider_id") == provider_id
-            and "invalid" not in run_key
-            and (provider_id != "hangseng" or is_cn_market_sample)
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise PublicationReproductionError("public evidence manifest is invalid")
+        run_key = entry.get("run_key")
+        relative_path = entry.get("path")
+        public_digest = entry.get("public_digest")
+        if not all(
+            isinstance(value, str) for value in (run_key, relative_path, public_digest)
         ):
-            terminals.append(terminal)
+            raise PublicationReproductionError("public evidence manifest is invalid")
+        run_key_text = str(run_key)
+        is_cn_market_sample = ":cn-600519-dividend-market:" in run_key_text
+        if (
+            f":{provider_id}:{access_path_id}:direct:" not in run_key_text
+            or "invalid" in run_key_text
+            or (provider_id == "hangseng" and not is_cn_market_sample)
+        ):
+            continue
+        path = resolve_repository_path(repository_root, str(relative_path))
+        if _digest(path.read_bytes()) != public_digest:
+            raise PublicationReproductionError("public evidence digest mismatch")
+        terminal = json.loads(path.read_text(encoding="utf-8"))
+        if (
+            terminal.get("provider_id") != provider_id
+            or terminal.get("access_path_id") != access_path_id
+            or terminal.get("run_key") != run_key_text
+        ):
+            raise PublicationReproductionError(
+                "public evidence Provider, Access Path, or run key mismatch"
+            )
+        terminals.append(terminal)
     if not terminals:
         raise PublicationReproductionError(
             f"no public terminal facts for {provider_id}"
@@ -685,12 +988,26 @@ def _markdown_table_rows(article: str, header_fragment: str) -> list[list[str]]:
 
 
 def _provider_row(rows: list[list[str]], provider: str, access: str) -> list[str]:
-    matches = [row for row in rows if provider in row[0] and access in row[0]]
+    matches = [row for row in rows if _row_identity(row[0]) == (provider, access)]
     if len(matches) != 1:
         raise PublicationReproductionError(
             f"article must contain one row for {provider} / {access}"
         )
     return matches[0]
+
+
+def _row_identity(cell: str) -> tuple[str, str]:
+    visible = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", cell).split(" · ", 1)[0]
+    match = re.fullmatch(
+        r"(?P<provider>.+?) (?:\((?P<paren>QVeris|Native MCP)\)|/ "
+        r"(?P<slash>QVeris|Native MCP))",
+        visible,
+    )
+    if match is None:
+        raise PublicationReproductionError(
+            "article Provider and Access Path identity drifted"
+        )
+    return match.group("provider"), match.group("paren") or match.group("slash")
 
 
 def _market_set(cell: str) -> set[str]:

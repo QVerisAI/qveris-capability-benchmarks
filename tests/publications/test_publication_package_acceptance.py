@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
+import socket
 import subprocess
 from pathlib import Path
 
@@ -36,11 +38,16 @@ def _copy_publication_repository(tmp_path: Path) -> Path:
         "providers",
         "releases/dividend-events-2026-q3-v5",
         "releases/dividend-events-market-coverage-2026-q3-v5",
+        "src/qveris_bench/cap_packs/dividend_events/publication.py",
+        "src/qveris_bench/cap_packs/dividend_events/selection_charts.py",
     ):
         source = ROOT / relative
         target = copied / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(source, target)
+        if source.is_dir():
+            shutil.copytree(source, target)
+        else:
+            shutil.copy2(source, target)
     article = copied / "docs/guides/best-dividend-apis.md"
     article.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / "docs/guides/best-dividend-apis.md", article)
@@ -51,6 +58,7 @@ def _repository_snapshot() -> dict[str, bytes]:
     paths = (
         ROOT / "docs/guides/best-dividend-apis.md",
         PUBLICATION_DIR / "selection-snapshot.json",
+        PUBLICATION_DIR / "article-facts.json",
         PUBLICATION_DIR / "charts/selection-charts-manifest.json",
         PUBLICATION_DIR / "charts/dividend-runtime-tradeoff.png",
         PUBLICATION_DIR / "charts/dividend-market-coverage.png",
@@ -69,6 +77,8 @@ def test_ac1_dividend_publication_reproduces_offline_and_read_only(
 
     monkeypatch.setattr(httpx.Client, "request", reject_network)
     monkeypatch.setattr(httpx.AsyncClient, "request", reject_network)
+    monkeypatch.setattr(socket, "create_connection", reject_network)
+    monkeypatch.setattr(socket.socket, "connect", reject_network)
     before = _repository_snapshot()
 
     result = RUNNER.invoke(
@@ -187,7 +197,7 @@ def test_ac3_publication_rejects_a_symlink_escape(tmp_path: Path) -> None:
             "docs/guides/best-dividend-apis.md",
             b"We made 102 live calls",
             b"We made 999 live calls",
-            "article call total drifted",
+            "article facts drifted",
         ),
         (
             "docs/guides/best-dividend-apis.md",
@@ -300,12 +310,15 @@ def test_ac5_dividend_adapter_rejects_an_extra_release(tmp_path: Path) -> None:
     package.write_text(
         content.replace(
             "release_sections: [release, market_coverage_release]",
+            "release_sections: [release, market_coverage_release, extra_release]",
+        ).replace(
+            "search_intent:",
             (
-                "release_sections: [release, market_coverage_release, extra_release]"
-                "\nextra_release:"
+                "extra_release:"
                 "\n  directory: releases/dividend-events-2026-q3-v5"
                 "\n  digest: "
                 "sha256:a24c398a6a6dcae35c5fac0b53b162aefb4253b34d8689416093751e5cfabe2a"
+                "\nsearch_intent:"
             ),
         ),
         encoding="utf-8",
@@ -339,3 +352,188 @@ def test_ac5_selection_input_rejects_a_nested_path_escape(tmp_path: Path) -> Non
         match="path must stay inside the repository",
     ):
         reproduce_publication_package(package)
+
+
+@pytest.mark.parametrize(
+    "release_id",
+    [
+        "dividend-events-2026-q3-v5",
+        "dividend-events-market-coverage-2026-q3-v5",
+    ],
+)
+def test_ac6_publication_requires_every_public_evidence_manifest(
+    tmp_path: Path,
+    release_id: str,
+) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    (repository / "releases" / release_id / "public-evidence-manifest.json").unlink()
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="public evidence manifest is required",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac6_unreleased_evidence_cannot_change_agent_facts(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    evidence_dir = repository / "evidence/dividend-events-2026-q3-v1"
+    source = evidence_dir / "alpha-vantage-aapl-dividends-round-1-terminal.json"
+    shutil.copy2(source, evidence_dir / "unreleased-alpha-terminal.json")
+    article = repository / "docs/guides/best-dividend-apis.md"
+    article.write_text(
+        article.read_text(encoding="utf-8").replace(
+            "| Alpha Vantage (QVeris) | 3/3 |",
+            "| Alpha Vantage (QVeris) | 4/4 |",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="public evidence file set differs|Agent facts drifted",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac6_provider_access_path_identity_is_exact(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    article = repository / "docs/guides/best-dividend-apis.md"
+    text = article.read_text(encoding="utf-8")
+    for old, new in (
+        ("] (QVeris) · [Try it in QVeris]", "] (Native MCP) · [Try it in QVeris]"),
+        ("[Alpha Vantage / QVeris]", "[Alpha Vantage / Native MCP]"),
+        ("| Alpha Vantage / QVeris |", "| Alpha Vantage / Native MCP |"),
+        ("| Alpha Vantage (QVeris) |", "| Alpha Vantage (Native MCP) |"),
+    ):
+        if old.startswith("]"):
+            prefix = (
+                "[Alpha Vantage](https://www.alphavantage.co/documentation/#dividends)"
+            )
+            text = text.replace(prefix + old, prefix + new, 1)
+        else:
+            text = text.replace(old, new, 1)
+    article.write_text(text, encoding="utf-8")
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="Provider and Access Path identity drifted",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [
+        (
+            "Each applicable Access Path had one positive security sample and one "
+            "invalid-symbol negative control, each repeated three times: "
+            "36 live calls.",
+            "Each applicable Access Path had one positive security sample and one "
+            "invalid-symbol negative control, each repeated three times: "
+            "999 live calls.",
+        ),
+        (
+            "The market Release contains 120 planned test cells. All 66 applicable "
+            "cells have sanitized public evidence, while the other 54 retain an "
+            "explicit not-applicable reason.",
+            "The market Release contains 999 planned test cells. All 1 applicable "
+            "cells have sanitized public evidence, while the other 998 retain an "
+            "explicit not-applicable reason.",
+        ),
+        (
+            "`sha256:9c11f7c920c0c6bd774a012b326c40e748142ff9f9c11df060850f8a1db8aead`",
+            "`sha256:" + "0" * 64 + "`",
+        ),
+    ],
+)
+def test_ac6_every_material_release_claim_is_bound(
+    tmp_path: Path,
+    old: str,
+    new: str,
+) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    article = repository / "docs/guides/best-dividend-apis.md"
+    text = article.read_text(encoding="utf-8")
+    assert old in text
+    article.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+    with pytest.raises(PublicationReproductionError, match="article facts drifted"):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac6_chart_pixels_cannot_be_replaced_with_coordinated_digests(
+    tmp_path: Path,
+) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    publication = repository / "docs/guides/capability-seo/best-dividend-apis"
+    runtime = publication / "charts/dividend-runtime-tradeoff.png"
+    market = publication / "charts/dividend-market-coverage.png"
+    market.write_bytes(runtime.read_bytes())
+    chart_manifest = publication / "charts/selection-charts-manifest.json"
+    chart_document = json.loads(chart_manifest.read_text(encoding="utf-8"))
+    chart_document["charts"][market.name] = (
+        "sha256:" + hashlib.sha256(market.read_bytes()).hexdigest()
+    )
+    chart_manifest.write_text(
+        json.dumps(chart_document, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    package = publication / "manifest.yaml"
+    package_text = package.read_text(encoding="utf-8")
+    package.write_text(
+        package_text.replace(
+            "selection_charts_manifest_digest: sha256:"
+            "1c35175fdcc204dc5caeec95097c2b715745c4b08cdc13bf58c343301c307344",
+            "selection_charts_manifest_digest: sha256:"
+            + hashlib.sha256(chart_manifest.read_bytes()).hexdigest(),
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="canonical chart pixels differ",
+    ):
+        reproduce_publication_package(package)
+
+
+def test_ac6_adapter_source_change_requires_a_new_digest(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    source = (
+        repository / "src/qveris_bench/cap_packs/dividend_events/selection_charts.py"
+    )
+    source.write_text(source.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="publication adapter digest mismatch",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )
+
+
+def test_ac6_malformed_publication_artifact_has_a_stable_error(tmp_path: Path) -> None:
+    repository = _copy_publication_repository(tmp_path)
+    snapshot = (
+        repository
+        / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json"
+    )
+    snapshot.write_text("{", encoding="utf-8")
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="selection snapshot differs",
+    ):
+        reproduce_publication_package(
+            repository / "docs/guides/capability-seo/best-dividend-apis/manifest.yaml"
+        )

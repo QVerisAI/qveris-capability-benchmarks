@@ -19,6 +19,8 @@ class PublicationPackageSpec(FrozenModel):
     adapter_version: SemanticVersion
     cap_id: StableId
     release_sections: tuple[SectionName, ...] = Field(min_length=1)
+    adapter_sources: tuple[str, ...] = Field(min_length=1)
+    adapter_digest: EvidenceRef
 
     @model_validator(mode="after")
     def release_sections_are_unique(self) -> PublicationPackageSpec:

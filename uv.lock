@@ -1338,7 +1338,9 @@ dependencies = [
     { name = "httpx" },
     { name = "matplotlib" },
     { name = "mcp" },
+    { name = "numpy" },
     { name = "openai" },
+    { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pyyaml" },
@@ -1357,9 +1359,11 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "matplotlib", specifier = ">=3.10.0" },
+    { name = "matplotlib", specifier = "==3.11.1" },
     { name = "mcp", specifier = ">=1.13.0" },
+    { name = "numpy", specifier = "==2.5.2" },
     { name = "openai", specifier = ">=1.99.0" },
+    { name = "pillow", specifier = "==12.3.0" },
     { name = "pydantic", specifier = ">=2.11.0" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "pyyaml", specifier = ">=6.0.2" },
