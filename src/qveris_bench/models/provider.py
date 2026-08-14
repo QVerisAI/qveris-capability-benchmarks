@@ -43,7 +43,7 @@ class ProviderProfile(FrozenModel):
     official_name: str = Field(min_length=1)
     website: HttpUrl
     market_coverage: tuple[str, ...] = ()
-    official_pricing: tuple[OfficialPricingFact, ...] = Field(min_length=1)
+    official_pricing: tuple[OfficialPricingFact, ...] = ()
 
 
 class QualificationDecision(FrozenModel):

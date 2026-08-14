@@ -1,0 +1,11 @@
+access_paths:
+  - access_path_id: stlouisfed-fred-govt-bond-yield-qveris
+    provider_id: stlouisfed-fred
+    canonical_interface: fred/series/observations
+    official_source: https://fred.stlouisfed.org/docs/api/fred/series_observations.html
+    direct_test_authorized: true
+  - access_path_id: qveris-finance-govt-bond-yield-qveris
+    provider_id: qveris-finance
+    canonical_interface: rates_govt_benchmark
+    official_source: https://qveris.ai/guides/finance-capabilities/
+    direct_test_authorized: true

@@ -1,0 +1,20 @@
+schema_version: 1
+source: qveris_discovery
+discovery_runs:
+  - run_id: "31789468768"
+    artifact_id: "9214837418"
+    query: government benchmark bond yield 10 year country historical time series
+    limit: 30
+    description_snapshot_digest: sha256:04afdcf416eca660f58ed1ae1f6a09770fcdf05a12f529f9024db7e78cdbb33d
+  - run_id: "31789579182"
+    query: FRED 10-Year Treasury Constant Maturity Rate observations series DGS10
+    limit: 20
+    description_snapshot_digest: sha256:31dff4e18f9569db55c22b9960091dc46b5b62a0558025a64621a92fb673b7b9
+candidates:
+  - alphavantage|alphavantage.economic.treasury_yield.retrieve.v1.7aca3c4a
+  - qveris_finance|qveris_finance.rates_govt_benchmark
+  - stlouisfed_fred|stlouisfed_fred.fred_series_observations.get.v1
+provider_aliases:
+  alphavantage: alpha-vantage
+  qveris_finance: qveris-finance
+  stlouisfed_fred: stlouisfed-fred

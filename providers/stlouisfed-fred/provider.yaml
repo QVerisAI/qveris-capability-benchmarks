@@ -1,0 +1,21 @@
+provider:
+  provider_id: stlouisfed-fred
+  official_name: Federal Reserve Economic Data (FRED)
+  website: https://fred.stlouisfed.org/
+  market_coverage: [US, CN, UK, DE, JP, AU, CA]
+  official_pricing: []
+access_paths:
+  - access_path_id: stlouisfed-fred-govt-bond-yield-qveris
+    provider_id: stlouisfed-fred
+    path_type: qveris_connector
+    official_source: https://fred.stlouisfed.org/docs/api/fred/series_observations.html
+    canonical_interface: fred/series/observations
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Direct Test is limited to the frozen government-yield series and citation-required sanitized facts.
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: The discovered FRED observations tool supports frozen series identities for the seven-country 10Y cases.
+      evidence_digest: sha256:c13fc1c5aacb9fbe9d2d37e581f4202ffefebd846fbe68dc80d59bcefaa07f78

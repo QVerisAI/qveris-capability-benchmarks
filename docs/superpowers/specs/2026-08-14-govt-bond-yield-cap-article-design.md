@@ -15,7 +15,7 @@ The publication is complete only when a reader can inspect the seven-country evi
 - Frozen tenor: 10Y
 - Negative control: unsupported country `ZZ` with tenor 10Y
 - Rounds: two per applicable Provider × Access Path × case
-- Maximum Provider executions: 48 when all three Harbor Providers are applicable
+- Maximum Provider executions: 36 for the two-path publishable cohort after the Alpha Vantage candidate fails the country-negative gate
 
 The CAP measures dated sovereign benchmark yield observations. It does not measure full yield curves, central-bank policy rates, corporate bonds, real-time tradable prices, or every maturity.
 
@@ -31,7 +31,7 @@ The CAP measures dated sovereign benchmark yield observations. It does not measu
 Harbor contract snapshot
   → candidate discovery and terminal dispositions
   → formal CAP Pack and frozen Direct Binding Registry
-  → baseline Suite (US + ZZ) and market Suite (remaining six countries)
+  → baseline Suite (US + ZZ) and market Suite (all seven countries)
   → GitHub-hosted QVeris Direct Tests using benchmark-e2e secret
   → sanitized public terminals + private raw envelopes
   → immutable baseline and market Releases
@@ -55,13 +55,15 @@ A positive cell completes only when the terminal evidence establishes:
 - source and currency remain optional observations and are not fabricated;
 - empty, malformed, cross-country, or wrong-tenor payloads do not pass.
 
+Every positive binding uses the fixed window `2024-01-01` through `2024-12-31` and deterministically selects the latest valid observation in that window. Zero and negative sovereign yields remain valid finite numeric observations. Provider-returned identity must match a frozen alias when present; otherwise the fact is explicitly request-bound. Optional unit, currency, and source fields are preserved when present and remain evidence-insufficient when absent.
+
 The `ZZ` negative control completes only on an explicit Provider-level rejection or empty unsupported result allowed by the CAP rule. Authentication, entitlement, rate limiting, server errors, parse failures, and timeouts remain infrastructure-blocked outcomes.
 
 ## Provider and Access Path discovery
 
-The public Harbor snapshot says the CAP has three Providers but does not identify executable QVeris tools. Discovery therefore runs through the existing `qveris-discovery.yml` workflow with the protected `QVERIS_API_KEY`.
+The public Harbor snapshot reports a provider count of three but does not publish the Provider identities. Discovery therefore runs through the existing `qveris-discovery.yml` workflow with the protected `QVERIS_API_KEY`; the resulting cohort is described as the frozen QVeris Provider × Access Path cohort, not as an asserted Harbor Provider list.
 
-Every discovered Tool receives a terminal disposition. A Provider enters the direct-test cohort only when one frozen QVeris Access Path exposes a safe request shape for the CAP. Qualification selects at most one canonical Tool per Harbor Provider through a versioned deterministic rule; alternate and alias candidates retain explicit dispositions. Provider and Access Path IDs remain separate in binding IDs, run keys, evidence, Releases, Snapshot rows, tables, and prose.
+Every discovered Tool receives a terminal disposition. A Provider enters the direct-test cohort only when one frozen QVeris Access Path exposes a safe request shape for the CAP. Qualification selects at most one canonical Tool per frozen Provider identity through a versioned deterministic rule; alternate and alias candidates retain explicit dispositions. Provider and Access Path IDs remain separate in binding IDs, run keys, evidence, Releases, Snapshot rows, tables, and prose.
 
 If fewer than two applicable Provider × Access Path rows survive discovery and preflight, publication stops as evidence-insufficient instead of manufacturing a ranking.
 
@@ -69,8 +71,8 @@ If fewer than two applicable Provider × Access Path rows survive discovery and 
 
 Two Releases keep baseline behavior and country coverage independently auditable:
 
-- Baseline Release: US 10Y plus the `ZZ` negative control.
-- Market Release: CN, UK, DE, JP, AU, and CA 10Y cases.
+- Baseline Release: US 10Y plus the `ZZ` negative control, exactly 8 planned Execute calls.
+- Market Release: all seven US, CN, UK, DE, JP, AU, and CA 10Y cases, exactly 28 planned Execute calls.
 
 Each public terminal is derived from one private execution envelope that binds run key, Provider, Access Path, Tool, canonical parameter digest, response digest, transport status, latency, and sanitized facts. Public evidence omits credentials, raw response bodies, signed URLs, and account-billed credits.
 
@@ -85,7 +87,7 @@ One row per Provider × Access Path projects only released facts:
 - latency median/min/max and sample count;
 - sanitized QVeris Inspect list credits;
 - official Provider pricing only when a scoped official fact is frozen;
-- separate Agent-interface observations for invalid input, benchmark identity, date, unit, currency, and source.
+- separate Snapshot Agent-interface observations for invalid input, plus digest-bound public terminal facts in writer input for benchmark identity, date, unit, currency, and source.
 
 Account-billed `cost_credits` is forbidden from public terminals, Releases, Snapshot facts, and the article.
 

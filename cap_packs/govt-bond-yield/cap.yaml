@@ -1,0 +1,18 @@
+cap_id: govt-bond-yield
+version: 1.0.0
+name: Government Bond Yield
+business_use: Compare frozen QVeris Access Paths for dated 10-year sovereign benchmark yields across seven representative countries.
+scope:
+  - Historical 10-year sovereign benchmark yield retrieval for US, CN, UK, DE, JP, AU, and CA in the fixed 2024 window.
+  - Explicit unsupported-country behavior where the Access Path can express a country or series identity.
+exclusions:
+  - Full yield curves, central-bank policy rates, corporate bond yields, and real-time tradable prices.
+  - Native APIs and candidate tools without a frozen public Provider x Access Path binding.
+markets: [US, CN, UK, DE, JP, AU, CA]
+asset_types: [FIXED_INCOME]
+sources:
+  - source_type: harbor_catalog
+    harbor_capability_id: RATES.GOVT_BENCHMARK
+    contract_version: 1
+    catalog_snapshot_digest: e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe
+    contract_digest: 0123f6f71e22364cfe8c11828e3a39d757ef7488f709cd503f0fc07b8cbd2004

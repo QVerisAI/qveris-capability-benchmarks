@@ -37,7 +37,7 @@ capabilities:
     harbor_capability_id: FX.SPOT
   - cap_id: govt-bond-yield
     name: Government Bond Yield
-    lifecycle: candidate
+    lifecycle: runnable
     business_use: Select a provider for dated sovereign benchmark yield series.
     source_id: harbor-capability-catalog
     harbor_capability_id: RATES.GOVT_BENCHMARK

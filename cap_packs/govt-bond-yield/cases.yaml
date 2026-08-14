@@ -1,0 +1,16 @@
+cases:
+  - case_id: us-10y-baseline
+    cap_id: govt-bond-yield
+    question: Return the latest United States 10-year sovereign benchmark yield in the fixed 2024 window.
+    input: {market: US, country: US, tenor: 10Y, start_date: 2024-01-01, end_date: 2024-12-31}
+    expected_observations: [symbol, date, close, identity_verified, identity_basis, unit, currency, source]
+    completion_conditions: [symbol, date, close, identity_verified]
+    disclosure_limits: [sanitized_public]
+  - case_id: unsupported-country-10y
+    cap_id: govt-bond-yield
+    question: Explicitly reject unsupported country ZZ without inventing a sovereign benchmark yield.
+    input: {country: ZZ, tenor: 10Y, start_date: 2024-01-01, end_date: 2024-12-31}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: [sanitized_public]
