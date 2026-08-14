@@ -1,0 +1,489 @@
+{
+  "artifacts": [
+    {
+      "name": "alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-1",
+      "private_archive_digest": "sha256:58ed472d3c8f8a6326a9a838199eab871ba0afa9531e0e8a39aecce488468a1f",
+      "private_artifact_id": 9208241121,
+      "public_archive_digest": "sha256:8b68619dc20a69586caeb4ff7671f1411d2276ffaa700d95792f175be641b074",
+      "public_artifact_id": 9208240781,
+      "public_digest": "sha256:320e2c437b4b291fb66e0936b4df0a39c3509d8e66c89765d9fea6ee4ec2f749",
+      "raw_digest": "sha256:a118645483faecdb8db4c56b41a1942ac3e2d82217077ad1e3309ec7c88d4a09",
+      "source_public_digest": "sha256:c2f67626fed6850d2d495def8949b6000eda793e064c7f66c840b7e7f4b53b14"
+    },
+    {
+      "name": "alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-2",
+      "private_archive_digest": "sha256:ecb45bd020879c6cb2abd0d253574da375b119b9ef4a139875d8a7a6d318bc8e",
+      "private_artifact_id": 9208241254,
+      "public_archive_digest": "sha256:cc78871609e85b14c018aab39804538268087382c17721d2413c58500db8da5c",
+      "public_artifact_id": 9208240937,
+      "public_digest": "sha256:d2276d2a17595a0ce77a22c5835201fc4b2fe7bd98cfb427a0bc5b211488f079",
+      "raw_digest": "sha256:0dc24ec6667fac5cd534e597bf431fc91ff20ad3eabb97fc3e4bfde708eb2f0d",
+      "source_public_digest": "sha256:5c90db7710b20acd65bdb1b4bf6d8b7f26acfd56e78cbd4c8a2e476fce2fda97"
+    },
+    {
+      "name": "alpha-vantage-us-aapl-split-market-round-1",
+      "private_archive_digest": "sha256:8213ad71689f4517682347bd194fde54c003db41413221c0872e93ac3de0b00e",
+      "private_artifact_id": 9208248633,
+      "public_archive_digest": "sha256:69082c1c34f76e10051504f9a5ab090e459f995f2a155bf7e017e423da18b2f3",
+      "public_artifact_id": 9208248294,
+      "public_digest": "sha256:6b5787f66e6e8cbcdd7f964784a537c5fdb8326686a6de39b37bbdc2f0958ec2",
+      "raw_digest": "sha256:6238ed50d3c2fbc6ba9bc1ac3cffefbaba4c3807eca279b7c6ecc0e3efcde18d",
+      "source_public_digest": "sha256:6b65d09f32705e87da18bc6cc4f7a0210c41e9d26a2d57a01d2bf80cb7f2559b"
+    },
+    {
+      "name": "alpha-vantage-us-aapl-split-market-round-2",
+      "private_archive_digest": "sha256:d7818ba70b47bf3ebd699178a5416a7465ed756b702acd464199ab9d38360fba",
+      "private_artifact_id": 9208250397,
+      "public_archive_digest": "sha256:3a96b6851494799f6ce43f9f455dfdd99614125b3b09c166099cb0c601be54cb",
+      "public_artifact_id": 9208250187,
+      "public_digest": "sha256:95f0fb3a71c938e141256f04be55428b9da4eb51f9c9ae3da39369165f9d2c73",
+      "raw_digest": "sha256:4bd988810eb71e223e0de672c031a769a1d405849c6bd1b53eed4777fa085cb1",
+      "source_public_digest": "sha256:2326bd714c23da62a23db8884c8e2314ffca93d932b0c587f2ff3247256d5f81"
+    },
+    {
+      "name": "eodhd-br-petr4-split-market-round-1",
+      "private_archive_digest": "sha256:43496ea46b2a49711d56207103f1b379ee2c6743b49c37be5704caf1a9a61acd",
+      "private_artifact_id": 9208245756,
+      "public_archive_digest": "sha256:04d6379da7080a6fd660d4e45012953a8923077449d26663e055fb6ed8b8efb1",
+      "public_artifact_id": 9208245382,
+      "public_digest": "sha256:dd88baf47e8f2d20bbc3e16901c0b136202ccda0753da67242956bdd0fbcb59d",
+      "raw_digest": "sha256:b17d1de3147e3279cff6060f974f7a33da2f317f70575e7d87ce5e7061c9205a",
+      "source_public_digest": "sha256:eead7b9c63d189a88270d35d9786e81ec8c3344269e3f660e21d960cb2946c73"
+    },
+    {
+      "name": "eodhd-br-petr4-split-market-round-2",
+      "private_archive_digest": "sha256:1f545c25b0b10a645bb107b47484e4a1cb354dbc0d55fd30dcfa541c13c3fc9c",
+      "private_artifact_id": 9208240796,
+      "public_archive_digest": "sha256:90e5bb3f48d30ffc6fb6727ea268843a3788ccf1de520f85d793a8b99bf06cfc",
+      "public_artifact_id": 9208240480,
+      "public_digest": "sha256:440d2530298edac1ab744349322c9d4c01e14f07733387fc48f1ee8ba4d561bf",
+      "raw_digest": "sha256:9485c4a2cc2d54dd1d5422e310b4c56d4cdf02efb013a394a12325188d6c5225",
+      "source_public_digest": "sha256:d6bcad97e6edd7cebb23a82fe661794bf7228bcb5c014d3b1175fccdfb2a77b2"
+    },
+    {
+      "name": "eodhd-cn-600519-split-market-round-1",
+      "private_archive_digest": "sha256:333acbdf23c0a529dcd61eea314c370313b95e70f626f43f1e011ac0dd3e0d4b",
+      "private_artifact_id": 9208240198,
+      "public_archive_digest": "sha256:501afbfcd9227ccd50fa2052af2f220d6825b5df0fea66da74b8e1ecd26cd73e",
+      "public_artifact_id": 9208239837,
+      "public_digest": "sha256:98bc07a54917f412a01bffd7ef40b7d736f31598d2f7dc2f36bea55bfd237beb",
+      "raw_digest": "sha256:794bbbcba34a604222a0049dcd73827f7c60c9ed4469da7c189de9b4a7219bd9",
+      "source_public_digest": "sha256:9a95f2a590d7cedf3e9e0758250302b47abf439a1dcba51bcc587120f792cb20"
+    },
+    {
+      "name": "eodhd-cn-600519-split-market-round-2",
+      "private_archive_digest": "sha256:b75e6beb3b6d3c655a54a269cd82c9a06c323870fdd48d5736208dc57ed682a0",
+      "private_artifact_id": 9208247241,
+      "public_archive_digest": "sha256:696f3101b2e82d8fcb2ca1a4a1ac02d0f3280741faff7586f520688a475864d8",
+      "public_artifact_id": 9208246882,
+      "public_digest": "sha256:67d501bcac0e123c564ec104a3e6b3526ab7c53d2daf63e37679a1d6f6a13c1c",
+      "raw_digest": "sha256:9918fcb87564e212b875e1a8e291ebd0ead2f2077ec0c3639d7fa2da74e2418c",
+      "source_public_digest": "sha256:2ec870cd3032a7677d99ced00fcb9b55399c802c19583ca347401f1f5d9933ff"
+    },
+    {
+      "name": "eodhd-de-sap-split-market-round-1",
+      "private_archive_digest": "sha256:26adc1031943c3b1ca965064791fbd11c81add300df3c5b88fd29edc63356eb7",
+      "private_artifact_id": 9208252294,
+      "public_archive_digest": "sha256:23072f7c9bc73dd57cedc79cb248270bc9dffe142e357c71540ecd117e9f7569",
+      "public_artifact_id": 9208252015,
+      "public_digest": "sha256:f73834a8fa42864bd3f3ac0f491373f30f13167f5491359263406c81ccad8e7a",
+      "raw_digest": "sha256:36e539736c9b3ea0ca8024f7669abc011047a5c8febdb3b8b16c7fb62e19c22c",
+      "source_public_digest": "sha256:9128dede1f3239403500788eadbdc6002dad625e686c84ed58180f327b7a4ea1"
+    },
+    {
+      "name": "eodhd-de-sap-split-market-round-2",
+      "private_archive_digest": "sha256:57694b0423e28290104163398fd2fa8441f6f3f61c580a09c5c87b262a50ed7c",
+      "private_artifact_id": 9208246550,
+      "public_archive_digest": "sha256:968635d6bac8cc7918ea5babb0645b813d8ac82180300f1881fe18b5ac7d71b9",
+      "public_artifact_id": 9208246309,
+      "public_digest": "sha256:f37b4d238529c7532cedb96df4862f44b246725be7da95ea86222659bf4f3f30",
+      "raw_digest": "sha256:755fd8e11bf888f6c3a8aeb26a51cbd2496256ad7a8a14f8f062ad15de20506f",
+      "source_public_digest": "sha256:6bd03d7c3fbb734ce14a3ca7ab995113c269200b385f21ffa43eb182225cf7b5"
+    },
+    {
+      "name": "eodhd-es-itx-split-market-round-1",
+      "private_archive_digest": "sha256:0af830045d9d140ceffd89524ee9c042bbe8dae7cd11386c71a392cbd576faf2",
+      "private_artifact_id": 9208250850,
+      "public_archive_digest": "sha256:d691a4adbade25241c0c3ba6db3b548aa0849b7d89809d6d1e8271e1cc94e4da",
+      "public_artifact_id": 9208250667,
+      "public_digest": "sha256:95095e1732d3dfb778d0c8b388c903e75368240fbee2eb27d00d4fd938186724",
+      "raw_digest": "sha256:5722abee07b32ea4675068e93a297fb13e0905201f56761a2af9c4d8a1b05041",
+      "source_public_digest": "sha256:2fe808a5cc66374421e9f96c83b8e454da497b0d8af7cbb7c0c7b1b5fa2536b4"
+    },
+    {
+      "name": "eodhd-es-itx-split-market-round-2",
+      "private_archive_digest": "sha256:625ef287a8e8ffb7fd28b9fb1dab796a4c4f5b7764fe5ee283c0025569c8693e",
+      "private_artifact_id": 9208247422,
+      "public_archive_digest": "sha256:6914b61360f8bdc63bde5364b5bde015a66957cd4db42af2a16521c867144d2c",
+      "public_artifact_id": 9208247099,
+      "public_digest": "sha256:3abb38a77f47dda11e0a6a53d92d4e0dc2461c8daf28390ff5b19fa099832850",
+      "raw_digest": "sha256:dc2b1db29b863f9cc2003d933d37a6990439e76a1bb6ba6a85a665a3b5741e13",
+      "source_public_digest": "sha256:573b5cf45c33ffb45b19480d25f6ba4bc1ae4b3b58f34e7963228a1e9785d164"
+    },
+    {
+      "name": "eodhd-fr-mc-split-market-round-1",
+      "private_archive_digest": "sha256:fe4235c3e01c1b4d5bc59517d552edbab51d6f87f5f31719df36523a7dacf73e",
+      "private_artifact_id": 9208246757,
+      "public_archive_digest": "sha256:138f94e86d248dcbc905c49a8c185911da5f96d02851f695b453f56a3b1230b0",
+      "public_artifact_id": 9208246409,
+      "public_digest": "sha256:0a84d39038b5b1f679284e92a5e63ab3a26a1c5ab8bc0722170b29bcb9b23d5b",
+      "raw_digest": "sha256:a1c977230174a44e00ba154653f2f81df2848421808f6c330570185c11b0c9cf",
+      "source_public_digest": "sha256:3627bebbecf8e890be01f9e97140b9f275db65bd4a5bf0a666f2406585eac90f"
+    },
+    {
+      "name": "eodhd-fr-mc-split-market-round-2",
+      "private_archive_digest": "sha256:58837ff94a3eca9f5ed6356191365aae867601ada1336fb316da90aaa45df7d1",
+      "private_artifact_id": 9208239662,
+      "public_archive_digest": "sha256:b22a5020ae378ab73f1d37332fc5efb7daf77dbc760114c8fde9428ffd01e0b9",
+      "public_artifact_id": 9208239407,
+      "public_digest": "sha256:0b110ddbb48f50a5e3f5a3c86343d419437387326155ebf29ab395d599fced57",
+      "raw_digest": "sha256:d2b728091659215e1e445f8bc5c91de91a5ebff2337e7034ff3e7aa903873eb7",
+      "source_public_digest": "sha256:ef38ef94b8b3d6596bff60ece3f286ca4538c7d7943490317a45744f1a14f397"
+    },
+    {
+      "name": "eodhd-hk-0700-split-market-round-1",
+      "private_archive_digest": "sha256:56662be4247290407fc5a25dce2f01b7651069ebcdf2b5fed103f1734c35b795",
+      "private_artifact_id": 9208240807,
+      "public_archive_digest": "sha256:0baf0b79a508992651db89efa065994733f9a5709e3f58597588c5d1932704db",
+      "public_artifact_id": 9208240408,
+      "public_digest": "sha256:73774de6bf4a67b7746e56c224ba48b8383fd6813fcb68ba3cc1bc84f53b8e6a",
+      "raw_digest": "sha256:01e5fa34663b7c470cb8542aab4c6d785496452972dfc17d8098b89c1d5a8ea1",
+      "source_public_digest": "sha256:cf2b650ac7bba64e7c7362964ccf5dd790fda1c09fe151c194c5453b86cac8f3"
+    },
+    {
+      "name": "eodhd-hk-0700-split-market-round-2",
+      "private_archive_digest": "sha256:a22f186445f2e1c1363b3985c7756b358f8ba09b68758690a234dea601e579e5",
+      "private_artifact_id": 9208251635,
+      "public_archive_digest": "sha256:220d4944daf8bdc3e74b08684daab2bd939887f052ce9129326e1e204aa10dfb",
+      "public_artifact_id": 9208251460,
+      "public_digest": "sha256:a447cd4077b17ca2be3eaced4d57a2286c7c7d2816f401852eb87b88f504b17d",
+      "raw_digest": "sha256:80a2393546210d3fea6ed6ead10f4885f0468c53b03295d05fe64c6ff70f9d28",
+      "source_public_digest": "sha256:344b49e318a5d91a5e442e97231533be495fc281e5e6752b21515a0307ba8ae2"
+    },
+    {
+      "name": "eodhd-in-reliance-split-market-round-1",
+      "private_archive_digest": "sha256:5c7448024b3903092ff8ca2db3e58c7a0defd555646ce185702ae1acca32320e",
+      "private_artifact_id": 9208247787,
+      "public_archive_digest": "sha256:4922988bc1e168aefa7bae3129902d587a8422218763071f27fce1f366a5f867",
+      "public_artifact_id": 9208247431,
+      "public_digest": "sha256:a1c50a7b6d687d46c8d479cd2500ba12033e75317eb1effdcb16545755d04aba",
+      "raw_digest": "sha256:c99303e359d48539cd08cc80fa4a663541b60b7b7a28f8f51c644e36a3e9a69e",
+      "source_public_digest": "sha256:5f40da9ea9900d147f4c8a4a0db7004939bc9897f76d763154f1f3b84ed7ea13"
+    },
+    {
+      "name": "eodhd-in-reliance-split-market-round-2",
+      "private_archive_digest": "sha256:695ca9a4aaf6caf5f3415bcc9853086f7137fa24ee644233238a9c49c4c8514a",
+      "private_artifact_id": 9208240763,
+      "public_archive_digest": "sha256:1b2e0461030150dcf2548472820e0b7d58a63bca67b5cb8bf410509091d32230",
+      "public_artifact_id": 9208240512,
+      "public_digest": "sha256:7bc8b5f1537490d935e1f526e9bd27cdb064317e31298bb254fe41cf8f3d3f26",
+      "raw_digest": "sha256:57bf78037c733eee2542c393e720b41c156e9faad487e447310be15e9d2e70a3",
+      "source_public_digest": "sha256:803253a26473c3a1ec7626a575bd49ec9808bf955bfa2bc15ffff57eae2f6b1c"
+    },
+    {
+      "name": "eodhd-invalid-corporate-actions-market-symbol-v2-round-1",
+      "private_archive_digest": "sha256:78902a74cbe0e5a017a9b80307b7d58fbe6d33061849490c9eead3de9614244e",
+      "private_artifact_id": 9208240293,
+      "public_archive_digest": "sha256:bed5b3ce4abeebe3019f9a5c81c51ab710e38498654263da25e4fbd5286f214a",
+      "public_artifact_id": 9208239909,
+      "public_digest": "sha256:f2b746fa4a9593d4c4f56ee4eb30352d8c79fa265d9fc4df41c31ea9919d63f7",
+      "raw_digest": "sha256:03f89bec4973ebaa8ab4bf40cfa9faccb959e81572be3a286ee66dabe8695a84",
+      "source_public_digest": "sha256:50005c8dcd2f154666d9b820cbe247745de48b81724517fcd982e984c8d58f8a"
+    },
+    {
+      "name": "eodhd-invalid-corporate-actions-market-symbol-v2-round-2",
+      "private_archive_digest": "sha256:bbf188f94f2d332f3b46a00ae3fa82fd83df611bb571eab260502d3b52a4b058",
+      "private_artifact_id": 9208250492,
+      "public_archive_digest": "sha256:9f8dd438273e082a7a2697486ec27214232eaf685070a2f46cce6fc15a2e1d6f",
+      "public_artifact_id": 9208250323,
+      "public_digest": "sha256:6c39eeee33af3db8dd730d57ef4b5830fe8e069f5783145e4fe9c0b6e873eaa0",
+      "raw_digest": "sha256:ef7822acddd3fb6c98c7c344f97d1e70b9adf7da9f6322abda400055a13e374f",
+      "source_public_digest": "sha256:a354ce9756397f67a4e1c0e74356c59b185d3cec8f9c3da080a61ad430f44e4a"
+    },
+    {
+      "name": "eodhd-jp-7203-split-market-round-1",
+      "private_archive_digest": "sha256:147b59b78ad558b8e02d2203e5ad163e3e84c3cd1fb66a1179cb9c7b33f8db29",
+      "private_artifact_id": 9208246109,
+      "public_archive_digest": "sha256:5a26a4e43b5de11d07550032bbfdbe05c364c9d56f405983de00403c847349de",
+      "public_artifact_id": 9208245939,
+      "public_digest": "sha256:af1a39f764dbaf900d95208238be57392763d41ec276d6ded8debc8aa3aa3fa3",
+      "raw_digest": "sha256:74cfed2dc8d87d8f51f143ff166c6f27749d08ef7140bd1b36aae67ebfd605f8",
+      "source_public_digest": "sha256:db244a99e034944cc4263f1b50d23c0f469f5c6c2e920fdc52258d09239716af"
+    },
+    {
+      "name": "eodhd-jp-7203-split-market-round-2",
+      "private_archive_digest": "sha256:c1a72b22370b5096a6324ed521c8691d82372407620362106a177c2cd69a8ef5",
+      "private_artifact_id": 9208251268,
+      "public_archive_digest": "sha256:1d8655ebe6ddfe67577d582098928eac4ee21b9266764e398cdef55c044e4a09",
+      "public_artifact_id": 9208250950,
+      "public_digest": "sha256:38d6a5c1a0a61a26b155e543896ff2dd381cc390510f2cef63988c6073b268c0",
+      "raw_digest": "sha256:71ebc1d7d4b593368e7619efee6482074ee3797e2381975732f65d9c6e0514b1",
+      "source_public_digest": "sha256:982291fdfc12aeda5fa427349cb598c92bf87a1cbc99522aa5f32598fb23648a"
+    },
+    {
+      "name": "eodhd-us-aapl-split-market-round-1",
+      "private_archive_digest": "sha256:40c77a9edb80d2f7684903f80ea16ef22c3c83e027d9bad05bbf7ebf3d853654",
+      "private_artifact_id": 9208245238,
+      "public_archive_digest": "sha256:49384228774ff8c796a10e7ef959c54f860d89a65525695e887a90590fd342b6",
+      "public_artifact_id": 9208244928,
+      "public_digest": "sha256:f155be5f50aa81b11cbb58977ede7c8cd246d26ef3c55189906b16bc7d6c013f",
+      "raw_digest": "sha256:da828ef0ac611d94a8a81c0552e2d78f3748ce7688a1be38bfd2ba1fefcb82b7",
+      "source_public_digest": "sha256:d05d7b8fc941ef79f566a2b808b2641bd672530867bb6cb51d48c1cac40ec6ea"
+    },
+    {
+      "name": "eodhd-us-aapl-split-market-round-2",
+      "private_archive_digest": "sha256:00e63e2f57e8fded40c2b201458ef0987e8f3dc42b41dc04f39a30931c6d87c5",
+      "private_artifact_id": 9208237736,
+      "public_archive_digest": "sha256:f81b6895bb8c07795c7aa7ea0b1b0bbde1076875d7197531bcf701a45530df34",
+      "public_artifact_id": 9208237572,
+      "public_digest": "sha256:58751f9e86e0ed37eb1a9d4fea645de043ee2a3b3ee0fd2a156bb12efe49ee63",
+      "raw_digest": "sha256:fbe19e13b1b5c113429cdfe6108bf204bd92f0a2e28afd0eab4904c3d2d6baaf",
+      "source_public_digest": "sha256:0f3e11515dcb29c61bf4a643b6b9b64c76fe780b451f69aeb2d29fc2c7dfcf68"
+    },
+    {
+      "name": "massive-invalid-corporate-actions-market-symbol-v2-round-1",
+      "private_archive_digest": "sha256:804e103d8856108f46cdf7a56e9f04087de19e45287c63f46ab093978b6bc9f0",
+      "private_artifact_id": 9208241238,
+      "public_archive_digest": "sha256:c80f9b881264353ab2a20c27f62ee4252c77b7911b79cd09cb6373e41d12a45d",
+      "public_artifact_id": 9208240961,
+      "public_digest": "sha256:be8b7d8b8542ef454a39bdf018e12e6bfed85af4f70d80c5eb8158d2316802e4",
+      "raw_digest": "sha256:8f6a97de0a4db9b53b4c12b603532941a2be8ca2c67cf707a22ac173aed3025c",
+      "source_public_digest": "sha256:ca00ac42de997afb9e1190bfc428b5dc183d05449d8bbd642c9f08bbb328c352"
+    },
+    {
+      "name": "massive-invalid-corporate-actions-market-symbol-v2-round-2",
+      "private_archive_digest": "sha256:022d29f16883b125a870e505842fa52363fa8b6b7c8b3379cf491b3cba31edb1",
+      "private_artifact_id": 9208252944,
+      "public_archive_digest": "sha256:6307117d8a56acf454dead81cb16d1aa4c65fcf428a7ca09851fd2025549c220",
+      "public_artifact_id": 9208252669,
+      "public_digest": "sha256:47146abe0fb1350824118d330fc705f93978e6b4bc421cd5489b5ace85a1d540",
+      "raw_digest": "sha256:4418aa720c3251fd0745021bfd4a8d196490c4c189ef4cfb0d9ca5b0c984051e",
+      "source_public_digest": "sha256:70c94be08af0ba11497fdb718bd9e7ebfa34241e9c8039ec4b079b84e7839af5"
+    },
+    {
+      "name": "massive-us-aapl-split-market-round-1",
+      "private_archive_digest": "sha256:a106fa5f1ac7476884c8f6991323c6e3ee6ec18180fa47d022b56157719edd5d",
+      "private_artifact_id": 9208249567,
+      "public_archive_digest": "sha256:45fff162571fd9112913593139ab5d73d04a1bcc6ad7de90a13180f1cc61e44c",
+      "public_artifact_id": 9208249251,
+      "public_digest": "sha256:0aeeeb539229aa93ffaf93be62e9533ee9924a724d96aa69a39517cb8a1a4e27",
+      "raw_digest": "sha256:c3ba4b70e0f5678ada63868f899618b07e3426dea6583bcc2739a11da49488f1",
+      "source_public_digest": "sha256:32846ad283f37b3813268738fd318881fd20a7eabefbb7b816c4e6dcda1ad7f9"
+    },
+    {
+      "name": "massive-us-aapl-split-market-round-2",
+      "private_archive_digest": "sha256:e0111248a21e816cc57c2612fdf63500ac0a4786b1277e752626f753fabb263c",
+      "private_artifact_id": 9208250930,
+      "public_archive_digest": "sha256:180da3e61ff80b8923685f2ad8dcad0d800015b9180f65e69574510eabf13c64",
+      "public_artifact_id": 9208250732,
+      "public_digest": "sha256:edc789733ac8b17520bd818911888ba7b04c1b137fc36de3cb244f824bfe72b2",
+      "raw_digest": "sha256:b8adbebf992a32a0a0e200f5387cf4f5f4f6b61579a9207a9954ddcf37cb4a2b",
+      "source_public_digest": "sha256:2b6079c4b76c8ea126d0ecd26bba469e92eea537eeca39ca4a4b5e346beab5c7"
+    },
+    {
+      "name": "twelve-data-br-petr4-split-market-round-1",
+      "private_archive_digest": "sha256:2e4f914584515b41b23aa65270bb0a66bd248e66b1576887726309b18d5a1ad6",
+      "private_artifact_id": 9208239935,
+      "public_archive_digest": "sha256:0691ea1ebb2b8c6d6e7059910374eedd26aa2801364526fbbfc7e1c8226aa427",
+      "public_artifact_id": 9208239754,
+      "public_digest": "sha256:1933f487ef2f36221daf887562cb879af0cad272d866a79684234d0fb7e5e173",
+      "raw_digest": "sha256:aed5269c4c0d584e5cac51eb7b2cc9e3814c026850c9f77f8653d68604cd9f53",
+      "source_public_digest": "sha256:1b390fd0442c609e96be255d841ad62a7a6c975ea855e9fa4204e5d9466716fa"
+    },
+    {
+      "name": "twelve-data-br-petr4-split-market-round-2",
+      "private_archive_digest": "sha256:0f2f94935dfd40e8ebfe15b8069a52a58a568ce2e8f75f308d353ec3e6063d74",
+      "private_artifact_id": 9208247766,
+      "public_archive_digest": "sha256:2922c3c708904ba67a878f42c2c7a9043841e366802c75b05d329f7fd92db547",
+      "public_artifact_id": 9208247405,
+      "public_digest": "sha256:44d8b2026f30131e92402ad3a2fdc7d395827efcf9f53fcf03322bc61d7da717",
+      "raw_digest": "sha256:419b1757ff0413f33e8ed311d2e18a600c06eba8182f0b13327105403af2422c",
+      "source_public_digest": "sha256:2b7bbce85602171dbeb75f14f331224ffd75311ed97226cfb94e58a354993ef8"
+    },
+    {
+      "name": "twelve-data-cn-600519-split-market-round-1",
+      "private_archive_digest": "sha256:b77395d3a6f644c6f95cc4979a23bb9176e6de0bd0630a9fc6aafe4815dce195",
+      "private_artifact_id": 9208237896,
+      "public_archive_digest": "sha256:3a3fe4c1c2ff9027607e6beb762f57f0ed9de05c4eb13e62cb837d9814830cf9",
+      "public_artifact_id": 9208237700,
+      "public_digest": "sha256:2f18d134f0917a4840bb0df927f995834bb03131f89c55cf6488319a72eb8f08",
+      "raw_digest": "sha256:c89858e211cfefb5c7a7a1d34c7af06a7f8436cb4a73bb8addcfede41362ceee",
+      "source_public_digest": "sha256:8fa9be4c865d372aadd97b045bf1b93e9c47eecbc48606eb29a083b969095926"
+    },
+    {
+      "name": "twelve-data-cn-600519-split-market-round-2",
+      "private_archive_digest": "sha256:e6aea8dd7c0804b6a1c332b4a342aa11c79d27a1c46187de18e4cced14fb1b03",
+      "private_artifact_id": 9208245304,
+      "public_archive_digest": "sha256:c3e5f58cb3492c53e359fcb9256bb9d038052d679c388648badb6a24ded7eb8f",
+      "public_artifact_id": 9208245036,
+      "public_digest": "sha256:f38c7811cf9e82839034268ac44131d0ca157cfe4e4edc01ff0bbd402e942820",
+      "raw_digest": "sha256:55fc0bfdad4620d2723593f0eb6f4170edc46e795f65f81cc52e20691339ffb0",
+      "source_public_digest": "sha256:30f46c8868b61d73ffffb4be4982bbf9104be802587c8590eae5397fecf9cbee"
+    },
+    {
+      "name": "twelve-data-de-sap-split-market-round-1",
+      "private_archive_digest": "sha256:ddae4615d5b3dbdd8916ee20aadb3070727ea79d7c7e26462d81fd2c8e64981a",
+      "private_artifact_id": 9208246588,
+      "public_archive_digest": "sha256:c03cf7103a0dc81cf412b162b7977301645758343c01ff01e94b320eb94027ee",
+      "public_artifact_id": 9208246377,
+      "public_digest": "sha256:aa526f57dd867a2990fc985a02d5ffa544cca4e57146006ca0a2a39c496a255a",
+      "raw_digest": "sha256:aace510f59ea934245e348c488ad4a73fcee7b3bd05615db36e57aafdbeb5ac2",
+      "source_public_digest": "sha256:298e3168d8f0d7fb4822aa355af8386e7154f572d80bb9f4019716f2cb310aff"
+    },
+    {
+      "name": "twelve-data-de-sap-split-market-round-2",
+      "private_archive_digest": "sha256:c4d5f8f63329129498fcdf9ad0213643c2514e92cab3ae903780fd5945168f01",
+      "private_artifact_id": 9208240976,
+      "public_archive_digest": "sha256:db950c33aac6e388f4e72e6272452e99ace6113e10f4ddb36b86c696114171e6",
+      "public_artifact_id": 9208240643,
+      "public_digest": "sha256:699ce72da981a04745d4114f44170b51dab79da3f138830bac73d28a508f8bfd",
+      "raw_digest": "sha256:ecf403817651bfe654bd5036ed645e71c7bfb9710021ac4c86b5deec646ac176",
+      "source_public_digest": "sha256:622f62262fba8f3931035d28e029aebc53adf964ceabb156c63a2e0b28b81f0f"
+    },
+    {
+      "name": "twelve-data-es-itx-split-market-round-1",
+      "private_archive_digest": "sha256:f246cb693bdef8f14ebcdde0d2db64adfc5dddb0b60516a6235289df6fd4d73f",
+      "private_artifact_id": 9208252572,
+      "public_archive_digest": "sha256:ecd7504e95f002591c22f83074ffd6ccab37312ae2377d302a77e68714db5079",
+      "public_artifact_id": 9208252356,
+      "public_digest": "sha256:4bcb38c6ffa11df544d2d563a1487ebe33194fd77c9d0e2b8d6895d562ee8bcc",
+      "raw_digest": "sha256:a53f960738a14efca3961aca1348ed5af11bdc70dfa476c8f98ef1f575907e9c",
+      "source_public_digest": "sha256:74b3f35ec2d37015f9d9951a1fdc69c178ea01d56cfed877afed617ba672898c"
+    },
+    {
+      "name": "twelve-data-es-itx-split-market-round-2",
+      "private_archive_digest": "sha256:1f26dd885748a67f705e21ac77d24342c859855f3fa24b6cc84721d5dad675a0",
+      "private_artifact_id": 9208246014,
+      "public_archive_digest": "sha256:b4f770c26ec56acc045f53a330ca76894c99b91dff81c997409bd412591b5cff",
+      "public_artifact_id": 9208245643,
+      "public_digest": "sha256:a4afc1f0485929c5524a7a3424cdb835b7cf39f6911107614ef9cf7e26d75571",
+      "raw_digest": "sha256:1644829f162f2f8c5517d10adae7d6244bd343028048d00d9f63c943ccc8187a",
+      "source_public_digest": "sha256:9961921f0a4352fb181f20a5a87a18d3282086c30f99e221972b780582ea1a56"
+    },
+    {
+      "name": "twelve-data-fr-mc-split-market-round-1",
+      "private_archive_digest": "sha256:acebfabe7803c9bee020b9e0810c159094c526f0d41b3c6f6358ea2a770c91ed",
+      "private_artifact_id": 9208240349,
+      "public_archive_digest": "sha256:dc4ca6821ec10e805a17554f27ba4f8a80112ec0fdffda1eb59293c9005adc87",
+      "public_artifact_id": 9208240020,
+      "public_digest": "sha256:359f832cbb4a6a1516d6ccf131e8a1db8cb11962d9d80e7e88fec53015d1a032",
+      "raw_digest": "sha256:a52c4d2facd5df58f3b8a0baaf4e271261afa2dc471a675739f29f6700d95f2c",
+      "source_public_digest": "sha256:239a1d6498974fbe096ef5c0d91e53ae338367dd5994c4bd444a1304ee8b219b"
+    },
+    {
+      "name": "twelve-data-fr-mc-split-market-round-2",
+      "private_archive_digest": "sha256:6591e759997dfcdce99b868163e8fbbf526f357cd0a9024d42ca44b608cf9c24",
+      "private_artifact_id": 9208243648,
+      "public_archive_digest": "sha256:1e9ddbe281e8816f54f5efeb3c67ce6a6b0e8cd33225c24cf24c7cada7f2d771",
+      "public_artifact_id": 9208243454,
+      "public_digest": "sha256:78821b842448710d03867d6946a78d923f5c55bbd71c2d58f84a5371da8f5179",
+      "raw_digest": "sha256:8224e4fb4ca0b1025f68c5b8118b7537ef86474a56df9994585b0717fb4d0dd3",
+      "source_public_digest": "sha256:70cd0da5f8158e45fd01526889d5aaa6c18cfbf2c3850004f644d8f4f37cf98b"
+    },
+    {
+      "name": "twelve-data-hk-0700-split-market-round-1",
+      "private_archive_digest": "sha256:bde5b48d3f5a53cf81ad201c7628e9c2c6ae0e700fdcfff368b2bb582ea0e9b6",
+      "private_artifact_id": 9208246579,
+      "public_archive_digest": "sha256:bf0cdad62c8f9339385bb6c74f1af23b6427117e265d0e7dea02a63f7441290d",
+      "public_artifact_id": 9208246340,
+      "public_digest": "sha256:1944bf0adf44f4cfd5db1f5e4025341b2bdb216946675a6b901f0eea8f9b1624",
+      "raw_digest": "sha256:5e24c642b74265613e225c1fd961ac81105ae1fc527ac6b96e442cf3ef3cc69f",
+      "source_public_digest": "sha256:2c2ec2ef37d20f9eceb684d81d9e0a8513ad29ffb28b3155f24d9039bf9eda39"
+    },
+    {
+      "name": "twelve-data-hk-0700-split-market-round-2",
+      "private_archive_digest": "sha256:2622d4cbb28068162b5ad24a036bf8c5775d9b39f58e181c7a5b3c4f8b69e37a",
+      "private_artifact_id": 9208242162,
+      "public_archive_digest": "sha256:81d8096782af9c129006cdfd602d3270b523a320f14fceb75e7944210d2246bb",
+      "public_artifact_id": 9208242002,
+      "public_digest": "sha256:80d912e668545a227b16826d7640ff307ec7f7df3cf8d3c0908f51b6acd95e3d",
+      "raw_digest": "sha256:a71f47df59abe4a9aaa51daf98c410cb7bef3f4b70ba438eb8e0f61dfa88e825",
+      "source_public_digest": "sha256:c09c529e01245a30e4be3624602dac0b25714ac2de29efc739526bf906d94eba"
+    },
+    {
+      "name": "twelve-data-in-reliance-split-market-round-1",
+      "private_archive_digest": "sha256:fa41e758a543948314d754e25fedac9b3d3f1046add9fb73c6c9e5770ef07f93",
+      "private_artifact_id": 9208242800,
+      "public_archive_digest": "sha256:cf40e6e67144a01683625f7413ed30befffffc0719b6b9bdef1b287e351cc0be",
+      "public_artifact_id": 9208242632,
+      "public_digest": "sha256:328c407a0a111afc33f61e171d33e37a1f09afc712d5d2e231f8754e37de010f",
+      "raw_digest": "sha256:8993187236567252d96392441cbf81f46648e73148167a79d030f097aa1f61f6",
+      "source_public_digest": "sha256:038e590a48785831ca7ca821f4ce4a979da39ce9559b5a638f436c1142874c5b"
+    },
+    {
+      "name": "twelve-data-in-reliance-split-market-round-2",
+      "private_archive_digest": "sha256:660029844c7f641b8483d84778ebb50ceddbd9db29947cb7217e0dcb47353a2d",
+      "private_artifact_id": 9208252057,
+      "public_archive_digest": "sha256:e9605ebea33a143e9178231d5caaeb3a71dc004018394e2a82598ef168797003",
+      "public_artifact_id": 9208251739,
+      "public_digest": "sha256:c1916e2637d4a85715b3baf72e843848a4c691d922b598c542596f42aa8c8f55",
+      "raw_digest": "sha256:a88c720fc0a08517848d224c1a49195c7ad3b7a767182716b4e46d501209a175",
+      "source_public_digest": "sha256:d8fe20c2b39b85006d303b86e7a549bdde915155b0322e1117f936597486b3bb"
+    },
+    {
+      "name": "twelve-data-invalid-corporate-actions-market-symbol-v2-round-1",
+      "private_archive_digest": "sha256:3715e9030d79876301f4711866b56de21c8329bbfe9428b4bd181635977a954b",
+      "private_artifact_id": 9208251091,
+      "public_archive_digest": "sha256:47642b036688a985c7f5a9134c18b0931307670f22c3357dd5b80e92169967d0",
+      "public_artifact_id": 9208250866,
+      "public_digest": "sha256:294d20a3f6d65f9fd05b6909d7db3cb8798f4bf0c9fb2af62862184c368f814e",
+      "raw_digest": "sha256:bc17ede85f44c984dcfa11d52e33405a2d9a9891fb5d02df92d0d336ecd00515",
+      "source_public_digest": "sha256:c030b60bf416ce9f0d3e6d277ef62af9fcfc522f802681495efde09a7b4f2371"
+    },
+    {
+      "name": "twelve-data-invalid-corporate-actions-market-symbol-v2-round-2",
+      "private_archive_digest": "sha256:8aa23689bc1c2d2203bc1ccd137c907920bdde3be29f98fffc66e52fe65d6864",
+      "private_artifact_id": 9208252873,
+      "public_archive_digest": "sha256:e1d986aa4f319004752b0097dc7253bf11efc61c5ed8562ef586c5142799773c",
+      "public_artifact_id": 9208252655,
+      "public_digest": "sha256:da6dbcfef27f26ced765b2323cd99abf71204e34c85aef8d04948eb5e9ca3b2b",
+      "raw_digest": "sha256:8fd3e4582e5ad9b2121e9bc1e2ada518cc24429079069b3315cae99a00eb2eab",
+      "source_public_digest": "sha256:312a3e92afa7e0eb689c6d2b33036fc69e55f792ae867ee2562460d2d2d1aa0e"
+    },
+    {
+      "name": "twelve-data-jp-7203-split-market-round-1",
+      "private_archive_digest": "sha256:a131b5d308d8e92c181b62208cc1b984ad34925c09d627179fc42c4eb14aa196",
+      "private_artifact_id": 9208247671,
+      "public_archive_digest": "sha256:3fe9274803880ced71e3ee7e428d31623b05e1255dc543f28c6f10dbf46543bd",
+      "public_artifact_id": 9208247265,
+      "public_digest": "sha256:db6c3a94afe94a0f38ccc349c6dacfa767c95f641055c0c0ffce7af12717308e",
+      "raw_digest": "sha256:00a7190ef06e059b7edc9e236510d2ccd471a07606540dbd3ac934cb05ede16b",
+      "source_public_digest": "sha256:29ace746d7f1a072b364b4ad2a321a2c17a8d50567e65f4ee22ee12e0fcef950"
+    },
+    {
+      "name": "twelve-data-jp-7203-split-market-round-2",
+      "private_archive_digest": "sha256:1764f70edbeeacea68bcad2e9857eb3df385998ce290da52f2ff036634f08024",
+      "private_artifact_id": 9208246567,
+      "public_archive_digest": "sha256:af3833b69227e27c87cd62d67ad3b145db95b24eb70595b8478acd0aad69dd38",
+      "public_artifact_id": 9208246280,
+      "public_digest": "sha256:826323b1586fd65770aad781551c6fe81377b8301ae04d8aefb5e0ea31c79ee0",
+      "raw_digest": "sha256:de98c68592d2f37548c428eb229b7a5b96249d62eaf8edf59b555d9a8a9ceaf8",
+      "source_public_digest": "sha256:95a05d99e63254da09c8699a5ca9b906fd32d29cae5e31280bd09a344d807681"
+    },
+    {
+      "name": "twelve-data-us-aapl-split-market-round-1",
+      "private_archive_digest": "sha256:34e5f92d41fb27e100a79e081e883799cb2528f931c4357415e401985684ea06",
+      "private_artifact_id": 9208246878,
+      "public_archive_digest": "sha256:47854e01023f7bbe179e2f20077e7e8630282efa66ad4314d200bc5685fe04c7",
+      "public_artifact_id": 9208246544,
+      "public_digest": "sha256:bb7aed96da86c18f1d91ea3d72e033888515d216ea040f659df14fef4c02d41f",
+      "raw_digest": "sha256:91838dc524ef55ecbf33b46440530efe0511e05337dc79439e5d25eaf7b9b81d",
+      "source_public_digest": "sha256:8b65f14361d15557c8e72582c7a8435dc1f9b233c1fd3606daf1d672103fcac6"
+    },
+    {
+      "name": "twelve-data-us-aapl-split-market-round-2",
+      "private_archive_digest": "sha256:63226041bbfbf68425e740e0548458aa9abd3f675515629973b6f8917219e7f3",
+      "private_artifact_id": 9208247013,
+      "public_archive_digest": "sha256:89a0034496282fb271e76a9ba881ae7517f69e2894b759d6e5ab1e1504e4bc62",
+      "public_artifact_id": 9208246652,
+      "public_digest": "sha256:5469af61c8fb0dccbc7b8fc4bf8f99c2641d6cfe7dd77b7945e7f4d6ba0648ae",
+      "raw_digest": "sha256:604fd457d0e6eca557a55f8ba7f7cb64b70a653228a2be7cba91282909ede59e",
+      "source_public_digest": "sha256:e3a5ab467eeb72ee8c3df8126f78c0adf35d74f24129c9b3e56cb58898d76e7a"
+    }
+  ],
+  "github_run_id": "31771339774",
+  "github_sha": "35640d75411288631113affdb878e115ed85a6bb",
+  "repository": "QVerisAI/qveris-capability-benchmarks",
+  "source": "github_actions_api",
+  "workflow_path": ".github/workflows/live-corporate-actions-market-e2e.yml"
+}

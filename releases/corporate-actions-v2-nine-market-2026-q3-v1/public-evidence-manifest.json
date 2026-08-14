@@ -1,0 +1,344 @@
+{
+  "binding_registry_digest": "sha256:d1806d1886c09e83cb5c44428f9060b99439fa248ee147212ffec961c5c9ed5f",
+  "evidence": [
+    {
+      "evidence_id": "alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-1.json",
+      "public_digest": "sha256:320e2c437b4b291fb66e0936b4df0a39c3509d8e66c89765d9fea6ee4ec2f749",
+      "raw_digest": "sha256:a118645483faecdb8db4c56b41a1942ac3e2d82217077ad1e3309ec7c88d4a09",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/alpha-vantage-invalid-corporate-actions-market-symbol-v2-round-2.json",
+      "public_digest": "sha256:d2276d2a17595a0ce77a22c5835201fc4b2fe7bd98cfb427a0bc5b211488f079",
+      "raw_digest": "sha256:0dc24ec6667fac5cd534e597bf431fc91ff20ad3eabb97fc3e4bfde708eb2f0d",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "alpha-vantage-us-aapl-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/alpha-vantage-us-aapl-split-market-round-1.json",
+      "public_digest": "sha256:6b5787f66e6e8cbcdd7f964784a537c5fdb8326686a6de39b37bbdc2f0958ec2",
+      "raw_digest": "sha256:6238ed50d3c2fbc6ba9bc1ac3cffefbaba4c3807eca279b7c6ecc0e3efcde18d",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "alpha-vantage-us-aapl-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/alpha-vantage-us-aapl-split-market-round-2.json",
+      "public_digest": "sha256:95f0fb3a71c938e141256f04be55428b9da4eb51f9c9ae3da39369165f9d2c73",
+      "raw_digest": "sha256:4bd988810eb71e223e0de672c031a769a1d405849c6bd1b53eed4777fa085cb1",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-br-petr4-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-br-petr4-split-market-round-1.json",
+      "public_digest": "sha256:dd88baf47e8f2d20bbc3e16901c0b136202ccda0753da67242956bdd0fbcb59d",
+      "raw_digest": "sha256:b17d1de3147e3279cff6060f974f7a33da2f317f70575e7d87ce5e7061c9205a",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-br-petr4-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-br-petr4-split-market-round-2.json",
+      "public_digest": "sha256:440d2530298edac1ab744349322c9d4c01e14f07733387fc48f1ee8ba4d561bf",
+      "raw_digest": "sha256:9485c4a2cc2d54dd1d5422e310b4c56d4cdf02efb013a394a12325188d6c5225",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-cn-600519-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-cn-600519-split-market-round-1.json",
+      "public_digest": "sha256:98bc07a54917f412a01bffd7ef40b7d736f31598d2f7dc2f36bea55bfd237beb",
+      "raw_digest": "sha256:794bbbcba34a604222a0049dcd73827f7c60c9ed4469da7c189de9b4a7219bd9",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-cn-600519-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-cn-600519-split-market-round-2.json",
+      "public_digest": "sha256:67d501bcac0e123c564ec104a3e6b3526ab7c53d2daf63e37679a1d6f6a13c1c",
+      "raw_digest": "sha256:9918fcb87564e212b875e1a8e291ebd0ead2f2077ec0c3639d7fa2da74e2418c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-de-sap-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-de-sap-split-market-round-1.json",
+      "public_digest": "sha256:f73834a8fa42864bd3f3ac0f491373f30f13167f5491359263406c81ccad8e7a",
+      "raw_digest": "sha256:36e539736c9b3ea0ca8024f7669abc011047a5c8febdb3b8b16c7fb62e19c22c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-de-sap-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-de-sap-split-market-round-2.json",
+      "public_digest": "sha256:f37b4d238529c7532cedb96df4862f44b246725be7da95ea86222659bf4f3f30",
+      "raw_digest": "sha256:755fd8e11bf888f6c3a8aeb26a51cbd2496256ad7a8a14f8f062ad15de20506f",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-es-itx-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-es-itx-split-market-round-1.json",
+      "public_digest": "sha256:95095e1732d3dfb778d0c8b388c903e75368240fbee2eb27d00d4fd938186724",
+      "raw_digest": "sha256:5722abee07b32ea4675068e93a297fb13e0905201f56761a2af9c4d8a1b05041",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-es-itx-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-es-itx-split-market-round-2.json",
+      "public_digest": "sha256:3abb38a77f47dda11e0a6a53d92d4e0dc2461c8daf28390ff5b19fa099832850",
+      "raw_digest": "sha256:dc2b1db29b863f9cc2003d933d37a6990439e76a1bb6ba6a85a665a3b5741e13",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-fr-mc-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-fr-mc-split-market-round-1.json",
+      "public_digest": "sha256:0a84d39038b5b1f679284e92a5e63ab3a26a1c5ab8bc0722170b29bcb9b23d5b",
+      "raw_digest": "sha256:a1c977230174a44e00ba154653f2f81df2848421808f6c330570185c11b0c9cf",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-fr-mc-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-fr-mc-split-market-round-2.json",
+      "public_digest": "sha256:0b110ddbb48f50a5e3f5a3c86343d419437387326155ebf29ab395d599fced57",
+      "raw_digest": "sha256:d2b728091659215e1e445f8bc5c91de91a5ebff2337e7034ff3e7aa903873eb7",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-hk-0700-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-hk-0700-split-market-round-1.json",
+      "public_digest": "sha256:73774de6bf4a67b7746e56c224ba48b8383fd6813fcb68ba3cc1bc84f53b8e6a",
+      "raw_digest": "sha256:01e5fa34663b7c470cb8542aab4c6d785496452972dfc17d8098b89c1d5a8ea1",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-hk-0700-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-hk-0700-split-market-round-2.json",
+      "public_digest": "sha256:a447cd4077b17ca2be3eaced4d57a2286c7c7d2816f401852eb87b88f504b17d",
+      "raw_digest": "sha256:80a2393546210d3fea6ed6ead10f4885f0468c53b03295d05fe64c6ff70f9d28",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-in-reliance-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-in-reliance-split-market-round-1.json",
+      "public_digest": "sha256:a1c50a7b6d687d46c8d479cd2500ba12033e75317eb1effdcb16545755d04aba",
+      "raw_digest": "sha256:c99303e359d48539cd08cc80fa4a663541b60b7b7a28f8f51c644e36a3e9a69e",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-in-reliance-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-in-reliance-split-market-round-2.json",
+      "public_digest": "sha256:7bc8b5f1537490d935e1f526e9bd27cdb064317e31298bb254fe41cf8f3d3f26",
+      "raw_digest": "sha256:57bf78037c733eee2542c393e720b41c156e9faad487e447310be15e9d2e70a3",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-invalid-corporate-actions-market-symbol-v2-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-invalid-corporate-actions-market-symbol-v2-round-1.json",
+      "public_digest": "sha256:f2b746fa4a9593d4c4f56ee4eb30352d8c79fa265d9fc4df41c31ea9919d63f7",
+      "raw_digest": "sha256:03f89bec4973ebaa8ab4bf40cfa9faccb959e81572be3a286ee66dabe8695a84",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-invalid-corporate-actions-market-symbol-v2-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-invalid-corporate-actions-market-symbol-v2-round-2.json",
+      "public_digest": "sha256:6c39eeee33af3db8dd730d57ef4b5830fe8e069f5783145e4fe9c0b6e873eaa0",
+      "raw_digest": "sha256:ef7822acddd3fb6c98c7c344f97d1e70b9adf7da9f6322abda400055a13e374f",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-jp-7203-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-jp-7203-split-market-round-1.json",
+      "public_digest": "sha256:af1a39f764dbaf900d95208238be57392763d41ec276d6ded8debc8aa3aa3fa3",
+      "raw_digest": "sha256:74cfed2dc8d87d8f51f143ff166c6f27749d08ef7140bd1b36aae67ebfd605f8",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-jp-7203-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-jp-7203-split-market-round-2.json",
+      "public_digest": "sha256:38d6a5c1a0a61a26b155e543896ff2dd381cc390510f2cef63988c6073b268c0",
+      "raw_digest": "sha256:71ebc1d7d4b593368e7619efee6482074ee3797e2381975732f65d9c6e0514b1",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "eodhd-us-aapl-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-us-aapl-split-market-round-1.json",
+      "public_digest": "sha256:f155be5f50aa81b11cbb58977ede7c8cd246d26ef3c55189906b16bc7d6c013f",
+      "raw_digest": "sha256:da828ef0ac611d94a8a81c0552e2d78f3748ce7688a1be38bfd2ba1fefcb82b7",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "eodhd-us-aapl-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/eodhd-us-aapl-split-market-round-2.json",
+      "public_digest": "sha256:58751f9e86e0ed37eb1a9d4fea645de043ee2a3b3ee0fd2a156bb12efe49ee63",
+      "raw_digest": "sha256:fbe19e13b1b5c113429cdfe6108bf204bd92f0a2e28afd0eab4904c3d2d6baaf",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "massive-invalid-corporate-actions-market-symbol-v2-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/massive-invalid-corporate-actions-market-symbol-v2-round-1.json",
+      "public_digest": "sha256:be8b7d8b8542ef454a39bdf018e12e6bfed85af4f70d80c5eb8158d2316802e4",
+      "raw_digest": "sha256:8f6a97de0a4db9b53b4c12b603532941a2be8ca2c67cf707a22ac173aed3025c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-invalid-corporate-actions-market-symbol-v2-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/massive-invalid-corporate-actions-market-symbol-v2-round-2.json",
+      "public_digest": "sha256:47146abe0fb1350824118d330fc705f93978e6b4bc421cd5489b5ace85a1d540",
+      "raw_digest": "sha256:4418aa720c3251fd0745021bfd4a8d196490c4c189ef4cfb0d9ca5b0c984051e",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "massive-us-aapl-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/massive-us-aapl-split-market-round-1.json",
+      "public_digest": "sha256:0aeeeb539229aa93ffaf93be62e9533ee9924a724d96aa69a39517cb8a1a4e27",
+      "raw_digest": "sha256:c3ba4b70e0f5678ada63868f899618b07e3426dea6583bcc2739a11da49488f1",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "massive-us-aapl-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/massive-us-aapl-split-market-round-2.json",
+      "public_digest": "sha256:edc789733ac8b17520bd818911888ba7b04c1b137fc36de3cb244f824bfe72b2",
+      "raw_digest": "sha256:b8adbebf992a32a0a0e200f5387cf4f5f4f6b61579a9207a9954ddcf37cb4a2b",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-br-petr4-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-br-petr4-split-market-round-1.json",
+      "public_digest": "sha256:1933f487ef2f36221daf887562cb879af0cad272d866a79684234d0fb7e5e173",
+      "raw_digest": "sha256:aed5269c4c0d584e5cac51eb7b2cc9e3814c026850c9f77f8653d68604cd9f53",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-br-petr4-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-br-petr4-split-market-round-2.json",
+      "public_digest": "sha256:44d8b2026f30131e92402ad3a2fdc7d395827efcf9f53fcf03322bc61d7da717",
+      "raw_digest": "sha256:419b1757ff0413f33e8ed311d2e18a600c06eba8182f0b13327105403af2422c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-cn-600519-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-cn-600519-split-market-round-1.json",
+      "public_digest": "sha256:2f18d134f0917a4840bb0df927f995834bb03131f89c55cf6488319a72eb8f08",
+      "raw_digest": "sha256:c89858e211cfefb5c7a7a1d34c7af06a7f8436cb4a73bb8addcfede41362ceee",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-cn-600519-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-cn-600519-split-market-round-2.json",
+      "public_digest": "sha256:f38c7811cf9e82839034268ac44131d0ca157cfe4e4edc01ff0bbd402e942820",
+      "raw_digest": "sha256:55fc0bfdad4620d2723593f0eb6f4170edc46e795f65f81cc52e20691339ffb0",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-de-sap-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-de-sap-split-market-round-1.json",
+      "public_digest": "sha256:aa526f57dd867a2990fc985a02d5ffa544cca4e57146006ca0a2a39c496a255a",
+      "raw_digest": "sha256:aace510f59ea934245e348c488ad4a73fcee7b3bd05615db36e57aafdbeb5ac2",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-de-sap-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-de-sap-split-market-round-2.json",
+      "public_digest": "sha256:699ce72da981a04745d4114f44170b51dab79da3f138830bac73d28a508f8bfd",
+      "raw_digest": "sha256:ecf403817651bfe654bd5036ed645e71c7bfb9710021ac4c86b5deec646ac176",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-es-itx-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-es-itx-split-market-round-1.json",
+      "public_digest": "sha256:4bcb38c6ffa11df544d2d563a1487ebe33194fd77c9d0e2b8d6895d562ee8bcc",
+      "raw_digest": "sha256:a53f960738a14efca3961aca1348ed5af11bdc70dfa476c8f98ef1f575907e9c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-es-itx-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-es-itx-split-market-round-2.json",
+      "public_digest": "sha256:a4afc1f0485929c5524a7a3424cdb835b7cf39f6911107614ef9cf7e26d75571",
+      "raw_digest": "sha256:1644829f162f2f8c5517d10adae7d6244bd343028048d00d9f63c943ccc8187a",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-fr-mc-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-fr-mc-split-market-round-1.json",
+      "public_digest": "sha256:359f832cbb4a6a1516d6ccf131e8a1db8cb11962d9d80e7e88fec53015d1a032",
+      "raw_digest": "sha256:a52c4d2facd5df58f3b8a0baaf4e271261afa2dc471a675739f29f6700d95f2c",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-fr-mc-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-fr-mc-split-market-round-2.json",
+      "public_digest": "sha256:78821b842448710d03867d6946a78d923f5c55bbd71c2d58f84a5371da8f5179",
+      "raw_digest": "sha256:8224e4fb4ca0b1025f68c5b8118b7537ef86474a56df9994585b0717fb4d0dd3",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-hk-0700-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-hk-0700-split-market-round-1.json",
+      "public_digest": "sha256:1944bf0adf44f4cfd5db1f5e4025341b2bdb216946675a6b901f0eea8f9b1624",
+      "raw_digest": "sha256:5e24c642b74265613e225c1fd961ac81105ae1fc527ac6b96e442cf3ef3cc69f",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-hk-0700-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-hk-0700-split-market-round-2.json",
+      "public_digest": "sha256:80d912e668545a227b16826d7640ff307ec7f7df3cf8d3c0908f51b6acd95e3d",
+      "raw_digest": "sha256:a71f47df59abe4a9aaa51daf98c410cb7bef3f4b70ba438eb8e0f61dfa88e825",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-in-reliance-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-in-reliance-split-market-round-1.json",
+      "public_digest": "sha256:328c407a0a111afc33f61e171d33e37a1f09afc712d5d2e231f8754e37de010f",
+      "raw_digest": "sha256:8993187236567252d96392441cbf81f46648e73148167a79d030f097aa1f61f6",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-in-reliance-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-in-reliance-split-market-round-2.json",
+      "public_digest": "sha256:c1916e2637d4a85715b3baf72e843848a4c691d922b598c542596f42aa8c8f55",
+      "raw_digest": "sha256:a88c720fc0a08517848d224c1a49195c7ad3b7a767182716b4e46d501209a175",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-corporate-actions-market-symbol-v2-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-invalid-corporate-actions-market-symbol-v2-round-1.json",
+      "public_digest": "sha256:294d20a3f6d65f9fd05b6909d7db3cb8798f4bf0c9fb2af62862184c368f814e",
+      "raw_digest": "sha256:bc17ede85f44c984dcfa11d52e33405a2d9a9891fb5d02df92d0d336ecd00515",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-invalid-corporate-actions-market-symbol-v2-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-invalid-corporate-actions-market-symbol-v2-round-2.json",
+      "public_digest": "sha256:da6dbcfef27f26ced765b2323cd99abf71204e34c85aef8d04948eb5e9ca3b2b",
+      "raw_digest": "sha256:8fd3e4582e5ad9b2121e9bc1e2ada518cc24429079069b3315cae99a00eb2eab",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-jp-7203-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-jp-7203-split-market-round-1.json",
+      "public_digest": "sha256:db6c3a94afe94a0f38ccc349c6dacfa767c95f641055c0c0ffce7af12717308e",
+      "raw_digest": "sha256:00a7190ef06e059b7edc9e236510d2ccd471a07606540dbd3ac934cb05ede16b",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-jp-7203-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-jp-7203-split-market-round-2.json",
+      "public_digest": "sha256:826323b1586fd65770aad781551c6fe81377b8301ae04d8aefb5e0ea31c79ee0",
+      "raw_digest": "sha256:de98c68592d2f37548c428eb229b7a5b96249d62eaf8edf59b555d9a8a9ceaf8",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    },
+    {
+      "evidence_id": "twelve-data-us-aapl-split-market-round-1",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-us-aapl-split-market-round-1.json",
+      "public_digest": "sha256:bb7aed96da86c18f1d91ea3d72e033888515d216ea040f659df14fef4c02d41f",
+      "raw_digest": "sha256:91838dc524ef55ecbf33b46440530efe0511e05337dc79439e5d25eaf7b9b81d",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1"
+    },
+    {
+      "evidence_id": "twelve-data-us-aapl-split-market-round-2",
+      "path": "evidence/corporate-actions-v2-nine-market-2026-q3-v1/twelve-data-us-aapl-split-market-round-2.json",
+      "public_digest": "sha256:5469af61c8fb0dccbc7b8fc4bf8f99c2641d6cfe7dd77b7945e7f4d6ba0648ae",
+      "raw_digest": "sha256:604fd457d0e6eca557a55f8ba7f7cb64b70a653228a2be7cba91282909ede59e",
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2"
+    }
+  ],
+  "github_artifacts_manifest_digest": "sha256:d72f549543439bad2e099d425a0bd4ed4b7a736fd71815b0142ab281d478c014",
+  "github_run_id": "31771339774",
+  "github_sha": "35640d75411288631113affdb878e115ed85a6bb"
+}

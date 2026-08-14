@@ -266,6 +266,11 @@ def test_build_release_verifies_github_archives_and_private_raw(
     assert release.is_file()
     evidence = tmp_path / "published/evidence/corporate-actions-v2-test"
     assert len(list(evidence.glob("*.json"))) == 24
+    assert all(
+        '"cost_credits"' not in path.read_text(encoding="utf-8")
+        for path in evidence.glob("*.json")
+    )
+    assert '"cost_credits"' not in release.read_text(encoding="utf-8")
 
 
 def test_build_release_rejects_missing_private_raw_digest(tmp_path: Path) -> None:

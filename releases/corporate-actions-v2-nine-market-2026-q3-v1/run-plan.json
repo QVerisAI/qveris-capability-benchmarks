@@ -1,0 +1,1433 @@
+{
+  "cap_id": "corporate-actions",
+  "cap_sources": [
+    {
+      "catalog_snapshot_digest": "e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe",
+      "contract_digest": "70d5687f6cdb493df3d8af69fc38f8fb41d027139c423bf3018b861f593b3f8d",
+      "contract_version": 1,
+      "harbor_capability_id": "MKT.CORPORATE_ACTIONS",
+      "source_type": "harbor_catalog"
+    }
+  ],
+  "cap_version": "2.0.0",
+  "cells": [
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "us-aapl-split-market",
+      "case_input": {
+        "end_date": "2020-12-31",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:us-aapl-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "hk-0700-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "HK",
+        "start_date": "2014-01-01",
+        "symbol": "0700.HK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:hk-0700-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "cn-600519-split-market",
+      "case_input": {
+        "end_date": "2026-08-14",
+        "market": "CN",
+        "start_date": "2000-01-01",
+        "symbol": "600519.SH"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:cn-600519-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "jp-7203-split-market",
+      "case_input": {
+        "end_date": "2021-12-31",
+        "market": "JP",
+        "start_date": "2021-01-01",
+        "symbol": "7203.T"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:jp-7203-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "de-sap-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "DE",
+        "start_date": "1999-01-01",
+        "symbol": "SAP.DE"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:de-sap-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "fr-mc-split-market",
+      "case_input": {
+        "end_date": "2001-12-31",
+        "market": "FR",
+        "start_date": "1999-01-01",
+        "symbol": "MC.PA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:fr-mc-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "br-petr4-split-market",
+      "case_input": {
+        "end_date": "2009-12-31",
+        "market": "BR",
+        "start_date": "2007-01-01",
+        "symbol": "PETR4.SA"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:br-petr4-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "in-reliance-split-market",
+      "case_input": {
+        "end_date": "2017-12-31",
+        "market": "IN",
+        "start_date": "2017-01-01",
+        "symbol": "RELIANCE.NS"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:in-reliance-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+      "applicable": false,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+      "applicable": false,
+      "case_id": "es-itx-split-market",
+      "case_input": {
+        "end_date": "2014-12-31",
+        "market": "ES",
+        "start_date": "2014-01-01",
+        "symbol": "ITX.MC"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:es-itx-split-market:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "not_applicable"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "planned"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol-v2",
+      "case_input": {
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": null,
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-market-coverage-v2:0468a9cadb08:invalid-corporate-actions-symbol-v2:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "planned"
+    }
+  ],
+  "suite_fingerprint": "0468a9cadb08cf6b8fb7a852802613f0f38ebd8fc101714bdb145bebbc13e380",
+  "suite_id": "corporate-actions-market-coverage-v2"
+}

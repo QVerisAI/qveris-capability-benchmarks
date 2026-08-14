@@ -16,7 +16,9 @@ from qveris_bench.models.enums import AccessPathType
 MeasurementState = Literal["measured", "evidence_insufficient", "not_applicable"]
 PricingState = Literal["declared", "evidence_insufficient"]
 QVerisListPriceState = Literal["declared", "not_applicable"]
-MarketResultState = Literal["verified", "provider_negative", "not_applicable"]
+MarketResultState = Literal[
+    "verified", "provider_negative", "evidence_insufficient", "not_applicable"
+]
 
 
 class ObservationWindow(FrozenModel):
@@ -263,6 +265,13 @@ class MarketCoverageResult(FrozenModel):
             or self.applicability_reason is not None
         ):
             raise ValueError("provider-negative market requires complete evidence")
+        if self.state == "evidence_insufficient" and (
+            len(self.evidence_refs) != self.total_rounds
+            or self.applicability_reason is not None
+        ):
+            raise ValueError(
+                "evidence-insufficient market requires every round and its evidence"
+            )
         if self.state == "not_applicable" and (
             self.passed_rounds
             or self.evidence_refs

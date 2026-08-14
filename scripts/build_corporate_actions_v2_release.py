@@ -183,11 +183,23 @@ def build_release_from_artifacts(
         ):
             raise ValueError("public terminal does not match private raw outcome")
         latency_ms, cost_credits = gateway_metrics(raw_document)
-        if terminal.latency_ms != latency_ms or terminal.cost_credits != cost_credits:
+        if terminal.latency_ms != latency_ms or terminal.cost_credits not in (
+            None,
+            cost_credits,
+        ):
             raise ValueError(
                 "public terminal metrics do not match private raw evidence"
             )
-        terminals[evidence_id] = terminal, public_bytes
+        published_terminal = terminal.model_copy(update={"cost_credits": None})
+        published_bytes = (
+            json.dumps(
+                published_terminal.model_dump(mode="json", exclude={"cost_credits"}),
+                sort_keys=True,
+            )
+            + "\n"
+        ).encode()
+        published_digest = sha256_digest(published_bytes)
+        terminals[evidence_id] = published_terminal, published_bytes
         attested_artifacts.append(
             {
                 "name": evidence_id,
@@ -195,7 +207,8 @@ def build_release_from_artifacts(
                 "public_archive_digest": public_archive_digest,
                 "private_artifact_id": private_row["id"],
                 "private_archive_digest": private_archive_digest,
-                "public_digest": public_digest,
+                "source_public_digest": public_digest,
+                "public_digest": published_digest,
                 "raw_digest": terminal.raw_digest,
             }
         )
