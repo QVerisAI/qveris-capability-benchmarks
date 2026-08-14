@@ -5,7 +5,7 @@
   "edition": "2026-08-14",
   "input_digests": {
     "cases": "sha256:8fcad8a3cbd47728cd2eb7193766c942a4aee6cfefc52bfbf24d3e77e75b42a6",
-    "input": "sha256:74d29bcb849944f2c1e3c846b6ef10accc0b1c13004df98f327f1e3961a3b3bc",
+    "input": "sha256:783d019c7cd06714cf4034b4a4276b11fc88a26acec5fac4f9f780a30ca5b465",
     "market_coverage_cases": "sha256:f110bf86b90dc6b85316506f473a3636537c0eebf6cb748e10e8b6e57ab39abf",
     "market_coverage_release": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
     "market_coverage_suite": "sha256:c278f88a1e89e04bf53a14b256c6f800435604f2eb9b94456909eb8626a0778b",

@@ -1,0 +1,49 @@
+provider:
+  provider_id: rongjuhui
+  official_name: 深圳市融聚汇信息科技有限公司
+  website: https://www.szfiu.com/
+  market_coverage: [HK, US, GLOBAL]
+  official_pricing:
+    - pricing_id: rongjuhui-official-pricing
+      pricing_url: https://www.szfiu.com/custom/detail.php?id=api
+      applies_to:
+        - rongjuhui-hkd-reference-rate
+        - rongjuhui-custom-api
+      currencies: [NONE]
+      free_tier: "No public free API tier"
+      paid_plans: "Custom commercial quote"
+      verified_at: 2026-08-10
+      source_digest: 572259dc17bc81754171295b0741769aaefa921306093d0e4007ca7939affdce
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: rongjuhui-hkd-reference-rate
+    provider_id: rongjuhui
+    path_type: qveris_connector
+    official_source: https://www.szfiu.com/custom/detail.php?id=api
+    canonical_interface: postapihkf10referencecurrency
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
+      evidence_digest: sha256:812e9c1ce1f8a132d3dd053a986417565d579983a97d716ebbc0d55f015c28fd
+  - access_path_id: rongjuhui-custom-api
+    provider_id: rongjuhui
+    path_type: official_api
+    official_source: https://www.szfiu.com/custom/detail.php?id=api
+    canonical_interface: Custom market-data API
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Endpoint and credentials issued during commercial onboarding
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Native access requires a commercial agreement and a disclosed endpoint.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c

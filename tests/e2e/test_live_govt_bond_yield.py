@@ -107,11 +107,11 @@ def test_live_government_bond_cell_produces_sanitized_terminal(
         registry,
         suite_path,
         cases_path,
-        ROOT / "providers",
+        PACK / "providers",
         cap_path=PACK / "cap.yaml",
     )
     compiled = compile_suite(
-        suite_path, cases_path, ROOT / "providers", PACK / "cap.yaml"
+        suite_path, cases_path, PACK / "providers", PACK / "cap.yaml"
     )
     validate_government_bond_request_identities(registry, compiled)
     binding = next(item for item in registry.bindings if item.binding_id == binding_id)

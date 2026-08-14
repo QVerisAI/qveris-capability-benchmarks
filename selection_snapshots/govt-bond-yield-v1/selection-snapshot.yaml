@@ -10,7 +10,7 @@ cap_release:
   digest: sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532
 suite: cap_packs/govt-bond-yield/suite.yaml
 cases: cap_packs/govt-bond-yield/cases.yaml
-providers_root: providers
+providers_root: cap_packs/govt-bond-yield/providers
 qveris_list_pricing:
   snapshot: selection_snapshots/govt-bond-yield-v1/qveris-list-pricing.json
   bindings: cap_packs/govt-bond-yield/direct-bindings.json

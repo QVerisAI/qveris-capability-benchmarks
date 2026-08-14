@@ -1,0 +1,34 @@
+provider:
+  provider_id: nbp-pl
+  official_name: Narodowy Bank Polski
+  website: https://nbp.pl/
+  market_coverage: [PL, GLOBAL]
+  official_pricing:
+    - pricing_id: nbp-official-pricing
+      pricing_url: https://api.nbp.pl/en.html
+      applies_to:
+        - nbp-pl-exchange-rates-native
+      currencies: [NONE]
+      free_tier: "Public API with no fee or API key"
+      paid_plans: "No paid plan"
+      verified_at: 2026-08-10
+      source_digest: 57b5c30f7712b7d94520d302b07321a485b6e92fac08d4b036240c02d1833f7e
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: nbp-pl-exchange-rates-native
+    provider_id: nbp-pl
+    path_type: official_api
+    official_source: https://api.nbp.pl/en.html
+    canonical_interface: exchangerates/rates
+    protocol: https_rest
+    endpoint_url: https://api.nbp.pl/api/exchangerates/rates
+    authentication: No authentication
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Native access is documented but is not frozen into the current benchmark cohort.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c

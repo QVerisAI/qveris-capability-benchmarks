@@ -77,11 +77,16 @@ def _require_compilable_cap_pack(
     cap_id: str, cap_paths: tuple[Path, ...], providers_root: Path
 ) -> None:
     for cap_path in cap_paths:
+        cap_providers_root = cap_path.parent / "providers"
         try:
             compile_suite(
                 suite_path=cap_path.with_name("suite.yaml"),
                 cases_path=cap_path.with_name("cases.yaml"),
-                providers_root=providers_root,
+                providers_root=(
+                    cap_providers_root
+                    if cap_providers_root.is_dir()
+                    else providers_root
+                ),
                 cap_path=cap_path,
             )
         except (OSError, ValueError):

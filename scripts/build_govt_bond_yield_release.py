@@ -105,14 +105,14 @@ def build_release_from_artifacts(
     if evidence_dir.exists() or release_dir.exists():
         raise ValueError("release ID already exists; releases are immutable")
     compiled = compile_suite(
-        suite_path, cases_path, ROOT / "providers", PACK / "cap.yaml"
+        suite_path, cases_path, PACK / "providers", PACK / "cap.yaml"
     )
     registry = load_direct_binding_registry(registry_path)
     validate_direct_binding_registry(
         registry,
         suite_path,
         cases_path,
-        ROOT / "providers",
+        PACK / "providers",
         cap_path=PACK / "cap.yaml",
     )
     validate_government_bond_request_identities(registry, compiled)

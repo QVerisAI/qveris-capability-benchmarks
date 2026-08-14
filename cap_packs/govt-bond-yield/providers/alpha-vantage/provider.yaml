@@ -17,6 +17,20 @@ provider:
       disclosure_level: sanitized_public
       license_status: cleared
 access_paths:
+  - access_path_id: alpha-vantage-govt-bond-yield-qveris
+    provider_id: alpha-vantage
+    path_type: qveris_connector
+    official_source: https://www.alphavantage.co/documentation/#treasury-yield
+    canonical_interface: TREASURY_YIELD
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No Direct Test is authorized because this US-only path cannot satisfy the CAP-owned country-negative control.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: The discovered Treasury Yield tool is US-only and cannot express the CAP-owned unsupported-country negative control.
+      evidence_digest: sha256:088ca3bfb2ae2b63ecbe6a4477672bb89a822004cdca4d86eee40f66b9f877a0
   - access_path_id: alpha-vantage-fx-spot-qveris
     provider_id: alpha-vantage
     path_type: qveris_connector

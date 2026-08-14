@@ -35,7 +35,7 @@ def _compile(prefix: str):
     return compile_suite(
         PACK / suite_name,
         PACK / cases_name,
-        ROOT / "providers",
+        PACK / "providers",
         PACK / "cap.yaml",
         ROOT / "harbor_catalog/contracts.json",
     )
@@ -119,7 +119,7 @@ def test_ac4_every_applicable_cell_has_one_frozen_direct_binding() -> None:
             registry,
             PACK / suite_name,
             PACK / cases_name,
-            ROOT / "providers",
+            PACK / "providers",
             cap_path=PACK / "cap.yaml",
         )
         compiled = _compile(prefix)
