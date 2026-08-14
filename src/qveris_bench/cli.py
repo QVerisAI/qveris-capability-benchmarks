@@ -149,9 +149,7 @@ def article_prepare(
     profile: Annotated[
         Path, typer.Option(help="CAP article publication profile YAML.")
     ],
-    output: Annotated[
-        Path, typer.Option(help="Frozen writer-input JSON output.")
-    ],
+    output: Annotated[Path, typer.Option(help="Frozen writer-input JSON output.")],
 ) -> None:
     """Prepare public, release-backed facts for a Skill-driven editorial draft."""
     from qveris_bench.articles.writer import WriterInputBuildError, build_writer_input
