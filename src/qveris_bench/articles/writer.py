@@ -166,6 +166,16 @@ def load_editorial_document(path: Path, writer_input: dict[str, Any]) -> dict[st
         if not isinstance(heading, str) or not heading.strip():
             raise EditorialValidationError("decision scenario has no heading")
         _validate_model_copy(heading, writer_input)
+        expected_paths, fact_suffix = _expected_scenario_paths(scenario, writer_input)
+        if set(selected) != expected_paths:
+            raise EditorialValidationError(
+                "decision scenario shortlist differs from frozen facts"
+            )
+        refs = scenario["fact_refs"]
+        if not all(f"path:{path_id}:{fact_suffix}" in refs for path_id in selected):
+            raise EditorialValidationError(
+                "decision scenario is not bound to its decision facts"
+            )
     analyses = document.get("provider_analyses")
     if (
         not isinstance(analyses, list)
@@ -229,7 +239,11 @@ def _editorial_blocks(document: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def _validate_model_copy(copy: str, writer_input: dict[str, Any]) -> None:
-    if re.search(r"\d|https?://|sha256:|credits?/call", copy, re.IGNORECASE):
+    if re.search(
+        r"\d|https?://|sha256:|credits?/call|\[|\]|<|>|//|\b(?:mailto|javascript|data|file):|\bwww\.",
+        copy,
+        re.IGNORECASE,
+    ):
         raise EditorialValidationError(
             "material values and links must be rendered from deterministic facts"
         )
@@ -246,6 +260,75 @@ def _validate_model_copy(copy: str, writer_input: dict[str, Any]) -> None:
         raise EditorialValidationError(
             "editorial copy must not declare an overall winner"
         )
+    if re.search(
+        r"\b(?:guarantee(?:s|d)?|flawless|permanent|complete|always|unlimited|exhaustive)\b",
+        copy,
+        re.IGNORECASE,
+    ):
+        raise EditorialValidationError("editorial copy contains an absolute claim")
+
+
+def _expected_scenario_paths(
+    scenario: dict[str, Any], writer_input: dict[str, Any]
+) -> tuple[set[str], str]:
+    rows = writer_input.get("rows", [])
+    decision_type = scenario.get("decision_type")
+    if decision_type == "broadest_market_coverage":
+        values = {
+            row["access_path_id"]: sum(
+                result["state"] == "verified"
+                for result in row["market_coverage"]["results"]
+            )
+            for row in rows
+        }
+        return _minimum_or_maximum(values, maximum=True), "market-coverage"
+    if decision_type == "verified_market":
+        market = scenario.get("market")
+        if market not in writer_input.get("markets", []):
+            raise EditorialValidationError("decision scenario has an unknown market")
+        selected = {
+            row["access_path_id"]
+            for row in rows
+            if any(
+                result["market"] == market and result["state"] == "verified"
+                for result in row["market_coverage"]["results"]
+            )
+        }
+        if not selected:
+            raise EditorialValidationError("decision scenario market is not verified")
+        return selected, "market-coverage"
+    if decision_type == "lowest_latency":
+        values = {
+            row["access_path_id"]: row["gateway_metrics"]["latency_median_ms"]
+            for row in rows
+            if row["gateway_metrics"]["latency_median_ms"] is not None
+        }
+        return _minimum_or_maximum(values), "latency"
+    if decision_type == "lowest_list_price":
+        values = {
+            row["access_path_id"]: row["qveris_list_price"]["amount_credits"]
+            for row in rows
+            if row["qveris_list_price"]["amount_credits"] is not None
+        }
+        return _minimum_or_maximum(values), "list-price"
+    if decision_type == "explicit_invalid_input":
+        values = {
+            row["access_path_id"]: row["agent_interface"]["invalid_input_handling"].get(
+                "passed", 0
+            )
+            for row in rows
+        }
+        return _minimum_or_maximum(values, maximum=True), "invalid-input"
+    raise EditorialValidationError("decision scenario has an unsupported decision type")
+
+
+def _minimum_or_maximum(
+    values: dict[str, float | int], *, maximum: bool = False
+) -> set[str]:
+    if not values:
+        raise EditorialValidationError("decision scenario has no measured facts")
+    target = max(values.values()) if maximum else min(values.values())
+    return {path_id for path_id, value in values.items() if value == target}
 
 
 def _fact_catalog(snapshot: SelectionSnapshot) -> dict[str, dict[str, Any]]:

@@ -14,7 +14,7 @@ publication_package:
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
     - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:3742fe4d4d589425ee9dff568be0afb1daf437e631402174f7a3d9014c3c6864
+  adapter_digest: sha256:b3cc2dc4555710e5c43ef37b84fbe757535ca1075ec38ec16f0da974a340c800
 release:
   directory: releases/corporate-actions-v2-baseline-2026-q3-v1
   digest: sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae
@@ -34,6 +34,7 @@ artifacts:
   editorial: docs/guides/capability-seo/best-corporate-actions-apis/editorial.json
   skill_sources:
     - .agents/skills/cap-article-writer/SKILL.md
+    - .agents/skills/cap-article-writer/agents/openai.yaml
     - .agents/skills/cap-article-writer/references/article-blueprint.md
     - .agents/skills/cap-article-writer/references/editorial-contract.md
     - .agents/skills/cap-article-writer/references/evidence-language.md

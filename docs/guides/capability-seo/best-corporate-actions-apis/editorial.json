@@ -14,6 +14,7 @@
     {
       "heading": "Broadest released market verification",
       "copy": "Choose the selected path when verified representative coverage across the released market matrix is the priority. It has the broadest set of verified cells in this release, but inconclusive cells remain unknown and should be checked against the exact target market before adoption.",
+      "decision_type": "broadest_market_coverage",
       "recommended_access_path_ids": [
         "eodhd-corporate-actions-qveris"
       ],
@@ -25,6 +26,8 @@
     {
       "heading": "A target market where the broadest path is inconclusive",
       "copy": "Choose the selected path when its specific target-market cell is verified while the broader alternative remains evidence-insufficient there. This is a cell-level decision, not permission to infer coverage for every market or instrument.",
+      "decision_type": "verified_market",
+      "market": "IN",
       "recommended_access_path_ids": [
         "twelve-data-corporate-actions-qveris"
       ],
@@ -37,6 +40,7 @@
     {
       "heading": "Lowest observed gateway latency",
       "copy": "Choose the selected path when the released gateway latency sample is the primary runtime constraint. Treat that result as a small observation at the gateway boundary and pair it with the path's narrower applicability before making a production decision.",
+      "decision_type": "lowest_latency",
       "recommended_access_path_ids": [
         "alpha-vantage-corporate-actions-qveris"
       ],
@@ -49,6 +53,7 @@
     {
       "heading": "Lowest public gateway list price",
       "copy": "Choose the selected path when the frozen public gateway list price is the leading constraint and the representative baseline is sufficient for initial evaluation. Qualify that choice because the market release is evidence-insufficient and direct official pricing evidence is unavailable; list price is not the same as account-billed consumption.",
+      "decision_type": "lowest_list_price",
       "recommended_access_path_ids": [
         "massive-stocks-corporate-actions-qveris"
       ],
@@ -62,6 +67,7 @@
     {
       "heading": "Explicit invalid-input behavior",
       "copy": "Choose the selected path when an invalid symbol must produce the released validation outcome instead of empty data or a runtime failure. This observation covers the tested negative control only and does not establish broader recovery, retry, or semantic-error behavior.",
+      "decision_type": "explicit_invalid_input",
       "recommended_access_path_ids": [
         "eodhd-corporate-actions-qveris"
       ],
@@ -72,7 +78,7 @@
     }
   ],
   "evidence_explainer": {
-    "copy": "Read verified as every frozen round for the representative case meeting the capability contract. Provider-negative means every frozen round returned an explicit Provider-level negative outcome, not permanent lack of support. Not-applicable means the Access Path contract excluded the cell rather than the test failing. Evidence-insufficient means the release supports neither a positive conclusion nor a Provider-negative one. Keep these live observations separate from official statements and editorial recommendations.",
+    "copy": "Read verified as every frozen round for the representative case meeting the capability contract. Provider-negative means every frozen round returned an explicit Provider-level negative outcome, not enduring lack of support. Not-applicable means the Access Path contract excluded the cell rather than the test failing. Evidence-insufficient means the release supports neither a positive conclusion nor a Provider-negative one. Keep these live observations separate from official statements and editorial recommendations.",
     "fact_refs": [
       "article:evidence-states",
       "article:scope"
@@ -102,7 +108,7 @@
       ]
     },
     "tradeoff": {
-      "copy": "Read the horizontal and vertical axes together: one represents the frozen public gateway list price and the other the observed gateway latency for the representative baseline. A point can improve one constraint while weakening another, and the latency sample is not a service-level guarantee. Use the chart to shortlist paths for a stated constraint, not to derive a composite or provider-wide rank.",
+      "copy": "Read the horizontal and vertical axes together: one represents the frozen public gateway list price and the other the observed gateway latency for the representative baseline. A point can improve one constraint while weakening another, and the latency sample is not a service-level commitment. Use the chart to shortlist paths for a stated constraint, not to derive a composite or provider-wide rank.",
       "fact_refs": [
         "article:runtime-tradeoff",
         "article:no-overall-winner",

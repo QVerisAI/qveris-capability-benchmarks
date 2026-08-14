@@ -317,6 +317,9 @@ def _offline_network() -> Iterator[None]:
         "socket.socket.connect",
         "socket.socket.connect_ex",
         "socket.socket.sendto",
+        "subprocess.Popen",
+        "os.system",
+        "os.popen",
     )
     with ExitStack() as stack:
         for target in targets:

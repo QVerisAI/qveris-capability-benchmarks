@@ -27,7 +27,7 @@ This comparison evaluates historical split-event retrieval through the released 
 
 “Verified” means every frozen round met the CAP contract. “Provider-negative” means every round returned an explicit Provider-level negative outcome; it does not prove permanent lack of support. “Not applicable” means the frozen plan excluded that market. “Evidence insufficient” means the Release did not establish either a positive or Provider-negative conclusion.
 
-Read verified as every frozen round for the representative case meeting the capability contract. Provider-negative means every frozen round returned an explicit Provider-level negative outcome, not permanent lack of support. Not-applicable means the Access Path contract excluded the cell rather than the test failing. Evidence-insufficient means the release supports neither a positive conclusion nor a Provider-negative one. Keep these live observations separate from official statements and editorial recommendations.
+Read verified as every frozen round for the representative case meeting the capability contract. Provider-negative means every frozen round returned an explicit Provider-level negative outcome, not enduring lack of support. Not-applicable means the Access Path contract excluded the cell rather than the test failing. Evidence-insufficient means the release supports neither a positive conclusion nor a Provider-negative one. Keep these live observations separate from official statements and editorial recommendations.
 
 ## How developers should choose
 
@@ -55,7 +55,7 @@ These are conditional recommendations from separate evidence dimensions, never a
 
 ## Evidence and Provider differences
 
-### Why corporate-action retrieval is harder than “get stock splits”
+### Why Corporate Actions is harder than a basic lookup
 
 A usable split event must preserve instrument identity, event date, and ratio while respecting market-specific symbol dialects. An empty result for a valid historical event and an explicit rejection for an invalid symbol are different outcomes; the CAP keeps them separate so an Agent cannot silently treat transport or entitlement failures as correct Provider behavior.
 
@@ -67,7 +67,7 @@ Corporate-action retrieval is not satisfied by receiving a non-empty payload. Th
 
 The horizontal axis is median QVeris gateway latency and the bar shows the observed minimum-to-maximum range. The vertical axis is the sanitized QVeris Inspect list price. These are different dimensions: neither axis represents direct Provider subscription price, personal account billing, or a service-level guarantee.
 
-Read the horizontal and vertical axes together: one represents the frozen public gateway list price and the other the observed gateway latency for the representative baseline. A point can improve one constraint while weakening another, and the latency sample is not a service-level guarantee. Use the chart to shortlist paths for a stated constraint, not to derive a composite or provider-wide rank.
+Read the horizontal and vertical axes together: one represents the frozen public gateway list price and the other the observed gateway latency for the representative baseline. A point can improve one constraint while weakening another, and the latency sample is not a service-level commitment. Use the chart to shortlist paths for a stated constraint, not to derive a composite or provider-wide rank.
 
 ### Native plans and QVeris credits are different prices
 
@@ -75,7 +75,7 @@ The comparison table keeps official Provider pricing beside, but separate from, 
 
 ### Representative samples across nine markets
 
-[![Corporate Actions test matrix for nine representative markets and four Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
+[![Corporate Actions test matrix for representative markets and Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
 
 | Provider × Access Path | BR | CN | DE | ES | FR | HK | IN | JP | US |
 |---|---|---|---|---|---|---|---|---|---|
@@ -92,25 +92,25 @@ Read rows as structurally identified Provider and Access Path pairs and columns 
 
 #### Alpha Vantage · QVeris connector
 
-A released successful sample returned symbol `AAPL`, event date `2020-08-31`, split ratio `4.0`, and identity verification `true`. Verified representative markets: US. Observed median gateway latency: 485 ms (n=3). QVeris Inspect list price: 2 credits/call.
+A released successful sample returned symbol `AAPL`, event date `2020-08-31`, split ratio `4.0`, identity verification `true`. Verified representative markets: US. Observed median gateway latency: 485 ms (n=3). QVeris Inspect list price: 2 credits/call.
 
 This path fits a latency-sensitive evaluation within its explicitly limited market contract. The representative baseline returned the required identity and split-event fields, and the applicable market cell was verified, while other market cells were excluded rather than failed. The invalid-input control did not meet the validation contract, so downstream code should not rely on an explicit validation error from this observation.
 
 #### EODHD · QVeris connector
 
-A released successful sample returned symbol `PETR4.SA`, event date `2008-04-28`, split ratio `2.0`, and identity verification `true`. Verified representative markets: BR, CN, DE, ES, FR, HK, US. Observed median gateway latency: 1557 ms (n=3). QVeris Inspect list price: 2.81 credits/call.
+A released successful sample returned symbol `PETR4.SA`, event date `2008-04-28`, split ratio `2.0`, identity verification `true`. Verified representative markets: BR, CN, DE, ES, FR, HK, US. Observed median gateway latency: 1557 ms (n=3). QVeris Inspect list price: 2.81 credits/call.
 
 This path fits developers prioritizing the broadest released set of verified market cells together with explicit invalid-input behavior. Its representative successful sample met the completion contract, but some applicable market cells remain evidence-insufficient, so the broad result must still be checked at the target-cell level. Its runtime and public list-price position should be weighed separately rather than folded into the coverage result.
 
 #### Massive · QVeris connector
 
-A released successful sample returned symbol `AAPL`, event date `2020-08-31`, split ratio `4.0`, and identity verification `true`. Verified representative markets: none in this edition. Observed median gateway latency: 1674 ms (n=3). QVeris Inspect list price: 1 credits/call.
+A released successful sample returned symbol `AAPL`, event date `2020-08-31`, split ratio `4.0`, identity verification `true`. Verified representative markets: none in this edition. Observed median gateway latency: 1674 ms (n=3). QVeris Inspect list price: 1 credits/call.
 
 This path fits an initial evaluation driven by the lowest frozen public gateway list price and a completed representative baseline. The separate market release remains evidence-insufficient after observed runtime blocking, so that baseline must not be promoted into a market-coverage claim. The invalid-input control did not meet the validation contract, and official direct-pricing evidence is unavailable in this release.
 
 #### Twelve Data · QVeris connector
 
-A released successful sample returned symbol `PETR4.SA`, event date `2008-04-28`, split ratio `0.5`, and identity verification `true`. Verified representative markets: BR, DE, FR, IN, JP, US. Observed median gateway latency: 1086 ms (n=3). QVeris Inspect list price: 2.37 credits/call.
+A released successful sample returned symbol `PETR4.SA`, event date `2008-04-28`, split ratio `0.5`, identity verification `true`. Verified representative markets: BR, DE, FR, IN, JP, US. Observed median gateway latency: 1086 ms (n=3). QVeris Inspect list price: 2.37 credits/call.
 
 This path fits target-market decisions where its released cell is verified, including cells left inconclusive by another broad-coverage path. Its representative successful sample met the completion contract, but several applicable cells remain evidence-insufficient after runtime errors. The invalid-input control also did not meet the validation contract, so agents need their own normalization and fallback policy.
 
@@ -125,23 +125,23 @@ This path fits target-market decisions where its released cell is verified, incl
 
 The constrained observation isolates invalid-input handling from other Agent-interface dimensions. Only the path with a positive invalid-input fact produced the required validation outcome; the other observed paths returned empty data or runtime failures for that control. Parameter clarity, schema stability, pagination, and single-tool completion remain evidence-insufficient across the released cohort. Agents should therefore validate returned identity, normalize failure classes, and avoid assuming unmeasured interface fitness.
 
-This is not an AI-friendly score. The current Release does not establish pagination behavior, schema stability across versions, language mapping, or single-tool completion. Validate returned identity, market symbol dialect, date semantics, ratio normalization, and empty-result behavior in the application boundary.
+This is not an AI-friendly score. The current Release does not establish pagination behavior, schema stability across versions, language mapping, single-tool completion. Validate returned identity, market symbol dialect, date semantics, ratio normalization, empty-result behavior in the application boundary.
 
 ## Method, reproduction, and contribution
 
 ### How we tested
 
-The baseline suite froze a known historical split case and an invalid-symbol control for every included Access Path. The market suite then ran applicable representative cases without converting not-applicable or blocked cells into Provider failures. Public terminal evidence is sanitized and digest-bound; private raw responses remain outside the repository.
+The baseline suite froze a known historical split case and an invalid-symbol control for every included Access Path. The market suite ran applicable representative cases without converting not-applicable or blocked cells into Provider failures. Public terminal evidence is sanitized and digest-bound; private raw responses remain outside the repository.
 
 The baseline Release digest is `sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae`. The market Release digest is `sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463`.
 
 ### No key required: reproduce the publication offline
 
 ```bash
-uv run qveris-bench publication reproduce --package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml --expected-package-attestation docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json
+uv run qveris-bench publication reproduce --package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml --expected-package-digest <published-digest>
 ```
 
-This command rebuilds the Selection Snapshot, writer input, article facts, charts, and guide from committed public evidence without calling QVeris or any Provider.
+Replace `<published-digest>` with the digest distributed by the trusted GitHub Release or CI attestation outside the checkout. The command rebuilds the Selection Snapshot, writer input, article facts, charts, and guide from committed public evidence without calling QVeris or any Provider; a digest stored only in the same mutable checkout is not a trust anchor.
 
 ### With a configured key: start a new live evidence run
 

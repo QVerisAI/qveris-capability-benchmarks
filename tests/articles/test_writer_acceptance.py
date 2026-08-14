@@ -20,6 +20,9 @@ PROFILE = (
     ROOT
     / "docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml"
 )
+EDITORIAL = (
+    ROOT / "docs/guides/capability-seo/best-corporate-actions-apis/editorial.json"
+)
 
 
 def test_ac1_writer_input_is_release_backed_and_contains_no_private_raw() -> None:
@@ -135,6 +138,9 @@ def test_ac3_editorial_document_rejects_unbound_claims(tmp_path: Path) -> None:
             )
         ],
     }
+    editorial["decision_scenarios"] = json.loads(EDITORIAL.read_text(encoding="utf-8"))[
+        "decision_scenarios"
+    ]
     editorial_path = tmp_path / "editorial.json"
     editorial_path.write_text(json.dumps(editorial), encoding="utf-8")
 
@@ -147,3 +153,30 @@ def test_ac3_editorial_document_rejects_unbound_claims(tmp_path: Path) -> None:
     editorial_path.write_text(json.dumps(editorial), encoding="utf-8")
     with pytest.raises(EditorialValidationError):
         load_editorial_document(editorial_path, writer_input)
+
+
+def test_editorial_rejects_wrong_shortlist_links_and_absolute_claims(
+    tmp_path: Path,
+) -> None:
+    writer_input = json.loads(build_writer_input(SNAPSHOT, PROFILE, ROOT).json_bytes)
+    original = json.loads(EDITORIAL.read_text(encoding="utf-8"))
+    editorial_path = tmp_path / "editorial.json"
+
+    wrong_shortlist = json.loads(json.dumps(original))
+    wrong_shortlist["decision_scenarios"][0]["recommended_access_path_ids"] = [
+        "alpha-vantage-corporate-actions-qveris"
+    ]
+    editorial_path.write_text(json.dumps(wrong_shortlist), encoding="utf-8")
+    with pytest.raises(EditorialValidationError, match="shortlist"):
+        load_editorial_document(editorial_path, writer_input)
+
+    for unsafe_copy in (
+        "Read the [source](//false.example) before choosing.",
+        "Read the <a href='javascript:alert()'>source</a> before choosing.",
+        "This path guarantees flawless pagination and permanent uptime.",
+    ):
+        unsafe = json.loads(json.dumps(original))
+        unsafe["lead"]["copy"] = unsafe_copy
+        editorial_path.write_text(json.dumps(unsafe), encoding="utf-8")
+        with pytest.raises(EditorialValidationError):
+            load_editorial_document(editorial_path, writer_input)

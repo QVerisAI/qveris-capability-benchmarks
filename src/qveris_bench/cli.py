@@ -220,30 +220,8 @@ def publication_reproduce(
         str | None,
         typer.Option(help="Trusted package digest from outside this checkout."),
     ] = None,
-    expected_package_attestation: Annotated[
-        Path | None,
-        typer.Option(help="JSON attestation containing the trusted package digest."),
-    ] = None,
 ) -> None:
     """Rebuild and verify a publication from committed release facts."""
-    attestation: dict[str, object] | None = None
-    if expected_package_digest is not None and expected_package_attestation is not None:
-        typer.echo("choose a package digest or attestation, not both", err=True)
-        raise typer.Exit(code=1)
-    if expected_package_attestation is not None:
-        try:
-            resolved = expected_package_attestation.resolve(strict=True)
-            resolved.relative_to(_REPOSITORY_ROOT.resolve(strict=True))
-            loaded = json.loads(resolved.read_text(encoding="utf-8"))
-            if not isinstance(loaded, dict) or not isinstance(
-                loaded.get("package_digest"), str
-            ):
-                raise ValueError
-            attestation = loaded
-            expected_package_digest = loaded["package_digest"]
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
-            typer.echo("invalid package attestation", err=True)
-            raise typer.Exit(code=1) from exc
     try:
         report = reproduce_publication_package(
             package,
@@ -252,9 +230,6 @@ def publication_reproduce(
     except PublicationReproductionError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
-    if attestation is not None and attestation.get("package_id") != report.package_id:
-        typer.echo("package attestation identity mismatch", err=True)
-        raise typer.Exit(code=1)
     typer.echo(report_json(report), nl=False)
 
 
