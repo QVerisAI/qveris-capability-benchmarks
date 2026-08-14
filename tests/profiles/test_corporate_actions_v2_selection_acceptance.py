@@ -65,6 +65,15 @@ def test_ac3_corporate_v2_snapshot_preserves_nine_market_evidence_states() -> No
         "not_applicable",
         "evidence_insufficient",
     }
+    assert {
+        str(row.provider_id): row.market_coverage.run_observations.terminal_observations
+        for row in rows
+    } == {
+        "alpha-vantage": 4,
+        "eodhd": 20,
+        "massive-stocks": 4,
+        "twelve-data": 20,
+    }
 
 
 def test_ac4_corporate_v2_snapshot_uses_inspect_prices_not_account_costs() -> None:

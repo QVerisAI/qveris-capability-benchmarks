@@ -1,7 +1,7 @@
 title: Best Corporate Actions APIs for Developers
-meta_description: Evidence-backed comparison of QVeris corporate-actions Access Paths for stock splits, with release-backed latency, list credits, market evidence, and Agent signals.
+meta_description: Compare four QVeris corporate-actions paths using 72 live split-event calls across nine markets, with latency, public credits, pricing, and evidence limits.
 cap_label: Corporate Actions
-scope: Historical US equity stock-split retrieval and an explicit invalid-symbol control through the tested QVeris Access Paths.
+scope: Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.
 allowed_links:
   - https://www.alphavantage.co/
   - https://qveris.ai/providers/alphavantage

@@ -285,6 +285,7 @@ class MarketCoverageSnapshot(FrozenModel):
     release_digest: EvidenceRef
     observation_date: date
     results: tuple[MarketCoverageResult, ...] = Field(min_length=1)
+    run_observations: RunObservationsSnapshot | None = None
 
     @model_validator(mode="after")
     def require_unique_markets(self) -> MarketCoverageSnapshot:

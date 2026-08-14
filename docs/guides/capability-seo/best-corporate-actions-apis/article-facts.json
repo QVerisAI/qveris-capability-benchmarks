@@ -1,10 +1,19 @@
 {
   "access_path_count": 4,
   "cap_id": "corporate-actions",
-  "cap_release_digest": "sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb",
+  "cap_release_digest": "sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae",
   "edition": "2026-08-14",
-  "market_release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
+  "market_release_digest": "sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463",
+  "market_terminal_observations": 48,
   "markets": [
+    "BR",
+    "CN",
+    "DE",
+    "ES",
+    "FR",
+    "HK",
+    "IN",
+    "JP",
     "US"
   ],
   "planned_observations": 24,
@@ -18,18 +27,66 @@
         "state": "measured",
         "total": 3
       },
-      "latency_max_ms": 4263.01,
-      "latency_median_ms": 479.75,
-      "latency_min_ms": 475.77,
+      "latency_max_ms": 1208.48,
+      "latency_median_ms": 484.66,
+      "latency_min_ms": 382.09,
       "latency_samples": 3,
       "list_price_credits": 2.0,
       "list_price_inspected_at": "2026-08-14",
       "market_results": [
         {
+          "market": "BR",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "ES",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "FR",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "HK",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "IN",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
           "market": "US",
-          "passed": 3,
+          "passed": 2,
           "state": "verified",
-          "total": 3
+          "total": 2
         }
       ],
       "negative": [
@@ -79,18 +136,66 @@
         "state": "measured",
         "total": 3
       },
-      "latency_max_ms": 1073.41,
-      "latency_median_ms": 976.03,
-      "latency_min_ms": 733.14,
+      "latency_max_ms": 1816.77,
+      "latency_median_ms": 1557.01,
+      "latency_min_ms": 692.71,
       "latency_samples": 3,
       "list_price_credits": 2.81,
       "list_price_inspected_at": "2026-08-14",
       "market_results": [
         {
-          "market": "US",
-          "passed": 3,
+          "market": "BR",
+          "passed": 2,
           "state": "verified",
-          "total": 3
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "ES",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "FR",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "HK",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "IN",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "US",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
         }
       ],
       "negative": [
@@ -129,6 +234,12 @@
       "provider_name": "EODHD",
       "terminal_observations": 6,
       "verified_markets": [
+        "BR",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
         "US"
       ]
     },
@@ -140,18 +251,66 @@
         "state": "measured",
         "total": 3
       },
-      "latency_max_ms": 1186.96,
-      "latency_median_ms": 1035.74,
-      "latency_min_ms": 754.23,
+      "latency_max_ms": 2298.23,
+      "latency_median_ms": 1673.54,
+      "latency_min_ms": 1154.02,
       "latency_samples": 3,
       "list_price_credits": 1.0,
       "list_price_inspected_at": "2026-08-14",
       "market_results": [
         {
+          "market": "BR",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "ES",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "FR",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "HK",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "IN",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 0,
+          "state": "not_applicable",
+          "total": 2
+        },
+        {
           "market": "US",
-          "passed": 3,
-          "state": "verified",
-          "total": 3
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
         }
       ],
       "negative": [
@@ -187,35 +346,81 @@
       "provider_id": "massive-stocks",
       "provider_name": "Massive",
       "terminal_observations": 6,
-      "verified_markets": [
-        "US"
-      ]
+      "verified_markets": []
     },
     {
       "access_path_id": "twelve-data-corporate-actions-qveris",
       "access_path_type": "qveris_connector",
       "invalid_input": {
-        "passed": 3,
+        "passed": 0,
         "state": "measured",
         "total": 3
       },
-      "latency_max_ms": 2029.23,
-      "latency_median_ms": 1045.36,
-      "latency_min_ms": 471.42,
+      "latency_max_ms": 2091.95,
+      "latency_median_ms": 1086.29,
+      "latency_min_ms": 441.1,
       "latency_samples": 3,
       "list_price_credits": 2.37,
       "list_price_inspected_at": "2026-08-14",
       "market_results": [
         {
-          "market": "US",
-          "passed": 3,
+          "market": "BR",
+          "passed": 2,
           "state": "verified",
-          "total": 3
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "ES",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "FR",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "HK",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "IN",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "US",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
         }
       ],
       "negative": [
         {
-          "passed": 3,
+          "passed": 0,
           "state": "measured",
           "total": 3
         }
@@ -249,10 +454,15 @@
       "provider_name": "Twelve Data",
       "terminal_observations": 6,
       "verified_markets": [
+        "BR",
+        "DE",
+        "FR",
+        "IN",
+        "JP",
         "US"
       ]
     }
   ],
-  "scope": "Historical US equity stock-split retrieval and an explicit invalid-symbol control through the tested QVeris Access Paths.",
+  "scope": "Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.",
   "terminal_observations": 24
 }
