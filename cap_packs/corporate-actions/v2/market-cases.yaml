@@ -1,0 +1,72 @@
+cases:
+  - case_id: us-aapl-split-market
+    cap_id: corporate-actions
+    question: Return the AAPL split event in the fixed United States market sample.
+    input: {market: US, symbol: AAPL, start_date: 2020-01-01, end_date: 2020-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: hk-0700-split-market
+    cap_id: corporate-actions
+    question: Return the Tencent split event in the fixed Hong Kong market sample.
+    input: {market: HK, symbol: 0700.HK, start_date: 2014-01-01, end_date: 2014-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: cn-600519-split-market
+    cap_id: corporate-actions
+    question: Return a Kweichow Moutai split or bonus-share event in the fixed China market sample.
+    input: {market: CN, symbol: 600519.SH, start_date: 2000-01-01, end_date: 2026-08-14}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: jp-7203-split-market
+    cap_id: corporate-actions
+    question: Return the Toyota split event in the fixed Japan market sample.
+    input: {market: JP, symbol: 7203.T, start_date: 2021-01-01, end_date: 2021-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: de-sap-split-market
+    cap_id: corporate-actions
+    question: Return the SAP split event in the fixed Germany market sample.
+    input: {market: DE, symbol: SAP.DE, start_date: 1999-01-01, end_date: 2001-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: fr-mc-split-market
+    cap_id: corporate-actions
+    question: Return the LVMH split event in the fixed France market sample.
+    input: {market: FR, symbol: MC.PA, start_date: 1999-01-01, end_date: 2001-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: br-petr4-split-market
+    cap_id: corporate-actions
+    question: Return the Petrobras split event in the fixed Brazil market sample.
+    input: {market: BR, symbol: PETR4.SA, start_date: 2007-01-01, end_date: 2009-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: in-reliance-split-market
+    cap_id: corporate-actions
+    question: Return the Reliance Industries split or bonus-share event in the fixed India market sample.
+    input: {market: IN, symbol: RELIANCE.NS, start_date: 2017-01-01, end_date: 2017-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: es-itx-split-market
+    cap_id: corporate-actions
+    question: Return the Inditex split event in the fixed Spain market sample.
+    input: {market: ES, symbol: ITX.MC, start_date: 2014-01-01, end_date: 2014-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: invalid-corporate-actions-symbol-v2
+    cap_id: corporate-actions
+    question: Explicitly reject an invalid split-event symbol without returning an event.
+    input: {symbol: NOTASTOCK}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: [sanitized_public]

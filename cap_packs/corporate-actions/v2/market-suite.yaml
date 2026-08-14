@@ -1,0 +1,44 @@
+suite_id: corporate-actions-market-coverage-v2
+version: 2.0.0
+cap_id: corporate-actions
+cap_version: 2.0.0
+case_ids:
+  - us-aapl-split-market
+  - hk-0700-split-market
+  - cn-600519-split-market
+  - jp-7203-split-market
+  - de-sap-split-market
+  - fr-mc-split-market
+  - br-petr4-split-market
+  - in-reliance-split-market
+  - es-itx-split-market
+  - invalid-corporate-actions-symbol-v2
+access_path_ids:
+  - eodhd-corporate-actions-qveris
+  - twelve-data-corporate-actions-qveris
+  - alpha-vantage-corporate-actions-qveris
+  - massive-stocks-corporate-actions-qveris
+modes: [direct]
+rounds: 2
+environment:
+  as_of: "2026-08-14"
+  execution_via: qveris_connector
+outcome_rules_file: outcome-rules.yaml
+agent_protocol: null
+not_applicable:
+  - {case_id: hk-0700-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: cn-600519-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: jp-7203-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: de-sap-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: fr-mc-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: br-petr4-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: in-reliance-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: es-itx-split-market, access_path_id: alpha-vantage-corporate-actions-qveris, reason: "Access Path contract limits this split tool to United States equities."}
+  - {case_id: hk-0700-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: cn-600519-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: jp-7203-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: de-sap-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: fr-mc-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: br-petr4-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: in-reliance-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}
+  - {case_id: es-itx-split-market, access_path_id: massive-stocks-corporate-actions-qveris, reason: "Access Path contract limits Massive Stocks to United States equities."}

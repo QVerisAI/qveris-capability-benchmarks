@@ -1,0 +1,6 @@
+required: [symbol, identity_verified, action_type, date]
+optional: [identity_basis, returned_symbol, ratio, validation_error]
+constraints:
+  - The positive response must contain a split event for the frozen request identity.
+  - The action type must unambiguously represent a split.
+  - The event date must be ISO-8601 and inside the frozen case window.

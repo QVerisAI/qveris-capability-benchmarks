@@ -1,0 +1,61 @@
+schema_version: 1
+captured_at: "2026-08-14T04:00:44.389870Z"
+source_snapshot_digest: sha256:7579d22a0e6a552f5c1225e5e208a0834fca8173c5b8253d949eb96d294cf7a4
+row_count: 55
+provider_identity_count: 12
+candidates:
+  - alphavantage|alphavantage.dividends.list.v1.467a92c0
+  - alphavantage|alphavantage.splits.list.v1.467a92c0
+  - eodhd|eodhd.dividends.list.v1.7b9ad8c6
+  - eodhd|eodhd.financial_apis.dividends.retrieve.v1.8b52cd2a
+  - eodhd|eodhd.financial_apis.splits.retrieve.v1.b2ac7c39
+  - eodhd|eodhd.historical_dividends.retrieve.v1.16c367bf
+  - eodhd|eodhd.splits.list.v1.7c5cf355
+  - financialmodelingprep|financialmodelingprep.stable.governanceexecutivecompensation.retrieve.v1.1be30df4
+  - financialmodelingprep|financialmodelingprep.stable.mergersacquisitionssearch.retrieve.v1.68736b51
+  - financialmodelingprep|financialmodelingprep.stable.secfilingssearch.cik.retrieve.v1.6c73a2ce
+  - finnhub|finnhub.stock.lobbying.execute.v1
+  - fiu_mcp_server|fiu_mcp_server.postapihkf10summarycadividends.create.v2.d3fe48e2
+  - fiu_mcp_server|fiu_mcp_server.postapihkf10summarycaexchangechange.create.v2.cab650d5
+  - fiu_mcp_server|fiu_mcp_server.postapihkf10summarycameeting.create.v2.4b5ae0f8
+  - fiu_mcp_server|fiu_mcp_server.postapihkf10summarycarepurchase.create.v2.479f419b
+  - fiu_mcp_server|fiu_mcp_server.postapihkf10summarycasplits.create.v2.29d164ee
+  - fiu_mcp_server|fiu_mcp_server.postapihsf10summarycadividends.create.v2.88186c04
+  - fiu_mcp_server|fiu_mcp_server.postapihsf10summarycameeting.create.v2.599cddf3
+  - fiu_mcp_server|fiu_mcp_server.postapihsf10summarycarepurchase.create.v2.4dde4d6c
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarybasic.create.v2.fe78c639
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarycacodechange.create.v2.0422b85c
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarycadividends.create.v2.47476df8
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarycameeting.create.v2.9a54993d
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarycasplits.create.v2.f790ab85
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summarycasuspension.create.v2.3c4e9afe
+  - fiu_mcp_server|fiu_mcp_server.postapiusf10summaryholdchange.create.v2.a288030f
+  - fiu_mcp_server|fiu_mcp_server.postv1utilsexrightevent.create.v2.f57e1d59
+  - fiu_mcp_server|fiu_mcp_server.postv3utilsexrightevent.create.v2.84f62b64
+  - hangseng_polysource|hangseng_polysource.enterprise_change_info.list.v2.e89f42ed
+  - hangseng_polysource|hangseng_polysource.finance.financereportdisclosure.gettime.create.v2.c5f5b170
+  - hangseng_polysource|hangseng_polysource.fund.fundDividendHistoryReport.v2.0d06a0ff
+  - hangseng_polysource|hangseng_polysource.hk.corp_rpt_disc_date.query.v2.2fffa5fe
+  - hangseng_polysource|hangseng_polysource.shareholding.shareholdingChangePlan.query.v2.b56907fe
+  - hangseng_polysource|hangseng_polysource.stock.buyBackCancel.query.v2.0471448f
+  - hangseng_polysource|hangseng_polysource.stock.dividend.query.v2.6174546b
+  - hangseng_polysource|hangseng_polysource.stock.sharePlacement.query.v2.58b8ad83
+  - hangseng_polysource|hangseng_polysource.stock.shareholdersMeeting.query.v2.bc34cda4
+  - hangseng_polysource|hangseng_polysource.stock.sharesFloating.query.v2.29c44e1f
+  - hangseng_polysource|hangseng_polysource.stock.stockincentive.create.v2.025796fd
+  - massive_stocks|massive_stocks.stocks.splits.list.v1.9ba1ffe4
+  - mcp_gildata|mcp_gildata.bonusstock.v1
+  - mcp_gildata|mcp_gildata.funddividendhistoryreport.v1
+  - mcp_gildata|mcp_gildata.restrictedstocklifting.v1
+  - mcp_gildata|mcp_gildata.stockshareissuance.v1
+  - mcp_gildata|mcp_gildata.stockshareplacement.v1
+  - polygon|polygon.stocks.dividends.list.v1.ea25c492
+  - ths_ifind|ths_ifind.block_trade.v1
+  - ths_ifind|ths_ifind.dividend_plan.v1
+  - ths_ifind|ths_ifind.ipo_return.v1
+  - ths_ifind|ths_ifind.report_query.v1
+  - twelvedata|twelvedata.dividends.retrieve.v1.c0c9b142
+  - twelvedata|twelvedata.dividendscalendar.retrieve.v1.394bd562
+  - twelvedata|twelvedata.edgarfilings.archive.retrieve.v1.a7fffdb6
+  - twelvedata|twelvedata.splits.retrieve.v1.43527690
+  - yahoo_finance|yahoo_finance.finance_quoteSummary.v1
