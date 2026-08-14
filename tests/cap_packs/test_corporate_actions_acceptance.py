@@ -8,6 +8,7 @@ from qveris_bench.execution.direct_binding import (
 )
 from qveris_bench.providers.repository import ProviderRegistryRepository
 from qveris_bench.suites.compiler import compile_suite
+from scripts.cap_direct_test_probe import load_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -75,3 +76,15 @@ def test_corporate_actions_direct_bindings_cover_each_frozen_cell() -> None:
     assert all(
         binding.discovery_query == binding.tool_id for binding in registry.bindings
     )
+
+
+def test_corporate_actions_probe_fixture_uses_frozen_case_ids() -> None:
+    probes = load_fixture(
+        ROOT / "scripts/fixtures/cap-direct-test-corporate-actions.yaml",
+        ROOT / "providers",
+    )
+
+    assert {case.case_id for probe in probes for case in probe.cases} == {
+        "aapl-splits-fixed-window",
+        "invalid-corporate-actions-symbol",
+    }
