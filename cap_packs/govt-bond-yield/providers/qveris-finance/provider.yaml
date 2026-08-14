@@ -1,0 +1,21 @@
+provider:
+  provider_id: qveris-finance
+  official_name: QVeris Finance
+  website: https://qveris.ai/
+  market_coverage: [US, CN, UK, DE, JP, AU, CA]
+  official_pricing: []
+access_paths:
+  - access_path_id: qveris-finance-govt-bond-yield-qveris
+    provider_id: qveris-finance
+    path_type: qveris_connector
+    official_source: https://qveris.ai/guides/finance-capabilities/
+    canonical_interface: rates_govt_benchmark
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: Direct Test is limited to the frozen seven-country 10Y and unsupported-country cases.
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: The discovered standardized government-bond-yield tool exposes the exact country and tenor contract.
+      evidence_digest: sha256:400ed252be01d3ca23658422fac6aef533565c157717561da82cff82f5de48dd

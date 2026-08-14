@@ -1,0 +1,7 @@
+required: [symbol, date, close, identity_verified, identity_basis]
+optional: [unit, currency, source, name, interval]
+constraints:
+  - The closing yield must be a finite number; zero and negative observations are valid.
+  - The observation date must be ISO-8601 and inside 2024-01-01 through 2024-12-31.
+  - Country and 10Y tenor identity must match the frozen request binding.
+  - Unit, currency, and source are preserved when observed and never inferred.

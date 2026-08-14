@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 import tempfile
-import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -21,8 +20,14 @@ from qveris_bench.execution.direct_binding import (
     load_direct_binding_registry,
     validate_direct_binding_registry,
 )
-from qveris_bench.execution.qveris import QverisExecutionEnvelope, gateway_metrics
+from qveris_bench.execution.qveris import gateway_metrics
 from qveris_bench.releases.canonical import release_digest
+from qveris_bench.releases.github_exports import (
+    json_object,
+    nested,
+    private_execution_document,
+    verified_archive,
+)
 from qveris_bench.releases.public_terminal import (
     PublicTerminal,
     assemble_public_terminal_release,
@@ -46,14 +51,14 @@ def build_release_from_artifacts(
 ) -> str:
     if suite_name not in {"baseline", "market"}:
         raise ValueError("suite must be baseline or market")
-    run = _json_object(github_run_export)
+    run = json_object(github_run_export)
     expected_workflow = f".github/workflows/live-corporate-actions-{suite_name}-e2e.yml"
     if (
         run.get("status") != "completed"
         or run.get("conclusion") != "success"
         or run.get("event") != "workflow_dispatch"
         or run.get("path") != expected_workflow
-        or _nested(run, "repository", "full_name") != REPOSITORY
+        or nested(run, "repository", "full_name") != REPOSITORY
         or not isinstance(run.get("id"), int)
         or not isinstance(run.get("head_sha"), str)
     ):
@@ -91,7 +96,7 @@ def build_release_from_artifacts(
         binding = bindings_by_cell[(cell.case_id, cell.access_path_id)]
         evidence_ids.add(f"{binding.binding_id}-round-{cell.round}")
 
-    artifact_export = _json_object(github_artifacts_export)
+    artifact_export = json_object(github_artifacts_export)
     artifact_rows = artifact_export.get("artifacts")
     if not isinstance(artifact_rows, list):
         raise ValueError("GitHub artifact export is missing artifacts")
@@ -120,10 +125,10 @@ def build_release_from_artifacts(
         private_name = f"private-corporate-actions-{suite_name}-{evidence_id}"
         public_row = artifacts_by_name[public_name]
         private_row = artifacts_by_name[private_name]
-        public_entries, public_archive_digest = _verified_archive(
+        public_entries, public_archive_digest = verified_archive(
             public_row, artifact_archive_root
         )
-        private_entries, private_archive_digest = _verified_archive(
+        private_entries, private_archive_digest = verified_archive(
             private_row, artifact_archive_root
         )
         if len(public_entries) != 1:
@@ -148,7 +153,7 @@ def build_release_from_artifacts(
         binding = bindings_by_cell[(matched_cell.case_id, matched_cell.access_path_id)]
         if binding.binding_id != terminal.binding_id:
             raise ValueError("public terminal binding identity mismatch")
-        raw_document, execution_envelope = _private_execution_document(
+        raw_document, execution_envelope = private_execution_document(
             private_entries,
             evidence_id,
             terminal.raw_digest,
@@ -259,118 +264,6 @@ def build_release_from_artifacts(
     release_artifacts.write(release_dir)
     (release_dir / "github-artifacts.json").write_bytes(attestation_bytes)
     return release_digest(release_artifacts.release_bytes)
-
-
-def _json_object(path: Path) -> dict[str, Any]:
-    try:
-        document = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"invalid JSON export: {path}") from exc
-    if not isinstance(document, dict):
-        raise ValueError(f"JSON export must be an object: {path}")
-    return document
-
-
-def _nested(document: dict[str, Any], *keys: str) -> object:
-    value: object = document
-    for key in keys:
-        if not isinstance(value, dict):
-            return None
-        value = value.get(key)
-    return value
-
-
-def _verified_archive(
-    artifact: dict[str, Any], archive_root: Path
-) -> tuple[dict[str, bytes], str]:
-    artifact_id = artifact.get("id")
-    declared_digest = artifact.get("digest")
-    if (
-        not isinstance(artifact_id, int)
-        or not isinstance(declared_digest, str)
-        or not declared_digest.startswith("sha256:")
-        or artifact.get("expired") is True
-    ):
-        raise ValueError("GitHub artifact identity or digest is invalid")
-    archive_path = archive_root / f"{artifact_id}.zip"
-    archive_digest = sha256_digest(archive_path.read_bytes())
-    if archive_digest != declared_digest:
-        raise ValueError("GitHub artifact archive digest mismatch")
-    entries: dict[str, bytes] = {}
-    try:
-        with zipfile.ZipFile(archive_path) as archive:
-            for info in archive.infolist():
-                if info.is_dir():
-                    continue
-                path = PurePosixPath(info.filename)
-                file_type = (info.external_attr >> 16) & 0o170000
-                if path.is_absolute() or ".." in path.parts or file_type == 0o120000:
-                    raise ValueError("GitHub artifact contains an unsafe path")
-                if path.as_posix() in entries:
-                    raise ValueError("GitHub artifact contains duplicate paths")
-                entries[path.as_posix()] = archive.read(info)
-    except zipfile.BadZipFile as exc:
-        raise ValueError("GitHub artifact archive is invalid") from exc
-    if not entries:
-        raise ValueError("GitHub artifact archive is empty")
-    return entries, archive_digest
-
-
-def _private_execution_document(
-    entries: dict[str, bytes],
-    evidence_id: str,
-    envelope_digest: str,
-    tool_id: str,
-    parameters: dict[str, object],
-) -> tuple[dict[str, Any], QverisExecutionEnvelope]:
-    for name, content in entries.items():
-        digest = sha256_digest(content).removeprefix("sha256:")
-        path = PurePosixPath(name)
-        suffix = f"-{digest}.json"
-        artifact_id = name.removesuffix(suffix)
-        if (
-            path.name != name
-            or not name.endswith(suffix)
-            or artifact_id
-            not in {
-                f"{evidence_id}-search",
-                f"{evidence_id}-search-describe",
-                f"{evidence_id}-search-execute",
-                f"{evidence_id}-search-execution-envelope",
-            }
-        ):
-            raise ValueError("private raw artifact contains an unbound entry")
-    envelope_name = (
-        f"{evidence_id}-search-execution-envelope-"
-        f"{envelope_digest.removeprefix('sha256:')}.json"
-    )
-    envelope_bytes = entries.get(envelope_name)
-    if envelope_bytes is None or sha256_digest(envelope_bytes) != envelope_digest:
-        raise ValueError("private raw artifact does not contain terminal raw digest")
-    try:
-        envelope = QverisExecutionEnvelope.model_validate_json(envelope_bytes)
-    except ValueError as exc:
-        raise ValueError("private execution envelope is invalid") from exc
-    if (
-        envelope.artifact_id != f"{evidence_id}-search"
-        or envelope.tool_id != tool_id
-        or envelope.parameters != parameters
-    ):
-        raise ValueError("private execution envelope request identity mismatch")
-    response_name = (
-        f"{evidence_id}-search-execute-"
-        f"{str(envelope.response_digest).removeprefix('sha256:')}.json"
-    )
-    raw_bytes = entries.get(response_name)
-    if raw_bytes is None or sha256_digest(raw_bytes) != envelope.response_digest:
-        raise ValueError("private execution envelope response digest mismatch")
-    try:
-        document = json.loads(raw_bytes)
-    except json.JSONDecodeError as exc:
-        raise ValueError("private raw execution is not JSON") from exc
-    if not isinstance(document, dict):
-        raise ValueError("private raw execution must be an object")
-    return document, envelope
 
 
 def main() -> None:

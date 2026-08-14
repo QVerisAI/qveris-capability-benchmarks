@@ -1,0 +1,33 @@
+provider:
+  provider_id: binance
+  official_name: Binance
+  website: https://www.binance.com/
+  market_coverage: [GLOBAL]
+  official_pricing:
+    - pricing_id: binance-public-market-data
+      pricing_url: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
+      applies_to: [binance-crypto-spot-qveris]
+      currencies: [NONE]
+      free_tier: Public market-data documentation does not state a subscription charge for this endpoint.
+      paid_plans: No provider-paid plan claim is used for the managed QVeris Access Path.
+      verified_at: 2026-08-13
+      source_digest: 49ea6809243fc7fb426e07f2fe662097736c7bb405bd2da5eef637d715427999
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: binance-crypto-spot-qveris
+    provider_id: binance
+    path_type: qveris_connector
+    official_source: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
+    canonical_interface: binance.ticker.24hr.retrieve.v1
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed QVeris access; no credential reference is stored in the public registry.
+    authorization: Maintainer-operated QVeris Direct Tests with sanitized public evidence are authorized for this CAP.
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: Maintainer preflight observed the required BTCUSDT spot quote fields and an explicit invalid-symbol rejection.
+      evidence_digest: sha256:2eaf20e68ea92308ddd122a7f7e6c7e1924197a11e42fd8ecdb1f0f48a53c03b

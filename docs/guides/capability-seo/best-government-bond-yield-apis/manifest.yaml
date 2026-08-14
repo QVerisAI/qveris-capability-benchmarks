@@ -1,0 +1,52 @@
+schema_version: 1
+benchmark_id: govt-bond-yield-2026-q3-v2
+article_slug: best-government-bond-yield-apis
+edition: "2026-08-14"
+publication_package:
+  package_id: best-government-bond-yield-apis-2026-08-14-v1
+  adapter_id: govt-bond-yield-v1
+  adapter_version: 1.0.0
+  cap_id: govt-bond-yield
+  release_sections: [release, market_coverage_release]
+  adapter_sources:
+    - src/qveris_bench/articles/factory.py
+    - src/qveris_bench/articles/factory_v2.py
+    - src/qveris_bench/articles/publication.py
+    - src/qveris_bench/articles/writer.py
+    - src/qveris_bench/cap_packs/govt_bond_yield/publication.py
+    - src/qveris_bench/models/selection.py
+    - src/qveris_bench/profiles/selection.py
+  adapter_digest: sha256:a039f23b28e01c5e1bf7d618f361aee62827551bec264ceaac17f86a27fa083d
+  chart_verification_mode: pixel_equivalent
+release:
+  directory: releases/govt-bond-yield-2026-q3-v2
+  digest: sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af
+market_coverage_release:
+  directory: releases/govt-bond-yield-markets-2026-q3-v2
+  digest: sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a
+artifacts:
+  article_package: docs/guides/capability-seo/best-government-bond-yield-apis
+  published_guide: docs/guides/best-government-bond-yield-apis.md
+  article: docs/guides/capability-seo/best-government-bond-yield-apis/article.md
+  article_facts: docs/guides/capability-seo/best-government-bond-yield-apis/article-facts.json
+  charts:
+    - docs/guides/capability-seo/best-government-bond-yield-apis/charts/latency-list-price-tradeoff.png
+    - docs/guides/capability-seo/best-government-bond-yield-apis/charts/market-coverage.png
+  publication_profile: docs/guides/capability-seo/best-government-bond-yield-apis/publication-profile.yaml
+  writer_input: docs/guides/capability-seo/best-government-bond-yield-apis/writer-input.json
+  editorial: docs/guides/capability-seo/best-government-bond-yield-apis/editorial.json
+  skill_sources:
+    - .agents/skills/cap-article-writer/SKILL.md
+    - .agents/skills/cap-article-writer/agents/openai.yaml
+    - .agents/skills/cap-article-writer/references/article-blueprint.md
+    - .agents/skills/cap-article-writer/references/editorial-contract.md
+    - .agents/skills/cap-article-writer/references/evidence-language.md
+    - .agents/skills/cap-article-writer/references/golden-rubric.md
+  selection_snapshot_input: selection_snapshots/govt-bond-yield-v1/selection-snapshot.yaml
+  selection_snapshot: selection_snapshots/govt-bond-yield-v1/selection-snapshot.json
+  qveris_list_pricing: selection_snapshots/govt-bond-yield-v1/qveris-list-pricing.json
+seo:
+  primary_keyword: government bond yield API
+  secondary_keywords: [sovereign bond yield API, government bond data API]
+  publication_action: create_new
+  inventory_checked_at: "2026-08-14"

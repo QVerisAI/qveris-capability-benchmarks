@@ -1,0 +1,45 @@
+title: Best Government Bond Yield APIs for Developers
+meta_description: Compare two QVeris government bond yield paths using 36 live calls across seven countries, with identity checks, latency, public credits, and evidence limits.
+cap_label: 10Y Sovereign Yield
+approved_editorial_copy_digest: sha256:4982c19fff88ef172d1487e713c44cd44e4f299e6bda0be4b100140bf0c02928
+scope: Fixed-window 10-year sovereign benchmark yield retrieval for US, CN, UK, DE, JP, AU, and CA, plus an unsupported-country control through the tested QVeris Access Paths.
+cap_contract_explanation: A usable sovereign benchmark observation must preserve country and tenor identity together with an in-window date and a finite numeric yield. A plausible yield for the wrong country is unsafe, so the CAP separates verified identity, Provider-negative identity mismatch, explicit invalid-input rejection, and infrastructure blocking.
+baseline_method: The baseline suite froze one US 10-year benchmark request and one unsupported-country control for each included Access Path.
+market_method: The market suite ran one country-qualified 10-year benchmark case in two rounds across all seven frozen countries.
+sample_field_labels:
+  symbol: benchmark
+  date: observation date
+  close: yield value
+  unit: reported unit
+  source: observed source
+  identity_verified: identity verification
+  identity_basis: identity basis
+agent_unmeasured_dimensions: [pagination behavior, schema stability across versions, language mapping, single-tool completion]
+agent_validation_dimensions: [returned country identity, tenor semantics, observation date, yield unit, source routing, invalid-input behavior]
+cap_limitations:
+  - One frozen 10-year benchmark per country does not prove every sovereign curve, tenor, date, or instrument.
+  - Monthly and daily source series can have different latest in-window dates and must not be treated as the same sampling frequency.
+  - A Provider-negative identity mismatch is scoped to the tested Access Path and request; it is not proof of permanent country non-support.
+  - Latency samples describe the tested QVeris Access Path and observation window, not an SLA.
+  - QVeris list credits are sanitized Inspect prices and are separate from account billing or official Provider subscription pricing.
+  - Corrections require a new evidence-bound publication package; historical Releases remain immutable.
+publication_manifest: docs/guides/capability-seo/best-government-bond-yield-apis/manifest.yaml
+publication_attestation: docs/guides/publication-attestations/best-government-bond-yield-apis-2026-08-14-v1.json
+live_rerun_command: gh workflow run live-govt-bond-yield-baseline-e2e.yml && gh workflow run live-govt-bond-yield-market-e2e.yml
+writer_evidence_releases:
+  - releases/govt-bond-yield-2026-q3-v2
+  - releases/govt-bond-yield-markets-2026-q3-v2
+allowed_links:
+  - https://fred.stlouisfed.org/
+  - https://qveris.ai/providers/stlouisfed_fred
+  - https://qveris.ai/guides/finance-capabilities/
+  - https://qveris.ai/providers/qveris_finance
+provider_links:
+  stlouisfed-fred:
+    name: FRED
+    official: https://fred.stlouisfed.org/
+    qveris: https://qveris.ai/providers/stlouisfed_fred
+  qveris-finance:
+    name: QVeris Finance
+    official: https://qveris.ai/guides/finance-capabilities/
+    qveris: https://qveris.ai/providers/qveris_finance

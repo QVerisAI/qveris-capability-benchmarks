@@ -133,10 +133,10 @@
       "type": "string"
     },
     "official_pricing": {
+      "default": [],
       "items": {
         "$ref": "#/$defs/OfficialPricingFact"
       },
-      "minItems": 1,
       "title": "Official Pricing",
       "type": "array"
     },
@@ -158,8 +158,7 @@
   "required": [
     "provider_id",
     "official_name",
-    "website",
-    "official_pricing"
+    "website"
   ],
   "title": "ProviderProfile",
   "type": "object"

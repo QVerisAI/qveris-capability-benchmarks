@@ -1,0 +1,1664 @@
+{
+  "access_path_count": 2,
+  "cap_id": "govt-bond-yield",
+  "edition": "2026-08-14",
+  "editorial_contract": {
+    "approved_copy_digest": "sha256:4982c19fff88ef172d1487e713c44cd44e4f299e6bda0be4b100140bf0c02928",
+    "links_are_renderer_owned": true,
+    "material_values_are_renderer_owned": true,
+    "minimum_decision_scenarios": 4,
+    "provider_identity_is_renderer_owned": true,
+    "required_provider_analyses": [
+      "qveris-finance-govt-bond-yield-qveris",
+      "stlouisfed-fred-govt-bond-yield-qveris"
+    ]
+  },
+  "fact_catalog": {
+    "article:agent-boundary": {
+      "kind": "agent_interface"
+    },
+    "article:evidence-states": {
+      "kind": "evidence_boundary"
+    },
+    "article:limitations": {
+      "kind": "limitations"
+    },
+    "article:markets": {
+      "kind": "market_matrix"
+    },
+    "article:no-overall-winner": {
+      "kind": "editorial_policy"
+    },
+    "article:runtime-tradeoff": {
+      "kind": "latency_and_list_price"
+    },
+    "article:scope": {
+      "kind": "scope"
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:invalid-input": {
+      "kind": "invalid_input",
+      "value": {
+        "evidence_refs": [
+          "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+          "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be"
+        ],
+        "passed": 0,
+        "state": "measured",
+        "total": 2
+      }
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:latency": {
+      "kind": "gateway_latency",
+      "value": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+        ],
+        "latency_evidence_refs": [
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+        ],
+        "latency_max_ms": 8094.56,
+        "latency_median_ms": 7345.33,
+        "latency_min_ms": 6596.1,
+        "latency_sample_size": 2,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      }
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:list-price": {
+      "kind": "qveris_list_price",
+      "value": {
+        "amount_credits": 1.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:7a3f5be531ca7f6eef970a78e392c2649410ba2a80845ea3fa0d911d6d1a1e91",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:477dd0955535455d516ad136e19db0e0fd29611bc37a6d622d3857bbb0a63c14",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": null,
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      }
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:market-coverage": {
+      "kind": "market_coverage",
+      "value": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+              "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085"
+            ],
+            "market": "AU",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+              "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99"
+            ],
+            "market": "CA",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+              "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3"
+            ],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+              "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
+            ],
+            "market": "DE",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+              "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4"
+            ],
+            "market": "JP",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+              "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e"
+            ],
+            "market": "UK",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+              "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ],
+        "run_observations": {
+          "evidence_refs": [
+            "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+            "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+            "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99",
+            "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+            "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+            "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+            "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085",
+            "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8",
+            "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+            "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4",
+            "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+            "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3",
+            "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e",
+            "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
+          ],
+          "planned_observations": 14,
+          "state": "measured",
+          "terminal_observations": 14
+        }
+      }
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:official-pricing": {
+      "kind": "official_pricing",
+      "value": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      }
+    },
+    "path:qveris-finance-govt-bond-yield-qveris:sample": {
+      "kind": "public_terminal_sample"
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input": {
+      "kind": "invalid_input",
+      "value": {
+        "evidence_refs": [
+          "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+          "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
+        ],
+        "passed": 2,
+        "state": "measured",
+        "total": 2
+      }
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:latency": {
+      "kind": "gateway_latency",
+      "value": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
+        ],
+        "latency_evidence_refs": [
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
+        ],
+        "latency_max_ms": 2325.04,
+        "latency_median_ms": 1407.5149999999999,
+        "latency_min_ms": 489.99,
+        "latency_sample_size": 2,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      }
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:list-price": {
+      "kind": "qveris_list_price",
+      "value": {
+        "amount_credits": 1.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:7a3f5be531ca7f6eef970a78e392c2649410ba2a80845ea3fa0d911d6d1a1e91",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:c627a68127470f6c0fa360ce7e82c8e3a82cf68ff6bb433385ab8df7330e0967",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": null,
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      }
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage": {
+      "kind": "market_coverage",
+      "value": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+              "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0"
+            ],
+            "market": "AU",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+              "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d"
+            ],
+            "market": "CA",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+              "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16"
+            ],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+              "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb"
+            ],
+            "market": "DE",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+              "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2"
+            ],
+            "market": "JP",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+              "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f"
+            ],
+            "market": "UK",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+              "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ],
+        "run_observations": {
+          "evidence_refs": [
+            "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+            "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+            "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+            "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d",
+            "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+            "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+            "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+            "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb",
+            "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2",
+            "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+            "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f",
+            "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0",
+            "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16",
+            "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
+          ],
+          "planned_observations": 14,
+          "state": "measured",
+          "terminal_observations": 14
+        }
+      }
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:official-pricing": {
+      "kind": "official_pricing",
+      "value": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      }
+    },
+    "path:stlouisfed-fred-govt-bond-yield-qveris:sample": {
+      "kind": "public_terminal_sample"
+    }
+  },
+  "live_call_count": 36,
+  "markets": [
+    "AU",
+    "CA",
+    "CN",
+    "DE",
+    "JP",
+    "UK",
+    "US"
+  ],
+  "provider_count": 2,
+  "public_observations": [
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "au-10y-market",
+      "evidence_id": "qveris-finance-au-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-au-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 2593.28,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "au-10y-market",
+      "evidence_id": "qveris-finance-au-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-au-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 6497.14,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "ca-10y-market",
+      "evidence_id": "qveris-finance-ca-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-ca-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 2552.74,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "ca-10y-market",
+      "evidence_id": "qveris-finance-ca-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-ca-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 3600.11,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "cn-10y-market",
+      "evidence_id": "qveris-finance-cn-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-cn-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 7399.94,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "cn-10y-market",
+      "evidence_id": "qveris-finance-cn-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-cn-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 2631.77,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "de-10y-market",
+      "evidence_id": "qveris-finance-de-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-de-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 3373.52,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "de-10y-market",
+      "evidence_id": "qveris-finance-de-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-de-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 7502.43,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "jp-10y-market",
+      "evidence_id": "qveris-finance-jp-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-jp-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 3106.0,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "jp-10y-market",
+      "evidence_id": "qveris-finance-jp-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-jp-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 2125.59,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "uk-10y-market",
+      "evidence_id": "qveris-finance-uk-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-uk-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 7264.72,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "uk-10y-market",
+      "evidence_id": "qveris-finance-uk-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-uk-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": false,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 2580.87,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "unsupported-country-10y",
+      "evidence_id": "qveris-finance-unsupported-country-10y-round-1",
+      "fact_id": "evidence:qveris-finance-unsupported-country-10y-round-1",
+      "facts": {},
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 4408.83,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+      "round": 1,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "validation_error"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "unsupported-country-10y",
+      "evidence_id": "qveris-finance-unsupported-country-10y-round-2",
+      "fact_id": "evidence:qveris-finance-unsupported-country-10y-round-2",
+      "facts": {},
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 8873.59,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be",
+      "round": 2,
+      "state": "provider_negative",
+      "unmet_conditions": [
+        "validation_error"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "us-10y-baseline",
+      "evidence_id": "qveris-finance-us-10y-baseline-round-1",
+      "fact_id": "evidence:qveris-finance-us-10y-baseline-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": true,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": null,
+      "latency_ms": 8094.56,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "us-10y-baseline",
+      "evidence_id": "qveris-finance-us-10y-baseline-round-2",
+      "fact_id": "evidence:qveris-finance-us-10y-baseline-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": true,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": null,
+      "latency_ms": 6596.1,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "us-10y-market",
+      "evidence_id": "qveris-finance-us-10y-market-round-1",
+      "fact_id": "evidence:qveris-finance-us-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": true,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": null,
+      "latency_ms": 2767.07,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "case_id": "us-10y-market",
+      "evidence_id": "qveris-finance-us-10y-market-round-2",
+      "fact_id": "evidence:qveris-finance-us-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "response_field",
+        "identity_verified": true,
+        "source": "alphavantage",
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "unit": "percent"
+      },
+      "failure_attribution": null,
+      "latency_ms": 2706.75,
+      "provider_id": "qveris-finance",
+      "public_digest": "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "au-10y-market",
+      "evidence_id": "fred-au-10y-market-round-1",
+      "fact_id": "evidence:fred-au-10y-market-round-1",
+      "facts": {
+        "close": 4.313,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01AUM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 467.31,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "au-10y-market",
+      "evidence_id": "fred-au-10y-market-round-2",
+      "fact_id": "evidence:fred-au-10y-market-round-2",
+      "facts": {
+        "close": 4.313,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01AUM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 388.16,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "ca-10y-market",
+      "evidence_id": "fred-ca-10y-market-round-1",
+      "fact_id": "evidence:fred-ca-10y-market-round-1",
+      "facts": {
+        "close": 3.1615,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01CAM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 3519.05,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "ca-10y-market",
+      "evidence_id": "fred-ca-10y-market-round-2",
+      "fact_id": "evidence:fred-ca-10y-market-round-2",
+      "facts": {
+        "close": 3.1615,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01CAM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 1108.58,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "cn-10y-market",
+      "evidence_id": "fred-cn-10y-market-round-1",
+      "fact_id": "evidence:fred-cn-10y-market-round-1",
+      "facts": {
+        "execution_failure": "empty_or_partial_data"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 449.71,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+      "round": 1,
+      "state": "infra_blocked",
+      "unmet_conditions": [
+        "symbol",
+        "date",
+        "close",
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "cn-10y-market",
+      "evidence_id": "fred-cn-10y-market-round-2",
+      "fact_id": "evidence:fred-cn-10y-market-round-2",
+      "facts": {
+        "execution_failure": "empty_or_partial_data"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "latency_ms": 475.93,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16",
+      "round": 2,
+      "state": "infra_blocked",
+      "unmet_conditions": [
+        "symbol",
+        "date",
+        "close",
+        "identity_verified"
+      ]
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "de-10y-market",
+      "evidence_id": "fred-de-10y-market-round-1",
+      "fact_id": "evidence:fred-de-10y-market-round-1",
+      "facts": {
+        "close": 2.1788888889,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01DEM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 411.38,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "de-10y-market",
+      "evidence_id": "fred-de-10y-market-round-2",
+      "fact_id": "evidence:fred-de-10y-market-round-2",
+      "facts": {
+        "close": 2.1788888889,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01DEM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 488.3,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "jp-10y-market",
+      "evidence_id": "fred-jp-10y-market-round-1",
+      "fact_id": "evidence:fred-jp-10y-market-round-1",
+      "facts": {
+        "close": 1.09,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01JPM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 945.95,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "jp-10y-market",
+      "evidence_id": "fred-jp-10y-market-round-2",
+      "fact_id": "evidence:fred-jp-10y-market-round-2",
+      "facts": {
+        "close": 1.09,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01JPM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 497.45,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "uk-10y-market",
+      "evidence_id": "fred-uk-10y-market-round-1",
+      "fact_id": "evidence:fred-uk-10y-market-round-1",
+      "facts": {
+        "close": 4.4345,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01GBM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 538.56,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "uk-10y-market",
+      "evidence_id": "fred-uk-10y-market-round-2",
+      "fact_id": "evidence:fred-uk-10y-market-round-2",
+      "facts": {
+        "close": 4.4345,
+        "date": "2024-12-01",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "IRLTLT01GBM156N"
+      },
+      "failure_attribution": null,
+      "latency_ms": 806.53,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "unsupported-country-10y",
+      "evidence_id": "fred-unsupported-country-10y-round-1",
+      "fact_id": "evidence:fred-unsupported-country-10y-round-1",
+      "facts": {
+        "validation_error": "provider_validation_error"
+      },
+      "failure_attribution": "provider_validation_error",
+      "latency_ms": 1353.43,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "unsupported-country-10y",
+      "evidence_id": "fred-unsupported-country-10y-round-2",
+      "fact_id": "evidence:fred-unsupported-country-10y-round-2",
+      "facts": {
+        "validation_error": "provider_validation_error"
+      },
+      "failure_attribution": "provider_validation_error",
+      "latency_ms": 1940.86,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "us-10y-baseline",
+      "evidence_id": "fred-us-10y-baseline-round-1",
+      "fact_id": "evidence:fred-us-10y-baseline-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "DGS10"
+      },
+      "failure_attribution": null,
+      "latency_ms": 2325.04,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "us-10y-baseline",
+      "evidence_id": "fred-us-10y-baseline-round-2",
+      "fact_id": "evidence:fred-us-10y-baseline-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "DGS10"
+      },
+      "failure_attribution": null,
+      "latency_ms": 489.99,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "us-10y-market",
+      "evidence_id": "fred-us-10y-market-round-1",
+      "fact_id": "evidence:fred-us-10y-market-round-1",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "DGS10"
+      },
+      "failure_attribution": null,
+      "latency_ms": 1027.61,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f",
+      "round": 1,
+      "state": "completed",
+      "unmet_conditions": []
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "case_id": "us-10y-market",
+      "evidence_id": "fred-us-10y-market-round-2",
+      "fact_id": "evidence:fred-us-10y-market-round-2",
+      "facts": {
+        "close": 4.58,
+        "date": "2024-12-31",
+        "identity_basis": "request_bound",
+        "identity_verified": true,
+        "source": "FRED",
+        "symbol": "DGS10"
+      },
+      "failure_attribution": null,
+      "latency_ms": 1161.96,
+      "provider_id": "stlouisfed-fred",
+      "public_digest": "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+      "round": 2,
+      "state": "completed",
+      "unmet_conditions": []
+    }
+  ],
+  "release_digests": [
+    "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
+    "sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af"
+  ],
+  "rows": [
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+            "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be"
+          ],
+          "passed": 0,
+          "state": "measured",
+          "total": 2
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "govt-bond-yield",
+      "case_observations": [
+        {
+          "case_id": "unsupported-country-10y",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+              "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be"
+            ],
+            "passed": 0,
+            "state": "measured",
+            "total": 2
+          }
+        },
+        {
+          "case_id": "us-10y-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+              "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+            ],
+            "passed": 2,
+            "state": "measured",
+            "total": 2
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+        ],
+        "latency_evidence_refs": [
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+        ],
+        "latency_max_ms": 8094.56,
+        "latency_median_ms": 7345.33,
+        "latency_min_ms": 6596.1,
+        "latency_sample_size": 2,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+              "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085"
+            ],
+            "market": "AU",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+              "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99"
+            ],
+            "market": "CA",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+              "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3"
+            ],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+              "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
+            ],
+            "market": "DE",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+              "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4"
+            ],
+            "market": "JP",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+              "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e"
+            ],
+            "market": "UK",
+            "passed_rounds": 0,
+            "state": "provider_negative",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+              "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ],
+        "run_observations": {
+          "evidence_refs": [
+            "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+            "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+            "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99",
+            "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+            "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+            "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+            "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085",
+            "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8",
+            "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+            "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4",
+            "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+            "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3",
+            "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e",
+            "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
+          ],
+          "planned_observations": 14,
+          "state": "measured",
+          "terminal_observations": 14
+        }
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "provider_id": "qveris-finance",
+      "provider_name": "QVeris Finance",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:7a3f5be531ca7f6eef970a78e392c2649410ba2a80845ea3fa0d911d6d1a1e91",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:477dd0955535455d516ad136e19db0e0fd29611bc37a6d622d3857bbb0a63c14",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": null,
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+          "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
+        ],
+        "planned_observations": 4,
+        "state": "measured",
+        "terminal_observations": 4
+      }
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+            "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
+          ],
+          "passed": 2,
+          "state": "measured",
+          "total": 2
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "govt-bond-yield",
+      "case_observations": [
+        {
+          "case_id": "unsupported-country-10y",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+              "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
+            ],
+            "passed": 2,
+            "state": "measured",
+            "total": 2
+          }
+        },
+        {
+          "case_id": "us-10y-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+              "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
+            ],
+            "passed": 2,
+            "state": "measured",
+            "total": 2
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
+        ],
+        "latency_evidence_refs": [
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
+        ],
+        "latency_max_ms": 2325.04,
+        "latency_median_ms": 1407.5149999999999,
+        "latency_min_ms": 489.99,
+        "latency_sample_size": 2,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+              "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0"
+            ],
+            "market": "AU",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+              "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d"
+            ],
+            "market": "CA",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+              "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16"
+            ],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+              "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb"
+            ],
+            "market": "DE",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+              "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2"
+            ],
+            "market": "JP",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+              "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f"
+            ],
+            "market": "UK",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+              "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ],
+        "run_observations": {
+          "evidence_refs": [
+            "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+            "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+            "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+            "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d",
+            "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+            "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+            "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+            "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb",
+            "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2",
+            "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+            "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f",
+            "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0",
+            "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16",
+            "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
+          ],
+          "planned_observations": 14,
+          "state": "measured",
+          "terminal_observations": 14
+        }
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "provider_id": "stlouisfed-fred",
+      "provider_name": "Federal Reserve Economic Data (FRED)",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:7a3f5be531ca7f6eef970a78e392c2649410ba2a80845ea3fa0d911d6d1a1e91",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:c627a68127470f6c0fa360ce7e82c8e3a82cf68ff6bb433385ab8df7330e0967",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": null,
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50",
+          "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
+        ],
+        "planned_observations": 4,
+        "state": "measured",
+        "terminal_observations": 4
+      }
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Fixed-window 10-year sovereign benchmark yield retrieval for US, CN, UK, DE, JP, AU, and CA, plus an unsupported-country control through the tested QVeris Access Paths."
+}

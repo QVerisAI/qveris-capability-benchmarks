@@ -21,6 +21,9 @@ class PublicationPackageSpec(FrozenModel):
     release_sections: tuple[SectionName, ...] = Field(min_length=1)
     adapter_sources: tuple[str, ...] = Field(min_length=1)
     adapter_digest: EvidenceRef
+    chart_verification_mode: Literal["canonical_linux_bytes", "pixel_equivalent"] = (
+        "canonical_linux_bytes"
+    )
 
     @model_validator(mode="after")
     def release_sections_are_unique(self) -> PublicationPackageSpec:

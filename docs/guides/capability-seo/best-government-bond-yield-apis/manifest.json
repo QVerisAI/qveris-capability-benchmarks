@@ -1,0 +1,21 @@
+{
+  "cap_id": "govt-bond-yield",
+  "charts": {
+    "latency-list-price-tradeoff.png": "sha256:320fc59e0e1abc1a80cfa63949bd5a5be347e531e2514bab3b4621ec75c09827",
+    "market-coverage.png": "sha256:9f298f8caab5760f3ae62f2d8a4d9325633ff406b451c66d279d3be9d568cdc9"
+  },
+  "edition": "2026-08-14",
+  "input_digests": {
+    "article_facts": "sha256:bdbf9ffd6d53d3da12170d3f75c2a4f178e750e2b81f1a6d687335bc889415c4",
+    "editorial": "sha256:c20cf5576ff128ff59a9ef50f2bdb356385b6fda56253055ec12affd222f6a3b",
+    "profile": "sha256:a3953c3f9eb6f8971cba8a91d4b4a377786beb94ba6f715812dd5acecf6b12e0",
+    "selection_snapshot": "sha256:33376fc581a723cfee82397ba0d3ef9a48c998b36ed2a53b79bf0d481d7e5144",
+    "writer_input": "sha256:35dc093c00f2c4ae1b2dc9e2794459cce1e6c49e5d3b9b25054318bcc704d2a8"
+  },
+  "outputs": {
+    "article": "article.md",
+    "article_facts": "article-facts.json"
+  },
+  "renderer_version": 2,
+  "schema_version": 1
+}

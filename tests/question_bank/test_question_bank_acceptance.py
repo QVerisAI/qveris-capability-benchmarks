@@ -36,7 +36,7 @@ def test_ac1_question_bank_contains_only_harbor_candidates() -> None:
         "dividend-events": "runnable",
         "financial-ratios": "candidate",
         "fx-spot-rate": "candidate",
-        "govt-bond-yield": "candidate",
+        "govt-bond-yield": "runnable",
         "realtime-financial-news": "candidate",
     }, "AC1 runnable CAPs must have a formal Harbor-backed pack"
     assert {str(cap.source_id) for cap in bank.capabilities} == {

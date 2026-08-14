@@ -1,0 +1,89 @@
+provider:
+  provider_id: eodhd
+  official_name: EODHD
+  website: https://eodhd.com/
+  market_coverage: [US]
+  official_pricing:
+    - pricing_id: eodhd-official-pricing
+      pricing_url: https://eodhd.com/pricing
+      applies_to: provider_wide
+      currencies: [USD]
+      free_tier: "20 API calls per day"
+      paid_plans: "All-in-One USD 99.99/month"
+      verified_at: 2026-08-10
+      source_digest: 3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: eodhd-fx-spot-qveris
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/live-forex-prices-api/
+    canonical_interface: real-time forex
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: The legacy publication does not retain complete release provenance.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: eodhd-corporate-actions-qveris
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+    canonical_interface: splits
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No complete release evidence is bound to this Access Path.
+      evidence_digest: sha256:6cb9a8100f1b033c65321ab21a1a628c0e1b29cd518caafd0a846b8dace5ff0c
+  - access_path_id: eodhd-dividends-qveris
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/api-splits-dividends/
+    canonical_interface: dividends
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: included
+      reason: A fixed QVeris dividend tool and successful legacy Direct probe qualify this path for Golden CAP execution.
+      evidence_digest: sha256:866f298ce03eb3cee4b0c806a3e7ed9223f5bc2079c94b1f4ef124145f3af947
+  - access_path_id: eodhd-stock-quote
+    provider_id: eodhd
+    path_type: qveris_connector
+    official_source: https://eodhd.com/financial-apis/real-time-stock-prices/
+    canonical_interface: real-time
+    protocol: https_rest
+    endpoint_url: null
+    authentication: Managed access; no credential reference is stored in the public registry.
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: The retired local CAP release cannot qualify this Access Path.
+      evidence_digest: sha256:6c30f7b6d4e721afbca0670e3e55468687d6179e42cc60368bc71ee5e0a1952e
+  - access_path_id: eodhd-etf-holdings
+    provider_id: eodhd
+    path_type: official_api
+    official_source: https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds
+    canonical_interface: fundamentals
+    protocol: https_rest
+    endpoint_url: https://eodhd.com/api/fundamentals
+    authentication: API token in the api_token query parameter
+    authorization: No benchmark execution is authorized beyond the recorded qualification decision.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: No benchmark execution authorization is recorded.
+      evidence_digest: sha256:546024ddd253c0256857261bb8558dd37e45890b55b6b6f8315f47aee7c07823

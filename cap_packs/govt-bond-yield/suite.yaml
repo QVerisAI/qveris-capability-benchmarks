@@ -1,0 +1,18 @@
+suite_id: govt-bond-yield-v1
+version: 1.0.0
+cap_id: govt-bond-yield
+cap_version: 1.0.0
+case_ids: [us-10y-baseline, unsupported-country-10y]
+access_path_ids:
+  - stlouisfed-fred-govt-bond-yield-qveris
+  - qveris-finance-govt-bond-yield-qveris
+modes: [direct]
+rounds: 2
+environment:
+  as_of: "2026-08-14"
+  observation_start: "2024-01-01"
+  observation_end: "2024-12-31"
+  execution_via: qveris_connector
+outcome_rules_file: outcome-rules.yaml
+agent_protocol: null
+not_applicable: []

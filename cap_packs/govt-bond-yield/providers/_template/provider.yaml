@@ -1,0 +1,35 @@
+provider:
+  provider_id: example-provider
+  official_name: Example Provider
+  website: https://example.com/
+  market_coverage: []
+  official_pricing:
+    - pricing_id: example-official-pricing
+      pricing_url: https://example.com/pricing
+      applies_to:
+        - example-official-api
+      currencies: [USD]
+      free_tier: "Describe the free allowance or state that none is public."
+      paid_plans: "Describe the paid entry point or state that none exists."
+      verified_at: 2026-08-10
+      source_digest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      extractor_version: 1.0.0
+      suite_fingerprint: 66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f
+      disclosure_level: sanitized_public
+      license_status: cleared
+access_paths:
+  - access_path_id: example-official-api
+    provider_id: example-provider
+    path_type: official_api
+    official_source: https://example.com/docs
+    plan_name: Sandbox
+    canonical_interface: example-operation
+    protocol: https_rest
+    endpoint_url: https://api.example.com/v1/example-operation
+    authentication: API key in the Authorization header
+    authorization: Describe the approved test and publication authorization.
+    agent_trial_eligible: false
+    qualification:
+      disposition: excluded
+      reason: Example template is not a frozen benchmark cohort.
+      evidence_digest: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

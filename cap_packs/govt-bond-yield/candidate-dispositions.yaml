@@ -1,0 +1,22 @@
+schema_version: 1
+source_manifest: candidate-source-manifest.yaml
+source_manifest_digest: sha256:052dc6fbc8f7774764683014dff08bd67ab66200df4df3944a4c612f387e78f8
+candidates:
+  - tool_id: alphavantage.economic.treasury_yield.retrieve.v1.7aca3c4a
+    source_provider_id: alphavantage
+    canonical_provider_id: alpha-vantage
+    disposition: excluded
+    reason: The tool is explicitly US-only and cannot express the CAP-owned unsupported-country negative control.
+    evidence_digest: sha256:088ca3bfb2ae2b63ecbe6a4477672bb89a822004cdca4d86eee40f66b9f877a0
+  - tool_id: qveris_finance.rates_govt_benchmark
+    source_provider_id: qveris_finance
+    canonical_provider_id: qveris-finance
+    disposition: included
+    reason: The tool exposes the exact country, tenor, and date-window contract for all frozen cases.
+    evidence_digest: sha256:400ed252be01d3ca23658422fac6aef533565c157717561da82cff82f5de48dd
+  - tool_id: stlouisfed_fred.fred_series_observations.get.v1
+    source_provider_id: stlouisfed_fred
+    canonical_provider_id: stlouisfed-fred
+    disposition: included
+    reason: The tool exposes frozen country-specific 10Y series identities and an invalid-series negative path.
+    evidence_digest: sha256:c13fc1c5aacb9fbe9d2d37e581f4202ffefebd846fbe68dc80d59bcefaa07f78

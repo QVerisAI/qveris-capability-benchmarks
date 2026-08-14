@@ -35,6 +35,15 @@
           "title": "Cap Id",
           "type": "string"
         },
+        "chart_verification_mode": {
+          "default": "canonical_linux_bytes",
+          "enum": [
+            "canonical_linux_bytes",
+            "pixel_equivalent"
+          ],
+          "title": "Chart Verification Mode",
+          "type": "string"
+        },
         "package_id": {
           "maxLength": 128,
           "minLength": 1,
