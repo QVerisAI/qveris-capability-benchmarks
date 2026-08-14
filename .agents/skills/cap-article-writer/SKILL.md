@@ -17,7 +17,8 @@ Turn a frozen `writer-input.json` into a structured `editorial.json`. Treat the 
 6. Select Provider × Access Path identities only through a supported `decision_type`, structured `recommended_access_path_ids`, and `access_path_id` fields. The validator must be able to derive the same shortlist from frozen facts.
 7. Leave every number, date, digest, URL, price, latency, market fraction, Provider name, and chart path to the deterministic renderer.
 8. Validate the draft with the repository's article build or publication reproduce command.
-9. Compare the rendered article against [golden-rubric.md](references/golden-rubric.md). Revise the editorial draft if any reader-value requirement is missing.
+9. Ask the human/editorial gate to approve the prose digest in the Publication Profile. Do not treat this approval as empirical evidence.
+10. Compare the rendered article against [golden-rubric.md](references/golden-rubric.md). Revise and re-approve the editorial draft if any reader-value requirement is missing.
 
 ## Non-negotiable boundaries
 

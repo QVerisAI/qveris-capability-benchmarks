@@ -138,9 +138,7 @@ def test_ac3_editorial_document_rejects_unbound_claims(tmp_path: Path) -> None:
             )
         ],
     }
-    editorial["decision_scenarios"] = json.loads(EDITORIAL.read_text(encoding="utf-8"))[
-        "decision_scenarios"
-    ]
+    editorial = json.loads(EDITORIAL.read_text(encoding="utf-8"))
     editorial_path = tmp_path / "editorial.json"
     editorial_path.write_text(json.dumps(editorial), encoding="utf-8")
 
@@ -174,9 +172,30 @@ def test_editorial_rejects_wrong_shortlist_links_and_absolute_claims(
         "Read the [source](//false.example) before choosing.",
         "Read the <a href='javascript:alert()'>source</a> before choosing.",
         "This path guarantees flawless pagination and permanent uptime.",
+        (
+            "The released cohort supports pagination across all historical records; "
+            "details are available at false.example/audit."
+        ),
     ):
         unsafe = json.loads(json.dumps(original))
         unsafe["lead"]["copy"] = unsafe_copy
         editorial_path.write_text(json.dumps(unsafe), encoding="utf-8")
         with pytest.raises(EditorialValidationError):
             load_editorial_document(editorial_path, writer_input)
+
+
+def test_editorial_rejects_invalid_input_shortlist_without_positive_evidence(
+    tmp_path: Path,
+) -> None:
+    writer_input = json.loads(build_writer_input(SNAPSHOT, PROFILE, ROOT).json_bytes)
+    for row in writer_input["rows"]:
+        row["agent_interface"]["invalid_input_handling"] = {
+            "state": "measured",
+            "passed": 0,
+            "total": 3,
+        }
+    editorial_path = tmp_path / "editorial.json"
+    editorial_path.write_bytes(EDITORIAL.read_bytes())
+
+    with pytest.raises(EditorialValidationError, match="no measured facts"):
+        load_editorial_document(editorial_path, writer_input)

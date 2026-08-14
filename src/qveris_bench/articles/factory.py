@@ -142,7 +142,7 @@ def build_article_package(
         )
 
         try:
-            repository_root = _repository_root(selection_snapshot_path)
+            repository_root = _repository_root(profile_path)
             rebuilt_writer_input = build_writer_input(
                 selection_snapshot_path,
                 profile_path,
@@ -333,7 +333,7 @@ The horizontal axis is median QVeris gateway latency and the bar shows the obser
 
 The comparison table keeps official Provider pricing beside, but separate from, QVeris list credits. Official plan facts carry their own URL and verification date. “Evidence insufficient” is retained when a publishable official price was not frozen for this edition.
 
-### Representative samples across nine markets
+### Representative samples across {_count_word(len(facts["markets"]))} markets
 
 [![{profile["cap_label"]} test matrix for representative markets and Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
 
@@ -414,15 +414,15 @@ def _provider_analysis(
     observations: list[dict[str, Any]],
     profile: dict[str, Any],
 ) -> str:
+    labels = profile["sample_field_labels"]
     samples = [
         item
         for item in observations
         if item["access_path_id"] == row["access_path_id"]
         and item["state"] == "completed"
-        and item["facts"].get("date") is not None
+        and any(field in item["facts"] for field in labels)
     ]
     sample = samples[0]["facts"] if samples else {}
-    labels = profile["sample_field_labels"]
     sample_values = [
         f"{label} `{str(sample.get(field)).lower() if isinstance(sample.get(field), bool) else sample.get(field)}`"
         for field, label in labels.items()

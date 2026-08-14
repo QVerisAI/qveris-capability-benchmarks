@@ -17,4 +17,6 @@ Output one JSON object with these fields:
 
 A copy block contains non-empty `copy` and non-empty `fact_refs`. Every reference must exist in `writer-input.json.fact_catalog`.
 
+The complete prose projection must match `writer-input.json.editorial_contract.approved_copy_digest`, which comes from the human-reviewed Publication Profile. Changing prose requires a new approval digest and publication package. This approval does not turn prose into measured evidence; all empirical values and typed recommendations remain renderer-owned.
+
 Do not put numbers, dates, links of any form, HTML, digests, credits-per-call strings, Provider names, or Access Path names in free prose. Use “the selected path”, “this path”, or “the released cohort”; the renderer validates the typed decision and inserts exact identities and material values.

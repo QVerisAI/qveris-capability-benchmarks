@@ -102,6 +102,7 @@ def build_writer_input(
             ),
         ),
         "editorial_contract": {
+            "approved_copy_digest": _approved_copy_digest(profile),
             "material_values_are_renderer_owned": True,
             "provider_identity_is_renderer_owned": True,
             "links_are_renderer_owned": True,
@@ -128,6 +129,13 @@ def load_editorial_document(path: Path, writer_input: dict[str, Any]) -> dict[st
     catalog = writer_input.get("fact_catalog")
     if not isinstance(catalog, dict):
         raise EditorialValidationError("writer input has no fact catalog")
+    approved_digest = writer_input.get("editorial_contract", {}).get(
+        "approved_copy_digest"
+    )
+    if editorial_copy_digest(document) != approved_digest:
+        raise EditorialValidationError(
+            "editorial prose differs from the approved Publication Profile"
+        )
     blocks = _editorial_blocks(document)
     for block in blocks:
         copy = block.get("copy")
@@ -142,7 +150,7 @@ def load_editorial_document(path: Path, writer_input: dict[str, Any]) -> dict[st
             raise EditorialValidationError(
                 "editorial copy has an unknown fact reference"
             )
-        _validate_model_copy(copy, writer_input)
+        _validate_model_copy(copy, writer_input, refs)
     scenarios = document.get("decision_scenarios")
     minimum = writer_input.get("editorial_contract", {}).get(
         "minimum_decision_scenarios", 4
@@ -165,7 +173,7 @@ def load_editorial_document(path: Path, writer_input: dict[str, Any]) -> dict[st
         heading = scenario.get("heading")
         if not isinstance(heading, str) or not heading.strip():
             raise EditorialValidationError("decision scenario has no heading")
-        _validate_model_copy(heading, writer_input)
+        _validate_model_copy(heading, writer_input, scenario["fact_refs"])
         expected_paths, fact_suffix = _expected_scenario_paths(scenario, writer_input)
         if set(selected) != expected_paths:
             raise EditorialValidationError(
@@ -208,9 +216,53 @@ def load_editorial_document(path: Path, writer_input: dict[str, Any]) -> dict[st
             raise EditorialValidationError(
                 "editorial FAQ has an unknown fact reference"
             )
-        _validate_model_copy(question, writer_input)
-        _validate_model_copy(answer, writer_input)
+        _validate_model_copy(question, writer_input, refs)
+        _validate_model_copy(answer, writer_input, refs)
     return document
+
+
+def editorial_copy_digest(document: dict[str, Any]) -> str:
+    try:
+        copy_document = {
+            "lead": document["lead"]["copy"],
+            "decision_scenarios": [
+                {"heading": item["heading"], "copy": item["copy"]}
+                for item in document["decision_scenarios"]
+            ],
+            "evidence_explainer": document["evidence_explainer"]["copy"],
+            "cap_explainer": document["cap_explainer"]["copy"],
+            "chart_explanations": {
+                key: document["chart_explanations"][key]["copy"]
+                for key in ("market", "tradeoff")
+            },
+            "provider_analyses": [
+                {
+                    "access_path_id": item["access_path_id"],
+                    "copy": item["copy"],
+                }
+                for item in document["provider_analyses"]
+            ],
+            "agent_notes": document["agent_notes"]["copy"],
+            "limitations": document["limitations"]["copy"],
+            "faq": [
+                {"question": item["question"], "answer": item["answer"]}
+                for item in document["faq"]
+            ],
+        }
+    except (KeyError, TypeError) as exc:
+        raise EditorialValidationError(
+            "editorial prose contract is incomplete"
+        ) from exc
+    return _digest(_canonical_json(copy_document))
+
+
+def _approved_copy_digest(profile: dict[str, Any]) -> str:
+    digest = profile.get("approved_editorial_copy_digest")
+    if not isinstance(digest, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
+        raise WriterInputBuildError(
+            "article profile has no approved editorial copy digest"
+        )
+    return digest
 
 
 def _editorial_blocks(document: dict[str, Any]) -> list[dict[str, Any]]:
@@ -238,9 +290,13 @@ def _editorial_blocks(document: dict[str, Any]) -> list[dict[str, Any]]:
     return blocks
 
 
-def _validate_model_copy(copy: str, writer_input: dict[str, Any]) -> None:
+def _validate_model_copy(
+    copy: str,
+    writer_input: dict[str, Any],
+    fact_refs: list[str] | None = None,
+) -> None:
     if re.search(
-        r"\d|https?://|sha256:|credits?/call|\[|\]|<|>|//|\b(?:mailto|javascript|data|file):|\bwww\.",
+        r"\d|https?://|sha256:|credits?/call|\[|\]|<|>|//|\b(?:mailto|javascript|data|file):|\bwww\.|\b(?:[a-z0-9-]+\.)+(?:com|org|net|io|ai|dev|co|app|example)(?:/\S*)?",
         copy,
         re.IGNORECASE,
     ):
@@ -261,11 +317,23 @@ def _validate_model_copy(copy: str, writer_input: dict[str, Any]) -> None:
             "editorial copy must not declare an overall winner"
         )
     if re.search(
-        r"\b(?:guarantee(?:s|d)?|flawless|permanent|complete|always|unlimited|exhaustive)\b",
+        r"\b(?:guarantee(?:s|d)?|flawless|permanent|complete|always|unlimited|exhaustive|full)\b",
         copy,
         re.IGNORECASE,
     ):
         raise EditorialValidationError("editorial copy contains an absolute claim")
+    refs = set(fact_refs or [])
+    if (
+        re.search(
+            r"\b(?:pagination|uptime|schema stability|single-tool|language mapping)\b",
+            copy,
+            re.IGNORECASE,
+        )
+        and "article:agent-boundary" not in refs
+    ):
+        raise EditorialValidationError(
+            "editorial Agent-interface claim is not bound to Agent facts"
+        )
 
 
 def _expected_scenario_paths(
@@ -317,6 +385,9 @@ def _expected_scenario_paths(
                 "passed", 0
             )
             for row in rows
+            if row["agent_interface"]["invalid_input_handling"].get("state")
+            == "measured"
+            and row["agent_interface"]["invalid_input_handling"].get("passed", 0) > 0
         }
         return _minimum_or_maximum(values, maximum=True), "invalid-input"
     raise EditorialValidationError("decision scenario has an unsupported decision type")

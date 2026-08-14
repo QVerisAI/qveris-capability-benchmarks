@@ -1,6 +1,7 @@
 title: Best Corporate Actions APIs for Developers
 meta_description: Compare four QVeris corporate-actions paths using 72 live split-event calls across nine markets, with latency, public credits, pricing, and evidence limits.
 cap_label: Corporate Actions
+approved_editorial_copy_digest: sha256:519716b569e9f59fcd1051daaa638b6ee05aef7e64e5b890d54cfb989e86b31d
 scope: Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.
 cap_contract_explanation: A usable split event must preserve instrument identity, event date, and ratio while respecting market-specific symbol dialects. An empty result for a valid historical event and an explicit rejection for an invalid symbol are different outcomes; the CAP keeps them separate so an Agent cannot silently treat transport or entitlement failures as correct Provider behavior.
 baseline_method: The baseline suite froze a known historical split case and an invalid-symbol control for every included Access Path.

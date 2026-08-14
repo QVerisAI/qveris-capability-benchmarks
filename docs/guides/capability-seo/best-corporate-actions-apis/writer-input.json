@@ -3,6 +3,7 @@
   "cap_id": "corporate-actions",
   "edition": "2026-08-14",
   "editorial_contract": {
+    "approved_copy_digest": "sha256:519716b569e9f59fcd1051daaa638b6ee05aef7e64e5b890d54cfb989e86b31d",
     "links_are_renderer_owned": true,
     "material_values_are_renderer_owned": true,
     "minimum_decision_scenarios": 4,

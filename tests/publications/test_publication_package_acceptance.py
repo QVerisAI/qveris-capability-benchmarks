@@ -700,3 +700,19 @@ def test_ac7_adapter_execution_cannot_escape_through_a_child_process(
         match="network access is disabled",
     ):
         reproduce_publication_package(PACKAGE)
+
+
+def test_ac7_adapter_execution_cannot_escape_through_posix_spawn(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def attempt_process(*args: object, **kwargs: object) -> tuple[str, ...]:
+        os.posix_spawn("/usr/bin/true", ["true"], os.environ.copy())
+        return ("selection_snapshot", "charts", "article_facts", "links")
+
+    monkeypatch.setattr(DividendEventsPublicationAdapter, "reproduce", attempt_process)
+
+    with pytest.raises(
+        PublicationReproductionError,
+        match="network access is disabled",
+    ):
+        reproduce_publication_package(PACKAGE)

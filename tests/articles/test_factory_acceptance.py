@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -188,6 +189,7 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         check=False,
         capture_output=True,
         text=True,
+        env={**os.environ, "UV_CACHE_DIR": str(tmp_path / "uv-cache")},
     )
     assert reproduced.returncode == 0, reproduced.stderr
 
@@ -245,6 +247,24 @@ def test_skill_article_build_rejects_tampered_writer_input(tmp_path: Path) -> No
             writer_input_path=tampered,
             editorial_path=package / "editorial.json",
         )
+
+
+def test_skill_article_prepare_build_round_trip_accepts_copied_snapshot(
+    tmp_path: Path,
+) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    copied_snapshot = tmp_path / "selection-snapshot.json"
+    copied_snapshot.write_bytes(CORPORATE_ACTIONS_V2_SNAPSHOT.read_bytes())
+
+    result = build_article_package(
+        copied_snapshot,
+        CORPORATE_ACTIONS_PROFILE,
+        tmp_path / "publication",
+        writer_input_path=package / "writer-input.json",
+        editorial_path=package / "editorial.json",
+    )
+
+    assert result.article.is_file()
 
 
 def test_article_reproduction_rejects_tampered_editorial_digest(
