@@ -19,8 +19,10 @@ from qveris_bench.execution.direct_binding import (
     direct_binding_registry_digest,
     load_direct_binding_registry,
 )
+from qveris_bench.execution.qveris import QverisExecutionEnvelope
 from qveris_bench.models.enums import CellState, FailureAttribution
 from qveris_bench.suites.compiler import compile_suite
+from qveris_bench.suites.fingerprint import canonical_json_bytes
 from scripts.build_corporate_actions_v2_release import (
     PACK,
     REPOSITORY,
@@ -35,11 +37,12 @@ GITHUB_SHA = "a" * 40
 def _terminal_bytes(
     binding,
     cell,
-    case,
     fingerprint: str,
     registry_digest: str,
     raw_digest: str,
     outcome: CorporateDirectResult,
+    latency_ms: float | None = 10.0,
+    cost_credits: float | None = 2.0,
 ) -> bytes:
     return (
         json.dumps(
@@ -60,8 +63,8 @@ def _terminal_bytes(
                 "redaction_status": "sanitized",
                 "disclosure_level": "sanitized_public",
                 "license_status": "cleared",
-                "latency_ms": 10.0,
-                "cost_credits": 2.0,
+                "latency_ms": latency_ms,
+                "cost_credits": cost_credits,
                 "github_run_id": str(GITHUB_RUN_ID),
                 "github_sha": GITHUB_SHA,
             },
@@ -72,8 +75,13 @@ def _terminal_bytes(
 
 
 def _zip(path: Path, name: str, content: bytes) -> str:
+    return _zip_entries(path, {name: content})
+
+
+def _zip_entries(path: Path, entries: dict[str, bytes]) -> str:
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(name, content)
+        for name, content in entries.items():
+            archive.writestr(name, content)
     return sha256_digest(path.read_bytes())
 
 
@@ -82,6 +90,8 @@ def _github_exports(
     *,
     infra_binding_id: str | None = None,
     forge_infra_as_negative: bool = False,
+    outer_error_binding_id: str | None = None,
+    request_override_binding_id: str | None = None,
 ) -> tuple[Path, Path, Path]:
     suite_path = PACK / "baseline-suite.yaml"
     cases_path = PACK / "baseline-cases.yaml"
@@ -106,14 +116,37 @@ def _github_exports(
         provider_payload = _provider_payload(
             str(binding.provider_id), case, binding.binding_id == infra_binding_id
         )
-        raw_bytes = json.dumps(
-            {"elapsed_time_ms": 10.0, "cost": 2.0, "result": provider_payload},
-            sort_keys=True,
-        ).encode()
-        raw_digest = sha256_digest(raw_bytes)
+        outer_error = binding.binding_id == outer_error_binding_id
+        response_status_code = 403 if outer_error else 200
+        raw_document = (
+            {"error": "entitlement required"}
+            if outer_error
+            else {"elapsed_time_ms": 10.0, "cost": 2.0, "result": provider_payload}
+        )
+        raw_bytes = json.dumps(raw_document, sort_keys=True).encode()
+        response_digest = sha256_digest(raw_bytes)
+        envelope = QverisExecutionEnvelope(
+            artifact_id=f"{evidence_id}-search",
+            tool_id=binding.tool_id,
+            search_id="search-123",
+            parameters=(
+                {"symbol": "AAPL"}
+                if binding.binding_id == request_override_binding_id
+                else binding.parameters
+            ),
+            response_status_code=response_status_code,
+            response_digest=response_digest,
+        )
+        envelope_bytes = canonical_json_bytes(envelope.model_dump(mode="json"))
+        envelope_digest = sha256_digest(envelope_bytes)
+        evaluation_payload = (
+            {"status_code": response_status_code, "data": raw_document}
+            if outer_error
+            else provider_payload
+        )
         outcome = evaluate_corporate_action_document(
             str(binding.provider_id),
-            provider_payload,
+            evaluation_payload,
             case,
             request_identity=corporate_action_request_identity(
                 binding.request_identity
@@ -131,11 +164,12 @@ def _github_exports(
             _terminal_bytes(
                 binding,
                 cell,
-                case,
                 compiled.fingerprint,
                 direct_binding_registry_digest(registry_path),
-                raw_digest,
+                envelope_digest,
                 outcome,
+                None if outer_error else 10.0,
+                None if outer_error else 2.0,
             ),
         )
         public_name = f"corporate-actions-baseline-{evidence_id}"
@@ -159,11 +193,16 @@ def _github_exports(
             {
                 "id": artifact_id,
                 "name": private_name,
-                "digest": _zip(
+                "digest": _zip_entries(
                     private_zip,
-                    f"{evidence_id}-search-execute-"
-                    f"{raw_digest.removeprefix('sha256:')}.json",
-                    raw_bytes,
+                    {
+                        f"{evidence_id}-search-execute-"
+                        f"{response_digest.removeprefix('sha256:')}.json": raw_bytes,
+                        f"{evidence_id}-search-execution-envelope-"
+                        f"{envelope_digest.removeprefix('sha256:')}.json": (
+                            envelope_bytes
+                        ),
+                    },
                 ),
                 "expired": False,
             }
@@ -294,6 +333,56 @@ def test_build_release_rejects_public_outcome_forged_against_private_raw(
     )
 
     with pytest.raises(ValueError, match="private raw outcome"):
+        build_release_from_artifacts(
+            run_export,
+            artifact_export,
+            archives,
+            tmp_path / "published",
+            suite_name="baseline",
+            release_id="corporate-actions-v2-test",
+        )
+
+
+def test_build_release_preserves_outer_http_entitlement_terminal(
+    tmp_path: Path,
+) -> None:
+    binding_id = "twelve-data-invalid-corporate-actions-symbol-v2"
+    run_export, artifact_export, archives = _github_exports(
+        tmp_path, outer_error_binding_id=binding_id
+    )
+
+    build_release_from_artifacts(
+        run_export,
+        artifact_export,
+        archives,
+        tmp_path / "published",
+        suite_name="baseline",
+        release_id="corporate-actions-v2-test",
+    )
+
+    cells = json.loads(
+        (
+            tmp_path / "published/releases/corporate-actions-v2-test/cells.json"
+        ).read_text()
+    )
+    blocked = [
+        cell
+        for cell in cells
+        if cell["provider_id"] == "twelve-data"
+        and cell["case_id"] == "invalid-corporate-actions-symbol-v2"
+    ]
+    assert len(blocked) == 3
+    assert all(cell["state"] == "infra_blocked" for cell in blocked)
+    assert all(cell["failure_attribution"] == "auth_or_entitlement" for cell in blocked)
+
+
+def test_build_release_rejects_private_request_identity_swap(tmp_path: Path) -> None:
+    binding_id = "twelve-data-invalid-corporate-actions-symbol-v2"
+    run_export, artifact_export, archives = _github_exports(
+        tmp_path, request_override_binding_id=binding_id
+    )
+
+    with pytest.raises(ValueError, match="request identity mismatch"):
         build_release_from_artifacts(
             run_export,
             artifact_export,

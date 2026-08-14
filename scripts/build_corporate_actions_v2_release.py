@@ -21,7 +21,7 @@ from qveris_bench.execution.direct_binding import (
     load_direct_binding_registry,
     validate_direct_binding_registry,
 )
-from qveris_bench.execution.qveris import gateway_metrics
+from qveris_bench.execution.qveris import QverisExecutionEnvelope, gateway_metrics
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.public_terminal import (
     PublicTerminal,
@@ -148,12 +148,24 @@ def build_release_from_artifacts(
         binding = bindings_by_cell[(matched_cell.case_id, matched_cell.access_path_id)]
         if binding.binding_id != terminal.binding_id:
             raise ValueError("public terminal binding identity mismatch")
-        raw_document = _private_execution_document(
-            private_entries, evidence_id, terminal.raw_digest
+        raw_document, execution_envelope = _private_execution_document(
+            private_entries,
+            evidence_id,
+            terminal.raw_digest,
+            binding.tool_id,
+            binding.parameters,
         )
-        payload = raw_document.get("result")
-        if not isinstance(payload, dict):
-            raise ValueError("private raw execution is missing result")
+        payload: dict[str, Any]
+        if execution_envelope.response_status_code >= 400:
+            payload = {
+                "status_code": execution_envelope.response_status_code,
+                "data": raw_document,
+            }
+        else:
+            result_payload = raw_document.get("result")
+            if not isinstance(result_payload, dict):
+                raise ValueError("private raw execution is missing result")
+            payload = result_payload
         case = cases[binding.case_id]
         raw_outcome = evaluate_corporate_action_document(
             str(binding.provider_id),
@@ -292,8 +304,12 @@ def _verified_archive(
 
 
 def _private_execution_document(
-    entries: dict[str, bytes], evidence_id: str, raw_digest: str
-) -> dict[str, Any]:
+    entries: dict[str, bytes],
+    evidence_id: str,
+    envelope_digest: str,
+    tool_id: str,
+    parameters: dict[str, object],
+) -> tuple[dict[str, Any], QverisExecutionEnvelope]:
     for name, content in entries.items():
         digest = sha256_digest(content).removeprefix("sha256:")
         path = PurePosixPath(name)
@@ -307,22 +323,41 @@ def _private_execution_document(
                 f"{evidence_id}-search",
                 f"{evidence_id}-search-describe",
                 f"{evidence_id}-search-execute",
+                f"{evidence_id}-search-execution-envelope",
             }
         ):
             raise ValueError("private raw artifact contains an unbound entry")
-    expected_name = (
-        f"{evidence_id}-search-execute-{raw_digest.removeprefix('sha256:')}.json"
+    envelope_name = (
+        f"{evidence_id}-search-execution-envelope-"
+        f"{envelope_digest.removeprefix('sha256:')}.json"
     )
-    raw_bytes = entries.get(expected_name)
-    if raw_bytes is None or sha256_digest(raw_bytes) != raw_digest:
+    envelope_bytes = entries.get(envelope_name)
+    if envelope_bytes is None or sha256_digest(envelope_bytes) != envelope_digest:
         raise ValueError("private raw artifact does not contain terminal raw digest")
+    try:
+        envelope = QverisExecutionEnvelope.model_validate_json(envelope_bytes)
+    except ValueError as exc:
+        raise ValueError("private execution envelope is invalid") from exc
+    if (
+        envelope.artifact_id != f"{evidence_id}-search"
+        or envelope.tool_id != tool_id
+        or envelope.parameters != parameters
+    ):
+        raise ValueError("private execution envelope request identity mismatch")
+    response_name = (
+        f"{evidence_id}-search-execute-"
+        f"{str(envelope.response_digest).removeprefix('sha256:')}.json"
+    )
+    raw_bytes = entries.get(response_name)
+    if raw_bytes is None or sha256_digest(raw_bytes) != envelope.response_digest:
+        raise ValueError("private execution envelope response digest mismatch")
     try:
         document = json.loads(raw_bytes)
     except json.JSONDecodeError as exc:
         raise ValueError("private raw execution is not JSON") from exc
     if not isinstance(document, dict):
         raise ValueError("private raw execution must be an object")
-    return document
+    return document, envelope
 
 
 def main() -> None:

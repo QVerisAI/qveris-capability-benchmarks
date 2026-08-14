@@ -2,14 +2,18 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any
+from pathlib import Path
+from typing import Any, Literal
 
 import httpx
 
-from qveris_bench.evidence.store import RawArtifactStore
+from qveris_bench.evidence.store import ArtifactRecord, RawArtifactStore
 from qveris_bench.execution.base import AdapterResult
+from qveris_bench.execution.errors import TransportError
 from qveris_bench.execution.http import HttpAdapter
 from qveris_bench.execution.request import TransportRequest
+from qveris_bench.models.base import EvidenceRef, FrozenModel
+from qveris_bench.suites.fingerprint import canonical_json_bytes
 
 DEFAULT_QVERIS_API_BASE_URL = "https://qveris.ai/api/v1"
 _PUBLIC_RESPONSE_KEYS = frozenset(
@@ -67,6 +71,18 @@ class QverisSearch:
 class QverisDirectExecution:
     search: QverisSearch
     result: AdapterResult
+    envelope_digest: str | None = None
+    envelope_path: Path | None = None
+
+
+class QverisExecutionEnvelope(FrozenModel):
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    artifact_id: str
+    tool_id: str
+    search_id: str
+    parameters: dict[str, Any]
+    response_status_code: int
+    response_digest: EvidenceRef
 
 
 class QverisToolClient:
@@ -78,6 +94,7 @@ class QverisToolClient:
         base_url: str = DEFAULT_QVERIS_API_BASE_URL,
     ) -> None:
         self._adapter = HttpAdapter(client, store)
+        self._store = store
         self._api_key = api_key
         self._base_url = base_url.rstrip("/")
 
@@ -142,6 +159,27 @@ class QverisToolClient:
     async def close(self) -> None:
         await self._adapter.close()
 
+    def persist_execution_envelope(
+        self,
+        artifact_id: str,
+        tool_id: str,
+        search_id: str,
+        parameters: dict[str, object],
+        result: AdapterResult,
+    ) -> ArtifactRecord:
+        envelope = QverisExecutionEnvelope(
+            artifact_id=artifact_id,
+            tool_id=tool_id,
+            search_id=search_id,
+            parameters=parameters,
+            response_status_code=result.status_code,
+            response_digest=result.raw_digest,
+        )
+        return self._store.persist(
+            f"{artifact_id}-execution-envelope",
+            canonical_json_bytes(envelope.model_dump(mode="json")),
+        )
+
 
 async def execute_discovered_tool(
     client: QverisToolClient,
@@ -149,6 +187,8 @@ async def execute_discovered_tool(
     query: str,
     tool_id: str,
     parameters: dict[str, object],
+    *,
+    capture_execute_http_error: bool = False,
 ) -> QverisDirectExecution:
     search = await client.search(search_artifact_id, query)
     document = _document(search.result)
@@ -165,10 +205,25 @@ async def execute_discovered_tool(
         described_ids = _tool_ids(_document(description))
         if tool_id not in described_ids:
             raise QverisProtocolError("tool_id was not returned by exact tool lookup")
-    result = await client.execute(
-        f"{search_artifact_id}-execute", tool_id, search.search_id, parameters
+    try:
+        result = await client.execute(
+            f"{search_artifact_id}-execute", tool_id, search.search_id, parameters
+        )
+    except TransportError as exc:
+        if not capture_execute_http_error or exc.result is None:
+            raise
+        result = exc.result
+    if not capture_execute_http_error:
+        return QverisDirectExecution(search=search, result=result)
+    envelope = client.persist_execution_envelope(
+        search_artifact_id, tool_id, search.search_id, parameters, result
     )
-    return QverisDirectExecution(search=search, result=result)
+    return QverisDirectExecution(
+        search=search,
+        result=result,
+        envelope_digest=envelope.digest,
+        envelope_path=envelope.path,
+    )
 
 
 def _tool_ids(document: dict[str, Any]) -> set[str]:

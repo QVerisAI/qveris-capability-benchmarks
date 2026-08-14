@@ -137,15 +137,21 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
                 str(binding.discovery_query),
                 binding.tool_id,
                 binding.parameters,
+                capture_execute_http_error=True,
             )
         finally:
             await client.close()
 
     execution = asyncio.run(run())
     document = json.loads(execution.result.raw_path.read_text(encoding="utf-8"))
-    payload = document.get("result")
-    if not isinstance(payload, dict):
-        raise AssertionError("QVeris execution response is missing result")
+    if execution.result.status_code >= 400:
+        payload = {"status_code": execution.result.status_code, "data": document}
+    else:
+        payload = document.get("result")
+        if not isinstance(payload, dict):
+            raise AssertionError("QVeris execution response is missing result")
+    if execution.envelope_digest is None or execution.envelope_path is None:
+        raise AssertionError("QVeris execution envelope is missing")
     latency_ms, cost_credits = gateway_metrics(document)
     result = evaluate_corporate_action_document(
         str(binding.provider_id),
@@ -161,7 +167,7 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
         _public_terminal(
             binding,
             cell.run_key,
-            execution.result.raw_digest,
+            execution.envelope_digest,
             result,
             compiled.fingerprint,
             direct_binding_registry_digest(registry_path),
@@ -169,7 +175,7 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
             cost_credits,
         ),
     )
-    assert public.digest != execution.result.raw_digest
+    assert public.digest != execution.envelope_digest
     assert result.state in {
         CellState.COMPLETED,
         CellState.PROVIDER_NEGATIVE,

@@ -42,13 +42,14 @@ class HttpAdapter:
         )
         if response.status_code == 429:
             raise TransportError(
-                "rate_limited", "provider rate limit", result.raw_digest
+                "rate_limited", "provider rate limit", result.raw_digest, result
             )
         if response.status_code >= 400:
             raise TransportError(
                 "http_error",
                 f"provider returned {response.status_code}",
                 result.raw_digest,
+                result,
             )
         return result
 
