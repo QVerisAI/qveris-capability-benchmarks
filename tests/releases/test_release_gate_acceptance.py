@@ -4,6 +4,7 @@ from qveris_bench.models.enums import (
     CellState,
     DimensionState,
     DisclosureLevel,
+    FailureAttribution,
     LicenseStatus,
     RedactionStatus,
     ReleaseFactType,
@@ -59,6 +60,21 @@ def test_ac1_release_gate_accepts_terminal_cells_with_safe_evidence() -> None:
 def test_ac1_release_gate_rejects_open_cells() -> None:
     with pytest.raises(ReleaseGateError, match="open"):
         validate_release_inputs(_release(), (_cell(CellState.PLANNED),), (_evidence(),))
+
+
+def test_ac1_release_gate_accepts_attributed_infra_blocked_terminal() -> None:
+    cell = _cell(CellState.INFRA_BLOCKED).model_copy(
+        update={"failure_attribution": FailureAttribution.RATE_LIMITED}
+    )
+
+    validate_release_inputs(_release(), (cell,), (_evidence(),))
+
+
+def test_ac1_release_gate_rejects_unattributed_infra_blocked_terminal() -> None:
+    with pytest.raises(ReleaseGateError, match="infra_blocked.*attribution"):
+        validate_release_inputs(
+            _release(), (_cell(CellState.INFRA_BLOCKED),), (_evidence(),)
+        )
 
 
 def test_ac1_release_gate_rejects_missing_evidence() -> None:

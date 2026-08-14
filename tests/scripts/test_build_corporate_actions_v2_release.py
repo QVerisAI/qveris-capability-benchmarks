@@ -32,11 +32,21 @@ def _terminal_bytes(
     fingerprint: str,
     registry_digest: str,
     raw_digest: str,
+    *,
+    infra_blocked: bool = False,
 ) -> bytes:
-    if case.negative_control:
+    if infra_blocked:
+        state = CellState.INFRA_BLOCKED
+        facts = {"execution_failure": "rate_limited"}
+        unmet_conditions = list(case.completion_conditions)
+        attribution = FailureAttribution.RATE_LIMITED
+    elif case.negative_control:
+        state = CellState.COMPLETED
         facts = {"validation_error": "provider_validation_error"}
+        unmet_conditions = []
         attribution = FailureAttribution.PROVIDER_VALIDATION_ERROR
     else:
+        state = CellState.COMPLETED
         facts = {
             "symbol": case.input["symbol"],
             "identity_verified": True,
@@ -44,6 +54,7 @@ def _terminal_bytes(
             "action_type": "split",
             "date": str(case.input["start_date"]),
         }
+        unmet_conditions = []
         attribution = None
     return (
         json.dumps(
@@ -53,9 +64,9 @@ def _terminal_bytes(
                 "provider_id": binding.provider_id,
                 "access_path_id": binding.access_path_id,
                 "transport": binding.transport,
-                "state": CellState.COMPLETED,
+                "state": state,
                 "facts": facts,
-                "unmet_conditions": [],
+                "unmet_conditions": unmet_conditions,
                 "failure_attribution": attribution,
                 "raw_digest": raw_digest,
                 "binding_registry_digest": registry_digest,
@@ -81,7 +92,9 @@ def _zip(path: Path, name: str, content: bytes) -> str:
     return sha256_digest(path.read_bytes())
 
 
-def _github_exports(tmp_path: Path) -> tuple[Path, Path, Path]:
+def _github_exports(
+    tmp_path: Path, *, infra_binding_id: str | None = None
+) -> tuple[Path, Path, Path]:
     suite_path = PACK / "baseline-suite.yaml"
     cases_path = PACK / "baseline-cases.yaml"
     registry_path = PACK / "baseline-direct-bindings.json"
@@ -112,6 +125,7 @@ def _github_exports(tmp_path: Path) -> tuple[Path, Path, Path]:
                 compiled.fingerprint,
                 direct_binding_registry_digest(registry_path),
                 raw_digest,
+                infra_blocked=binding.binding_id == infra_binding_id,
             ),
         )
         public_name = f"corporate-actions-baseline-{evidence_id}"
@@ -199,3 +213,37 @@ def test_build_release_rejects_missing_private_raw_digest(tmp_path: Path) -> Non
             suite_name="baseline",
             release_id="corporate-actions-v2-test",
         )
+
+
+def test_build_release_preserves_attested_infra_blocked_terminal(
+    tmp_path: Path,
+) -> None:
+    binding_id = "twelve-data-invalid-corporate-actions-symbol-v2"
+    run_export, artifact_export, archives = _github_exports(
+        tmp_path, infra_binding_id=binding_id
+    )
+
+    build_release_from_artifacts(
+        run_export,
+        artifact_export,
+        archives,
+        tmp_path / "published",
+        suite_name="baseline",
+        release_id="corporate-actions-v2-test",
+    )
+
+    cells = json.loads(
+        (
+            tmp_path
+            / "published/releases/corporate-actions-v2-test/cells.json"
+        ).read_text()
+    )
+    blocked = [
+        cell
+        for cell in cells
+        if cell["state"] == "infra_blocked"
+        and cell["case_id"] == "invalid-corporate-actions-symbol-v2"
+        and cell["provider_id"] == "twelve-data"
+    ]
+    assert len(blocked) == 3
+    assert all(cell["failure_attribution"] == "rate_limited" for cell in blocked)

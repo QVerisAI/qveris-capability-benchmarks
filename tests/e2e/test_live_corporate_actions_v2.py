@@ -29,7 +29,7 @@ from qveris_bench.execution.qveris import (
     execute_discovered_tool,
     gateway_metrics,
 )
-from qveris_bench.models.enums import CellState
+from qveris_bench.models.enums import CellState, FailureAttribution
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -170,7 +170,11 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
         ),
     )
     assert public.digest != execution.result.raw_digest
-    assert result.state in {CellState.COMPLETED, CellState.PROVIDER_NEGATIVE}
+    assert result.state in {
+        CellState.COMPLETED,
+        CellState.PROVIDER_NEGATIVE,
+        CellState.INFRA_BLOCKED,
+    }
 
 
 def test_public_terminal_does_not_include_request_parameters_or_credentials() -> None:
@@ -190,3 +194,28 @@ def test_public_terminal_does_not_include_request_parameters_or_credentials() ->
     assert "Authorization" not in content
     assert "AAPL.US" not in content
     assert '"parameters"' not in content
+
+
+def test_public_terminal_preserves_sanitized_infra_outcome() -> None:
+    registry = load_direct_binding_registry(PACK / "baseline-direct-bindings.json")
+    binding = registry.bindings[0]
+    content = _public_terminal(
+        binding,
+        "run-key",
+        "sha256:" + "a" * 64,
+        CorporateDirectResult(
+            CellState.INFRA_BLOCKED,
+            {"execution_failure": "rate_limited"},
+            ("validation_error",),
+            FailureAttribution.RATE_LIMITED,
+        ),
+        "b" * 64,
+        "sha256:" + "c" * 64,
+        1.0,
+        2.0,
+    )
+    document = json.loads(content)
+
+    assert document["state"] == "infra_blocked"
+    assert document["facts"] == {"execution_failure": "rate_limited"}
+    assert document["failure_attribution"] == "rate_limited"
