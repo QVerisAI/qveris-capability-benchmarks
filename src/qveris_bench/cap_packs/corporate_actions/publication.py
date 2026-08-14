@@ -46,6 +46,9 @@ class CorporateActionsPublicationAdapter:
             article_dir = resolve_repository_path(
                 repository_root, str(artifacts["article_package"])
             )
+            published_guide = resolve_repository_path(
+                repository_root, str(artifacts["published_guide"])
+            )
         except (KeyError, TypeError) as exc:
             raise PublicationReproductionError(
                 "publication artifacts are incomplete"
@@ -59,4 +62,13 @@ class CorporateActionsPublicationAdapter:
         if snapshot.read_bytes() != rebuilt_snapshot.json_bytes:
             raise PublicationReproductionError("selection snapshot differs from inputs")
         reproduce_article_package(snapshot, profile, article_dir)
+        package_article = article_dir / "article.md"
+        projected = package_article.read_text(encoding="utf-8").replace(
+            "](charts/",
+            "](capability-seo/best-corporate-actions-apis/charts/",
+        )
+        if published_guide.read_text(encoding="utf-8") != projected:
+            raise PublicationReproductionError(
+                "published guide differs from article package"
+            )
         return ("selection_snapshot", "charts", "article_facts", "links")
