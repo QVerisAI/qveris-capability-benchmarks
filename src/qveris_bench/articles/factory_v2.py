@@ -148,10 +148,14 @@ def _validate_manifest(committed_path: Path, fresh_path: Path) -> None:
     committed = json.loads(committed_path.read_text(encoding="utf-8"))
     fresh = json.loads(fresh_path.read_text(encoding="utf-8"))
     committed_charts = committed.pop("charts")
-    fresh.pop("charts")
+    fresh_charts = fresh.pop("charts")
     if committed != fresh:
         raise v1.ArticleBuildError(
             "article manifest artifact differs from a fresh build"
+        )
+    if committed_charts.keys() != fresh_charts.keys():
+        raise v1.ArticleBuildError(
+            "article manifest chart set differs from a fresh build"
         )
     for name, digest in committed_charts.items():
         chart = committed_path.parent / "charts" / name

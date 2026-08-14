@@ -144,17 +144,21 @@ def reproduce_publication_package(
         raise PublicationReproductionError(
             "publication adapter did not complete every required check"
         )
+    canonical_chart_bytes_verified = (
+        manifest.publication_package.chart_verification_mode == "canonical_linux_bytes"
+        and platform.system() == "Linux"
+    )
     return PublicationReproductionReport(
         package_id=manifest.publication_package.package_id,
         package_digest=package_digest,
         status=(
             "verified"
-            if platform.system() == "Linux"
+            if canonical_chart_bytes_verified
             else "verified_with_noncanonical_chart_bytes"
         ),
         release_count=len(release_dirs),
         checks=("releases", *checks),
-        canonical_chart_bytes_verified=platform.system() == "Linux",
+        canonical_chart_bytes_verified=canonical_chart_bytes_verified,
     )
 
 

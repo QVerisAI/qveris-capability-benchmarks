@@ -422,11 +422,9 @@ def test_ac5_reproduction_rejects_a_tampered_article(tmp_path: Path) -> None:
 
 
 def test_ac5_cli_reproduces_the_article_package_offline(tmp_path: Path) -> None:
-    from qveris_bench.articles.factory_v2 import build_article_package as build_v2
-
     output = tmp_path / "publication"
     profile = _profile(tmp_path / "profile.yaml")
-    build_v2(SNAPSHOT, profile, output)
+    build_article_package(SNAPSHOT, profile, output)
 
     result = CliRunner().invoke(
         app,
@@ -444,3 +442,22 @@ def test_ac5_cli_reproduces_the_article_package_offline(tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert "Verified article package" in result.output
+
+
+def test_v2_reproduction_requires_every_chart_digest(tmp_path: Path) -> None:
+    from qveris_bench.articles.factory_v2 import (
+        build_article_package as build_v2,
+    )
+    from qveris_bench.articles.factory_v2 import (
+        reproduce_article_package as reproduce_v2,
+    )
+
+    output = tmp_path / "publication"
+    profile = _profile(tmp_path / "profile.yaml")
+    built = build_v2(SNAPSHOT, profile, output)
+    manifest = json.loads(built.manifest.read_text(encoding="utf-8"))
+    manifest["charts"].pop("market-coverage.png")
+    built.manifest.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ArticleBuildError, match="chart set differs"):
+        reproduce_v2(SNAPSHOT, profile, output)

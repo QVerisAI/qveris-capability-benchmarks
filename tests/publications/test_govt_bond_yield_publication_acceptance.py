@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import platform
 from pathlib import Path
 
 import pytest
@@ -42,11 +41,8 @@ def test_government_bond_yield_publication_reproduces_from_released_facts() -> N
 
     assert report.package_id == "best-government-bond-yield-apis-2026-08-14-v1"
     assert report.release_count == 2
-    assert report.status == (
-        "verified"
-        if platform.system() == "Linux"
-        else "verified_with_noncanonical_chart_bytes"
-    )
+    assert report.status == "verified_with_noncanonical_chart_bytes"
+    assert report.canonical_chart_bytes_verified is False
     assert report.checks == (
         "releases",
         "selection_snapshot",

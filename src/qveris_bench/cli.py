@@ -192,8 +192,15 @@ def article_reproduce(
     ] = None,
 ) -> None:
     """Rebuild and verify an article package without provider API calls."""
+    import json
+
     from qveris_bench.articles.factory import ArticleBuildError
-    from qveris_bench.articles.factory_v2 import reproduce_article_package
+
+    manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("renderer_version", 1) == 2:
+        from qveris_bench.articles.factory_v2 import reproduce_article_package
+    else:
+        from qveris_bench.articles.factory import reproduce_article_package
 
     try:
         reproduce_article_package(
