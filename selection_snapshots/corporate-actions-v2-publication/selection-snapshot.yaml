@@ -1,5 +1,5 @@
-snapshot_id: corporate-actions-v2-selection-2026-q3-v1
-version: 2.0.0
+snapshot_id: corporate-actions-v2-publication-selection-2026-q3-v1
+version: 2.1.0
 edition: "2026-08-14"
 cap_id: corporate-actions
 historical_execution_contract:
@@ -27,6 +27,7 @@ market_coverage_release:
     execution_contract_digest: sha256:0468a9cadb08cf6b8fb7a852802613f0f38ebd8fc101714bdb145bebbc13e380
 include_release_identity: true
 include_case_observations: true
+include_market_run_observations: true
 gateway_latency_scope: positive_cases
 limitations:
   - The nine-market matrix uses one representative split-event case per market and does not establish exhaustive provider coverage.

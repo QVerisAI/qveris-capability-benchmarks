@@ -2,6 +2,8 @@ title: Best Corporate Actions APIs for Developers
 meta_description: Compare four QVeris corporate-actions paths using 72 live split-event calls across nine markets, with latency, public credits, pricing, and evidence limits.
 cap_label: Corporate Actions
 scope: Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.
+publication_manifest: docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml
+publication_attestation: docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json
 allowed_links:
   - https://www.alphavantage.co/
   - https://qveris.ai/providers/alphavantage

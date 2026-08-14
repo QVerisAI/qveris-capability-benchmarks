@@ -226,6 +226,15 @@ def _validate_publishable_rows(
         )
     if not _market_rows(rows):
         raise ArticleBuildError("market chart requires release-backed market coverage")
+    for key in ("publication_manifest", "publication_attestation"):
+        value = profile.get(key)
+        if value is not None and (
+            not isinstance(value, str)
+            or not value
+            or Path(value).is_absolute()
+            or ".." in Path(value).parts
+        ):
+            raise ArticleBuildError("article profile has an invalid publication path")
 
 
 def _article_facts(
@@ -397,7 +406,7 @@ Do not treat this as an AI-friendly score. Validate the returned instrument iden
 
 ## How we tested, reproduce, and contribute
 
-The baseline Release digest is `{facts["cap_release_digest"]}`. The market Release digest is `{facts["market_release_digest"]}`. Reproduce the package offline with `qveris-bench publication reproduce --package <package-manifest> --expected-package-digest <published-digest>`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
+The baseline Release digest is `{facts["cap_release_digest"]}`. The market Release digest is `{facts["market_release_digest"]}`. Reproduce the package offline with `{_reproduce_command(profile)}`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
 
 Suppliers may submit a binding, reproducible case, or factual correction through the repository. Inclusion and conclusions cannot be purchased.
 
@@ -515,6 +524,21 @@ def _market_recommendation(rows: list[dict[str, Any]], markets: tuple[str, ...])
     return (
         f"- **Representative-market evidence:** {names} are tied at "
         f"{len(rows[0]['verified_markets'])} of {len(markets)} tested markets."
+    )
+
+
+def _reproduce_command(profile: dict[str, Any]) -> str:
+    manifest = profile.get("publication_manifest")
+    attestation = profile.get("publication_attestation")
+    if not isinstance(manifest, str) or not isinstance(attestation, str):
+        return (
+            "qveris-bench publication reproduce --package <package-manifest> "
+            "--expected-package-digest <published-digest>"
+        )
+    return (
+        "qveris-bench publication reproduce --package "
+        f"{manifest} --expected-package-digest \"$(python -c \"import json; "
+        f"print(json.load(open('{attestation}'))['package_digest'])\")\""
     )
 
 

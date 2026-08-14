@@ -11,8 +11,9 @@ publication_package:
   adapter_sources:
     - src/qveris_bench/articles/factory.py
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
+    - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:00607842e9adbf1d1c69d12950ab07035d9d64307507a3de2a114dbe5fc23466
+  adapter_digest: sha256:06bbaae8e26a575b093f9fd9634b72be7444cd4797990db1bf0856142e760697
 release:
   directory: releases/corporate-actions-v2-baseline-2026-q3-v1
   digest: sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae
@@ -28,8 +29,8 @@ artifacts:
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/latency-list-price-tradeoff.png
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/market-coverage.png
   publication_profile: docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml
-  selection_snapshot_input: selection_snapshots/corporate-actions-v2/selection-snapshot.yaml
-  selection_snapshot: selection_snapshots/corporate-actions-v2/selection-snapshot.json
+  selection_snapshot_input: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.yaml
+  selection_snapshot: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json
   qveris_list_pricing: selection_snapshots/corporate-actions-v2/qveris-list-pricing.json
 seo:
   primary_keyword: corporate actions API

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -8,14 +9,23 @@ from pathlib import Path
 import pytest
 import yaml
 
+from qveris_bench.cap_packs.corporate_actions.publication import (
+    _validate_snapshot_release_refs,
+)
 from qveris_bench.profiles.selection import (
     SelectionSnapshotBuildError,
     build_selection_snapshot,
 )
+from qveris_bench.publications.service import PublicationReproductionError
 
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / "selection_snapshots/corporate-actions-v2/selection-snapshot.yaml"
 SNAPSHOT = INPUT.with_suffix(".json")
+PUBLICATION_INPUT = (
+    ROOT
+    / "selection_snapshots/corporate-actions-v2-publication"
+    / "selection-snapshot.yaml"
+)
 MARKETS = {"US", "HK", "CN", "JP", "DE", "FR", "BR", "IN", "ES"}
 
 
@@ -28,6 +38,9 @@ def test_ac1_corporate_v2_snapshot_rebuilds_exactly_from_releases() -> None:
     )
     assert build.snapshot.market_coverage_release_digest == (
         "sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463"
+    )
+    assert hashlib.sha256(SNAPSHOT.read_bytes()).hexdigest() == (
+        "7e7102036922e0bb1f913e5f72f7eb2443fb2b9bb2618f3735823060e1449fd8"
     )
 
 
@@ -45,7 +58,7 @@ def test_ac2_corporate_v2_snapshot_keeps_provider_path_identities_separate() -> 
 
 
 def test_ac3_corporate_v2_snapshot_preserves_nine_market_evidence_states() -> None:
-    rows = build_selection_snapshot(INPUT, ROOT).snapshot.rows
+    rows = build_selection_snapshot(PUBLICATION_INPUT, ROOT).snapshot.rows
 
     for row in rows:
         results = row.market_coverage.results
@@ -76,6 +89,19 @@ def test_ac3_corporate_v2_snapshot_preserves_nine_market_evidence_states() -> No
     }
 
 
+def test_corporate_publication_rejects_snapshot_from_an_unlisted_release() -> None:
+    build = build_selection_snapshot(PUBLICATION_INPUT, ROOT)
+
+    with pytest.raises(PublicationReproductionError, match="release references"):
+        _validate_snapshot_release_refs(
+            build,
+            {
+                "release": {"digest": "sha256:" + "0" * 64},
+                "market_coverage_release": {
+                    "digest": "sha256:" + "0" * 64,
+                },
+            },
+        )
 def test_ac4_corporate_v2_snapshot_uses_inspect_prices_not_account_costs() -> None:
     rows = build_selection_snapshot(INPUT, ROOT).snapshot.rows
     prices = {

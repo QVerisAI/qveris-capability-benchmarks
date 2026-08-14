@@ -55,7 +55,7 @@ Do not treat this as an AI-friendly score. Validate the returned instrument iden
 
 ## How we tested, reproduce, and contribute
 
-The baseline Release digest is `sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae`. The market Release digest is `sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463`. Reproduce the package offline with `qveris-bench publication reproduce --package <package-manifest> --expected-package-digest <published-digest>`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
+The baseline Release digest is `sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae`. The market Release digest is `sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463`. Reproduce the package offline with `qveris-bench publication reproduce --package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml --expected-package-digest "$(python -c "import json; print(json.load(open('docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json'))['package_digest'])")"`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
 
 Suppliers may submit a binding, reproducible case, or factual correction through the repository. Inclusion and conclusions cannot be purchased.
 

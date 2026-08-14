@@ -20,7 +20,7 @@ SNAPSHOT = (
     ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json"
 )
 CORPORATE_ACTIONS_V2_SNAPSHOT = (
-    ROOT / "selection_snapshots/corporate-actions-v2/selection-snapshot.json"
+    ROOT / "selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json"
 )
 CORPORATE_ACTIONS_PROFILE = (
     ROOT
@@ -159,6 +159,12 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
     assert "nine representative markets" in article
     assert "72 release-backed live calls" in article
     assert "0/2 Evidence insufficient" in article
+    assert "<package-manifest>" not in article
+    assert (
+        "--package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml"
+        in article
+    )
+    assert "best-corporate-actions-apis-2026-08-14-v2.json" in article
     assert result.market_chart.is_file()
 
 
