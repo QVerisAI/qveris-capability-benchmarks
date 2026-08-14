@@ -117,16 +117,57 @@ def article_build(
     output_dir: Annotated[
         Path, typer.Option(help="Output directory for article assets.")
     ],
+    writer_input: Annotated[
+        Path | None, typer.Option(help="Frozen public writer-input JSON.")
+    ] = None,
+    editorial: Annotated[
+        Path | None, typer.Option(help="Skill-generated editorial JSON.")
+    ] = None,
 ) -> None:
     """Build an English article and charts without calling provider APIs."""
     from qveris_bench.articles.factory import ArticleBuildError, build_article_package
 
     try:
-        built = build_article_package(selection_snapshot, profile, output_dir)
+        built = build_article_package(
+            selection_snapshot,
+            profile,
+            output_dir,
+            writer_input_path=writer_input,
+            editorial_path=editorial,
+        )
     except ArticleBuildError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(f"Built article package -> {built.article}")
+
+
+@article_app.command("prepare")
+def article_prepare(
+    selection_snapshot: Annotated[
+        Path, typer.Option(help="Frozen Selection Snapshot JSON.")
+    ],
+    profile: Annotated[
+        Path, typer.Option(help="CAP article publication profile YAML.")
+    ],
+    output: Annotated[
+        Path, typer.Option(help="Frozen writer-input JSON output.")
+    ],
+) -> None:
+    """Prepare public, release-backed facts for a Skill-driven editorial draft."""
+    from qveris_bench.articles.writer import WriterInputBuildError, build_writer_input
+
+    try:
+        built = build_writer_input(
+            selection_snapshot,
+            profile,
+            _REPOSITORY_ROOT,
+        )
+    except WriterInputBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(built.json_bytes)
+    typer.echo(f"Built writer input -> {output}")
 
 
 @article_app.command("reproduce")
@@ -144,6 +185,12 @@ def article_reproduce(
         str | None,
         typer.Option(help="Trusted manifest digest from outside this checkout."),
     ] = None,
+    writer_input: Annotated[
+        Path | None, typer.Option(help="Frozen public writer-input JSON.")
+    ] = None,
+    editorial: Annotated[
+        Path | None, typer.Option(help="Skill-generated editorial JSON.")
+    ] = None,
 ) -> None:
     """Rebuild and verify an article package without provider API calls."""
     from qveris_bench.articles.factory import (
@@ -156,6 +203,8 @@ def article_reproduce(
             selection_snapshot,
             profile,
             output_dir,
+            writer_input_path=writer_input,
+            editorial_path=editorial,
             expected_manifest_digest=expected_manifest_digest,
         )
     except ArticleBuildError as exc:
@@ -171,8 +220,30 @@ def publication_reproduce(
         str | None,
         typer.Option(help="Trusted package digest from outside this checkout."),
     ] = None,
+    expected_package_attestation: Annotated[
+        Path | None,
+        typer.Option(help="JSON attestation containing the trusted package digest."),
+    ] = None,
 ) -> None:
     """Rebuild and verify a publication from committed release facts."""
+    attestation: dict[str, object] | None = None
+    if expected_package_digest is not None and expected_package_attestation is not None:
+        typer.echo("choose a package digest or attestation, not both", err=True)
+        raise typer.Exit(code=1)
+    if expected_package_attestation is not None:
+        try:
+            resolved = expected_package_attestation.resolve(strict=True)
+            resolved.relative_to(_REPOSITORY_ROOT.resolve(strict=True))
+            loaded = json.loads(resolved.read_text(encoding="utf-8"))
+            if not isinstance(loaded, dict) or not isinstance(
+                loaded.get("package_digest"), str
+            ):
+                raise ValueError
+            attestation = loaded
+            expected_package_digest = loaded["package_digest"]
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            typer.echo("invalid package attestation", err=True)
+            raise typer.Exit(code=1) from exc
     try:
         report = reproduce_publication_package(
             package,
@@ -181,6 +252,9 @@ def publication_reproduce(
     except PublicationReproductionError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
+    if attestation is not None and attestation.get("package_id") != report.package_id:
+        typer.echo("package attestation identity mismatch", err=True)
+        raise typer.Exit(code=1)
     typer.echo(report_json(report), nl=False)
 
 

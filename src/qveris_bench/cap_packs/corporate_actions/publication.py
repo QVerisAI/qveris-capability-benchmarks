@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from qveris_bench.articles.factory import reproduce_article_package
+from qveris_bench.articles.writer import WriterInputBuildError, build_writer_input
 from qveris_bench.models.publication import PublicationPackageSpec
 from qveris_bench.profiles.selection import (
     SelectionSnapshotBuildError,
@@ -49,6 +50,12 @@ class CorporateActionsPublicationAdapter:
             published_guide = resolve_repository_path(
                 repository_root, str(artifacts["published_guide"])
             )
+            writer_input = resolve_repository_path(
+                repository_root, str(artifacts["writer_input"])
+            )
+            editorial = resolve_repository_path(
+                repository_root, str(artifacts["editorial"])
+            )
         except (KeyError, TypeError) as exc:
             raise PublicationReproductionError(
                 "publication artifacts are incomplete"
@@ -62,7 +69,25 @@ class CorporateActionsPublicationAdapter:
         _validate_snapshot_release_refs(rebuilt_snapshot, document)
         if snapshot.read_bytes() != rebuilt_snapshot.json_bytes:
             raise PublicationReproductionError("selection snapshot differs from inputs")
-        reproduce_article_package(snapshot, profile, article_dir)
+        try:
+            rebuilt_writer_input = build_writer_input(
+                snapshot, profile, repository_root
+            )
+        except WriterInputBuildError as exc:
+            raise PublicationReproductionError(
+                "writer input cannot be rebuilt"
+            ) from exc
+        if writer_input.read_bytes() != rebuilt_writer_input.json_bytes:
+            raise PublicationReproductionError(
+                "writer input differs from public evidence"
+            )
+        reproduce_article_package(
+            snapshot,
+            profile,
+            article_dir,
+            writer_input_path=writer_input,
+            editorial_path=editorial,
+        )
         package_article = article_dir / "article.md"
         projected = package_article.read_text(encoding="utf-8").replace(
             "](charts/",

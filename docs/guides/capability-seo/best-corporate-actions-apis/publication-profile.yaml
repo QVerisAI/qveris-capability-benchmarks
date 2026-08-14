@@ -4,6 +4,10 @@ cap_label: Corporate Actions
 scope: Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.
 publication_manifest: docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml
 publication_attestation: docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json
+live_rerun_command: gh workflow run live-corporate-actions-baseline-e2e.yml && gh workflow run live-corporate-actions-market-e2e.yml
+writer_evidence_releases:
+  - releases/corporate-actions-v2-baseline-2026-q3-v1
+  - releases/corporate-actions-v2-nine-market-2026-q3-v1
 allowed_links:
   - https://www.alphavantage.co/
   - https://qveris.ai/providers/alphavantage

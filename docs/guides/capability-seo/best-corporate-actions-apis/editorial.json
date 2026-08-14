@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "skill_id": "cap-article-writer",
+  "skill_version": "1.0.0",
+  "lead": {
+    "copy": "This comparison evaluates historical split-event retrieval through the released cohort of Provider and Access Path pairs. It is designed to support choices about representative market coverage, observed gateway behavior, public list-price trade-offs, and invalid-input handling within the frozen evidence boundary; it does not establish universal instrument support or a provider-wide ranking.",
+    "fact_refs": [
+      "article:scope",
+      "article:no-overall-winner",
+      "article:limitations"
+    ]
+  },
+  "decision_scenarios": [
+    {
+      "heading": "Broadest released market verification",
+      "copy": "Choose the selected path when verified representative coverage across the released market matrix is the priority. It has the broadest set of verified cells in this release, but inconclusive cells remain unknown and should be checked against the exact target market before adoption.",
+      "recommended_access_path_ids": [
+        "eodhd-corporate-actions-qveris"
+      ],
+      "fact_refs": [
+        "path:eodhd-corporate-actions-qveris:market-coverage",
+        "article:evidence-states"
+      ]
+    },
+    {
+      "heading": "A target market where the broadest path is inconclusive",
+      "copy": "Choose the selected path when its specific target-market cell is verified while the broader alternative remains evidence-insufficient there. This is a cell-level decision, not permission to infer coverage for every market or instrument.",
+      "recommended_access_path_ids": [
+        "twelve-data-corporate-actions-qveris"
+      ],
+      "fact_refs": [
+        "path:eodhd-corporate-actions-qveris:market-coverage",
+        "path:twelve-data-corporate-actions-qveris:market-coverage",
+        "article:limitations"
+      ]
+    },
+    {
+      "heading": "Lowest observed gateway latency",
+      "copy": "Choose the selected path when the released gateway latency sample is the primary runtime constraint. Treat that result as a small observation at the gateway boundary and pair it with the path's narrower applicability before making a production decision.",
+      "recommended_access_path_ids": [
+        "alpha-vantage-corporate-actions-qveris"
+      ],
+      "fact_refs": [
+        "path:alpha-vantage-corporate-actions-qveris:latency",
+        "path:alpha-vantage-corporate-actions-qveris:market-coverage",
+        "article:limitations"
+      ]
+    },
+    {
+      "heading": "Lowest public gateway list price",
+      "copy": "Choose the selected path when the frozen public gateway list price is the leading constraint and the representative baseline is sufficient for initial evaluation. Qualify that choice because the market release is evidence-insufficient and direct official pricing evidence is unavailable; list price is not the same as account-billed consumption.",
+      "recommended_access_path_ids": [
+        "massive-stocks-corporate-actions-qveris"
+      ],
+      "fact_refs": [
+        "path:massive-stocks-corporate-actions-qveris:list-price",
+        "path:massive-stocks-corporate-actions-qveris:sample",
+        "path:massive-stocks-corporate-actions-qveris:market-coverage",
+        "path:massive-stocks-corporate-actions-qveris:official-pricing"
+      ]
+    },
+    {
+      "heading": "Explicit invalid-input behavior",
+      "copy": "Choose the selected path when an invalid symbol must produce the released validation outcome instead of empty data or a runtime failure. This observation covers the tested negative control only and does not establish broader recovery, retry, or semantic-error behavior.",
+      "recommended_access_path_ids": [
+        "eodhd-corporate-actions-qveris"
+      ],
+      "fact_refs": [
+        "path:eodhd-corporate-actions-qveris:invalid-input",
+        "article:agent-boundary"
+      ]
+    }
+  ],
+  "evidence_explainer": {
+    "copy": "Read verified as every frozen round for the representative case meeting the capability contract. Provider-negative means every frozen round returned an explicit Provider-level negative outcome, not permanent lack of support. Not-applicable means the Access Path contract excluded the cell rather than the test failing. Evidence-insufficient means the release supports neither a positive conclusion nor a Provider-negative one. Keep these live observations separate from official statements and editorial recommendations.",
+    "fact_refs": [
+      "article:evidence-states",
+      "article:scope"
+    ]
+  },
+  "cap_explainer": {
+    "copy": "Corporate-action retrieval is not satisfied by receiving a non-empty payload. The completion contract must bind the requested instrument to the response and extract the action type, effective date, and split ratio; those fields drive downstream position and price-history adjustments, so a plausible record with the wrong identity or semantics is unsafe. Market-qualified symbols make identity handling non-trivial, while the negative control separately tests whether an invalid symbol is surfaced as validation behavior rather than empty or partial data. A successful representative sample proves that contract only for the tested request and path.",
+    "fact_refs": [
+      "article:scope",
+      "path:alpha-vantage-corporate-actions-qveris:sample",
+      "path:eodhd-corporate-actions-qveris:sample",
+      "path:massive-stocks-corporate-actions-qveris:sample",
+      "path:twelve-data-corporate-actions-qveris:sample",
+      "path:alpha-vantage-corporate-actions-qveris:invalid-input",
+      "path:eodhd-corporate-actions-qveris:invalid-input",
+      "path:massive-stocks-corporate-actions-qveris:invalid-input",
+      "path:twelve-data-corporate-actions-qveris:invalid-input"
+    ]
+  },
+  "chart_explanations": {
+    "market": {
+      "copy": "Read rows as structurally identified Provider and Access Path pairs and columns as representative markets. Each cell reports the released evidence state using the frozen rounds for that representative case; its denominator is those planned rounds, not a count of all instruments in the market. Compare cells only within this observation scope, and do not turn an excluded or inconclusive cell into a failure claim.",
+      "fact_refs": [
+        "article:markets",
+        "article:evidence-states",
+        "article:limitations"
+      ]
+    },
+    "tradeoff": {
+      "copy": "Read the horizontal and vertical axes together: one represents the frozen public gateway list price and the other the observed gateway latency for the representative baseline. A point can improve one constraint while weakening another, and the latency sample is not a service-level guarantee. Use the chart to shortlist paths for a stated constraint, not to derive a composite or provider-wide rank.",
+      "fact_refs": [
+        "article:runtime-tradeoff",
+        "article:no-overall-winner",
+        "article:limitations"
+      ]
+    }
+  },
+  "provider_analyses": [
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "copy": "This path fits a latency-sensitive evaluation within its explicitly limited market contract. The representative baseline returned the required identity and split-event fields, and the applicable market cell was verified, while other market cells were excluded rather than failed. The invalid-input control did not meet the validation contract, so downstream code should not rely on an explicit validation error from this observation.",
+      "fact_refs": [
+        "path:alpha-vantage-corporate-actions-qveris:sample",
+        "path:alpha-vantage-corporate-actions-qveris:latency",
+        "path:alpha-vantage-corporate-actions-qveris:market-coverage",
+        "path:alpha-vantage-corporate-actions-qveris:invalid-input"
+      ]
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "copy": "This path fits developers prioritizing the broadest released set of verified market cells together with explicit invalid-input behavior. Its representative successful sample met the completion contract, but some applicable market cells remain evidence-insufficient, so the broad result must still be checked at the target-cell level. Its runtime and public list-price position should be weighed separately rather than folded into the coverage result.",
+      "fact_refs": [
+        "path:eodhd-corporate-actions-qveris:sample",
+        "path:eodhd-corporate-actions-qveris:market-coverage",
+        "path:eodhd-corporate-actions-qveris:invalid-input",
+        "path:eodhd-corporate-actions-qveris:latency",
+        "path:eodhd-corporate-actions-qveris:list-price"
+      ]
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "copy": "This path fits an initial evaluation driven by the lowest frozen public gateway list price and a completed representative baseline. The separate market release remains evidence-insufficient after observed runtime blocking, so that baseline must not be promoted into a market-coverage claim. The invalid-input control did not meet the validation contract, and official direct-pricing evidence is unavailable in this release.",
+      "fact_refs": [
+        "path:massive-stocks-corporate-actions-qveris:sample",
+        "path:massive-stocks-corporate-actions-qveris:list-price",
+        "path:massive-stocks-corporate-actions-qveris:market-coverage",
+        "path:massive-stocks-corporate-actions-qveris:invalid-input",
+        "path:massive-stocks-corporate-actions-qveris:official-pricing"
+      ]
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "copy": "This path fits target-market decisions where its released cell is verified, including cells left inconclusive by another broad-coverage path. Its representative successful sample met the completion contract, but several applicable cells remain evidence-insufficient after runtime errors. The invalid-input control also did not meet the validation contract, so agents need their own normalization and fallback policy.",
+      "fact_refs": [
+        "path:twelve-data-corporate-actions-qveris:sample",
+        "path:twelve-data-corporate-actions-qveris:market-coverage",
+        "path:twelve-data-corporate-actions-qveris:invalid-input",
+        "article:agent-boundary"
+      ]
+    }
+  ],
+  "agent_notes": {
+    "copy": "The constrained observation isolates invalid-input handling from other Agent-interface dimensions. Only the path with a positive invalid-input fact produced the required validation outcome; the other observed paths returned empty data or runtime failures for that control. Parameter clarity, schema stability, pagination, and single-tool completion remain evidence-insufficient across the released cohort. Agents should therefore validate returned identity, normalize failure classes, and avoid assuming unmeasured interface fitness.",
+    "fact_refs": [
+      "article:agent-boundary",
+      "path:alpha-vantage-corporate-actions-qveris:invalid-input",
+      "path:eodhd-corporate-actions-qveris:invalid-input",
+      "path:massive-stocks-corporate-actions-qveris:invalid-input",
+      "path:twelve-data-corporate-actions-qveris:invalid-input"
+    ]
+  },
+  "limitations": {
+    "copy": "The evidence covers historical split-event retrieval for representative symbols through the released paths, not every corporate-action type, instrument, exchange, or native Provider surface. Latency comes from a small gateway-boundary sample, public list prices are snapshots rather than billed consumption, and official pricing evidence is separate from live measurements. Representative successes do not establish universal coverage, while Provider-negative and evidence-insufficient outcomes must remain bounded to the frozen observation.",
+    "fact_refs": [
+      "article:scope",
+      "article:limitations",
+      "article:runtime-tradeoff",
+      "article:evidence-states"
+    ]
+  },
+  "faq": [
+    {
+      "question": "Is there a single winner?",
+      "answer": "No. Select a path by the released dimension that matches the application: target-market evidence, gateway latency, public list price, or invalid-input behavior. Each recommendation carries a different evidence boundary and trade-off.",
+      "fact_refs": [
+        "article:no-overall-winner",
+        "article:markets",
+        "article:runtime-tradeoff",
+        "article:agent-boundary"
+      ]
+    },
+    {
+      "question": "Can the publication be reproduced without Provider credentials?",
+      "answer": "Yes. Use the renderer-provided offline reproduction command to rebuild the publication from the immutable released facts and sanitized public evidence. Offline reproduction verifies the published package; it does not make new Provider calls.",
+      "fact_refs": [
+        "article:scope",
+        "article:limitations"
+      ]
+    },
+    {
+      "question": "How is a fresh live edition created?",
+      "answer": "Use the renderer-provided live rerun workflow with your own credential and create a new immutable Release. A fresh run produces new observations and must not overwrite or silently extend the evidence boundary of this publication.",
+      "fact_refs": [
+        "article:scope",
+        "article:evidence-states",
+        "article:limitations"
+      ]
+    },
+    {
+      "question": "How can a Provider contribute evidence or request a correction?",
+      "answer": "Use the renderer-provided contribution or correction route. New claims should arrive with explicit provenance and enter a new immutable Release; corrections should identify the affected released fact without rewriting the original observation boundary.",
+      "fact_refs": [
+        "article:evidence-states",
+        "article:limitations"
+      ]
+    },
+    {
+      "question": "Does a verified representative case prove universal support?",
+      "answer": "No. Verified applies only when every frozen round for that representative case met the capability contract. It does not establish support for every instrument, market, corporate-action type, or native Provider interface.",
+      "fact_refs": [
+        "article:evidence-states",
+        "article:limitations",
+        "article:scope"
+      ]
+    }
+  ]
+}

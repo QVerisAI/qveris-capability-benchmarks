@@ -167,7 +167,7 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         "--package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml"
         in article
     )
-    assert "uv run python -c" in article
+    assert "--expected-package-attestation" in article
     assert "best-corporate-actions-apis-2026-08-14-v2.json" in article
     assert result.market_chart.is_file()
 
@@ -182,6 +182,43 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         text=True,
     )
     assert reproduced.returncode == 0, reproduced.stderr
+
+
+def test_corporate_actions_skill_article_matches_golden_reader_structure(
+    tmp_path: Path,
+) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    result = build_article_package(
+        CORPORATE_ACTIONS_V2_SNAPSHOT,
+        CORPORATE_ACTIONS_PROFILE,
+        tmp_path / "publication",
+        writer_input_path=package / "writer-input.json",
+        editorial_path=package / "editorial.json",
+    )
+
+    article = result.article.read_text(encoding="utf-8")
+    for heading in (
+        "## Contents",
+        "## Results at a glance",
+        "## How developers should choose",
+        "## Evidence and Provider differences",
+        "### Provider-by-Provider analysis",
+        "## What AI Agent builders should verify",
+        "## Method, reproduction, and contribution",
+        "### No key required: reproduce the publication offline",
+        "### With a configured key: start a new live evidence run",
+        "### How Providers and developers can participate",
+        "## Limitations, disclosures, and corrections",
+        "## FAQ",
+    ):
+        assert heading in article
+    assert article.count("**Evidence-backed shortlist:**") >= 4
+    assert article.count("#### ") == 4
+    assert article.count("### ") >= 14
+    assert article.count("[![") == 2
+    assert len(article.split()) >= 2200
+    assert "qveris-bench cap run" not in article
+    assert "gh workflow run live-corporate-actions-baseline-e2e.yml" in article
 
 
 def test_rejects_an_unapproved_profile_link(tmp_path: Path) -> None:
