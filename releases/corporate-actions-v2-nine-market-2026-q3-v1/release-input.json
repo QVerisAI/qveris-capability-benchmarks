@@ -61,7 +61,7 @@
     "twelve-data-us-aapl-split-market-round-1",
     "twelve-data-us-aapl-split-market-round-2"
   ],
-  "github_artifacts_manifest_digest": "sha256:702d1ba948e3e944eab7793adee28a7b77ddf90c944efc99d526e6b111bd9d70",
+  "github_artifacts_manifest_digest": "sha256:d72f549543439bad2e099d425a0bd4ed4b7a736fd71815b0142ab281d478c014",
   "limitations": [
     "This release measures the frozen split-event workflow only.",
     "Provider and Access Path conclusions apply only to the released cells.",
@@ -119,7 +119,7 @@
     "twelve-data-us-aapl-split-market-round-2-completed"
   ],
   "provider_feedback_facts": {},
-  "public_evidence_manifest_digest": "sha256:2a9da0e65b80c874258a03884cebf28efcd1dab6504153322fd0a3a97426f01e",
+  "public_evidence_manifest_digest": "sha256:eb1350e5f63ff694f51a44bcced0d2d43a208033b806994a783fd1bd82a82a3e",
   "release_id": "corporate-actions-v2-nine-market-2026-q3-v1",
   "run_plan_digest": "sha256:6a1a348a0bde863a6703f1096ae04eb285639aa4e17c41d9ccd2328a241a56f9",
   "suite_fingerprint": "0468a9cadb08cf6b8fb7a852802613f0f38ebd8fc101714bdb145bebbc13e380",

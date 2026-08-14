@@ -37,7 +37,7 @@
     "twelve-data-us-aapl-split-baseline-round-2",
     "twelve-data-us-aapl-split-baseline-round-3"
   ],
-  "github_artifacts_manifest_digest": "sha256:611fd19fa81495e1e1b47d129acaa772431d35f56f77918415116927691d9d14",
+  "github_artifacts_manifest_digest": "sha256:60653c1e7d2b020a7ad0408eb6533e4592b6591d6bdb0ebe1369ca3c86a6f165",
   "limitations": [
     "This release measures the frozen split-event workflow only.",
     "Provider and Access Path conclusions apply only to the released cells.",
@@ -71,7 +71,7 @@
     "twelve-data-us-aapl-split-baseline-round-3-completed"
   ],
   "provider_feedback_facts": {},
-  "public_evidence_manifest_digest": "sha256:67dec8c1a56826587bea41d3b095b876a3f561e246f5acf9a2658ea55538d3b5",
+  "public_evidence_manifest_digest": "sha256:2b848d38d9737735ab10cc8426f98c9cb46e948a3a890cd4b34820710f7f6a0a",
   "release_id": "corporate-actions-v2-baseline-2026-q3-v1",
   "run_plan_digest": "sha256:a23007f00df7f601bb51784ce9f5a68b42d197f7db997ceab3d7523585e2d020",
   "suite_fingerprint": "65b0dc53f5981d85ecd53600aebe641fbf4efa2566d8a4197bdeb277ee77c3ba",

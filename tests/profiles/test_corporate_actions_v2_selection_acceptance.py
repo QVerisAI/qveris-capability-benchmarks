@@ -18,10 +18,10 @@ def test_ac1_corporate_v2_snapshot_rebuilds_exactly_from_releases() -> None:
 
     assert build.json_bytes == SNAPSHOT.read_bytes(), "AC1 snapshot is stale"
     assert build.snapshot.cap_release_digest == (
-        "sha256:75323cf3c31850ff8c48388235c366b0b7a880745e8629a0cfe2e06a7619ec58"
+        "sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae"
     )
     assert build.snapshot.market_coverage_release_digest == (
-        "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b"
+        "sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463"
     )
 
 
@@ -78,6 +78,15 @@ def test_ac4_corporate_v2_snapshot_uses_inspect_prices_not_account_costs() -> No
         assert row.gateway_metrics.cost_sample_size == 0
         assert row.gateway_metrics.median_credits is None
         assert not row.gateway_metrics.cost_evidence_refs
+
+    for relative_root in (
+        "evidence/corporate-actions-v2-baseline-2026-q3-v1",
+        "evidence/corporate-actions-v2-nine-market-2026-q3-v1",
+        "releases/corporate-actions-v2-baseline-2026-q3-v1",
+        "releases/corporate-actions-v2-nine-market-2026-q3-v1",
+    ):
+        for path in (ROOT / relative_root).glob("*.json"):
+            assert '"cost_credits"' not in path.read_text(encoding="utf-8")
 
 
 def test_ac5_corporate_v2_snapshot_builds_through_installed_cli(tmp_path: Path) -> None:

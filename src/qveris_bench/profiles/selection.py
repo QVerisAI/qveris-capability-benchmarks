@@ -308,9 +308,7 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                     positive_cases_only=(
                         config.get("gateway_latency_scope") == "positive_cases"
                     ),
-                    include_costs=bool(
-                        config.get("include_gateway_account_costs", True)
-                    ),
+                    include_costs=_include_gateway_account_costs(config),
                 ),
                 qveris_list_price=(
                     QVerisListPriceSnapshot(
@@ -430,7 +428,7 @@ def _gateway_metrics(
     *,
     is_qveris: bool,
     positive_cases_only: bool = False,
-    include_costs: bool = True,
+    include_costs: bool = False,
 ) -> GatewayMetricsSnapshot:
     if not is_qveris:
         return GatewayMetricsSnapshot(
@@ -479,6 +477,14 @@ def _gateway_metrics(
         latency_evidence_refs=latency_refs,
         cost_evidence_refs=cost_refs,
     )
+
+
+def _include_gateway_account_costs(config: dict[str, Any]) -> bool:
+    configured = config.get("include_gateway_account_costs")
+    if configured is not None:
+        return bool(configured)
+    # v1 已发布包保留字节级复现；v2 起公开事实默认排除账号实扣。
+    return str(config.get("version")) == "1.0.0"
 
 
 def _load_qveris_list_prices(

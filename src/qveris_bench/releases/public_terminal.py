@@ -55,7 +55,7 @@ class PublicTerminal(FrozenModel):
     disclosure_level: DisclosureLevel
     license_status: LicenseStatus
     latency_ms: float | None
-    cost_credits: float | None
+    cost_credits: float | None = None
     github_run_id: str = Field(min_length=1)
     github_sha: str = Field(pattern=r"^[a-f0-9]{40}$")
 

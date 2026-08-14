@@ -196,6 +196,31 @@ def test_ac4_gateway_metrics_can_exclude_account_billing() -> None:
     assert metrics.cost_evidence_refs == ()
 
 
+def test_ac4_gateway_metrics_exclude_account_billing_by_default() -> None:
+    metrics = _gateway_metrics(
+        [
+            {
+                "run_key": "positive-round-1",
+                "case_id": "positive",
+                "state": "completed",
+            }
+        ],
+        {
+            "positive-round-1": {
+                "latency_ms": 125,
+                "cost_credits": 0.25,
+                "public_digest": "sha256:" + "a" * 64,
+            }
+        },
+        {"positive": False},
+        is_qveris=True,
+    )
+
+    assert metrics.cost_sample_size == 0
+    assert metrics.median_credits is None
+    assert metrics.cost_evidence_refs == ()
+
+
 def test_ac5_pricing_respects_access_path_scope() -> None:
     rows = {
         row.access_path_id: row
