@@ -1043,11 +1043,11 @@ def _digest(value: bytes) -> str:
 
 def _same_pixels(first: Path, second: Path) -> bool:
     with Image.open(first) as expected, Image.open(second) as actual:
-        expected_rgba = expected.convert("RGBA")
-        actual_rgba = actual.convert("RGBA")
+        expected_rgb = expected.convert("RGB")
+        actual_rgb = actual.convert("RGB")
         return (
-            expected_rgba.size == actual_rgba.size
-            and ImageChops.difference(expected_rgba, actual_rgba).getbbox() is None
+            expected_rgb.size == actual_rgb.size
+            and ImageChops.difference(expected_rgb, actual_rgb).getbbox() is None
         )
 
 

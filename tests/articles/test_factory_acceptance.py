@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from PIL import Image
 from typer.testing import CliRunner
 
 from qveris_bench.articles.factory import (
@@ -16,6 +17,7 @@ from qveris_bench.articles.factory import (
     _load_snapshot,
     _market_rows,
     _render_market_chart,
+    _same_pixels,
     build_article_package,
     reproduce_article_package,
 )
@@ -234,7 +236,9 @@ def test_ac2_market_chart_distinguishes_multiple_paths_for_one_provider(
 
     rendered = chart.read_text(encoding="utf-8")
     assert row.access_path_id in rendered, "AC2: original Access Path is ambiguous"
-    assert alternate.access_path_id in rendered, "AC2: alternate Access Path is ambiguous"
+    assert alternate.access_path_id in rendered, (
+        "AC2: alternate Access Path is ambiguous"
+    )
 
 
 def test_ac4_article_skill_requires_non_redundant_chart_labels() -> None:
@@ -247,6 +251,17 @@ def test_ac4_article_skill_requires_non_redundant_chart_labels() -> None:
     )
     assert "retain enough Access Path identity" in blueprint, (
         "AC4: duplicate Provider rows could become ambiguous"
+    )
+
+
+def test_ac3_chart_pixel_comparison_rejects_rgb_tampering(tmp_path: Path) -> None:
+    expected = tmp_path / "expected.png"
+    tampered = tmp_path / "tampered.png"
+    Image.new("RGBA", (1, 1), (0, 0, 0, 255)).save(expected)
+    Image.new("RGBA", (1, 1), (255, 0, 255, 255)).save(tampered)
+
+    assert not _same_pixels(expected, tampered), (
+        "AC3: an RGB-only chart mutation was accepted"
     )
 
 
