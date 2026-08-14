@@ -262,6 +262,17 @@
           "minItems": 1,
           "title": "Results",
           "type": "array"
+        },
+        "run_observations": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RunObservationsSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
