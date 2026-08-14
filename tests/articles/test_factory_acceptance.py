@@ -22,7 +22,8 @@ SNAPSHOT = (
     ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json"
 )
 CORPORATE_ACTIONS_V2_SNAPSHOT = (
-    ROOT / "selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json"
+    ROOT
+    / "selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json"
 )
 CORPORATE_ACTIONS_PROFILE = (
     ROOT

@@ -859,9 +859,7 @@ def _market_coverage(
         observation_date=observation_date,
         results=tuple(results),
         run_observations=(
-            _run_observations(cells, run_refs)
-            if include_run_observations
-            else None
+            _run_observations(cells, run_refs) if include_run_observations else None
         ),
     )
 

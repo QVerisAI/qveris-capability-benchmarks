@@ -363,9 +363,7 @@ def _render_article(facts: dict[str, Any], profile: dict[str, Any]) -> str:
     cheapest = min(runtime_rows, key=lambda row: row["list_price_credits"])
     broadest_count = max(len(row["verified_markets"]) for row in rows)
     broadest = [row for row in rows if len(row["verified_markets"]) == broadest_count]
-    live_calls = (
-        facts["terminal_observations"] + facts["market_terminal_observations"]
-    )
+    live_calls = facts["terminal_observations"] + facts["market_terminal_observations"]
     comparison = "\n".join(_comparison_row(row, profile) for row in rows)
     market_rows = "\n".join(_market_row(row, facts["markets"]) for row in rows)
     agent_rows = "\n".join(_agent_row(row) for row in rows)
@@ -548,8 +546,8 @@ def _reproduce_command(profile: dict[str, Any]) -> str:
         )
     return (
         "qveris-bench publication reproduce --package "
-        f"{manifest} --expected-package-digest \"$(uv run python -c "
-        f"'import json; print(json.load(open(\"{attestation}\"))[\"package_digest\"])')\""
+        f'{manifest} --expected-package-digest "$(uv run python -c '
+        f'\'import json; print(json.load(open("{attestation}"))["package_digest"])\')"'
     )
 
 

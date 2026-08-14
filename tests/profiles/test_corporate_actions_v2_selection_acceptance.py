@@ -102,6 +102,8 @@ def test_corporate_publication_rejects_snapshot_from_an_unlisted_release() -> No
                 },
             },
         )
+
+
 def test_ac4_corporate_v2_snapshot_uses_inspect_prices_not_account_costs() -> None:
     rows = build_selection_snapshot(INPUT, ROOT).snapshot.rows
     prices = {
