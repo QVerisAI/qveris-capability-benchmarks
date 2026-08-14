@@ -1,0 +1,968 @@
+{
+  "cap_id": "corporate-actions",
+  "cap_release_digest": "sha256:75323cf3c31850ff8c48388235c366b0b7a880745e8629a0cfe2e06a7619ec58",
+  "cap_release_id": "corporate-actions-v2-baseline-2026-q3-v1",
+  "edition": "2026-08-14",
+  "input_digests": {
+    "cases": "sha256:5f7cde7faef1ec06c088a23934dc8ba000c7dd99142ea82aaba321903237047f",
+    "input": "sha256:d6a1990c90dfb1eef10165f489000d147ea9a94c5c1393e7efb665d72b2d4714",
+    "market_coverage_cases": "sha256:89dcd3e4f9d7eee4f6d8e131d6fe355c1b7e658d4084c878a90c90280fcaca64",
+    "market_coverage_release": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+    "market_coverage_suite": "sha256:eb8dcd641178d9889564b90cf7bbfc01ffa6b9491685606cbe85592dab469f30",
+    "providers": {
+      "alpha-vantage": "sha256:7a605e02c351b685f9986d2509702ccda7cae0ab282c6ec0ad46c55f634a9462",
+      "eodhd": "sha256:153e836de0ad9cfb8d1c963761dd216fe27f8f2c9acb18ffe9e4e61b418771bf",
+      "massive-stocks": "sha256:e8c5173b6c73a5784d3c8737af848a8a0627f2778d00eebcd9811d04b75054b4",
+      "twelve-data": "sha256:e57ce76097b0484d7ae7957a9a9f69358bca51091ace0804dd9cd410ac000ea0"
+    },
+    "qveris_direct_bindings": "sha256:946d0cb28c84cd665456c45a9a369789041a0e56e9978a185c73b30079186e9e",
+    "qveris_list_pricing": "sha256:4db46f38e3143d997eb8e97973789b68950f4965661b57718c39518168f4d87a",
+    "release": "sha256:75323cf3c31850ff8c48388235c366b0b7a880745e8629a0cfe2e06a7619ec58",
+    "suite": "sha256:b78510a7b92e9139cf21eb75e16ddd4c443019cd15e6a8095452109149ab388b"
+  },
+  "limitations": [
+    "The nine-market matrix uses one representative split-event case per market and does not establish exhaustive provider coverage.",
+    "Infra-blocked or mixed rounds remain evidence-insufficient and are not provider-negative.",
+    "QVeris list credits are sanitized Inspect list prices, not account billing."
+  ],
+  "market_coverage_release_digest": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+  "rows": [
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:1d413237587c8223066409a2b3e887bc0363059b52ecab1170fb2eb79145d1a0",
+            "sha256:7c9a0f131612a598aaae155dd61ab6a5329256119e858f2fe5557a02085ccb95",
+            "sha256:dfc51e3f59ccc4ed294d7694a5da52e1151dcf373738511018dbeae4ce33e041"
+          ],
+          "passed": 0,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "corporate-actions",
+      "case_observations": [
+        {
+          "case_id": "invalid-corporate-actions-symbol-v2",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:1d413237587c8223066409a2b3e887bc0363059b52ecab1170fb2eb79145d1a0",
+              "sha256:7c9a0f131612a598aaae155dd61ab6a5329256119e858f2fe5557a02085ccb95",
+              "sha256:dfc51e3f59ccc4ed294d7694a5da52e1151dcf373738511018dbeae4ce33e041"
+            ],
+            "passed": 0,
+            "state": "measured",
+            "total": 3
+          }
+        },
+        {
+          "case_id": "us-aapl-split-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:0c990f4c93f0896cc2187439a65c9a4221931fe4bf8280ab6baf30a23729e561",
+              "sha256:580063978a7f6d8fdea9a5ae6e5069bf10a9279ce564453a510709bb443dbdac",
+              "sha256:d173791564da49d01ca7e222ae85a45f1fbb0a1f391bc91887bf557f3fcde75d"
+            ],
+            "passed": 3,
+            "state": "measured",
+            "total": 3
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:0c990f4c93f0896cc2187439a65c9a4221931fe4bf8280ab6baf30a23729e561",
+          "sha256:580063978a7f6d8fdea9a5ae6e5069bf10a9279ce564453a510709bb443dbdac",
+          "sha256:d173791564da49d01ca7e222ae85a45f1fbb0a1f391bc91887bf557f3fcde75d"
+        ],
+        "latency_evidence_refs": [
+          "sha256:0c990f4c93f0896cc2187439a65c9a4221931fe4bf8280ab6baf30a23729e561",
+          "sha256:580063978a7f6d8fdea9a5ae6e5069bf10a9279ce564453a510709bb443dbdac",
+          "sha256:d173791564da49d01ca7e222ae85a45f1fbb0a1f391bc91887bf557f3fcde75d"
+        ],
+        "latency_max_ms": 1208.48,
+        "latency_median_ms": 484.66,
+        "latency_min_ms": 382.09,
+        "latency_sample_size": 3,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+        "results": [
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "BR",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "DE",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "ES",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "FR",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "HK",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "IN",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits this split tool to United States equities.",
+            "evidence_refs": [],
+            "market": "JP",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2326bd714c23da62a23db8884c8e2314ffca93d932b0c587f2ff3247256d5f81",
+              "sha256:6b65d09f32705e87da18bc6cc4f7a0210c41e9d26a2d57a01d2bf80cb7f2559b"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "25 API requests per day",
+        "license_status": "cleared",
+        "paid_plans": "Premium from USD 49.99/month",
+        "pricing_id": "alpha-vantage-official-pricing",
+        "pricing_url": "https://www.alphavantage.co/premium/",
+        "source_digest": "8c1c5dc3b6635a7d3d58f64378fab701c4d8ec5f122302aa00981aa81da90baa",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "alpha-vantage",
+      "provider_name": "Alpha Vantage",
+      "qveris_list_price": {
+        "amount_credits": 2.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:4db46f38e3143d997eb8e97973789b68950f4965661b57718c39518168f4d87a",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:b2afa91b7fe213e657d72b8a10a093ecfae055d4bdb8e94ec1ee1434d32fd2db",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": "website-default",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:0c990f4c93f0896cc2187439a65c9a4221931fe4bf8280ab6baf30a23729e561",
+          "sha256:1d413237587c8223066409a2b3e887bc0363059b52ecab1170fb2eb79145d1a0",
+          "sha256:580063978a7f6d8fdea9a5ae6e5069bf10a9279ce564453a510709bb443dbdac",
+          "sha256:7c9a0f131612a598aaae155dd61ab6a5329256119e858f2fe5557a02085ccb95",
+          "sha256:d173791564da49d01ca7e222ae85a45f1fbb0a1f391bc91887bf557f3fcde75d",
+          "sha256:dfc51e3f59ccc4ed294d7694a5da52e1151dcf373738511018dbeae4ce33e041"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:115ef1a8fc32760c060e9140bb42f3ddf3d8a13ebdd59b7ac8616f328354d3fc",
+            "sha256:36b074e0e94abcf76dfbb009de87b81c786b0ab58b90bfb1f8e3a687876279a9",
+            "sha256:897c138d56f6a7e8af0aaf548693fc165093b63590fef08f48ca4b9cf20149e3"
+          ],
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "corporate-actions",
+      "case_observations": [
+        {
+          "case_id": "invalid-corporate-actions-symbol-v2",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:115ef1a8fc32760c060e9140bb42f3ddf3d8a13ebdd59b7ac8616f328354d3fc",
+              "sha256:36b074e0e94abcf76dfbb009de87b81c786b0ab58b90bfb1f8e3a687876279a9",
+              "sha256:897c138d56f6a7e8af0aaf548693fc165093b63590fef08f48ca4b9cf20149e3"
+            ],
+            "passed": 3,
+            "state": "measured",
+            "total": 3
+          }
+        },
+        {
+          "case_id": "us-aapl-split-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:14bb855aa04b0f5cd84ca3566954a5da3dac49c7a46e5a681eccc72b2b8d41e5",
+              "sha256:da4ffa460a510bfde60599be6a94677c2420b72e4c0c55ea826a16ac7c40f324",
+              "sha256:e64e13ef69f9dbe3ddb2888ea016e45bb300fa6f97496b7a56a9db7656e7b26b"
+            ],
+            "passed": 3,
+            "state": "measured",
+            "total": 3
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:14bb855aa04b0f5cd84ca3566954a5da3dac49c7a46e5a681eccc72b2b8d41e5",
+          "sha256:da4ffa460a510bfde60599be6a94677c2420b72e4c0c55ea826a16ac7c40f324",
+          "sha256:e64e13ef69f9dbe3ddb2888ea016e45bb300fa6f97496b7a56a9db7656e7b26b"
+        ],
+        "latency_evidence_refs": [
+          "sha256:14bb855aa04b0f5cd84ca3566954a5da3dac49c7a46e5a681eccc72b2b8d41e5",
+          "sha256:da4ffa460a510bfde60599be6a94677c2420b72e4c0c55ea826a16ac7c40f324",
+          "sha256:e64e13ef69f9dbe3ddb2888ea016e45bb300fa6f97496b7a56a9db7656e7b26b"
+        ],
+        "latency_max_ms": 1816.77,
+        "latency_median_ms": 1557.01,
+        "latency_min_ms": 692.71,
+        "latency_sample_size": 3,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:d6bcad97e6edd7cebb23a82fe661794bf7228bcb5c014d3b1175fccdfb2a77b2",
+              "sha256:eead7b9c63d189a88270d35d9786e81ec8c3344269e3f660e21d960cb2946c73"
+            ],
+            "market": "BR",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2ec870cd3032a7677d99ced00fcb9b55399c802c19583ca347401f1f5d9933ff",
+              "sha256:9a95f2a590d7cedf3e9e0758250302b47abf439a1dcba51bcc587120f792cb20"
+            ],
+            "market": "CN",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:6bd03d7c3fbb734ce14a3ca7ab995113c269200b385f21ffa43eb182225cf7b5",
+              "sha256:9128dede1f3239403500788eadbdc6002dad625e686c84ed58180f327b7a4ea1"
+            ],
+            "market": "DE",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2fe808a5cc66374421e9f96c83b8e454da497b0d8af7cbb7c0c7b1b5fa2536b4",
+              "sha256:573b5cf45c33ffb45b19480d25f6ba4bc1ae4b3b58f34e7963228a1e9785d164"
+            ],
+            "market": "ES",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:3627bebbecf8e890be01f9e97140b9f275db65bd4a5bf0a666f2406585eac90f",
+              "sha256:ef38ef94b8b3d6596bff60ece3f286ca4538c7d7943490317a45744f1a14f397"
+            ],
+            "market": "FR",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:344b49e318a5d91a5e442e97231533be495fc281e5e6752b21515a0307ba8ae2",
+              "sha256:cf2b650ac7bba64e7c7362964ccf5dd790fda1c09fe151c194c5453b86cac8f3"
+            ],
+            "market": "HK",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:5f40da9ea9900d147f4c8a4a0db7004939bc9897f76d763154f1f3b84ed7ea13",
+              "sha256:803253a26473c3a1ec7626a575bd49ec9808bf955bfa2bc15ffff57eae2f6b1c"
+            ],
+            "market": "IN",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:982291fdfc12aeda5fa427349cb598c92bf87a1cbc99522aa5f32598fb23648a",
+              "sha256:db244a99e034944cc4263f1b50d23c0f469f5c6c2e920fdc52258d09239716af"
+            ],
+            "market": "JP",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:0f3e11515dcb29c61bf4a643b6b9b64c76fe780b451f69aeb2d29fc2c7dfcf68",
+              "sha256:d05d7b8fc941ef79f566a2b808b2641bd672530867bb6cb51d48c1cac40ec6ea"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "20 API calls per day",
+        "license_status": "cleared",
+        "paid_plans": "All-in-One USD 99.99/month",
+        "pricing_id": "eodhd-official-pricing",
+        "pricing_url": "https://eodhd.com/pricing",
+        "source_digest": "3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "eodhd",
+      "provider_name": "EODHD",
+      "qveris_list_price": {
+        "amount_credits": 2.81,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:4db46f38e3143d997eb8e97973789b68950f4965661b57718c39518168f4d87a",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:baa8e0e3a941f824450be42fde4e301154abe363bd9ed0ab5f86211805a0d375",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": "website-default",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:115ef1a8fc32760c060e9140bb42f3ddf3d8a13ebdd59b7ac8616f328354d3fc",
+          "sha256:14bb855aa04b0f5cd84ca3566954a5da3dac49c7a46e5a681eccc72b2b8d41e5",
+          "sha256:36b074e0e94abcf76dfbb009de87b81c786b0ab58b90bfb1f8e3a687876279a9",
+          "sha256:897c138d56f6a7e8af0aaf548693fc165093b63590fef08f48ca4b9cf20149e3",
+          "sha256:da4ffa460a510bfde60599be6a94677c2420b72e4c0c55ea826a16ac7c40f324",
+          "sha256:e64e13ef69f9dbe3ddb2888ea016e45bb300fa6f97496b7a56a9db7656e7b26b"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:155d44896bc525ba8a58181db4005fc766edc9b3dd1c913de878197c703a74ad",
+            "sha256:4b6425585169e205a980367356ea895dad34757397314aceb39532b27d1f56f2",
+            "sha256:e8091ffbc2583ccdb739b0066122f7fed1ae8cc5fa22ab706375d91181ff445d"
+          ],
+          "passed": 0,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "corporate-actions",
+      "case_observations": [
+        {
+          "case_id": "invalid-corporate-actions-symbol-v2",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:155d44896bc525ba8a58181db4005fc766edc9b3dd1c913de878197c703a74ad",
+              "sha256:4b6425585169e205a980367356ea895dad34757397314aceb39532b27d1f56f2",
+              "sha256:e8091ffbc2583ccdb739b0066122f7fed1ae8cc5fa22ab706375d91181ff445d"
+            ],
+            "passed": 0,
+            "state": "measured",
+            "total": 3
+          }
+        },
+        {
+          "case_id": "us-aapl-split-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:14e92af11144ebca2f77eaaf999ac0970c0d96454f8ec9fc0e5344ac4e0e14a0",
+              "sha256:641b3fe67c7ba360c4953da208460d33208841d4a65f3b428d4a39f62863a105",
+              "sha256:94fac09562b4ecd2aafadee5e8ac905c69555ae1482fca0d974c765901516f98"
+            ],
+            "passed": 3,
+            "state": "measured",
+            "total": 3
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:14e92af11144ebca2f77eaaf999ac0970c0d96454f8ec9fc0e5344ac4e0e14a0",
+          "sha256:641b3fe67c7ba360c4953da208460d33208841d4a65f3b428d4a39f62863a105",
+          "sha256:94fac09562b4ecd2aafadee5e8ac905c69555ae1482fca0d974c765901516f98"
+        ],
+        "latency_evidence_refs": [
+          "sha256:14e92af11144ebca2f77eaaf999ac0970c0d96454f8ec9fc0e5344ac4e0e14a0",
+          "sha256:641b3fe67c7ba360c4953da208460d33208841d4a65f3b428d4a39f62863a105",
+          "sha256:94fac09562b4ecd2aafadee5e8ac905c69555ae1482fca0d974c765901516f98"
+        ],
+        "latency_max_ms": 2298.23,
+        "latency_median_ms": 1673.54,
+        "latency_min_ms": 1154.02,
+        "latency_sample_size": 3,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+        "results": [
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "BR",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "DE",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "ES",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "FR",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "HK",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "IN",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": "Access Path contract limits Massive Stocks to United States equities.",
+            "evidence_refs": [],
+            "market": "JP",
+            "passed_rounds": 0,
+            "state": "not_applicable",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2b6079c4b76c8ea126d0ecd26bba469e92eea537eeca39ca4a4b5e346beab5c7",
+              "sha256:32846ad283f37b3813268738fd318881fd20a7eabefbb7b816c4e6dcda1ad7f9"
+            ],
+            "market": "US",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          }
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "provider_id": "massive-stocks",
+      "provider_name": "Massive Stocks",
+      "qveris_list_price": {
+        "amount_credits": 1.0,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:4db46f38e3143d997eb8e97973789b68950f4965661b57718c39518168f4d87a",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:a59857ee3c4ceca737ef7524441ec8b0f429d7919a8ee4d900cd827ae186e6c3",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": null,
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:14e92af11144ebca2f77eaaf999ac0970c0d96454f8ec9fc0e5344ac4e0e14a0",
+          "sha256:155d44896bc525ba8a58181db4005fc766edc9b3dd1c913de878197c703a74ad",
+          "sha256:4b6425585169e205a980367356ea895dad34757397314aceb39532b27d1f56f2",
+          "sha256:641b3fe67c7ba360c4953da208460d33208841d4a65f3b428d4a39f62863a105",
+          "sha256:94fac09562b4ecd2aafadee5e8ac905c69555ae1482fca0d974c765901516f98",
+          "sha256:e8091ffbc2583ccdb739b0066122f7fed1ae8cc5fa22ab706375d91181ff445d"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "agent_interface": {
+        "invalid_input_handling": {
+          "evidence_refs": [
+            "sha256:ca1cac566e8281a7d4a3ddc880669449d44ab2f736d70e0c479a4d62da442fbd",
+            "sha256:dd7f6abef71581de61921fe1d4c4f8495910169727b17242b2fbd3820836a6f9",
+            "sha256:e836afe323c00c0b5c9a0d2f1c098a44f4903470b9701c3ffaf910f2d172f1ce"
+          ],
+          "passed": 0,
+          "state": "measured",
+          "total": 3
+        },
+        "pagination": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "parameter_clarity": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "schema_stability": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        },
+        "single_tool_completion": {
+          "evidence_refs": [],
+          "passed": null,
+          "state": "evidence_insufficient",
+          "total": null
+        }
+      },
+      "cap_id": "corporate-actions",
+      "case_observations": [
+        {
+          "case_id": "invalid-corporate-actions-symbol-v2",
+          "negative_control": true,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:ca1cac566e8281a7d4a3ddc880669449d44ab2f736d70e0c479a4d62da442fbd",
+              "sha256:dd7f6abef71581de61921fe1d4c4f8495910169727b17242b2fbd3820836a6f9",
+              "sha256:e836afe323c00c0b5c9a0d2f1c098a44f4903470b9701c3ffaf910f2d172f1ce"
+            ],
+            "passed": 0,
+            "state": "measured",
+            "total": 3
+          }
+        },
+        {
+          "case_id": "us-aapl-split-baseline",
+          "negative_control": false,
+          "outcome": {
+            "evidence_refs": [
+              "sha256:6c1666b6b380af2b9f9ccfc1c324726d26988ac358e343ad04b9e67e6e5d9979",
+              "sha256:9a43867adc006e95893e57e2c2ab2130156c0e00adf27b39dc95541722dcf212",
+              "sha256:cd86a04ab330e1eedc2f7ba9ebc8832a8b4ef1a0de10330c02ceb16fbc2aede7"
+            ],
+            "passed": 3,
+            "state": "measured",
+            "total": 3
+          }
+        }
+      ],
+      "gateway_metrics": {
+        "cost_evidence_refs": [],
+        "cost_sample_size": 0,
+        "evidence_refs": [
+          "sha256:6c1666b6b380af2b9f9ccfc1c324726d26988ac358e343ad04b9e67e6e5d9979",
+          "sha256:9a43867adc006e95893e57e2c2ab2130156c0e00adf27b39dc95541722dcf212",
+          "sha256:cd86a04ab330e1eedc2f7ba9ebc8832a8b4ef1a0de10330c02ceb16fbc2aede7"
+        ],
+        "latency_evidence_refs": [
+          "sha256:6c1666b6b380af2b9f9ccfc1c324726d26988ac358e343ad04b9e67e6e5d9979",
+          "sha256:9a43867adc006e95893e57e2c2ab2130156c0e00adf27b39dc95541722dcf212",
+          "sha256:cd86a04ab330e1eedc2f7ba9ebc8832a8b4ef1a0de10330c02ceb16fbc2aede7"
+        ],
+        "latency_max_ms": 2091.95,
+        "latency_median_ms": 1086.29,
+        "latency_min_ms": 441.1,
+        "latency_sample_size": 3,
+        "measurement_boundary": "qveris_gateway",
+        "median_credits": null,
+        "state": "measured"
+      },
+      "market_coverage": {
+        "observation_date": "2026-08-14",
+        "release_digest": "sha256:ecac3bae5e48462fa8a68ec914a64626ed7e2c73b5505cf003d18aecaec9992b",
+        "results": [
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:1b390fd0442c609e96be255d841ad62a7a6c975ea855e9fa4204e5d9466716fa",
+              "sha256:2b7bbce85602171dbeb75f14f331224ffd75311ed97226cfb94e58a354993ef8"
+            ],
+            "market": "BR",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:30f46c8868b61d73ffffb4be4982bbf9104be802587c8590eae5397fecf9cbee",
+              "sha256:8fa9be4c865d372aadd97b045bf1b93e9c47eecbc48606eb29a083b969095926"
+            ],
+            "market": "CN",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:298e3168d8f0d7fb4822aa355af8386e7154f572d80bb9f4019716f2cb310aff",
+              "sha256:622f62262fba8f3931035d28e029aebc53adf964ceabb156c63a2e0b28b81f0f"
+            ],
+            "market": "DE",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:74b3f35ec2d37015f9d9951a1fdc69c178ea01d56cfed877afed617ba672898c",
+              "sha256:9961921f0a4352fb181f20a5a87a18d3282086c30f99e221972b780582ea1a56"
+            ],
+            "market": "ES",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:239a1d6498974fbe096ef5c0d91e53ae338367dd5994c4bd444a1304ee8b219b",
+              "sha256:70cd0da5f8158e45fd01526889d5aaa6c18cfbf2c3850004f644d8f4f37cf98b"
+            ],
+            "market": "FR",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:2c2ec2ef37d20f9eceb684d81d9e0a8513ad29ffb28b3155f24d9039bf9eda39",
+              "sha256:c09c529e01245a30e4be3624602dac0b25714ac2de29efc739526bf906d94eba"
+            ],
+            "market": "HK",
+            "passed_rounds": 0,
+            "state": "evidence_insufficient",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:038e590a48785831ca7ca821f4ce4a979da39ce9559b5a638f436c1142874c5b",
+              "sha256:d8fe20c2b39b85006d303b86e7a549bdde915155b0322e1117f936597486b3bb"
+            ],
+            "market": "IN",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:29ace746d7f1a072b364b4ad2a321a2c17a8d50567e65f4ee22ee12e0fcef950",
+              "sha256:95a05d99e63254da09c8699a5ca9b906fd32d29cae5e31280bd09a344d807681"
+            ],
+            "market": "JP",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          },
+          {
+            "applicability_reason": null,
+            "evidence_refs": [
+              "sha256:8b65f14361d15557c8e72582c7a8435dc1f9b233c1fd3606daf1d672103fcac6",
+              "sha256:e3a5ab467eeb72ee8c3df8126f78c0adf35d74f24129c9b3e56cb58898d76e7a"
+            ],
+            "market": "US",
+            "passed_rounds": 2,
+            "state": "verified",
+            "total_rounds": 2
+          }
+        ]
+      },
+      "observation_window": {
+        "end": "2026-08-14",
+        "start": "2026-08-14"
+      },
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Basic with 8 API credits per minute and 800 per day",
+        "license_status": "cleared",
+        "paid_plans": "Grow from USD 29/month",
+        "pricing_id": "twelve-data-official-pricing",
+        "pricing_url": "https://twelvedata.com/pricing",
+        "source_digest": "00bd84cd0b0d9ce97da479e2a5ebfa25365bc3efa46f7b27c53f8384cb80f27d",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
+      "provider_id": "twelve-data",
+      "provider_name": "Twelve Data",
+      "qveris_list_price": {
+        "amount_credits": 2.37,
+        "disclosure_level": "sanitized_public",
+        "evidence_ref": "sha256:4db46f38e3143d997eb8e97973789b68950f4965661b57718c39518168f4d87a",
+        "extractor_version": "1.0.0",
+        "inspect_response_digest": "sha256:39b8f1535599bb4f9a247375720eec73810a1cbac76f69e9487e3007b4356c52",
+        "inspected_at": "2026-08-14",
+        "license_status": "cleared",
+        "snapshot_version": "website-default",
+        "source": "qveris_inspect",
+        "state": "declared",
+        "unit": "per_call"
+      },
+      "run_observations": {
+        "evidence_refs": [
+          "sha256:6c1666b6b380af2b9f9ccfc1c324726d26988ac358e343ad04b9e67e6e5d9979",
+          "sha256:9a43867adc006e95893e57e2c2ab2130156c0e00adf27b39dc95541722dcf212",
+          "sha256:ca1cac566e8281a7d4a3ddc880669449d44ab2f736d70e0c479a4d62da442fbd",
+          "sha256:cd86a04ab330e1eedc2f7ba9ebc8832a8b4ef1a0de10330c02ceb16fbc2aede7",
+          "sha256:dd7f6abef71581de61921fe1d4c4f8495910169727b17242b2fbd3820836a6f9",
+          "sha256:e836afe323c00c0b5c9a0d2f1c098a44f4903470b9701c3ffaf910f2d172f1ce"
+        ],
+        "planned_observations": 6,
+        "state": "measured",
+        "terminal_observations": 6
+      }
+    }
+  ],
+  "snapshot_id": "corporate-actions-v2-selection-2026-q3-v1",
+  "suite_fingerprint": "65b0dc53f5981d85ecd53600aebe641fbf4efa2566d8a4197bdeb277ee77c3ba",
+  "version": "1.0.0"
+}

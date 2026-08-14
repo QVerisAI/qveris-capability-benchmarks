@@ -1,0 +1,20 @@
+{
+  "source": "qveris_inspect",
+  "inspected_at": "2026-08-14",
+  "extractor_version": "1.0.0",
+  "disclosure_level": "sanitized_public",
+  "license_status": "cleared",
+  "bindings_digest": "sha256:946d0cb28c84cd665456c45a9a369789041a0e56e9978a185c73b30079186e9e",
+  "responses": [
+    {"tool_id":"eodhd.financial_apis.splits.retrieve.v1.b2ac7c39","provider_id":"eodhd","amount_credits":2.81,"billing_unit":"call","per":1,"snapshot_version":"website-default"},
+    {"tool_id":"alphavantage.splits.list.v1.467a92c0","provider_id":"alphavantage","amount_credits":2,"billing_unit":"call","per":1,"snapshot_version":"website-default"},
+    {"tool_id":"twelvedata.splits.retrieve.v1.43527690","provider_id":"twelvedata","amount_credits":2.37,"billing_unit":"call","per":1,"snapshot_version":"website-default"},
+    {"tool_id":"massive_stocks.stocks.splits.list.v1.9ba1ffe4","provider_id":"massive_stocks","amount_credits":1,"billing_unit":"call","per":1,"snapshot_version":null}
+  ],
+  "prices": [
+    {"provider_id":"eodhd","access_path_id":"eodhd-corporate-actions-qveris","tool_id":"eodhd.financial_apis.splits.retrieve.v1.b2ac7c39","qveris_provider_id":"eodhd","amount_credits":2.81,"snapshot_version":"website-default","inspect_response_digest":"sha256:baa8e0e3a941f824450be42fde4e301154abe363bd9ed0ab5f86211805a0d375"},
+    {"provider_id":"alpha-vantage","access_path_id":"alpha-vantage-corporate-actions-qveris","tool_id":"alphavantage.splits.list.v1.467a92c0","qveris_provider_id":"alphavantage","amount_credits":2,"snapshot_version":"website-default","inspect_response_digest":"sha256:b2afa91b7fe213e657d72b8a10a093ecfae055d4bdb8e94ec1ee1434d32fd2db"},
+    {"provider_id":"twelve-data","access_path_id":"twelve-data-corporate-actions-qveris","tool_id":"twelvedata.splits.retrieve.v1.43527690","qveris_provider_id":"twelvedata","amount_credits":2.37,"snapshot_version":"website-default","inspect_response_digest":"sha256:39b8f1535599bb4f9a247375720eec73810a1cbac76f69e9487e3007b4356c52"},
+    {"provider_id":"massive-stocks","access_path_id":"massive-stocks-corporate-actions-qveris","tool_id":"massive_stocks.stocks.splits.list.v1.9ba1ffe4","qveris_provider_id":"massive_stocks","amount_credits":1,"snapshot_version":null,"inspect_response_digest":"sha256:a59857ee3c4ceca737ef7524441ec8b0f429d7919a8ee4d900cd827ae186e6c3"}
+  ]
+}

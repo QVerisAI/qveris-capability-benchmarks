@@ -308,6 +308,9 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                     positive_cases_only=(
                         config.get("gateway_latency_scope") == "positive_cases"
                     ),
+                    include_costs=bool(
+                        config.get("include_gateway_account_costs", True)
+                    ),
                 ),
                 qveris_list_price=(
                     QVerisListPriceSnapshot(
@@ -427,6 +430,7 @@ def _gateway_metrics(
     *,
     is_qveris: bool,
     positive_cases_only: bool = False,
+    include_costs: bool = True,
 ) -> GatewayMetricsSnapshot:
     if not is_qveris:
         return GatewayMetricsSnapshot(
@@ -440,13 +444,17 @@ def _gateway_metrics(
         if not (positive_cases_only and case_roles.get(str(cell["case_id"]), False))
         if str(cell["run_key"]) in evidence_by_run_key
     ]
-    cost_evidence = [
-        evidence_by_run_key[str(cell["run_key"])]
-        for cell in cells
-        if not case_roles.get(str(cell["case_id"]), False)
-        and str(cell.get("state")) == CellState.COMPLETED.value
-        and str(cell["run_key"]) in evidence_by_run_key
-    ]
+    cost_evidence = (
+        [
+            evidence_by_run_key[str(cell["run_key"])]
+            for cell in cells
+            if not case_roles.get(str(cell["case_id"]), False)
+            and str(cell.get("state")) == CellState.COMPLETED.value
+            and str(cell["run_key"]) in evidence_by_run_key
+        ]
+        if include_costs
+        else []
+    )
     latencies = sorted(
         float(item["latency_ms"])
         for item in latency_evidence
@@ -630,6 +638,7 @@ def _run_observations(
     terminal = {
         CellState.COMPLETED.value,
         CellState.PROVIDER_NEGATIVE.value,
+        CellState.INFRA_BLOCKED.value,
         CellState.EXCLUDED.value,
     }
     count = sum(str(item.get("state")) in terminal for item in cells)
@@ -807,8 +816,9 @@ def _market_coverage(
             state = "provider_negative"
             passed = 0
         else:
-            raise SelectionSnapshotBuildError(
-                f"market rounds disagree for {market}: {sorted(states)}"
+            state = "evidence_insufficient"
+            passed = sum(
+                str(cell.get("state")) == CellState.COMPLETED.value for cell in scoped
             )
         results.append(
             MarketCoverageResult(

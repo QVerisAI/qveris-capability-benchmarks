@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -14,9 +15,13 @@ from qveris_bench.models.selection import (
     OfficialPricingSnapshot,
     RunObservationsSnapshot,
 )
+from qveris_bench.models.suite import BenchmarkCase
 from qveris_bench.profiles.selection import (
     SelectionSnapshotBuildError,
     _agent_interface,
+    _gateway_metrics,
+    _market_coverage,
+    _run_observations,
     build_selection_snapshot,
 )
 
@@ -88,6 +93,53 @@ def test_ac3_snapshot_consumes_released_market_results() -> None:
     )
 
 
+def test_ac3_blocked_market_round_remains_evidence_insufficient() -> None:
+    case = BenchmarkCase(
+        case_id="hk-split-market",
+        cap_id="corporate-actions",
+        question="test",
+        input={"market": "HK", "symbol": "0700.HK"},
+        expected_observations=("symbol",),
+        completion_conditions=("symbol",),
+        disclosure_limits=("sanitized_public",),
+    )
+    cells = [
+        {
+            "run_key": "round-1",
+            "case_id": case.case_id,
+            "applicable": True,
+            "state": "completed",
+        },
+        {
+            "run_key": "round-2",
+            "case_id": case.case_id,
+            "applicable": True,
+            "state": "infra_blocked",
+        },
+    ]
+    evidence = {
+        "round-1": {"public_digest": "sha256:" + "a" * 64},
+        "round-2": {"public_digest": "sha256:" + "b" * 64},
+    }
+
+    coverage = _market_coverage(
+        cells,
+        {str(case.case_id): case},
+        evidence,
+        "sha256:" + "c" * 64,
+        date(2026, 8, 14),
+    )
+    observations = _run_observations(
+        cells, tuple(item["public_digest"] for item in evidence.values())
+    )
+
+    assert coverage.results[0].state == "evidence_insufficient"
+    assert coverage.results[0].passed_rounds == 1
+    assert coverage.results[0].total_rounds == 2
+    assert len(coverage.results[0].evidence_refs) == 2
+    assert observations.terminal_observations == 2
+
+
 def test_ac4_gateway_metrics_never_leak_into_native_path() -> None:
     rows = {
         row.access_path_id: row
@@ -110,6 +162,38 @@ def test_ac4_gateway_metrics_never_leak_into_native_path() -> None:
         assert row.run_observations.terminal_observations == 6
         assert row.run_observations.planned_observations == 6
         assert row.run_observations.evidence_refs
+
+
+def test_ac4_gateway_metrics_can_exclude_account_billing() -> None:
+    cells = [
+        {
+            "run_key": "positive-round-1",
+            "case_id": "positive",
+            "state": "completed",
+        }
+    ]
+    evidence = {
+        "positive-round-1": {
+            "latency_ms": 125,
+            "cost_credits": 0.25,
+            "public_digest": "sha256:" + "a" * 64,
+        }
+    }
+
+    metrics = _gateway_metrics(
+        cells,
+        evidence,
+        {"positive": False},
+        is_qveris=True,
+        include_costs=False,
+    )
+
+    assert metrics.state == "measured"
+    assert metrics.latency_sample_size == 1
+    assert metrics.latency_median_ms == 125
+    assert metrics.cost_sample_size == 0
+    assert metrics.median_credits is None
+    assert metrics.cost_evidence_refs == ()
 
 
 def test_ac5_pricing_respects_access_path_scope() -> None:
