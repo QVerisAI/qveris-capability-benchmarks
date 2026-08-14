@@ -6,6 +6,7 @@ import hashlib
 import json
 import platform
 import tempfile
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -15,7 +16,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch, Rectangle
-from PIL import Image, ImageChops
+from PIL import Image
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import SelectionSnapshot, SelectionSnapshotRow
@@ -1002,10 +1003,7 @@ def _render_market_chart(
     axis.set_xticks(range(len(markets)), markets)
     axis.set_yticks(
         range(len(rows)),
-        [
-            f"{display_names[row.provider_id]} · {_path_label(row.model_dump(mode='json'))}"
-            for row in rows
-        ],
+        _market_chart_labels(rows, display_names),
     )
     axis.tick_params(length=0)
     axis.set_title(f"{cap_label}: representative-market evidence")
@@ -1023,6 +1021,22 @@ def _render_market_chart(
     plt.close(fig)
 
 
+def _market_chart_labels(
+    rows: tuple[SelectionSnapshotRow, ...], display_names: dict[str, str]
+) -> list[str]:
+    names = [display_names[row.provider_id] for row in rows]
+    counts = Counter(names)
+    return [
+        name
+        if counts[name] == 1
+        else (
+            f"{name} · {_path_label(row.model_dump(mode='json'))} "
+            f"({row.access_path_id})"
+        )
+        for row, name in zip(rows, names, strict=True)
+    ]
+
+
 def _digest(value: bytes) -> str:
     return "sha256:" + hashlib.sha256(value).hexdigest()
 
@@ -1033,7 +1047,7 @@ def _same_pixels(first: Path, second: Path) -> bool:
         actual_rgba = actual.convert("RGBA")
         return (
             expected_rgba.size == actual_rgba.size
-            and ImageChops.difference(expected_rgba, actual_rgba).getbbox() is None
+            and expected_rgba.tobytes() == actual_rgba.tobytes()
         )
 
 
