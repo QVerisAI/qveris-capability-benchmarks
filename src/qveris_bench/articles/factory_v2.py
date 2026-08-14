@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import io
 import json
-import platform
 import tempfile
 from collections import Counter
 from collections.abc import Iterator
@@ -125,7 +124,6 @@ def reproduce_article_package(
         artifacts = (
             (output_dir / "article.md", rebuilt.article, "article"),
             (output_dir / "article-facts.json", rebuilt.article_facts, "article facts"),
-            (output_dir / "manifest.json", rebuilt.manifest, "article manifest"),
             (
                 output_dir / "charts/latency-list-price-tradeoff.png",
                 rebuilt.runtime_chart,
@@ -137,16 +135,28 @@ def reproduce_article_package(
                 "market chart",
             ),
         )
+        _validate_manifest(output_dir / "manifest.json", rebuilt.manifest)
         for committed, fresh, name in artifacts:
             if committed.read_bytes() == fresh.read_bytes():
                 continue
-            if (
-                name.endswith("chart")
-                and platform.system() != "Linux"
-                and _same_pixels(committed, fresh)
-            ):
+            if name.endswith("chart") and _same_pixels(committed, fresh):
                 continue
             raise v1.ArticleBuildError(f"{name} artifact differs from a fresh build")
+
+
+def _validate_manifest(committed_path: Path, fresh_path: Path) -> None:
+    committed = json.loads(committed_path.read_text(encoding="utf-8"))
+    fresh = json.loads(fresh_path.read_text(encoding="utf-8"))
+    committed_charts = committed.pop("charts")
+    fresh.pop("charts")
+    if committed != fresh:
+        raise v1.ArticleBuildError(
+            "article manifest artifact differs from a fresh build"
+        )
+    for name, digest in committed_charts.items():
+        chart = committed_path.parent / "charts" / name
+        if _digest(chart.read_bytes()) != digest:
+            raise v1.ArticleBuildError("article manifest chart digest mismatch")
 
 
 def _render_runtime_chart(

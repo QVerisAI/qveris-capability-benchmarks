@@ -16,7 +16,7 @@ publication_package:
     - src/qveris_bench/cap_packs/govt_bond_yield/publication.py
     - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:b91e556074a35afa5d1b8951a2a610c597d78d5f88303e8627565d46aa9a7cc1
+  adapter_digest: sha256:722ac301fc2af240ea8421839cfb70a391681f1116a9d997bafdb445428b5996
 release:
   directory: releases/govt-bond-yield-2026-q3-v2
   digest: sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af

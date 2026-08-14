@@ -422,9 +422,11 @@ def test_ac5_reproduction_rejects_a_tampered_article(tmp_path: Path) -> None:
 
 
 def test_ac5_cli_reproduces_the_article_package_offline(tmp_path: Path) -> None:
+    from qveris_bench.articles.factory_v2 import build_article_package as build_v2
+
     output = tmp_path / "publication"
     profile = _profile(tmp_path / "profile.yaml")
-    build_article_package(SNAPSHOT, profile, output)
+    build_v2(SNAPSHOT, profile, output)
 
     result = CliRunner().invoke(
         app,
