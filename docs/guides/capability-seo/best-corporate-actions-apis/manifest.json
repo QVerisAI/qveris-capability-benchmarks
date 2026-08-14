@@ -7,8 +7,10 @@
   "edition": "2026-08-14",
   "input_digests": {
     "article_facts": "sha256:70fe79e6cf099cea8d6d39b83a1c8a1b68c517f525ad8fa2588e9cff23ebe27e",
-    "profile": "sha256:5d2b0d8c73258e48c2a7dae56597557fca218d2743f18347cb6a3b22202588d6",
-    "selection_snapshot": "sha256:799eb7876b5e9ba319775e7895164c896a228a2669cf96c7a7134f2744d226d1"
+    "editorial": "sha256:019f2f12a0dae3eb1e98ec0b0e48491c68254b38405853d202e62a3e77fd1d8d",
+    "profile": "sha256:799fc83c541776fbd161d30ea46966eaaedf90a6b23c4c63d3cd0b3f8d2125a9",
+    "selection_snapshot": "sha256:799eb7876b5e9ba319775e7895164c896a228a2669cf96c7a7134f2744d226d1",
+    "writer_input": "sha256:b2c081b6f891a47c4e7be989257f520b801e934a0ebcdc672091409a551521b9"
   },
   "outputs": {
     "article": "article.md",

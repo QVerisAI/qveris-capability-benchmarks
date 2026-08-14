@@ -1,9 +1,30 @@
 title: Best Corporate Actions APIs for Developers
 meta_description: Compare four QVeris corporate-actions paths using 72 live split-event calls across nine markets, with latency, public credits, pricing, and evidence limits.
 cap_label: Corporate Actions
+approved_editorial_copy_digest: sha256:519716b569e9f59fcd1051daaa638b6ee05aef7e64e5b890d54cfb989e86b31d
 scope: Historical split-event retrieval across US, HK, CN, JP, DE, FR, BR, IN, and ES representative symbols, plus an explicit invalid-symbol control through the tested QVeris Access Paths.
+cap_contract_explanation: A usable split event must preserve instrument identity, event date, and ratio while respecting market-specific symbol dialects. An empty result for a valid historical event and an explicit rejection for an invalid symbol are different outcomes; the CAP keeps them separate so an Agent cannot silently treat transport or entitlement failures as correct Provider behavior.
+baseline_method: The baseline suite froze a known historical split case and an invalid-symbol control for every included Access Path.
+market_method: The market suite ran applicable representative cases without converting not-applicable or blocked cells into Provider failures.
+sample_field_labels:
+  symbol: symbol
+  date: event date
+  ratio: split ratio
+  identity_verified: identity verification
+agent_unmeasured_dimensions: [pagination behavior, schema stability across versions, language mapping, single-tool completion]
+agent_validation_dimensions: [returned identity, market symbol dialect, date semantics, ratio normalization, empty-result behavior]
+cap_limitations:
+  - Representative cases do not prove exhaustive exchange, symbol, instrument, or date-range coverage.
+  - Latency samples describe the tested QVeris Access Path and observation window, not an SLA.
+  - QVeris list credits and direct Provider plan prices use different units and scopes.
+  - This CAP measures historical stock splits, not dividends, mergers, spin-offs, or every corporate-action type.
+  - Corrections require a new evidence-bound publication package; historical Releases remain immutable.
 publication_manifest: docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml
 publication_attestation: docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json
+live_rerun_command: gh workflow run live-corporate-actions-baseline-e2e.yml && gh workflow run live-corporate-actions-market-e2e.yml
+writer_evidence_releases:
+  - releases/corporate-actions-v2-baseline-2026-q3-v1
+  - releases/corporate-actions-v2-nine-market-2026-q3-v1
 allowed_links:
   - https://www.alphavantage.co/
   - https://qveris.ai/providers/alphavantage

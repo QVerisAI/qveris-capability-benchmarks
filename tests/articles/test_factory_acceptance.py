@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -167,21 +168,130 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         "--package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml"
         in article
     )
-    assert "uv run python -c" in article
-    assert "best-corporate-actions-apis-2026-08-14-v2.json" in article
+    assert "--expected-package-digest <published-digest>" in article
     assert result.market_chart.is_file()
 
     command = re.search(r"Reproduce the package offline with `(.*?)`", article)
     assert command is not None
+    attestation = json.loads(
+        (
+            ROOT
+            / "docs/guides/publication-attestations/best-corporate-actions-apis-2026-08-14-v2.json"
+        ).read_text(encoding="utf-8")
+    )
+    executable = command.group(1).replace(
+        "<published-digest>", attestation["package_digest"]
+    )
     reproduced = subprocess.run(
-        command.group(1),
+        executable,
         cwd=ROOT,
         shell=True,
         check=False,
         capture_output=True,
         text=True,
+        env={**os.environ, "UV_CACHE_DIR": str(tmp_path / "uv-cache")},
     )
     assert reproduced.returncode == 0, reproduced.stderr
+
+
+def test_corporate_actions_skill_article_matches_golden_reader_structure(
+    tmp_path: Path,
+) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    result = build_article_package(
+        CORPORATE_ACTIONS_V2_SNAPSHOT,
+        CORPORATE_ACTIONS_PROFILE,
+        tmp_path / "publication",
+        writer_input_path=package / "writer-input.json",
+        editorial_path=package / "editorial.json",
+    )
+
+    article = result.article.read_text(encoding="utf-8")
+    for heading in (
+        "## Contents",
+        "## Results at a glance",
+        "## How developers should choose",
+        "## Evidence and Provider differences",
+        "### Provider-by-Provider analysis",
+        "## What AI Agent builders should verify",
+        "## Method, reproduction, and contribution",
+        "### No key required: reproduce the publication offline",
+        "### With a configured key: start a new live evidence run",
+        "### How Providers and developers can participate",
+        "## Limitations, disclosures, and corrections",
+        "## FAQ",
+    ):
+        assert heading in article
+    assert article.count("**Evidence-backed shortlist:**") >= 4
+    assert article.count("#### ") == 4
+    assert article.count("### ") >= 14
+    assert article.count("[![") == 2
+    assert len(article.split()) >= 2200
+    assert "qveris-bench cap run" not in article
+    assert "gh workflow run live-corporate-actions-baseline-e2e.yml" in article
+    assert "outside the checkout" in article
+
+
+def test_skill_article_build_rejects_tampered_writer_input(tmp_path: Path) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    writer_input = json.loads((package / "writer-input.json").read_text())
+    writer_input["public_observations"][0]["facts"]["ratio"] = 999
+    tampered = tmp_path / "writer-input.json"
+    tampered.write_text(json.dumps(writer_input), encoding="utf-8")
+
+    with pytest.raises(ArticleBuildError, match="release-backed public evidence"):
+        build_article_package(
+            CORPORATE_ACTIONS_V2_SNAPSHOT,
+            CORPORATE_ACTIONS_PROFILE,
+            tmp_path / "publication",
+            writer_input_path=tampered,
+            editorial_path=package / "editorial.json",
+        )
+
+
+def test_skill_article_prepare_build_round_trip_accepts_copied_snapshot(
+    tmp_path: Path,
+) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    copied_snapshot = tmp_path / "selection-snapshot.json"
+    copied_snapshot.write_bytes(CORPORATE_ACTIONS_V2_SNAPSHOT.read_bytes())
+
+    result = build_article_package(
+        copied_snapshot,
+        CORPORATE_ACTIONS_PROFILE,
+        tmp_path / "publication",
+        writer_input_path=package / "writer-input.json",
+        editorial_path=package / "editorial.json",
+    )
+
+    assert result.article.is_file()
+
+
+def test_article_reproduction_rejects_tampered_editorial_digest(
+    tmp_path: Path,
+) -> None:
+    package = ROOT / "docs/guides/capability-seo/best-corporate-actions-apis"
+    output = tmp_path / "publication"
+    build_article_package(
+        CORPORATE_ACTIONS_V2_SNAPSHOT,
+        CORPORATE_ACTIONS_PROFILE,
+        output,
+        writer_input_path=package / "writer-input.json",
+        editorial_path=package / "editorial.json",
+    )
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["input_digests"]["editorial"] = "sha256:" + "0" * 64
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ArticleBuildError, match="input digest"):
+        reproduce_article_package(
+            CORPORATE_ACTIONS_V2_SNAPSHOT,
+            CORPORATE_ACTIONS_PROFILE,
+            output,
+            writer_input_path=package / "writer-input.json",
+            editorial_path=package / "editorial.json",
+        )
 
 
 def test_rejects_an_unapproved_profile_link(tmp_path: Path) -> None:

@@ -117,16 +117,55 @@ def article_build(
     output_dir: Annotated[
         Path, typer.Option(help="Output directory for article assets.")
     ],
+    writer_input: Annotated[
+        Path | None, typer.Option(help="Frozen public writer-input JSON.")
+    ] = None,
+    editorial: Annotated[
+        Path | None, typer.Option(help="Skill-generated editorial JSON.")
+    ] = None,
 ) -> None:
     """Build an English article and charts without calling provider APIs."""
     from qveris_bench.articles.factory import ArticleBuildError, build_article_package
 
     try:
-        built = build_article_package(selection_snapshot, profile, output_dir)
+        built = build_article_package(
+            selection_snapshot,
+            profile,
+            output_dir,
+            writer_input_path=writer_input,
+            editorial_path=editorial,
+        )
     except ArticleBuildError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(f"Built article package -> {built.article}")
+
+
+@article_app.command("prepare")
+def article_prepare(
+    selection_snapshot: Annotated[
+        Path, typer.Option(help="Frozen Selection Snapshot JSON.")
+    ],
+    profile: Annotated[
+        Path, typer.Option(help="CAP article publication profile YAML.")
+    ],
+    output: Annotated[Path, typer.Option(help="Frozen writer-input JSON output.")],
+) -> None:
+    """Prepare public, release-backed facts for a Skill-driven editorial draft."""
+    from qveris_bench.articles.writer import WriterInputBuildError, build_writer_input
+
+    try:
+        built = build_writer_input(
+            selection_snapshot,
+            profile,
+            _REPOSITORY_ROOT,
+        )
+    except WriterInputBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(built.json_bytes)
+    typer.echo(f"Built writer input -> {output}")
 
 
 @article_app.command("reproduce")
@@ -144,6 +183,12 @@ def article_reproduce(
         str | None,
         typer.Option(help="Trusted manifest digest from outside this checkout."),
     ] = None,
+    writer_input: Annotated[
+        Path | None, typer.Option(help="Frozen public writer-input JSON.")
+    ] = None,
+    editorial: Annotated[
+        Path | None, typer.Option(help="Skill-generated editorial JSON.")
+    ] = None,
 ) -> None:
     """Rebuild and verify an article package without provider API calls."""
     from qveris_bench.articles.factory import (
@@ -156,6 +201,8 @@ def article_reproduce(
             selection_snapshot,
             profile,
             output_dir,
+            writer_input_path=writer_input,
+            editorial_path=editorial,
             expected_manifest_digest=expected_manifest_digest,
         )
     except ArticleBuildError as exc:

@@ -40,6 +40,8 @@ def reproduce_article_package(
     profile_path: Path,
     output_dir: Path,
     *,
+    writer_input_path: Path | None = None,
+    editorial_path: Path | None = None,
     expected_manifest_digest: str | None = None,
 ) -> None:
     manifest_path = output_dir / "manifest.json"
@@ -58,19 +60,26 @@ def reproduce_article_package(
         "selection_snapshot": _digest(selection_snapshot_path.read_bytes()),
         "profile": _digest(profile_path.read_bytes()),
     }
-    if (
-        not isinstance(manifest, dict)
-        or manifest.get("input_digests", {}).get("selection_snapshot")
-        != expected_inputs["selection_snapshot"]
-        or manifest.get("input_digests", {}).get("profile")
-        != expected_inputs["profile"]
+    if writer_input_path is not None:
+        expected_inputs["writer_input"] = _digest(writer_input_path.read_bytes())
+    if editorial_path is not None:
+        expected_inputs["editorial"] = _digest(editorial_path.read_bytes())
+    actual_inputs = (
+        manifest.get("input_digests") if isinstance(manifest, dict) else None
+    )
+    if not isinstance(actual_inputs, dict) or any(
+        actual_inputs.get(key) != value for key, value in expected_inputs.items()
     ):
+        raise ArticleBuildError("article manifest input digest differs")
+    if set(actual_inputs) - {"article_facts"} != set(expected_inputs):
         raise ArticleBuildError("article manifest input digest differs")
     with tempfile.TemporaryDirectory(prefix="qveris-article-") as temporary:
         rebuilt = build_article_package(
             selection_snapshot_path,
             profile_path,
             Path(temporary),
+            writer_input_path=writer_input_path,
+            editorial_path=editorial_path,
         )
         artifacts = (
             (output_dir / "article.md", rebuilt.article, "article"),
@@ -104,6 +113,9 @@ def build_article_package(
     selection_snapshot_path: Path,
     profile_path: Path,
     output_dir: Path,
+    *,
+    writer_input_path: Path | None = None,
+    editorial_path: Path | None = None,
 ) -> ArticleBuild:
     snapshot = _load_snapshot(selection_snapshot_path)
     profile = _load_profile(profile_path)
@@ -115,6 +127,41 @@ def build_article_package(
     chart_dir = output_dir / "charts"
     chart_dir.mkdir(exist_ok=True)
     facts = _article_facts(snapshot, rows, profile)
+    writer_input: dict[str, Any] | None = None
+    editorial: dict[str, Any] | None = None
+    if (writer_input_path is None) != (editorial_path is None):
+        raise ArticleBuildError(
+            "writer input and editorial document must be supplied together"
+        )
+    if writer_input_path is not None and editorial_path is not None:
+        from qveris_bench.articles.writer import (
+            EditorialValidationError,
+            WriterInputBuildError,
+            build_writer_input,
+            load_editorial_document,
+        )
+
+        try:
+            repository_root = _repository_root(profile_path)
+            rebuilt_writer_input = build_writer_input(
+                selection_snapshot_path,
+                profile_path,
+                repository_root,
+            )
+            if writer_input_path.read_bytes() != rebuilt_writer_input.json_bytes:
+                raise ArticleBuildError(
+                    "writer input differs from release-backed public evidence"
+                )
+            writer_input = json.loads(rebuilt_writer_input.json_bytes)
+            editorial = load_editorial_document(editorial_path, writer_input)
+            _validate_editorial_profile(profile)
+        except (
+            OSError,
+            json.JSONDecodeError,
+            EditorialValidationError,
+            WriterInputBuildError,
+        ) as exc:
+            raise ArticleBuildError(f"invalid Skill editorial input: {exc}") from exc
     article = output_dir / "article.md"
     facts_path = output_dir / "article-facts.json"
     runtime_chart = chart_dir / "latency-list-price-tradeoff.png"
@@ -130,7 +177,12 @@ def build_article_package(
         runtime_rows, display_names, profile["cap_label"], runtime_chart
     )
     _render_market_chart(market_rows, display_names, profile["cap_label"], market_chart)
-    article.write_text(_render_article(facts, profile), encoding="utf-8")
+    rendered = (
+        _render_editorial_article(facts, profile, editorial, writer_input)
+        if editorial is not None and writer_input is not None
+        else _render_article(facts, profile)
+    )
+    article.write_text(rendered, encoding="utf-8")
     manifest = output_dir / "manifest.json"
     manifest.write_bytes(
         _canonical_json(
@@ -142,6 +194,16 @@ def build_article_package(
                     "selection_snapshot": _digest(selection_snapshot_path.read_bytes()),
                     "profile": _digest(profile_path.read_bytes()),
                     "article_facts": _digest(facts_path.read_bytes()),
+                    **(
+                        {"writer_input": _digest(writer_input_path.read_bytes())}
+                        if writer_input_path is not None
+                        else {}
+                    ),
+                    **(
+                        {"editorial": _digest(editorial_path.read_bytes())}
+                        if editorial_path is not None
+                        else {}
+                    ),
                 },
                 "outputs": {
                     "article": article.name,
@@ -155,6 +217,230 @@ def build_article_package(
         )
     )
     return ArticleBuild(article, facts_path, runtime_chart, market_chart, manifest)
+
+
+def _repository_root(path: Path) -> Path:
+    for candidate in (path.parent, *path.parents):
+        if (candidate / "pyproject.toml").is_file() and (
+            candidate / "cap_packs"
+        ).is_dir():
+            return candidate
+    raise ArticleBuildError("article inputs must be inside a benchmark repository")
+
+
+def _validate_editorial_profile(profile: dict[str, Any]) -> None:
+    required = (
+        "cap_contract_explanation",
+        "baseline_method",
+        "market_method",
+        "sample_field_labels",
+        "agent_unmeasured_dimensions",
+        "agent_validation_dimensions",
+        "cap_limitations",
+    )
+    if any(key not in profile for key in required):
+        raise ArticleBuildError("Skill-driven article profile is incomplete")
+
+
+def _render_editorial_article(
+    facts: dict[str, Any],
+    profile: dict[str, Any],
+    editorial: dict[str, Any],
+    writer_input: dict[str, Any],
+) -> str:
+    rows = facts["rows"]
+    live_calls = facts["terminal_observations"] + facts["market_terminal_observations"]
+    comparison = "\n".join(_comparison_row(row, profile) for row in rows)
+    market_rows = "\n".join(_market_row(row, facts["markets"]) for row in rows)
+    agent_rows = "\n".join(_agent_row(row) for row in rows)
+    scenarios = "\n\n".join(
+        _editorial_scenario(item, rows) for item in editorial["decision_scenarios"]
+    )
+    analyses_by_path = {
+        item["access_path_id"]: item for item in editorial["provider_analyses"]
+    }
+    observations = writer_input["public_observations"]
+    provider_analyses = "\n\n".join(
+        _provider_analysis(
+            row,
+            analyses_by_path[row["access_path_id"]],
+            observations,
+            profile,
+        )
+        for row in rows
+    )
+    faq = "\n\n".join(
+        f"### {item['question']}\n\n{item['answer']}" for item in editorial["faq"]
+    )
+    live_rerun = profile.get(
+        "live_rerun_command",
+        "qveris-bench cap run --cap <cap-id> --release-id <new-release-id>",
+    )
+    cap_limitations = "\n".join(f"- {item}" for item in profile["cap_limitations"])
+    unmeasured = ", ".join(profile["agent_unmeasured_dimensions"])
+    validation = ", ".join(profile["agent_validation_dimensions"])
+    return f"""# {profile["title"]}
+
+> {profile["meta_description"]}
+
+{facts["scope"]} This edition compares {facts["provider_count"]} Providers × {facts["access_path_count"]} Access Paths across {_count_word(len(facts["markets"]))} representative markets using {live_calls} release-backed live calls. Every conclusion is scoped to the tested Access Path and observation window, not the Provider's full native API surface.
+
+{editorial["lead"]["copy"]}
+
+## Contents
+
+- [Results at a glance](#results-at-a-glance)
+- [How developers should choose](#how-developers-should-choose)
+- [Evidence and Provider differences](#evidence-and-provider-differences)
+- [What AI Agent builders should verify](#what-ai-agent-builders-should-verify)
+- [Method, reproduction, and contribution](#method-reproduction-and-contribution)
+- [Limitations, disclosures, and corrections](#limitations-disclosures-and-corrections)
+- [FAQ](#faq)
+
+## Results at a glance
+
+| Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call | Official Provider pricing |
+|---|---|---|---:|---:|---|
+{comparison}
+
+“Verified” means every frozen round met the CAP contract. “Provider-negative” means every round returned an explicit Provider-level negative outcome; it does not prove permanent lack of support. “Not applicable” means the frozen plan excluded that market. “Evidence insufficient” means the Release did not establish either a positive or Provider-negative conclusion.
+
+{editorial["evidence_explainer"]["copy"]}
+
+## How developers should choose
+
+{scenarios}
+
+These are conditional recommendations from separate evidence dimensions, never an overall score or winner.
+
+## Evidence and Provider differences
+
+### Why {profile["cap_label"]} is harder than a basic lookup
+
+{profile["cap_contract_explanation"]}
+
+{editorial["cap_explainer"]["copy"]}
+
+### Observed latency and public QVeris list price
+
+[![Latency and QVeris list-price trade-off generated from the Selection Snapshot](charts/latency-list-price-tradeoff.png)](charts/latency-list-price-tradeoff.png)
+
+The horizontal axis is median QVeris gateway latency and the bar shows the observed minimum-to-maximum range. The vertical axis is the sanitized QVeris Inspect list price. These are different dimensions: neither axis represents direct Provider subscription price, personal account billing, or a service-level guarantee.
+
+{editorial["chart_explanations"]["tradeoff"]["copy"]}
+
+### Native plans and QVeris credits are different prices
+
+The comparison table keeps official Provider pricing beside, but separate from, QVeris list credits. Official plan facts carry their own URL and verification date. “Evidence insufficient” is retained when a publishable official price was not frozen for this edition.
+
+### Representative samples across {_count_word(len(facts["markets"]))} markets
+
+[![{profile["cap_label"]} test matrix for representative markets and Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
+
+| Provider × Access Path | {" | ".join(facts["markets"])} |
+|---|{"|".join("---" for _ in facts["markets"])}|
+{market_rows}
+
+Each cell is one representative symbol per market from the market Release. A fraction reports passed rounds over frozen rounds; it is not the percentage of all symbols or exchanges supported.
+
+{editorial["chart_explanations"]["market"]["copy"]}
+
+### Provider-by-Provider analysis
+
+{provider_analyses}
+
+## What AI Agent builders should verify
+
+| Provider × Access Path | Invalid-input handling | Integration note |
+|---|---:|---|
+{agent_rows}
+
+{editorial["agent_notes"]["copy"]}
+
+This is not an AI-friendly score. The current Release does not establish {unmeasured}. Validate {validation} in the application boundary.
+
+## Method, reproduction, and contribution
+
+### How we tested
+
+{profile["baseline_method"]} {profile["market_method"]} Public terminal evidence is sanitized and digest-bound; private raw responses remain outside the repository.
+
+The baseline Release digest is `{facts["cap_release_digest"]}`. The market Release digest is `{facts["market_release_digest"]}`.
+
+### No key required: reproduce the publication offline
+
+```bash
+{_reproduce_command(profile)}
+```
+
+Replace `<published-digest>` with the digest distributed by the trusted GitHub Release or CI attestation outside the checkout. The command rebuilds the Selection Snapshot, writer input, article facts, charts, and guide from committed public evidence without calling QVeris or any Provider; a digest stored only in the same mutable checkout is not a trust anchor.
+
+### With a configured key: start a new live evidence run
+
+```bash
+{live_rerun}
+```
+
+The workflows read `QVERIS_API_KEY` from the protected `benchmark-e2e` GitHub environment and emit a new artifact set. Release assembly must use a new Release ID; it never overwrites the evidence cited by this edition.
+
+### How Providers and developers can participate
+
+Contributions may add a frozen binding, representative case, publishable pricing fact, sanitized evidence, or factual correction through the repository. Inclusion and conclusions cannot be purchased, and every new claim must remain reproducible from a new immutable Release.
+
+## Limitations, disclosures, and corrections
+
+{editorial["limitations"]["copy"]}
+
+{cap_limitations}
+
+## FAQ
+
+{faq}
+"""
+
+
+def _editorial_scenario(item: dict[str, Any], rows: list[dict[str, Any]]) -> str:
+    by_path = {row["access_path_id"]: row for row in rows}
+    selected = [by_path[path_id] for path_id in item["recommended_access_path_ids"]]
+    labels = ", ".join(
+        f"{row['provider_name']} · {_path_label(row)}" for row in selected
+    )
+    return f"### {item['heading']}\n\n**Evidence-backed shortlist:** {labels}. {item['copy']}"
+
+
+def _provider_analysis(
+    row: dict[str, Any],
+    editorial: dict[str, Any],
+    observations: list[dict[str, Any]],
+    profile: dict[str, Any],
+) -> str:
+    labels = profile["sample_field_labels"]
+    samples = [
+        item
+        for item in observations
+        if item["access_path_id"] == row["access_path_id"]
+        and item["state"] == "completed"
+        and any(field in item["facts"] for field in labels)
+    ]
+    sample = samples[0]["facts"] if samples else {}
+    sample_values = [
+        f"{label} `{str(sample.get(field)).lower() if isinstance(sample.get(field), bool) else sample.get(field)}`"
+        for field, label in labels.items()
+        if field in sample
+    ]
+    sample_text = (
+        "A released successful sample returned " + ", ".join(sample_values) + "."
+        if sample_values
+        else "No publishable successful sample fields were available for this path."
+    )
+    markets = ", ".join(row["verified_markets"]) or "none in this edition"
+    return (
+        f"#### {row['provider_name']} · {_path_label(row)}\n\n"
+        f"{sample_text} Verified representative markets: {markets}. "
+        f"Observed median gateway latency: {_runtime_value(row)}. "
+        f"QVeris Inspect list price: {_price_value(row)} credits/call.\n\n"
+        f"{editorial['copy']}"
+    )
 
 
 def _load_snapshot(path: Path) -> SelectionSnapshot:
@@ -177,6 +463,31 @@ def _load_profile(path: Path) -> dict[str, Any]:
         raise ArticleBuildError("article profile is missing required English copy")
     if not isinstance(profile.get("provider_links"), dict):
         raise ArticleBuildError("article profile is missing provider links")
+    for key in ("cap_contract_explanation", "baseline_method", "market_method"):
+        if key in profile and (
+            not isinstance(profile[key], str) or not profile[key].strip()
+        ):
+            raise ArticleBuildError(f"article profile has invalid {key}")
+    for key in (
+        "agent_unmeasured_dimensions",
+        "agent_validation_dimensions",
+        "cap_limitations",
+    ):
+        if key in profile and (
+            not isinstance(profile[key], list)
+            or not profile[key]
+            or not all(isinstance(item, str) and item for item in profile[key])
+        ):
+            raise ArticleBuildError(f"article profile has invalid {key}")
+    if "sample_field_labels" in profile and (
+        not isinstance(profile["sample_field_labels"], dict)
+        or not profile["sample_field_labels"]
+        or not all(
+            isinstance(field, str) and isinstance(label, str) and field and label
+            for field, label in profile["sample_field_labels"].items()
+        )
+    ):
+        raise ArticleBuildError("article profile has invalid sample_field_labels")
     allowed_links = profile.get("allowed_links")
     if (
         not isinstance(allowed_links, list)
@@ -538,16 +849,14 @@ def _market_recommendation(rows: list[dict[str, Any]], markets: tuple[str, ...])
 
 def _reproduce_command(profile: dict[str, Any]) -> str:
     manifest = profile.get("publication_manifest")
-    attestation = profile.get("publication_attestation")
-    if not isinstance(manifest, str) or not isinstance(attestation, str):
+    if not isinstance(manifest, str):
         return (
             "qveris-bench publication reproduce --package <package-manifest> "
             "--expected-package-digest <published-digest>"
         )
     return (
-        "qveris-bench publication reproduce --package "
-        f'{manifest} --expected-package-digest "$(uv run python -c '
-        f'\'import json; print(json.load(open("{attestation}"))["package_digest"])\')"'
+        "uv run qveris-bench publication reproduce --package "
+        f"{manifest} --expected-package-digest <published-digest>"
     )
 
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CAP Article Writer"
+  short_description: "Write decision-first CAP articles from frozen facts"
+  default_prompt: "Use $cap-article-writer to create editorial.json from writer-input.json without inventing facts."

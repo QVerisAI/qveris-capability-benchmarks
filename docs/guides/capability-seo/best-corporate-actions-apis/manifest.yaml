@@ -10,10 +10,11 @@ publication_package:
   release_sections: [release, market_coverage_release]
   adapter_sources:
     - src/qveris_bench/articles/factory.py
+    - src/qveris_bench/articles/writer.py
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
     - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:93e59e2c3d9e4275c00b8f64ed540f8252be524081d0c2968213c6b9595504bf
+  adapter_digest: sha256:03d323ee2bc7a6e13e4f2a591a6135d7ca38b4bf3b1fe675409dcd40a8ee9026
 release:
   directory: releases/corporate-actions-v2-baseline-2026-q3-v1
   digest: sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae
@@ -29,6 +30,15 @@ artifacts:
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/latency-list-price-tradeoff.png
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/market-coverage.png
   publication_profile: docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml
+  writer_input: docs/guides/capability-seo/best-corporate-actions-apis/writer-input.json
+  editorial: docs/guides/capability-seo/best-corporate-actions-apis/editorial.json
+  skill_sources:
+    - .agents/skills/cap-article-writer/SKILL.md
+    - .agents/skills/cap-article-writer/agents/openai.yaml
+    - .agents/skills/cap-article-writer/references/article-blueprint.md
+    - .agents/skills/cap-article-writer/references/editorial-contract.md
+    - .agents/skills/cap-article-writer/references/evidence-language.md
+    - .agents/skills/cap-article-writer/references/golden-rubric.md
   selection_snapshot_input: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.yaml
   selection_snapshot: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json
   qveris_list_pricing: selection_snapshots/corporate-actions-v2/qveris-list-pricing.json

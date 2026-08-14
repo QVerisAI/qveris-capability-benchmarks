@@ -318,9 +318,29 @@ def _offline_network() -> Iterator[None]:
         "socket.socket.connect_ex",
         "socket.socket.sendto",
     )
+    process_functions = (
+        "system",
+        "popen",
+        "posix_spawn",
+        "posix_spawnp",
+        "spawnl",
+        "spawnle",
+        "spawnlp",
+        "spawnlpe",
+        "spawnv",
+        "spawnve",
+        "spawnvp",
+        "spawnvpe",
+        "fork",
+        "forkpty",
+    )
     with ExitStack() as stack:
         for target in targets:
             stack.enter_context(patch(target, deny_network))
+        stack.enter_context(patch("subprocess.Popen", deny_network))
+        for name in process_functions:
+            if hasattr(os, name):
+                stack.enter_context(patch.object(os, name, deny_network))
         yield
 
 
