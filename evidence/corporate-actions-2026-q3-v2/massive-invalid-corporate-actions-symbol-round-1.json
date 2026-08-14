@@ -1,0 +1,24 @@
+{
+  "access_path_id": "massive-stocks-corporate-actions-qveris",
+  "binding_id": "massive-invalid-corporate-actions-symbol",
+  "binding_registry_digest": "sha256:8a75ea00cf7685a745ba05fff0f2125a7b5eaf8fca73585d5e99e80234190d65",
+  "cost_credits": 0.0,
+  "disclosure_level": "sanitized_public",
+  "extractor_version": "1.0.0",
+  "facts": {},
+  "failure_attribution": "empty_or_partial_data",
+  "github_run_id": "31761368777",
+  "github_sha": "d2d3d1e8f0e056bc25b09910eef4b4431f7001db",
+  "latency_ms": 764.25,
+  "license_status": "cleared",
+  "provider_id": "massive-stocks",
+  "raw_digest": "sha256:67ca8af985a1016aabdecc0423944e88cb1473af74dbe4ec0b4058a224dd71c0",
+  "redaction_status": "sanitized",
+  "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+  "state": "provider_negative",
+  "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20",
+  "transport": "qveris_connector",
+  "unmet_conditions": [
+    "provider_validation_error"
+  ]
+}

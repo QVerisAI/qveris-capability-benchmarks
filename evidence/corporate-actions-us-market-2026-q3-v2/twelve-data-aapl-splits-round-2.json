@@ -1,0 +1,26 @@
+{
+  "access_path_id": "twelve-data-corporate-actions-qveris",
+  "binding_id": "twelve-data-aapl-splits",
+  "binding_registry_digest": "sha256:ddeb39cc6a31b155e192a2b2864abbcdcdb9d8c6d187d66d84ce94e85b0f4d18",
+  "cost_credits": 2.37,
+  "disclosure_level": "sanitized_public",
+  "extractor_version": "1.0.0",
+  "facts": {
+    "action_type": "split",
+    "date": "2020-08-31",
+    "symbol": "AAPL"
+  },
+  "failure_attribution": null,
+  "github_run_id": "31761368777",
+  "github_sha": "d2d3d1e8f0e056bc25b09910eef4b4431f7001db",
+  "latency_ms": 471.42,
+  "license_status": "cleared",
+  "provider_id": "twelve-data",
+  "raw_digest": "sha256:374d25de9014dbcc4c1b8d561ee839dc953afba76b9cd9ed69416081cd91bcce",
+  "redaction_status": "sanitized",
+  "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+  "state": "completed",
+  "suite_fingerprint": "0b76325ee2d44b943dca649d61a359cc1d5cd7d25f314e155e4f554d2a126f3a",
+  "transport": "qveris_connector",
+  "unmet_conditions": []
+}

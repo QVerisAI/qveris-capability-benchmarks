@@ -1,0 +1,10 @@
+required: [symbol, action_type, date]
+optional: [ratio, ex_date, record_date, pay_date, description]
+constraints:
+  - The positive response must contain an AAPL split event.
+  - The action type must unambiguously represent a split.
+  - The event date must be ISO-8601 date-like.
+completion_requires:
+  - a matching AAPL split event contains a symbol, split action type, and event date
+negative_control_requires:
+  - an invalid symbol is rejected without a corporate-action event

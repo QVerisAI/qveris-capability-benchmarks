@@ -1,0 +1,33 @@
+title: Best Corporate Actions APIs for Developers
+meta_description: Evidence-backed comparison of QVeris corporate-actions Access Paths for stock splits, with release-backed latency, list credits, market evidence, and Agent signals.
+cap_label: Corporate Actions
+scope: Historical US equity stock-split retrieval and an explicit invalid-symbol control through the tested QVeris Access Paths.
+allowed_links:
+  - https://www.alphavantage.co/
+  - https://qveris.ai/providers/alphavantage
+  - https://eodhd.com/
+  - https://qveris.ai/providers/eodhd
+  - https://massive.io/
+  - https://qveris.ai/providers/massive_stocks
+  - https://twelvedata.com/
+  - https://qveris.ai/providers/twelvedata
+  - https://www.alphavantage.co/premium/
+  - https://eodhd.com/pricing
+  - https://twelvedata.com/pricing
+provider_links:
+  alpha-vantage:
+    name: Alpha Vantage
+    official: https://www.alphavantage.co/
+    qveris: https://qveris.ai/providers/alphavantage
+  eodhd:
+    name: EODHD
+    official: https://eodhd.com/
+    qveris: https://qveris.ai/providers/eodhd
+  massive-stocks:
+    name: Massive
+    official: https://massive.io/
+    qveris: https://qveris.ai/providers/massive_stocks
+  twelve-data:
+    name: Twelve Data
+    official: https://twelvedata.com/
+    qveris: https://qveris.ai/providers/twelvedata

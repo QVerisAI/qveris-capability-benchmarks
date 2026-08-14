@@ -41,6 +41,32 @@
       "title": "AgentInterfaceSnapshot",
       "type": "object"
     },
+    "CaseObservationSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "negative_control": {
+          "title": "Negative Control",
+          "type": "boolean"
+        },
+        "outcome": {
+          "$ref": "#/$defs/SelectionObservation"
+        }
+      },
+      "required": [
+        "case_id",
+        "negative_control",
+        "outcome"
+      ],
+      "title": "CaseObservationSnapshot",
+      "type": "object"
+    },
     "GatewayMetricsSnapshot": {
       "additionalProperties": false,
       "properties": {
@@ -706,11 +732,27 @@
           "title": "Cap Id",
           "type": "string"
         },
+        "case_observations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CaseObservationSnapshot"
+          },
+          "title": "Case Observations",
+          "type": "array"
+        },
         "gateway_metrics": {
           "$ref": "#/$defs/GatewayMetricsSnapshot"
         },
         "market_coverage": {
-          "$ref": "#/$defs/MarketCoverageSnapshot"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MarketCoverageSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "observation_window": {
           "$ref": "#/$defs/ObservationWindow"
@@ -748,7 +790,6 @@
         "gateway_metrics",
         "qveris_list_price",
         "official_pricing",
-        "market_coverage",
         "agent_interface"
       ],
       "title": "SelectionSnapshotRow",
@@ -769,6 +810,21 @@
       "title": "Cap Release Digest",
       "type": "string"
     },
+    "cap_release_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cap Release Id"
+    },
     "edition": {
       "format": "date",
       "title": "Edition",
@@ -788,9 +844,17 @@
       "type": "array"
     },
     "market_coverage_release_digest": {
-      "pattern": "^sha256:[a-f0-9]{64}$",
-      "title": "Market Coverage Release Digest",
-      "type": "string"
+      "anyOf": [
+        {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Market Coverage Release Digest"
     },
     "rows": {
       "items": {
@@ -807,6 +871,19 @@
       "title": "Snapshot Id",
       "type": "string"
     },
+    "suite_fingerprint": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Suite Fingerprint"
+    },
     "version": {
       "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
       "title": "Version",
@@ -819,7 +896,6 @@
     "edition",
     "cap_id",
     "cap_release_digest",
-    "market_coverage_release_digest",
     "input_digests",
     "rows"
   ],

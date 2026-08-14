@@ -49,7 +49,7 @@ class PublicationReleaseRef(FrozenModel):
 class PublicationReproductionReport(FrozenModel):
     package_id: StableId
     package_digest: EvidenceRef
-    status: Literal["verified"]
+    status: Literal["verified", "verified_with_noncanonical_chart_bytes"]
     release_count: int = Field(ge=1)
     checks: tuple[SectionName, ...]
     canonical_chart_bytes_verified: bool

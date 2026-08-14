@@ -1,0 +1,24 @@
+{
+  "access_path_id": "eodhd-corporate-actions-qveris",
+  "binding_id": "eodhd-invalid-corporate-actions-symbol",
+  "binding_registry_digest": "sha256:8a75ea00cf7685a745ba05fff0f2125a7b5eaf8fca73585d5e99e80234190d65",
+  "cost_credits": 0.0,
+  "disclosure_level": "sanitized_public",
+  "extractor_version": "1.0.0",
+  "facts": {
+    "validation_error": "provider_validation_error"
+  },
+  "failure_attribution": "provider_validation_error",
+  "github_run_id": "31761368777",
+  "github_sha": "d2d3d1e8f0e056bc25b09910eef4b4431f7001db",
+  "latency_ms": 725.42,
+  "license_status": "cleared",
+  "provider_id": "eodhd",
+  "raw_digest": "sha256:3ec5777add65cd6f7459aa27957839ad5a0bfa21b8f815513c75316cd978f181",
+  "redaction_status": "sanitized",
+  "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:3",
+  "state": "completed",
+  "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20",
+  "transport": "qveris_connector",
+  "unmet_conditions": []
+}

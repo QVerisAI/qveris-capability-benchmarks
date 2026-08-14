@@ -7,9 +7,11 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.parse
 import urllib.request
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -17,6 +19,7 @@ from typing import Any
 
 import yaml
 
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.providers.repository import ProviderRegistryRepository
 
 
@@ -49,6 +52,9 @@ class CellResult:
     notes: str = ""
     latency_ms: float | None = None
     cost_credits: float | None = None
+    raw_document: dict[str, Any] | None = None
+    raw_digest: str | None = None
+    raw_content: bytes | None = None
 
 
 def _observation_present(data: Any, observation: str) -> bool:
@@ -69,17 +75,43 @@ def _observation_present(data: Any, observation: str) -> bool:
 
 
 def _negative_ok(data: Any, status_code: int) -> bool:
-    if status_code not in (200, 204):
-        return True
-    if data is None:
-        return True
-    if isinstance(data, dict):
-        return not _has_event_rows(data)
-    if isinstance(data, list):
-        return not data
-    if isinstance(data, str):
-        return len([line for line in data.strip().splitlines() if line.strip()]) < 2
-    return True
+    return (
+        _is_negative_control_response(status_code)
+        and not _has_event_rows(data)
+        and _has_explicit_provider_rejection(data)
+    )
+
+
+def _is_negative_control_response(status_code: int) -> bool:
+    return status_code in (200, 204, 404) or status_code >= 1000
+
+
+def _has_explicit_provider_rejection(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            normalized = key.lower().replace("_", "") if isinstance(key, str) else ""
+            if (
+                normalized
+                in {
+                    "error",
+                    "errors",
+                    "errormessage",
+                    "validationerror",
+                    "message",
+                    "msg",
+                }
+                and isinstance(nested, str)
+                and nested.strip()
+            ):
+                return True
+            if isinstance(nested, (dict, list)) and _has_explicit_provider_rejection(
+                nested
+            ):
+                return True
+        return False
+    if isinstance(value, list):
+        return any(_has_explicit_provider_rejection(item) for item in value)
+    return isinstance(value, str) and bool(value.strip())
 
 
 def _has_event_rows(value: Any) -> bool:
@@ -125,21 +157,35 @@ def load_fixture(
 def build_executor(
     base_url: str, api_key: str
 ) -> Callable[[str, dict[str, Any]], dict[str, Any]]:
+    search_ids: dict[str, str] = {}
+    search_failures: dict[str, str] = {}
+
     def execute(tool_id: str, parameters: dict[str, Any]) -> dict[str, Any]:
-        search_request = urllib.request.Request(
-            f"{base_url}/search",
-            data=json.dumps({"query": tool_id, "limit": 1}).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(search_request, timeout=30) as response:
-                search_id = json.loads(response.read().decode("utf-8"))["search_id"]
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"search HTTP {exc.code}") from exc
+        search_id = search_ids.get(tool_id)
+        if search_id is None and tool_id in search_failures:
+            raise RuntimeError(search_failures[tool_id])
+        if search_id is None:
+            search_request = urllib.request.Request(
+                f"{base_url}/search",
+                data=json.dumps({"query": tool_id, "limit": 1}).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(search_request, timeout=90) as response:
+                    search_id = json.loads(response.read().decode("utf-8"))["search_id"]
+            except urllib.error.HTTPError as exc:
+                message = f"search HTTP {exc.code}"
+                search_failures[tool_id] = message
+                raise RuntimeError(message) from exc
+            except TimeoutError as exc:
+                message = "search timed out"
+                search_failures[tool_id] = message
+                raise RuntimeError(message) from exc
+            search_ids[tool_id] = search_id
         execute_request = urllib.request.Request(
             f"{base_url}/tools/execute?tool_id={urllib.parse.quote(tool_id)}",
             data=json.dumps({"search_id": search_id, "parameters": parameters}).encode(
@@ -153,7 +199,8 @@ def build_executor(
         )
         try:
             with urllib.request.urlopen(execute_request, timeout=60) as response:
-                body = json.loads(response.read().decode("utf-8"))
+                raw_content = response.read()
+                body = json.loads(raw_content.decode("utf-8"))
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"execute HTTP {exc.code}") from exc
         result = body.get("result") or {}
@@ -163,6 +210,9 @@ def build_executor(
             "data": result.get("data"),
             "latency_ms": body.get("elapsed_time_ms"),
             "cost_credits": billing.get("list_amount_credits"),
+            "raw_document": body,
+            "raw_digest": sha256_digest(raw_content),
+            "raw_content": raw_content,
         }
 
     return execute
@@ -180,17 +230,47 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
             notes="no execution result",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
         )
-    if case.negative_control:
-        passed = _negative_ok(data, status_code)
+    if case.negative_control and _negative_ok(data, status_code):
         return CellResult(
             "",
             case.case_id,
             0,
-            "passed" if passed else "failed",
-            notes=("" if passed else "negative control returned data"),
+            "passed",
             latency_ms=outcome.get("latency_ms"),
             cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
+        )
+    if status_code not in (200, 204):
+        return CellResult(
+            "",
+            case.case_id,
+            0,
+            "n_a",
+            notes=f"provider response HTTP {status_code}",
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
+        )
+    if case.negative_control:
+        return CellResult(
+            "",
+            case.case_id,
+            0,
+            "failed",
+            notes="negative control returned data or no explicit rejection",
+            latency_ms=outcome.get("latency_ms"),
+            cost_credits=outcome.get("cost_credits"),
+            raw_document=outcome.get("raw_document"),
+            raw_digest=outcome.get("raw_digest"),
+            raw_content=outcome.get("raw_content"),
         )
     missing = tuple(
         observation
@@ -206,6 +286,9 @@ def evaluate_cell(case: Case, outcome: dict[str, Any]) -> CellResult:
         missing=missing,
         latency_ms=outcome.get("latency_ms"),
         cost_credits=outcome.get("cost_credits"),
+        raw_document=outcome.get("raw_document"),
+        raw_digest=outcome.get("raw_digest"),
+        raw_content=outcome.get("raw_content"),
     )
 
 
@@ -214,15 +297,21 @@ def run_probe(
     execute: Callable[[str, dict[str, Any]], dict[str, Any]],
     *,
     rounds: int = 2,
+    call_delay_seconds: float = 0,
 ) -> list[CellResult]:
-    results: list[CellResult] = []
-    for probe in probes:
+    if call_delay_seconds < 0:
+        raise ValueError("call delay must be non-negative")
+
+    def run_supplier(probe: SupplierProbe) -> list[CellResult]:
+        results: list[CellResult] = []
         for case in probe.cases:
             for round_index in range(1, rounds + 1):
+                if results and call_delay_seconds:
+                    time.sleep(call_delay_seconds)
                 try:
                     outcome = execute(probe.tool_id, case.parameters)
                     result = evaluate_cell(case, outcome)
-                except RuntimeError as exc:
+                except (RuntimeError, TimeoutError) as exc:
                     result = CellResult(
                         probe.supplier,
                         case.case_id,
@@ -244,9 +333,17 @@ def run_probe(
                         notes=result.notes,
                         latency_ms=result.latency_ms,
                         cost_credits=result.cost_credits,
+                        raw_document=result.raw_document,
+                        raw_digest=result.raw_digest,
+                        raw_content=result.raw_content,
                     )
                 )
-    return results
+        return results
+
+    with ThreadPoolExecutor(max_workers=len(probes)) as pool:
+        return [
+            result for results in pool.map(run_supplier, probes) for result in results
+        ]
 
 
 def probe_state(cells: list[CellResult]) -> str:
@@ -257,6 +354,24 @@ def probe_state(cells: list[CellResult]) -> str:
     return "passed"
 
 
+def write_private_raw_evidence(
+    output_dir: Path, cells: list[CellResult]
+) -> dict[str, str]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    written: dict[str, str] = {}
+    for cell in cells:
+        if cell.raw_content is None or cell.raw_digest is None:
+            continue
+        evidence_id = f"{cell.provider_id}-{cell.case_id}-round-{cell.round}"
+        if evidence_id in written:
+            raise ValueError("duplicate private raw evidence identity")
+        if sha256_digest(cell.raw_content) != cell.raw_digest:
+            raise ValueError("private raw evidence digest mismatch")
+        (output_dir / f"{evidence_id}.json").write_bytes(cell.raw_content)
+        written[evidence_id] = cell.raw_digest
+    return written
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -265,11 +380,17 @@ def main(argv: list[str] | None = None) -> int:
         default=Path("scripts/fixtures/cap-direct-test-corporate-actions.yaml"),
     )
     parser.add_argument("--rounds", type=int, default=2)
+    parser.add_argument("--call-delay-seconds", type=float, default=0)
     parser.add_argument("--base-url", default="https://qveris.ai/api/v1")
     parser.add_argument(
         "--output",
         type=Path,
         default=Path("evidence/private/cap-direct-test.jsonl"),
+    )
+    parser.add_argument(
+        "--raw-output",
+        type=Path,
+        help="Private raw response directory; never commit this directory.",
     )
     args = parser.parse_args(argv)
 
@@ -280,7 +401,14 @@ def main(argv: list[str] | None = None) -> int:
 
     probes = load_fixture(args.fixture, Path("providers"))
     execute = build_executor(args.base_url.rstrip("/"), api_key)
-    results = run_probe(probes, execute, rounds=args.rounds)
+    results = run_probe(
+        probes,
+        execute,
+        rounds=args.rounds,
+        call_delay_seconds=args.call_delay_seconds,
+    )
+    if args.raw_output is not None:
+        write_private_raw_evidence(args.raw_output, results)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     recorded_at = datetime.now(UTC).isoformat()
@@ -299,6 +427,7 @@ def main(argv: list[str] | None = None) -> int:
                         "notes": result.notes,
                         "latency_ms": result.latency_ms,
                         "cost_credits": result.cost_credits,
+                        "raw_digest": result.raw_digest,
                         "recorded_at": recorded_at,
                     },
                     ensure_ascii=False,

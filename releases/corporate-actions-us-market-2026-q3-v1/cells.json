@@ -1,0 +1,218 @@
+[
+  {
+    "access_path_id": "alpha-vantage-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 1,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 2,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "alpha-vantage-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "alpha-vantage",
+    "round": 3,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 1,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 2,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "eodhd-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "eodhd",
+    "round": 3,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 1,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 2,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "massive-stocks-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "massive-stocks",
+    "round": 3,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:3",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 1,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 2,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "twelve-data-corporate-actions-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "aapl-splits-fixed-window",
+    "case_input": {
+      "end_date": "2026-08-13",
+      "market": "US",
+      "start_date": "2020-01-01",
+      "symbol": "AAPL"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "twelve-data",
+    "round": 3,
+    "run_key": "corporate-actions-us-market-v1:0b76325ee2d4:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:3",
+    "state": "completed"
+  }
+]

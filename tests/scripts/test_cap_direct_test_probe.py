@@ -2,14 +2,95 @@
 
 from __future__ import annotations
 
+import urllib.error
+from pathlib import Path
+from threading import Barrier
+
+import pytest
+
+from qveris_bench.evidence.hashing import sha256_digest
 from scripts.cap_direct_test_probe import (
     Case,
+    CellResult,
     SupplierProbe,
+    build_executor,
     evaluate_cell,
     load_fixture,
     probe_state,
     run_probe,
+    write_private_raw_evidence,
 )
+
+
+def test_executor_reuses_one_discovery_for_repeated_frozen_tool_calls(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests = []
+
+    class Response:
+        def __init__(self, body: dict) -> None:
+            self.body = body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self) -> bytes:
+            import json
+
+            return json.dumps(self.body).encode("utf-8")
+
+    def urlopen(request, timeout):
+        requests.append((request.full_url, timeout))
+        if request.full_url.endswith("/search"):
+            return Response({"search_id": "frozen-search"})
+        return Response(
+            {
+                "result": {"status_code": 200, "data": {"Date": "2020-08-31"}},
+                "billing": {"list_amount_credits": 1},
+                "elapsed_time_ms": 100,
+            }
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    execute = build_executor("https://qveris.ai/api/v1", "test-key")
+
+    execute("provider.splits", {"symbol": "AAPL"})
+    second = execute("provider.splits", {"symbol": "NOTASTOCK"})
+
+    assert sum(url.endswith("/search") for url, _ in requests) == 1
+    assert len(requests) == 3
+    assert second["raw_document"] == {
+        "result": {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31"},
+        },
+        "billing": {"list_amount_credits": 1},
+        "elapsed_time_ms": 100,
+    }
+    assert second["raw_digest"].startswith("sha256:")
+    assert second["raw_content"]
+
+
+def test_executor_caches_a_frozen_tool_discovery_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests = []
+
+    def urlopen(request, timeout):
+        requests.append((request.full_url, timeout))
+        raise urllib.error.HTTPError(request.full_url, 500, "error", {}, None)
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    execute = build_executor("https://qveris.ai/api/v1", "test-key")
+
+    for parameters in ({"symbol": "AAPL"}, {"symbol": "NOTASTOCK"}):
+        with pytest.raises(RuntimeError, match="search HTTP 500"):
+            execute("provider.splits", parameters)
+
+    assert len(requests) == 1
 
 
 def _case(**kwargs) -> Case:
@@ -32,6 +113,56 @@ def test_ac1_positive_all_observations_present_passes() -> None:
     assert result.state == "passed"
 
 
+def test_probe_keeps_raw_gateway_document_out_of_terminal_summary() -> None:
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+    raw_document = {
+        "result": {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        }
+    }
+
+    result = run_probe(
+        (probe,),
+        lambda _tool, _parameters: {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+            "raw_document": raw_document,
+        },
+        rounds=1,
+    )[0]
+
+    assert result.raw_document == raw_document
+    assert result.raw_document is not None
+
+
+def test_private_raw_evidence_is_written_separately_from_summary(
+    tmp_path: Path,
+) -> None:
+    raw_content = b'{"private":"provider response"}'
+    result = CellResult(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        case_id="aapl-splits",
+        round=1,
+        state="passed",
+        raw_content=raw_content,
+        raw_digest=sha256_digest(raw_content),
+    )
+
+    written = write_private_raw_evidence(tmp_path, [result])
+
+    assert written == {"eodhd-aapl-splits-round-1": result.raw_digest}
+    assert (tmp_path / "eodhd-aapl-splits-round-1.json").read_bytes() == raw_content
+
+
 def test_ac2_positive_missing_observation_fails() -> None:
     outcome = {"status_code": 200, "data": {"Date": "2020-08-31"}}
     result = evaluate_cell(_case(), outcome)
@@ -50,12 +181,60 @@ def test_ac3_negative_control_with_fabricated_data_fails() -> None:
     assert result.state == "failed"
 
 
-def test_ac4_negative_control_empty_response_passes() -> None:
-    outcome = {"status_code": 200, "data": {}}
+def test_ac4_negative_control_explicit_provider_error_passes() -> None:
+    outcome = {
+        "status_code": 200,
+        "data": {"error": "Unknown symbol: NOTASTOCK"},
+    }
     result = evaluate_cell(
         _case(negative_control=True, expected_observations=()), outcome
     )
     assert result.state == "passed"
+
+
+@pytest.mark.parametrize("status_code", [400, 401, 429, 500])
+def test_ac4_negative_control_gateway_or_http_errors_are_unavailable(
+    status_code: int,
+) -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": status_code, "data": {"error": "request failed"}},
+    )
+
+    assert result.state == "n_a"
+
+
+@pytest.mark.parametrize("status_code", [404, 4042])
+def test_ac4_explicit_invalid_symbol_rejection_passes_on_provider_error_code(
+    status_code: int,
+) -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": status_code, "data": "Symbol not found"},
+    )
+
+    assert result.state == "passed"
+
+
+def test_ac4_negative_control_empty_response_is_not_an_explicit_rejection() -> None:
+    result = evaluate_cell(
+        _case(negative_control=True, expected_observations=()),
+        {"status_code": 200, "data": {}},
+    )
+
+    assert result.state == "failed"
+
+
+def test_ac2_positive_http_error_is_unavailable() -> None:
+    result = evaluate_cell(
+        _case(),
+        {
+            "status_code": 500,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        },
+    )
+
+    assert result.state == "n_a"
 
 
 def test_ac6_csv_string_response_observations_match_header() -> None:
@@ -67,12 +246,12 @@ def test_ac6_csv_string_response_observations_match_header() -> None:
     assert result.state == "passed"
 
 
-def test_ac7_negative_control_empty_event_list_passes() -> None:
+def test_ac7_negative_control_empty_event_list_is_not_an_explicit_rejection() -> None:
     outcome = {"status_code": 200, "data": {"symbol": "NOTASTOCK", "data": []}}
     result = evaluate_cell(
         _case(negative_control=True, expected_observations=()), outcome
     )
-    assert result.state == "passed"
+    assert result.state == "failed"
 
 
 def test_ac8_negative_control_nested_error_envelope_passes() -> None:
@@ -108,6 +287,77 @@ def test_ac5_execution_unauthorized_is_n_a() -> None:
     results = run_probe((probe,), execute, rounds=1)
     assert results[0].state == "n_a"
     assert probe_state(results) == "n_a"
+
+
+def test_ac5_search_timeout_is_a_terminal_unavailable_observation() -> None:
+    def execute(tool_id, parameters):
+        raise TimeoutError("gateway search timed out")
+
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+
+    results = run_probe((probe,), execute, rounds=1)
+
+    assert results[0].state == "n_a"
+    assert "timed out" in results[0].notes
+
+
+def test_direct_test_runs_independent_provider_paths_concurrently() -> None:
+    barrier = Barrier(2)
+
+    def execute(_tool_id, _parameters):
+        barrier.wait(timeout=1)
+        return {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        }
+
+    probes = tuple(
+        SupplierProbe(
+            supplier=supplier,
+            provider_id=provider_id,
+            access_path_id=f"{provider_id}-corporate-actions-qveris",
+            tool_id=f"{provider_id}.splits",
+            cases=(_case(),),
+        )
+        for supplier, provider_id in (("Alpha", "alpha"), ("Beta", "beta"))
+    )
+
+    results = run_probe(probes, execute, rounds=1)
+
+    assert [result.provider_id for result in results] == ["alpha", "beta"]
+    assert all(result.state == "passed" for result in results)
+
+
+def test_direct_test_spaces_calls_within_one_provider_path(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pauses: list[float] = []
+    probe = SupplierProbe(
+        supplier="EODHD",
+        provider_id="eodhd",
+        access_path_id="eodhd-corporate-actions-qveris",
+        tool_id="eodhd.splits",
+        cases=(_case(),),
+    )
+    monkeypatch.setattr("scripts.cap_direct_test_probe.time.sleep", pauses.append)
+
+    run_probe(
+        (probe,),
+        lambda _tool, _parameters: {
+            "status_code": 200,
+            "data": {"Date": "2020-08-31", "Stock Splits": "4:1"},
+        },
+        rounds=3,
+        call_delay_seconds=15,
+    )
+
+    assert pauses == [15, 15]
 
 
 def test_ac5_any_failed_or_unavailable_cell_fails_the_probe() -> None:

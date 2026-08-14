@@ -1,0 +1,26 @@
+cases:
+  - case_id: aapl-splits-fixed-window
+    cap_id: corporate-actions
+    question: Return AAPL stock split events from 2020-01-01 through 2026-08-13.
+    input:
+      symbol: AAPL
+      start_date: "2020-01-01"
+      end_date: "2026-08-13"
+      market: US
+    expected_observations: [symbol, action_type, date]
+    completion_conditions:
+      - a matching AAPL split event contains a symbol, split action type, and event date
+    disclosure_limits: [sanitized_public]
+    applicable_provider_ids: [eodhd, twelve-data, alpha-vantage, massive-stocks]
+  - case_id: invalid-corporate-actions-symbol
+    cap_id: corporate-actions
+    question: Reject an invalid equity symbol without returning corporate-action events.
+    input:
+      symbol: NOTASTOCK
+      market: US
+    negative_control: true
+    expected_observations: [provider_validation_error]
+    completion_conditions:
+      - an invalid symbol is rejected without a corporate-action event
+    disclosure_limits: [sanitized_public]
+    applicable_provider_ids: [eodhd, twelve-data, alpha-vantage, massive-stocks]

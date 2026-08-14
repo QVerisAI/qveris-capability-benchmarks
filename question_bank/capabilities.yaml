@@ -17,6 +17,12 @@ capabilities:
     business_use: Select a provider for a current cryptocurrency spot quote.
     source_id: harbor-capability-catalog
     harbor_capability_id: CRYPTO.SPOT.RT
+  - cap_id: corporate-actions
+    name: Corporate Actions
+    lifecycle: runnable
+    business_use: Select a provider for historical equity corporate-action event records.
+    source_id: harbor-capability-catalog
+    harbor_capability_id: MKT.CORPORATE_ACTIONS
   - cap_id: financial-ratios
     name: Financial Ratios and Valuation
     lifecycle: candidate

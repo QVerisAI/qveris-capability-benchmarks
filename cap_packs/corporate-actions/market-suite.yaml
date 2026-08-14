@@ -1,0 +1,17 @@
+suite_id: corporate-actions-us-market-v1
+version: 1.0.0
+cap_id: corporate-actions
+cap_version: 1.0.0
+case_ids: [aapl-splits-fixed-window]
+access_path_ids:
+  - eodhd-corporate-actions-qveris
+  - twelve-data-corporate-actions-qveris
+  - alpha-vantage-corporate-actions-qveris
+  - massive-stocks-corporate-actions-qveris
+modes: [direct]
+rounds: 3
+environment:
+  as_of: "2026-08-13"
+  execution_via: qveris_connector
+agent_protocol: null
+not_applicable: []

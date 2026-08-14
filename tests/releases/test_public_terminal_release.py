@@ -58,7 +58,13 @@ def _assemble(
     compiled = replace(
         compiled,
         fingerprint=historical_plan.suite_fingerprint,
-        run_plan=historical_plan,
+        run_plan=historical_plan.model_copy(
+            update={
+                "cap_id": compiled.run_plan.cap_id,
+                "cap_version": compiled.run_plan.cap_version,
+                "cap_sources": compiled.run_plan.cap_sources,
+            }
+        ),
     )
     registry_path = PACK / "market-direct-bindings.json"
     return assemble_public_terminal_release(
@@ -76,6 +82,7 @@ def _assemble(
         expected_github_sha=ATTESTATION["github_sha"],
         expected_provenance=provenance or PROVENANCE,
         github_artifacts_manifest_bytes=ATTESTATION_BYTES,
+        binding_registry_bytes=registry_path.read_bytes(),
     )
 
 
@@ -90,7 +97,15 @@ def test_assembles_every_applicable_cell_and_preserves_negative_results() -> Non
     assert (
         sum(cell.state.value == "provider_negative" for cell in artifacts.cells) == 16
     )
+    assert artifacts.release.cap_id == "dividend-events"
+    assert artifacts.release.cap_version == "1.0.0"
+    assert artifacts.release.cap_sources == artifacts.run_plan.cap_sources
     assert artifacts.release_bytes == artifacts.rebuild()
+    manifest = json.loads(artifacts.public_evidence_manifest_bytes)
+    assert all(
+        item["path"].startswith("evidence/dividend-events-market-coverage-")
+        for item in manifest["evidence"]
+    )
 
 
 def test_committed_market_release_exactly_matches_public_terminals() -> None:
@@ -206,3 +221,47 @@ def test_replay_rejects_tampered_public_terminal(tmp_path: Path) -> None:
         ReleaseReplayError, match="public evidence bytes digest mismatch"
     ):
         replay_release_dir(release_dir)
+
+
+def test_replay_rejects_tampered_attestation_or_binding_registry(
+    tmp_path: Path,
+) -> None:
+    artifacts = _assemble()
+    release_dir = tmp_path / "releases" / RELEASE.name
+    evidence_dir = tmp_path / "evidence" / RELEASE.name
+    artifacts.write(release_dir)
+    evidence_dir.mkdir(parents=True)
+    for item in PUBLIC_EVIDENCE.glob("*.json"):
+        (evidence_dir / item.name).write_bytes(item.read_bytes())
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    replay_release_dir(
+        release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+    )
+
+    (release_dir / "github-artifacts.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(ReleaseReplayError, match="attestation digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )
+
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    manifest = release_dir / "public-evidence-manifest.json"
+    document = json.loads(manifest.read_text())
+    document.pop("github_artifacts_manifest_digest")
+    manifest.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ReleaseReplayError, match="public evidence manifest digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )
+
+    artifacts.write(release_dir)
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    registry = release_dir / "direct-binding-registry.json"
+    registry.write_text(
+        registry.read_text(encoding="utf-8").replace("AAPL", "MSFT", 1),
+        encoding="utf-8",
+    )
+    with pytest.raises(ReleaseReplayError, match="binding registry digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )

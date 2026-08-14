@@ -23,6 +23,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment: benchmark-e2e
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +37,9 @@ jobs:
           uv run python scripts/cap_direct_test_probe.py \
             --fixture "scripts/fixtures/cap-direct-test-$FIXTURE_PREFIX.yaml" \
             --rounds "$ROUNDS" \
-            --output "evidence/private/cap-direct-test.jsonl"
+            --call-delay-seconds 15 \
+            --output "evidence/private/cap-direct-test.jsonl" \
+            --raw-output "evidence/private/cap-direct-test-raw"
         env:
           QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
           FIXTURE_PREFIX: ${{ inputs.fixture_prefix }}
@@ -95,5 +98,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cap-probe-evidence-${{ inputs.fixture_prefix }}
-          path: evidence/private/*.jsonl
+          path: evidence/private
           if-no-files-found: error

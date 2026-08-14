@@ -233,6 +233,12 @@ class AgentInterfaceSnapshot(FrozenModel):
     single_tool_completion: SelectionObservation
 
 
+class CaseObservationSnapshot(FrozenModel):
+    case_id: StableId
+    negative_control: bool
+    outcome: SelectionObservation
+
+
 class MarketCoverageResult(FrozenModel):
     market: str = Field(pattern=r"^[A-Z]{2,8}$")
     state: MarketResultState
@@ -290,8 +296,11 @@ class SelectionSnapshotRow(FrozenModel):
     gateway_metrics: GatewayMetricsSnapshot
     qveris_list_price: QVerisListPriceSnapshot
     official_pricing: OfficialPricingSnapshot
-    market_coverage: MarketCoverageSnapshot
+    market_coverage: MarketCoverageSnapshot | None = None
     agent_interface: AgentInterfaceSnapshot
+    case_observations: tuple[CaseObservationSnapshot, ...] = Field(
+        default=(), exclude_if=lambda value: not value
+    )
 
 
 class SelectionSnapshot(FrozenModel):
@@ -300,7 +309,15 @@ class SelectionSnapshot(FrozenModel):
     edition: date
     cap_id: StableId
     cap_release_digest: EvidenceRef
-    market_coverage_release_digest: EvidenceRef
+    cap_release_id: StableId | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    suite_fingerprint: str | None = Field(
+        default=None,
+        pattern=r"^[a-f0-9]{64}$",
+        exclude_if=lambda value: value is None,
+    )
+    market_coverage_release_digest: EvidenceRef | None = None
     input_digests: dict[str, object]
     rows: tuple[SelectionSnapshotRow, ...] = Field(min_length=1)
     limitations: tuple[str, ...] = ()

@@ -69,6 +69,9 @@ qveris_app = typer.Typer(help="Discover QVeris connector tools.")
 question_app = typer.Typer(help="Validate the versioned CAP question bank.")
 selection_app = typer.Typer(help="Build immutable developer selection snapshots.")
 publication_app = typer.Typer(help="Reproduce evidence-backed publications offline.")
+article_app = typer.Typer(
+    help="Build evidence-bound CAP articles from frozen snapshots."
+)
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 app.add_typer(schema_app, name="schema")
 app.add_typer(cap_app, name="cap")
@@ -79,6 +82,7 @@ app.add_typer(qveris_app, name="qveris")
 app.add_typer(question_app, name="question")
 app.add_typer(selection_app, name="selection")
 app.add_typer(publication_app, name="publication")
+app.add_typer(article_app, name="article")
 
 
 @app.callback()
@@ -100,6 +104,64 @@ def selection_build(
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(built.json_bytes)
     typer.echo(f"Built Selection Snapshot -> {output}")
+
+
+@article_app.command("build")
+def article_build(
+    selection_snapshot: Annotated[
+        Path, typer.Option(help="Frozen Selection Snapshot JSON.")
+    ],
+    profile: Annotated[
+        Path, typer.Option(help="CAP article publication profile YAML.")
+    ],
+    output_dir: Annotated[
+        Path, typer.Option(help="Output directory for article assets.")
+    ],
+) -> None:
+    """Build an English article and charts without calling provider APIs."""
+    from qveris_bench.articles.factory import ArticleBuildError, build_article_package
+
+    try:
+        built = build_article_package(selection_snapshot, profile, output_dir)
+    except ArticleBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Built article package -> {built.article}")
+
+
+@article_app.command("reproduce")
+def article_reproduce(
+    selection_snapshot: Annotated[
+        Path, typer.Option(help="Frozen Selection Snapshot JSON.")
+    ],
+    profile: Annotated[
+        Path, typer.Option(help="CAP article publication profile YAML.")
+    ],
+    output_dir: Annotated[
+        Path, typer.Option(help="Existing article package directory.")
+    ],
+    expected_manifest_digest: Annotated[
+        str | None,
+        typer.Option(help="Trusted manifest digest from outside this checkout."),
+    ] = None,
+) -> None:
+    """Rebuild and verify an article package without provider API calls."""
+    from qveris_bench.articles.factory import (
+        ArticleBuildError,
+        reproduce_article_package,
+    )
+
+    try:
+        reproduce_article_package(
+            selection_snapshot,
+            profile,
+            output_dir,
+            expected_manifest_digest=expected_manifest_digest,
+        )
+    except ArticleBuildError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Verified article package -> {output_dir}")
 
 
 @publication_app.command("reproduce")

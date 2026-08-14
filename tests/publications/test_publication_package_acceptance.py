@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import platform
 import re
 import shutil
 import socket
@@ -93,7 +94,11 @@ def test_ac1_dividend_publication_reproduces_offline_and_read_only(
     assert result.exit_code == 0, result.output
     report = json.loads(result.output)
     assert report["package_id"] == "best-dividend-apis-2026-08-12"
-    assert report["status"] == "verified"
+    assert report["status"] == (
+        "verified"
+        if platform.system() == "Linux"
+        else "verified_with_noncanonical_chart_bytes"
+    )
     assert report["release_count"] == 2
     assert report["checks"] == [
         "releases",
@@ -119,7 +124,11 @@ def test_ac2_installed_cli_reproduces_the_dividend_publication() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout)["status"] == "verified"
+    assert json.loads(result.stdout)["status"] == (
+        "verified"
+        if platform.system() == "Linux"
+        else "verified_with_noncanonical_chart_bytes"
+    )
 
 
 @pytest.mark.parametrize("path", ["../../outside", "/tmp/outside"])
