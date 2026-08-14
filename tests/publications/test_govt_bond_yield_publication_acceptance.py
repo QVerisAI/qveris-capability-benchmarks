@@ -5,6 +5,7 @@ import platform
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from qveris_bench.publications.service import (
     PublicationReproductionError,
@@ -13,25 +14,21 @@ from qveris_bench.publications.service import (
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = (
-    ROOT
-    / "docs/guides/capability-seo/best-government-bond-yield-apis/manifest.yaml"
+    ROOT / "docs/guides/capability-seo/best-government-bond-yield-apis/manifest.yaml"
 )
 ATTESTATION = (
-    ROOT
-    / "docs/guides/publication-attestations/"
+    ROOT / "docs/guides/publication-attestations/"
     "best-government-bond-yield-apis-2026-08-14-v1.json"
 )
 GUIDE = ROOT / "docs/guides/best-government-bond-yield-apis.md"
-SNAPSHOT = (
-    ROOT / "selection_snapshots/govt-bond-yield-v1/selection-snapshot.json"
-)
+SNAPSHOT = ROOT / "selection_snapshots/govt-bond-yield-v1/selection-snapshot.json"
 RELEASES = (
-    ROOT / "releases/govt-bond-yield-2026-q3-v1",
-    ROOT / "releases/govt-bond-yield-markets-2026-q3-v1",
+    ROOT / "releases/govt-bond-yield-2026-q3-v2",
+    ROOT / "releases/govt-bond-yield-markets-2026-q3-v2",
 )
 EVIDENCE = (
-    ROOT / "evidence/govt-bond-yield-2026-q3-v1",
-    ROOT / "evidence/govt-bond-yield-markets-2026-q3-v1",
+    ROOT / "evidence/govt-bond-yield-2026-q3-v2",
+    ROOT / "evidence/govt-bond-yield-markets-2026-q3-v2",
 )
 
 
@@ -57,6 +54,20 @@ def test_government_bond_yield_publication_reproduces_from_released_facts() -> N
         "article_facts",
         "links",
     )
+
+
+def test_publication_renderer_is_hermetic_after_dividend_renderer_import() -> None:
+    from qveris_bench.cap_packs.dividend_events import selection_charts
+
+    assert selection_charts is not None
+    attestation = json.loads(ATTESTATION.read_text(encoding="utf-8"))
+
+    report = reproduce_publication_package(
+        PACKAGE,
+        expected_package_digest=attestation["package_digest"],
+    )
+
+    assert report.release_count == 2
 
 
 def test_snapshot_and_guide_preserve_observed_boundaries() -> None:
@@ -93,8 +104,23 @@ def test_snapshot_and_guide_preserve_observed_boundaries() -> None:
     assert "36 release-backed live calls" in article
     assert "across seven representative markets" in article
     assert "plausible benchmark tied to a different country identity" in article
+    assert "identity basis `request_bound`" in article
+    assert "identity basis `response_field`" in article
+    assert "did not independently echo benchmark identity" in article
+    assert "preserve the frozen request-series mapping" in article
     assert "market-coverage.png" in article
     assert "latency-list-price-tradeoff.png" in article
+
+    chart = PACKAGE.parent / "charts/market-coverage.png"
+    with Image.open(chart) as image:
+        pixels = image.convert("RGBA")
+        width, height = pixels.size
+        background = pixels.getpixel((0, 0))
+        assert width >= 2000 and height >= 1000
+        assert all(pixels.getpixel((x, 0)) == background for x in range(width))
+        assert all(pixels.getpixel((x, height - 1)) == background for x in range(width))
+        assert all(pixels.getpixel((0, y)) == background for y in range(height))
+        assert all(pixels.getpixel((width - 1, y)) == background for y in range(height))
 
 
 def test_public_release_and_evidence_exclude_account_billed_credits() -> None:

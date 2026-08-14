@@ -107,9 +107,10 @@ def reproduce_article_package(
     expected_manifest_digest: str | None = None,
 ) -> None:
     manifest = output_dir / "manifest.json"
-    if expected_manifest_digest is not None and _digest(
-        manifest.read_bytes()
-    ) != expected_manifest_digest:
+    if (
+        expected_manifest_digest is not None
+        and _digest(manifest.read_bytes()) != expected_manifest_digest
+    ):
         raise v1.ArticleBuildError(
             "article manifest digest does not match expected digest"
         )
@@ -263,9 +264,7 @@ def _market_chart_labels(
     names = [display_names[row.provider_id] for row in rows]
     counts = Counter(names)
     return [
-        name
-        if counts[name] == 1
-        else f"{name} ({row.access_path_id})"
+        name if counts[name] == 1 else f"{name} ({row.access_path_id})"
         for row, name in zip(rows, names, strict=True)
     ]
 

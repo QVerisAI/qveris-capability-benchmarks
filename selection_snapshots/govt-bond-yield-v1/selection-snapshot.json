@@ -1,13 +1,13 @@
 {
   "cap_id": "govt-bond-yield",
-  "cap_release_digest": "sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532",
-  "cap_release_id": "govt-bond-yield-2026-q3-v1",
+  "cap_release_digest": "sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af",
+  "cap_release_id": "govt-bond-yield-2026-q3-v2",
   "edition": "2026-08-14",
   "input_digests": {
-    "cases": "sha256:8fcad8a3cbd47728cd2eb7193766c942a4aee6cfefc52bfbf24d3e77e75b42a6",
-    "input": "sha256:783d019c7cd06714cf4034b4a4276b11fc88a26acec5fac4f9f780a30ca5b465",
-    "market_coverage_cases": "sha256:f110bf86b90dc6b85316506f473a3636537c0eebf6cb748e10e8b6e57ab39abf",
-    "market_coverage_release": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+    "cases": "sha256:399a18430ee12280782077e26df09ca38e905acb760171c5488d6bb2528dcb2f",
+    "input": "sha256:16f17099a3b2a2db8abd656292f4086d2cb6ccf6baa5d49f49f56ff913c04fd3",
+    "market_coverage_cases": "sha256:39dcdb21df4bab6dd61aa387d0eedf5b500a740a389e0142028eb7dff3ccf18b",
+    "market_coverage_release": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
     "market_coverage_suite": "sha256:c278f88a1e89e04bf53a14b256c6f800435604f2eb9b94456909eb8626a0778b",
     "providers": {
       "qveris-finance": "sha256:f0a5e15639e4c85ead7d9655b8bef2bfa5327301fedf48c33cb63415db754bba",
@@ -15,7 +15,7 @@
     },
     "qveris_direct_bindings": "sha256:10a4a0301a885fecbcd9b4839e1aecb528cb47e0fa462e15d4d1228eed629554",
     "qveris_list_pricing": "sha256:7a3f5be531ca7f6eef970a78e392c2649410ba2a80845ea3fa0d911d6d1a1e91",
-    "release": "sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532",
+    "release": "sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af",
     "suite": "sha256:8ebcc5b35f5d1e989b198bd4a1ea66bf0034a4d64469c9d75f732e57058ea017"
   },
   "limitations": [
@@ -24,7 +24,7 @@
     "Infra-blocked or mixed rounds remain evidence-insufficient and are not proof of permanent Provider support or non-support.",
     "QVeris list credits are sanitized Inspect list prices, not account billing."
   ],
-  "market_coverage_release_digest": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+  "market_coverage_release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
   "rows": [
     {
       "access_path_id": "qveris-finance-govt-bond-yield-qveris",
@@ -32,8 +32,8 @@
       "agent_interface": {
         "invalid_input_handling": {
           "evidence_refs": [
-            "sha256:b1625c4bf8d071d6f825d0601d2679d31e5433b1221443bffb0ff0c5c565d0d3",
-            "sha256:f8a17114bc5084cf4749e85cc1481461586def31636c47843731d5bf0b6b2e85"
+            "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+            "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be"
           ],
           "passed": 0,
           "state": "measured",
@@ -71,8 +71,8 @@
           "negative_control": true,
           "outcome": {
             "evidence_refs": [
-              "sha256:b1625c4bf8d071d6f825d0601d2679d31e5433b1221443bffb0ff0c5c565d0d3",
-              "sha256:f8a17114bc5084cf4749e85cc1481461586def31636c47843731d5bf0b6b2e85"
+              "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+              "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be"
             ],
             "passed": 0,
             "state": "measured",
@@ -84,8 +84,8 @@
           "negative_control": false,
           "outcome": {
             "evidence_refs": [
-              "sha256:084db3b1919cd1b64548df58bf2ca3f9270bb9d7e3f86490b6acaa10d1e72d3e",
-              "sha256:9eadf5235c29189974d7b18dbf4215bf00c1930548327a19ee6b9e855b76689a"
+              "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+              "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
             ],
             "passed": 2,
             "state": "measured",
@@ -97,16 +97,16 @@
         "cost_evidence_refs": [],
         "cost_sample_size": 0,
         "evidence_refs": [
-          "sha256:084db3b1919cd1b64548df58bf2ca3f9270bb9d7e3f86490b6acaa10d1e72d3e",
-          "sha256:9eadf5235c29189974d7b18dbf4215bf00c1930548327a19ee6b9e855b76689a"
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
         ],
         "latency_evidence_refs": [
-          "sha256:084db3b1919cd1b64548df58bf2ca3f9270bb9d7e3f86490b6acaa10d1e72d3e",
-          "sha256:9eadf5235c29189974d7b18dbf4215bf00c1930548327a19ee6b9e855b76689a"
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
         ],
-        "latency_max_ms": 4440.5,
-        "latency_median_ms": 3335.5699999999997,
-        "latency_min_ms": 2230.64,
+        "latency_max_ms": 8094.56,
+        "latency_median_ms": 7345.33,
+        "latency_min_ms": 6596.1,
         "latency_sample_size": 2,
         "measurement_boundary": "qveris_gateway",
         "median_credits": null,
@@ -114,13 +114,13 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-14",
-        "release_digest": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
         "results": [
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:080b25efd7f896bdef15e5f3b670a0ec418d227a18a1fd0c2ff6cea432b6f956",
-              "sha256:e6a48c5dced00fefeec4f085a580abf37e0040cd64afc193db9bf84c94d2d428"
+              "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+              "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085"
             ],
             "market": "AU",
             "passed_rounds": 0,
@@ -130,8 +130,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:ad32da59058af73f5a9cdf5fb8469a1ef75d382a0b505fadd61a7eb17e64de87",
-              "sha256:bcb5ffab079d6afa5aa561a962ea290844e329552fb0d6a34c374d2559f9decc"
+              "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+              "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99"
             ],
             "market": "CA",
             "passed_rounds": 0,
@@ -141,8 +141,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:b0781c80148e46c45893e33ee3246e802909b0d72cb5ad28b8e40c42478d35e4",
-              "sha256:b294ecdd11a4bc11c286759ec3b17014551d7f9ca8b50721f571428db817f165"
+              "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+              "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3"
             ],
             "market": "CN",
             "passed_rounds": 0,
@@ -152,8 +152,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:13dbbe864f33eb5a40471ecea99d6bf30c0b41de7e058e6e4db8c158e12a7a3b",
-              "sha256:1e723b4a3004d73cad2f2935232256a6344b41218db7b0bbdf053940f2207a73"
+              "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+              "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
             ],
             "market": "DE",
             "passed_rounds": 0,
@@ -163,8 +163,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:50c11834bf60365a3044dfcd2dc21f88208867a821ae326aa0e0e3d35b5b9a49",
-              "sha256:f2a3bf10d549761eb12ed0dced7aa635f3b7d67a6f1aa51a854b183719fecc28"
+              "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+              "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4"
             ],
             "market": "JP",
             "passed_rounds": 0,
@@ -174,8 +174,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:33dd8c2a791d9282ef81faaec68305a5a6035bc81851654bb1900cabec769f50",
-              "sha256:7c8e03a9acad3a1907d53feaa11e19921648f67b73788b6cb92bd1fa9ef67169"
+              "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+              "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e"
             ],
             "market": "UK",
             "passed_rounds": 0,
@@ -185,8 +185,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:5e0fcda0dd76b8823ff661cc266325ca05f40ee7f98b8a8565223643e61b02b9",
-              "sha256:ac98481666de8f27cd54eaf8f04d1852b6930f9399b0a2b7aa0268d92dcc8023"
+              "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+              "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8"
             ],
             "market": "US",
             "passed_rounds": 2,
@@ -196,20 +196,20 @@
         ],
         "run_observations": {
           "evidence_refs": [
-            "sha256:080b25efd7f896bdef15e5f3b670a0ec418d227a18a1fd0c2ff6cea432b6f956",
-            "sha256:13dbbe864f33eb5a40471ecea99d6bf30c0b41de7e058e6e4db8c158e12a7a3b",
-            "sha256:1e723b4a3004d73cad2f2935232256a6344b41218db7b0bbdf053940f2207a73",
-            "sha256:33dd8c2a791d9282ef81faaec68305a5a6035bc81851654bb1900cabec769f50",
-            "sha256:50c11834bf60365a3044dfcd2dc21f88208867a821ae326aa0e0e3d35b5b9a49",
-            "sha256:5e0fcda0dd76b8823ff661cc266325ca05f40ee7f98b8a8565223643e61b02b9",
-            "sha256:7c8e03a9acad3a1907d53feaa11e19921648f67b73788b6cb92bd1fa9ef67169",
-            "sha256:ac98481666de8f27cd54eaf8f04d1852b6930f9399b0a2b7aa0268d92dcc8023",
-            "sha256:ad32da59058af73f5a9cdf5fb8469a1ef75d382a0b505fadd61a7eb17e64de87",
-            "sha256:b0781c80148e46c45893e33ee3246e802909b0d72cb5ad28b8e40c42478d35e4",
-            "sha256:b294ecdd11a4bc11c286759ec3b17014551d7f9ca8b50721f571428db817f165",
-            "sha256:bcb5ffab079d6afa5aa561a962ea290844e329552fb0d6a34c374d2559f9decc",
-            "sha256:e6a48c5dced00fefeec4f085a580abf37e0040cd64afc193db9bf84c94d2d428",
-            "sha256:f2a3bf10d549761eb12ed0dced7aa635f3b7d67a6f1aa51a854b183719fecc28"
+            "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+            "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+            "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99",
+            "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+            "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+            "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+            "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085",
+            "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8",
+            "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+            "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4",
+            "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+            "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3",
+            "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e",
+            "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
           ],
           "planned_observations": 14,
           "state": "measured",
@@ -252,10 +252,10 @@
       },
       "run_observations": {
         "evidence_refs": [
-          "sha256:084db3b1919cd1b64548df58bf2ca3f9270bb9d7e3f86490b6acaa10d1e72d3e",
-          "sha256:9eadf5235c29189974d7b18dbf4215bf00c1930548327a19ee6b9e855b76689a",
-          "sha256:b1625c4bf8d071d6f825d0601d2679d31e5433b1221443bffb0ff0c5c565d0d3",
-          "sha256:f8a17114bc5084cf4749e85cc1481461586def31636c47843731d5bf0b6b2e85"
+          "sha256:1c41fc4590d74f21293bf8bbebaa1fc29026ddf7ade2d5aea3e3ddabe5da5b65",
+          "sha256:8360f24647ce1164949890fa357fd44fed2f6dbebde6a52548cf5e01c24eb37d",
+          "sha256:e7e3efd99313a0701009abe75658232dccda7488266c56c1ebcf78961590a3be",
+          "sha256:ff773f24c55863499310cef1dd3e251cf08fe898b24a6976a179c36c3c10bf06"
         ],
         "planned_observations": 4,
         "state": "measured",
@@ -268,8 +268,8 @@
       "agent_interface": {
         "invalid_input_handling": {
           "evidence_refs": [
-            "sha256:026539e829bcb02d42cf8ca78acfbea5eee122a97433f591203856f2a63d7ad6",
-            "sha256:d524858a0a47ffc4d64f29cbcbe74bf5d35fedb5f488ee1eef05511c37c46d55"
+            "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+            "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
           ],
           "passed": 2,
           "state": "measured",
@@ -307,8 +307,8 @@
           "negative_control": true,
           "outcome": {
             "evidence_refs": [
-              "sha256:026539e829bcb02d42cf8ca78acfbea5eee122a97433f591203856f2a63d7ad6",
-              "sha256:d524858a0a47ffc4d64f29cbcbe74bf5d35fedb5f488ee1eef05511c37c46d55"
+              "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+              "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
             ],
             "passed": 2,
             "state": "measured",
@@ -320,8 +320,8 @@
           "negative_control": false,
           "outcome": {
             "evidence_refs": [
-              "sha256:136a5b07ee317de8bd69a4f24ada037caddfc6362e1c7efb4e1cb2075c1ff99c",
-              "sha256:b094070a2c5710c3de9404afa3635e2eb5075fe0e652472f11f0c95a41248d19"
+              "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+              "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
             ],
             "passed": 2,
             "state": "measured",
@@ -333,16 +333,16 @@
         "cost_evidence_refs": [],
         "cost_sample_size": 0,
         "evidence_refs": [
-          "sha256:136a5b07ee317de8bd69a4f24ada037caddfc6362e1c7efb4e1cb2075c1ff99c",
-          "sha256:b094070a2c5710c3de9404afa3635e2eb5075fe0e652472f11f0c95a41248d19"
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
         ],
         "latency_evidence_refs": [
-          "sha256:136a5b07ee317de8bd69a4f24ada037caddfc6362e1c7efb4e1cb2075c1ff99c",
-          "sha256:b094070a2c5710c3de9404afa3635e2eb5075fe0e652472f11f0c95a41248d19"
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50"
         ],
-        "latency_max_ms": 588.69,
-        "latency_median_ms": 540.165,
-        "latency_min_ms": 491.64,
+        "latency_max_ms": 2325.04,
+        "latency_median_ms": 1407.5149999999999,
+        "latency_min_ms": 489.99,
         "latency_sample_size": 2,
         "measurement_boundary": "qveris_gateway",
         "median_credits": null,
@@ -350,13 +350,13 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-14",
-        "release_digest": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+        "release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
         "results": [
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:1fda120c0e5ff03faa6f1bf8f7c68147c104a01fcdc5266043147485716b593c",
-              "sha256:61026d28a570c8df0658698a2364c7de80cad0bbcb488ce196878adda4f77ac7"
+              "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+              "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0"
             ],
             "market": "AU",
             "passed_rounds": 2,
@@ -366,8 +366,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:5e6e645d17ab8acecf2a401e8dba50a00a7643ae68dfee282d19c1e7a0e3b98a",
-              "sha256:91b64aa0493fcc0e1d85c39ccfef0ceb4bb86063490ab98c4ba00b8416c7dfc6"
+              "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+              "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d"
             ],
             "market": "CA",
             "passed_rounds": 2,
@@ -377,8 +377,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:e3b8cd59789db50d2b7876f232773e7b9dd0616c7a0674c778f9be111e19920e",
-              "sha256:ef675795e982fd6ec64c699cc38a60f27faa8534e75e12a5f4d9d1f188676838"
+              "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+              "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16"
             ],
             "market": "CN",
             "passed_rounds": 0,
@@ -388,8 +388,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:1818901a8d4eed99e7aaeedca9d6d4c0d81004b0b573684d28ceb53426c6ec2e",
-              "sha256:3a0bcf3c630fc492cf2f09251497cd8f2b76fee65c8b269648a64321415a0cf0"
+              "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+              "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb"
             ],
             "market": "DE",
             "passed_rounds": 2,
@@ -399,8 +399,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:8bec3a32880a7c2c824d71b8e463d9080a4e5f4a7c5ab0b3c296b0a6f210a2b9",
-              "sha256:c2b40da08c042170fbb825fbacfd0ab47b6aea0bd11d0eb6da02ae144028d1a6"
+              "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+              "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2"
             ],
             "market": "JP",
             "passed_rounds": 2,
@@ -410,8 +410,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:0bfce0f4bff28c633d958844f41f96dc48d08f0ad1bed07e39f9d7ea266d633b",
-              "sha256:d2070c8e395de89422939268d8b461c893349910c98fbfbede992f28e9e34fe9"
+              "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+              "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f"
             ],
             "market": "UK",
             "passed_rounds": 2,
@@ -421,8 +421,8 @@
           {
             "applicability_reason": null,
             "evidence_refs": [
-              "sha256:9e176acdff797c85ec6205801cb42d64aa79a28a1fa1607f490fa158dc5b62ae",
-              "sha256:e5d53111817643303fd288d1632c60b63f7981177f42fddb2de92d60d6e6ddbe"
+              "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+              "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
             ],
             "market": "US",
             "passed_rounds": 2,
@@ -432,20 +432,20 @@
         ],
         "run_observations": {
           "evidence_refs": [
-            "sha256:0bfce0f4bff28c633d958844f41f96dc48d08f0ad1bed07e39f9d7ea266d633b",
-            "sha256:1818901a8d4eed99e7aaeedca9d6d4c0d81004b0b573684d28ceb53426c6ec2e",
-            "sha256:1fda120c0e5ff03faa6f1bf8f7c68147c104a01fcdc5266043147485716b593c",
-            "sha256:3a0bcf3c630fc492cf2f09251497cd8f2b76fee65c8b269648a64321415a0cf0",
-            "sha256:5e6e645d17ab8acecf2a401e8dba50a00a7643ae68dfee282d19c1e7a0e3b98a",
-            "sha256:61026d28a570c8df0658698a2364c7de80cad0bbcb488ce196878adda4f77ac7",
-            "sha256:8bec3a32880a7c2c824d71b8e463d9080a4e5f4a7c5ab0b3c296b0a6f210a2b9",
-            "sha256:91b64aa0493fcc0e1d85c39ccfef0ceb4bb86063490ab98c4ba00b8416c7dfc6",
-            "sha256:9e176acdff797c85ec6205801cb42d64aa79a28a1fa1607f490fa158dc5b62ae",
-            "sha256:c2b40da08c042170fbb825fbacfd0ab47b6aea0bd11d0eb6da02ae144028d1a6",
-            "sha256:d2070c8e395de89422939268d8b461c893349910c98fbfbede992f28e9e34fe9",
-            "sha256:e3b8cd59789db50d2b7876f232773e7b9dd0616c7a0674c778f9be111e19920e",
-            "sha256:e5d53111817643303fd288d1632c60b63f7981177f42fddb2de92d60d6e6ddbe",
-            "sha256:ef675795e982fd6ec64c699cc38a60f27faa8534e75e12a5f4d9d1f188676838"
+            "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+            "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+            "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+            "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d",
+            "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+            "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+            "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+            "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb",
+            "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2",
+            "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+            "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f",
+            "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0",
+            "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16",
+            "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
           ],
           "planned_observations": 14,
           "state": "measured",
@@ -488,10 +488,10 @@
       },
       "run_observations": {
         "evidence_refs": [
-          "sha256:026539e829bcb02d42cf8ca78acfbea5eee122a97433f591203856f2a63d7ad6",
-          "sha256:136a5b07ee317de8bd69a4f24ada037caddfc6362e1c7efb4e1cb2075c1ff99c",
-          "sha256:b094070a2c5710c3de9404afa3635e2eb5075fe0e652472f11f0c95a41248d19",
-          "sha256:d524858a0a47ffc4d64f29cbcbe74bf5d35fedb5f488ee1eef05511c37c46d55"
+          "sha256:29521a14bd2f57065a0e2b836118cee3e2cd65393ed4cba177caf038eef83450",
+          "sha256:5d032c301c2537380006bd565675774d0255c5c1bc8df520f8261b7d5fe270a8",
+          "sha256:a819bc6cba31188debac3d34fac35c1995c7de5eab2823722e07c02b107d4d50",
+          "sha256:b27f21cf3d045380befa49b138b980da0376bc23f39149823070ac2000a047ca"
         ],
         "planned_observations": 4,
         "state": "measured",
@@ -500,6 +500,6 @@
     }
   ],
   "snapshot_id": "govt-bond-yield-selection-2026-q3-v1",
-  "suite_fingerprint": "edd7b7059298b2975ab4d02c5947544b35fddb14a3f0f924b9d443ce27632dd4",
+  "suite_fingerprint": "876a53a1e4b006560c0bf3f84d2ae753939a1fdd166fcccd818de2c958b2c2df",
   "version": "1.0.0"
 }

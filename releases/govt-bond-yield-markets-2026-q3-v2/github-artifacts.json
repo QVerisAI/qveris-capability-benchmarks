@@ -1,0 +1,289 @@
+{
+  "artifacts": [
+    {
+      "name": "fred-au-10y-market-round-1",
+      "private_archive_digest": "sha256:14c9e3d46c19fa4166a1014691d5093a3e01e93b8bcd45e46e61c51c4e24339c",
+      "private_artifact_id": 9218598551,
+      "public_archive_digest": "sha256:3833f85f97badfcd0cb696433f76d54f8eafead9a3f40dbcc9e0307019efdf34",
+      "public_artifact_id": 9218598282,
+      "public_digest": "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0",
+      "raw_digest": "sha256:54ba74c9314a86303430bd06d4267824b1be0aeefe97b661fda5df46041c506a",
+      "source_public_digest": "sha256:a4648a63e3131e022c924034999af591730795b23d3ea93273d7a12d919b50b0"
+    },
+    {
+      "name": "fred-au-10y-market-round-2",
+      "private_archive_digest": "sha256:f5b991e4e9f2652ff995a038c873670bf7f396e59f8ff2c74416726434dfee50",
+      "private_artifact_id": 9218596310,
+      "public_archive_digest": "sha256:9d956cd3101704367af2343e45bb0a707ef22b144731f5ce89014340e123bf24",
+      "public_artifact_id": 9218595816,
+      "public_digest": "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3",
+      "raw_digest": "sha256:4a3ee679a0581505d7e6ec8934670526f0ab227a014ccbfe93ae985fe3d9e0cf",
+      "source_public_digest": "sha256:18cca03ea57b3c79be18057b5b7d9669f3c005dbce4953012d4ddbef7cf94ea3"
+    },
+    {
+      "name": "fred-ca-10y-market-round-1",
+      "private_archive_digest": "sha256:d409696df995091580ddd2f63e03bfeaf538dbcbcf3ee34ec576c0d310b0f430",
+      "private_artifact_id": 9218589398,
+      "public_archive_digest": "sha256:1343de6592e200b2039192e45268add3cb79623d961b72f41262ef821b16ca48",
+      "public_artifact_id": 9218589170,
+      "public_digest": "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d",
+      "raw_digest": "sha256:96bd1545bca29099321a6fc18ab2e7f092c0ebb2e220fe92c2c166dbe72339dd",
+      "source_public_digest": "sha256:5625787414f6bcfbdafe4baacbd4b0cc1013d3beb98e538fe3ca5ab0116c923d"
+    },
+    {
+      "name": "fred-ca-10y-market-round-2",
+      "private_archive_digest": "sha256:4f97db5a580531c5a82e950b3b720c83732e3baead4915c643c92470e74e51d7",
+      "private_artifact_id": 9218596874,
+      "public_archive_digest": "sha256:ecb7ce0bfbc6203d1aed03188bbd20f3643013aec1a43a40919c1a06b4cee065",
+      "public_artifact_id": 9218596660,
+      "public_digest": "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c",
+      "raw_digest": "sha256:0d8e4e70051d975a2f983a180fdc32754cf9d0199dc6f46754bd501fc418391b",
+      "source_public_digest": "sha256:3daab2e70fb639a4f4effcd8734d48749369a0ce305c2ee3305aab9f70b9193c"
+    },
+    {
+      "name": "fred-cn-10y-market-round-1",
+      "private_archive_digest": "sha256:7e563d76928cc3eedd3e8f62f86c9ed5aacc0ad4fabd5c6c23f496178cc00d59",
+      "private_artifact_id": 9218600303,
+      "public_archive_digest": "sha256:5c3ba87f08dc562e465993e3c407e621482d9878d4918f59fdd96fd43a064690",
+      "public_artifact_id": 9218599987,
+      "public_digest": "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5",
+      "raw_digest": "sha256:ba8c69a6bd39a9d31fa8f11a677a00e4b392a55c03a10587069505dd23d0f8c3",
+      "source_public_digest": "sha256:576d3ec99af481a442ae4690edefdbc816dc24e4a21cb64b5b659e933ca4faa5"
+    },
+    {
+      "name": "fred-cn-10y-market-round-2",
+      "private_archive_digest": "sha256:5e91054607a9e998cb358ed12392f2194d6f526746a9dfd0be3e4adc4fde61d2",
+      "private_artifact_id": 9218597420,
+      "public_archive_digest": "sha256:3842e4d0314d36c8251a5c884ddbfab2386bcf669b6cdb93828a868a076bbcd3",
+      "public_artifact_id": 9218596917,
+      "public_digest": "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16",
+      "raw_digest": "sha256:07547b64b257447b7288de1daccce1c5ef3a0acab0955529fca2ff6c2250dd95",
+      "source_public_digest": "sha256:f80c3c926c87845d000ac94a05f9c46f5c1d9eb14519145a606bdb1effdfee16"
+    },
+    {
+      "name": "fred-de-10y-market-round-1",
+      "private_archive_digest": "sha256:c4e4199041565242aa45ae3a40465210f4348a70376ee63ff6f60ed1437f6efb",
+      "private_artifact_id": 9218598501,
+      "public_archive_digest": "sha256:72dd832e659b8cff42b39c1b87dbf5dfa86680b1bf6c0653e05d77c427b136e4",
+      "public_artifact_id": 9218597997,
+      "public_digest": "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb",
+      "raw_digest": "sha256:8223041dd3c7cf37dda968f4fdd05ddc8545d96e39667fd59d81da05764cfed2",
+      "source_public_digest": "sha256:7e962ce630f21233af601fa1b27500c14bf2decea8a99b29de61bd06a0160edb"
+    },
+    {
+      "name": "fred-de-10y-market-round-2",
+      "private_archive_digest": "sha256:fea0f348d29a265a3f8c0820d4f1e93e0a2ff9c307a551131e54676d778106e9",
+      "private_artifact_id": 9218594516,
+      "public_archive_digest": "sha256:f34b9c8ba088628972be8b1155e984dfacb50268a9e6940351340317b3c1b43b",
+      "public_artifact_id": 9218594186,
+      "public_digest": "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8",
+      "raw_digest": "sha256:78e2cb3455cc3886c56e09ea3a77eef03c493992eb261a7cf4b9fceb8b51e6c7",
+      "source_public_digest": "sha256:7c772296101015c7c829ff8f76d1342f940e38fd59c4220a8db2c90ce3e9ada8"
+    },
+    {
+      "name": "fred-jp-10y-market-round-1",
+      "private_archive_digest": "sha256:13809d885d1278d2768a2318fc47f0364ebb05882ba970f7bd1db730751f1ce2",
+      "private_artifact_id": 9218590600,
+      "public_archive_digest": "sha256:86b41faad8af5c6c9d5e37fde48ae0101674a7662d499c9a391c98d9ff008024",
+      "public_artifact_id": 9218590117,
+      "public_digest": "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9",
+      "raw_digest": "sha256:e491b6778cb38e1921f763f1b6610b1ea92fba4b1e7bde21cdef22138dfd9602",
+      "source_public_digest": "sha256:6965f93b69c9630db70b9911e8cef4e48c8dc9fdd9804c270f6deaa57be64ea9"
+    },
+    {
+      "name": "fred-jp-10y-market-round-2",
+      "private_archive_digest": "sha256:deeeabc7222eb285bec3cee7a68a93ec3f7ace036ee93b83838c5c324c556df3",
+      "private_artifact_id": 9218600486,
+      "public_archive_digest": "sha256:b86e58cdb5584260558741381c8c024742832b8b8cfdc127e2731f3e38dbba94",
+      "public_artifact_id": 9218600060,
+      "public_digest": "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2",
+      "raw_digest": "sha256:8a7ec831b55c4bffd1359f4819f34817115eb33ec0ff29cdcbc9e2b515938e52",
+      "source_public_digest": "sha256:8471c9b232f55200b0fa91405cc61ef61745934f12244c7c9e899dc42cb8f4e2"
+    },
+    {
+      "name": "fred-uk-10y-market-round-1",
+      "private_archive_digest": "sha256:332d8abce7b52434a77adaf727a6ac8f01c1948c7d1beb354792a25d500fd52e",
+      "private_artifact_id": 9218600978,
+      "public_archive_digest": "sha256:d0b5a09beac50a85b5effccbcc45a51e5be7f57e0073203bd9776b00d5727438",
+      "public_artifact_id": 9218600497,
+      "public_digest": "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b",
+      "raw_digest": "sha256:f1c3c9a51a5b71e386fa04f98efa80b1d11d82376ab47f54fcdcfbc1336bee5f",
+      "source_public_digest": "sha256:28aa6b34be4c139174e9aec5a0137e0112126fd892682b4433af5fa7d491691b"
+    },
+    {
+      "name": "fred-uk-10y-market-round-2",
+      "private_archive_digest": "sha256:e6794992b6f33246cb5b3b66d3612b282230bff7a693be37a468a62ad23df882",
+      "private_artifact_id": 9218590112,
+      "public_archive_digest": "sha256:d62c281993c90f515e50ee687174cb2eca6f3968cf0a7d05bcd720c4a502b193",
+      "public_artifact_id": 9218589684,
+      "public_digest": "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f",
+      "raw_digest": "sha256:5af5fbaf534646cafd0845d7db67e098de950e8d5da97bc15892fef57661eaba",
+      "source_public_digest": "sha256:949bc3a037300ca6da3d48d981b29e15378c601c1a42d67bf7c0c930bbfed66f"
+    },
+    {
+      "name": "fred-us-10y-market-round-1",
+      "private_archive_digest": "sha256:447b6bfdf89e18c38118884ef5fae94718204203611148eb930cf48bf6a7ede4",
+      "private_artifact_id": 9218598033,
+      "public_archive_digest": "sha256:4930c263ce3959c5723b71e07f28825599fe943c4ae7b96edf5782e7fb02677b",
+      "public_artifact_id": 9218597607,
+      "public_digest": "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f",
+      "raw_digest": "sha256:3abb8a7437436a4996d3d977d89cf303905d5cdeee50206416c9c0983776ec59",
+      "source_public_digest": "sha256:fe74b6d4b0e2608c8f06cad7b7505f7bda11fd207ec938547c1a8e483781d03f"
+    },
+    {
+      "name": "fred-us-10y-market-round-2",
+      "private_archive_digest": "sha256:0ede88763b4fd3725fa3e9d5a8d356102495a9ba1cb29ca1d9ac39325d422c8e",
+      "private_artifact_id": 9218599846,
+      "public_archive_digest": "sha256:5822b7bfb5b091ef1eecaeadfbd188b467f72b6626f4f5f768629b0ec13b825b",
+      "public_artifact_id": 9218599639,
+      "public_digest": "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73",
+      "raw_digest": "sha256:6281d20560252aa8704c2e345dee8742231dddcd039713f0ee80f7d4994344f7",
+      "source_public_digest": "sha256:8f7678b13292e1487cd074ac871ea407adca0452c57c119f8cf95885b51b4f73"
+    },
+    {
+      "name": "qveris-finance-au-10y-market-round-1",
+      "private_archive_digest": "sha256:66bbba059eb795fc5ada1106953537071f9bb07f25bfd83a2a08dee6cac35cee",
+      "private_artifact_id": 9218599935,
+      "public_archive_digest": "sha256:af93db0d8e37adf68aff11959396f72ac28cb167309685a69abd2f4643f15d70",
+      "public_artifact_id": 9218599636,
+      "public_digest": "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085",
+      "raw_digest": "sha256:a46b53aa76766cdd0306ba969e572f3da25548a23219fc5565c4234dcb18cadf",
+      "source_public_digest": "sha256:68e517597aba8386d75626ba6ce756d4c5c121a145b648806b5a40c333531085"
+    },
+    {
+      "name": "qveris-finance-au-10y-market-round-2",
+      "private_archive_digest": "sha256:b2dec48332379a8e5993c2f63a1b46ec73782f9c9b336b556d577e2339d21696",
+      "private_artifact_id": 9218592491,
+      "public_archive_digest": "sha256:4a88603ad1b4a6fbabc427e667d1818caa0fd1e27bc9df38f4c5aa82ae5f78a2",
+      "public_artifact_id": 9218592028,
+      "public_digest": "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719",
+      "raw_digest": "sha256:ac8bad344df3cbead817da954bd2a721935aa4ca83aff3df606e6a441d8694f9",
+      "source_public_digest": "sha256:65c1d661c5a1b84a9ae43bd40994fc7330114ef37260ae3aac4735b721665719"
+    },
+    {
+      "name": "qveris-finance-ca-10y-market-round-1",
+      "private_archive_digest": "sha256:8c39569099da0d37100d92fdcd600a64883c1ca4588ac4436514ac2b4efd49be",
+      "private_artifact_id": 9218597553,
+      "public_archive_digest": "sha256:e35a582ecd22d486397c8f672b547163899c9df4228f8452bb0361db982de8ce",
+      "public_artifact_id": 9218597269,
+      "public_digest": "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99",
+      "raw_digest": "sha256:f43380ac70f4d215177b1ea2122d6f8c3eb908737dcfc59acf12e4c6cf1174cd",
+      "source_public_digest": "sha256:36d4bda606c12d064e6ac402bdb7ba905f2061c4588d69ac273c05fd9416ee99"
+    },
+    {
+      "name": "qveris-finance-ca-10y-market-round-2",
+      "private_archive_digest": "sha256:b0ec421efe5cd63cd8a12c24247be835e5cfb157204fba57602b31fd29c569c4",
+      "private_artifact_id": 9218598228,
+      "public_archive_digest": "sha256:3d6752dbb37a5f3c0e47f67f87396d23e00760a0b1a8c88e7170bd2c7170e6c0",
+      "public_artifact_id": 9218597929,
+      "public_digest": "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f",
+      "raw_digest": "sha256:a49c6b3332f2cadc373315108da5ce7dd016c6797b968d6af8d53d5e8039e0ab",
+      "source_public_digest": "sha256:02975243cea124c246627388b48e9cc7590fe65657073113ee7b74b0ace02c0f"
+    },
+    {
+      "name": "qveris-finance-cn-10y-market-round-1",
+      "private_archive_digest": "sha256:bdc134d14eff91ccff4dc9186f0c84e6f2f0be19bcbe1ab5aa5f00821a512757",
+      "private_artifact_id": 9218593138,
+      "public_archive_digest": "sha256:484dbb58ffb874d34f2d3538543875e0ab6ec2e2bf378686956d0f6275627fd5",
+      "public_artifact_id": 9218592688,
+      "public_digest": "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920",
+      "raw_digest": "sha256:a4d2a85fe83ea979fcdc91497386f70f47ccfac3dea4c55d20a560289820945a",
+      "source_public_digest": "sha256:7e2a641ae439e50f7f9bfab0307ff50ab6f7064c6e0f0f6dfdbf864100b49920"
+    },
+    {
+      "name": "qveris-finance-cn-10y-market-round-2",
+      "private_archive_digest": "sha256:90dcf38b7d16ad841efa1d5c0d0e285679c2e90c06717b9689548dd93c0d32e2",
+      "private_artifact_id": 9218598286,
+      "public_archive_digest": "sha256:214dbe525f56e12f04151d3167858c3839d4417b7d0346c0fe85c8ead35c3e87",
+      "public_artifact_id": 9218597825,
+      "public_digest": "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3",
+      "raw_digest": "sha256:426f42b230815e1b495661be92b421d471bb483f43837a574bebedce8aa2058a",
+      "source_public_digest": "sha256:c1a641c2c20c23a8fec4691462699468b1b5a97f7e8141b58379341fa130b8e3"
+    },
+    {
+      "name": "qveris-finance-de-10y-market-round-1",
+      "private_archive_digest": "sha256:5fb731a626b44169a06fcc28adc6e8277c711f63fb154cb1c13f95abb4b8ae28",
+      "private_artifact_id": 9218596209,
+      "public_archive_digest": "sha256:92e07540b14dc7c6748d05899bbda3e3e3363e28d861d9929075db28a386972b",
+      "public_artifact_id": 9218595978,
+      "public_digest": "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77",
+      "raw_digest": "sha256:4083ac0713067644dc0d76b40f49b04a5a603dd1d863b023fdbc8dd3ab7896e8",
+      "source_public_digest": "sha256:d311967ab260cc8f707c5cb95715dcf0df39b222e81fbeb227e531d6b52f8f77"
+    },
+    {
+      "name": "qveris-finance-de-10y-market-round-2",
+      "private_archive_digest": "sha256:b105289a74c3dba22241c9689fb0b3040f3e45f86f42f30f5a8ee5ac5d28e760",
+      "private_artifact_id": 9218592585,
+      "public_archive_digest": "sha256:4544362a8bce125994885eefb99e41d3df9b8e5eb697d077d97ffec509cd0157",
+      "public_artifact_id": 9218592084,
+      "public_digest": "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7",
+      "raw_digest": "sha256:e2a81f0139ad8ecc923ec990f088c755beff68748c9ab30c93464326dc9f06a5",
+      "source_public_digest": "sha256:3a9a9e52eb27af704ca48cdda4d44247fba69d3d498815cca1bb8cdbb24cb3b7"
+    },
+    {
+      "name": "qveris-finance-jp-10y-market-round-1",
+      "private_archive_digest": "sha256:702b719accd75a695f08f82338a89292dd77c61849074e409dcd30cc8a69b597",
+      "private_artifact_id": 9218590100,
+      "public_archive_digest": "sha256:98915b300da4f53be6e86c7a75cac0cd50a541b4cc8bdd9cbc239459f9118304",
+      "public_artifact_id": 9218589583,
+      "public_digest": "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4",
+      "raw_digest": "sha256:ebeda6ee35432dd1d771279897182159e70a338d86e3c3058963421846d69ead",
+      "source_public_digest": "sha256:81307f879467c964b866ab4d2f2fc7b9fcb607193b71467628df3624252ad7c4"
+    },
+    {
+      "name": "qveris-finance-jp-10y-market-round-2",
+      "private_archive_digest": "sha256:554ca7cdd0d9f8a011e4e621f48196403fe07b8204623cf8dc861dd11b3f33a3",
+      "private_artifact_id": 9218588501,
+      "public_archive_digest": "sha256:96bc9848d452e6cd8d64649109dfc51767db0842d9deb431fed969032a3bccf8",
+      "public_artifact_id": 9218588282,
+      "public_digest": "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143",
+      "raw_digest": "sha256:73fbd5a3e669c9dc785a95b81a0aaed803a92222dcc48e3a258ba8770e5de7f3",
+      "source_public_digest": "sha256:460a1a625a525ed1da5e381745e731bae3878a2230d0b6666352ee4ce6746143"
+    },
+    {
+      "name": "qveris-finance-uk-10y-market-round-1",
+      "private_archive_digest": "sha256:40cb50898ad01ad9a912eee7c0416421b65bb0f339d3905a86c352a26af7012e",
+      "private_artifact_id": 9218593403,
+      "public_archive_digest": "sha256:121c2b4a62a76a5dfd65659ffb50b0dd5238939ca1ea86de4f658f4df8812956",
+      "public_artifact_id": 9218593025,
+      "public_digest": "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd",
+      "raw_digest": "sha256:415dfb578e17a61b0cbe510e598919491bd704954ae5a5b6d7f64eb856fffd9e",
+      "source_public_digest": "sha256:a02e90ecacdebae7c9f723e5c31384ba9e0908be2570c1a9a9a7838b939ba5bd"
+    },
+    {
+      "name": "qveris-finance-uk-10y-market-round-2",
+      "private_archive_digest": "sha256:97cefb6dc36323985de7a5caf696944d1f7958c2fbbc8b2c18bc21f93b20c2d7",
+      "private_artifact_id": 9218600428,
+      "public_archive_digest": "sha256:f9dc847e64dcf73b6d0c37c33a009f18c7ccb5971a5b74513b01820d7a134744",
+      "public_artifact_id": 9218600010,
+      "public_digest": "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e",
+      "raw_digest": "sha256:2056fbef4a188436d094f92defb2b34e0359fb69d04eab1596b948a4463a23ce",
+      "source_public_digest": "sha256:d197a8c93ea87567db78c087b6adf523ad1cf7539ba51093bfdbe7fe23787d7e"
+    },
+    {
+      "name": "qveris-finance-us-10y-market-round-1",
+      "private_archive_digest": "sha256:540f275f0fd36917c16de210f75d9534cbcc33ac596eab1111b5a600c44837ae",
+      "private_artifact_id": 9218591096,
+      "public_archive_digest": "sha256:fa5a9df2ce2696dcf4102ffa2a8dca828fe5d8abe2961626b9fb1d13c3efaa40",
+      "public_artifact_id": 9218590696,
+      "public_digest": "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8",
+      "raw_digest": "sha256:ce6a89c32bf0627b68c397ae8754b89750896f31b769b98bb2ac5a777e4e5774",
+      "source_public_digest": "sha256:692101ebe8f798c6ab27d9974ef87b09911bd38dd3e27a5eb9c1451eba49abb8"
+    },
+    {
+      "name": "qveris-finance-us-10y-market-round-2",
+      "private_archive_digest": "sha256:e999ccea85be4211ae3ec8b2a635b86bbc2656be79a2319d31d72cdaaebb70b6",
+      "private_artifact_id": 9218591712,
+      "public_archive_digest": "sha256:f0882825d67df3c999950f5ffdc561e94b119f68082389c9b30bd88c57c6d50a",
+      "public_artifact_id": 9218591210,
+      "public_digest": "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61",
+      "raw_digest": "sha256:61d59b420960333bf4a57597e25a283dbc607480fca7ebc076144e5af140e1fe",
+      "source_public_digest": "sha256:2eb267a62d369435fb6273b72e89f5ed9e01ae7c976ecf0cd68124bcfbc0ce61"
+    }
+  ],
+  "github_run_id": "31799299204",
+  "github_sha": "3aa0ab1d3d238954c7604a559027a658aa6f2592",
+  "repository": "QVerisAI/qveris-capability-benchmarks",
+  "source": "github_actions_api",
+  "workflow_path": ".github/workflows/live-govt-bond-yield-market-e2e.yml"
+}

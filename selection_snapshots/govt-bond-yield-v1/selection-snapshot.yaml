@@ -3,11 +3,11 @@ version: 1.0.0
 edition: "2026-08-14"
 cap_id: govt-bond-yield
 historical_execution_contract:
-  suite_fingerprint: edd7b7059298b2975ab4d02c5947544b35fddb14a3f0f924b9d443ce27632dd4
-  execution_contract_digest: sha256:edd7b7059298b2975ab4d02c5947544b35fddb14a3f0f924b9d443ce27632dd4
+  suite_fingerprint: 876a53a1e4b006560c0bf3f84d2ae753939a1fdd166fcccd818de2c958b2c2df
+  execution_contract_digest: sha256:876a53a1e4b006560c0bf3f84d2ae753939a1fdd166fcccd818de2c958b2c2df
 cap_release:
-  release: releases/govt-bond-yield-2026-q3-v1/release.json
-  digest: sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532
+  release: releases/govt-bond-yield-2026-q3-v2/release.json
+  digest: sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af
 suite: cap_packs/govt-bond-yield/suite.yaml
 cases: cap_packs/govt-bond-yield/cases.yaml
 providers_root: cap_packs/govt-bond-yield/providers
@@ -18,13 +18,13 @@ observation_window:
   start: "2026-08-14"
   end: "2026-08-14"
 market_coverage_release:
-  release: releases/govt-bond-yield-markets-2026-q3-v1/release.json
-  digest: sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d
+  release: releases/govt-bond-yield-markets-2026-q3-v2/release.json
+  digest: sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a
   suite: cap_packs/govt-bond-yield/market-suite.yaml
   cases: cap_packs/govt-bond-yield/market-cases.yaml
   historical_execution_contract:
-    suite_fingerprint: 75e8a1a8b587d736da685be47d15a0d0db54ba134699ec90f12b4289584689e1
-    execution_contract_digest: sha256:75e8a1a8b587d736da685be47d15a0d0db54ba134699ec90f12b4289584689e1
+    suite_fingerprint: 70cfcd622407fa75de9c55f5895b3808fcb8b4d79d9a310845cad37887a70a55
+    execution_contract_digest: sha256:70cfcd622407fa75de9c55f5895b3808fcb8b4d79d9a310845cad37887a70a55
 include_release_identity: true
 include_case_observations: true
 include_market_run_observations: true

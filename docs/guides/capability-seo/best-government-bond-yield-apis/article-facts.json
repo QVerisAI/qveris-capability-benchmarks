@@ -1,9 +1,9 @@
 {
   "access_path_count": 2,
   "cap_id": "govt-bond-yield",
-  "cap_release_digest": "sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532",
+  "cap_release_digest": "sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af",
   "edition": "2026-08-14",
-  "market_release_digest": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+  "market_release_digest": "sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a",
   "market_terminal_observations": 28,
   "markets": [
     "AU",
@@ -25,9 +25,9 @@
         "state": "measured",
         "total": 2
       },
-      "latency_max_ms": 588.69,
-      "latency_median_ms": 540.165,
-      "latency_min_ms": 491.64,
+      "latency_max_ms": 2325.04,
+      "latency_median_ms": 1407.5149999999999,
+      "latency_min_ms": 489.99,
       "latency_samples": 2,
       "list_price_credits": 1.0,
       "list_price_inspected_at": "2026-08-14",
@@ -106,7 +106,7 @@
         }
       ],
       "provider_id": "stlouisfed-fred",
-      "provider_name": "Federal Reserve Economic Data (FRED)",
+      "provider_name": "FRED",
       "terminal_observations": 4,
       "verified_markets": [
         "AU",
@@ -125,9 +125,9 @@
         "state": "measured",
         "total": 2
       },
-      "latency_max_ms": 4440.5,
-      "latency_median_ms": 3335.5699999999997,
-      "latency_min_ms": 2230.64,
+      "latency_max_ms": 8094.56,
+      "latency_median_ms": 7345.33,
+      "latency_min_ms": 6596.1,
       "latency_samples": 2,
       "list_price_credits": 1.0,
       "list_price_inspected_at": "2026-08-14",

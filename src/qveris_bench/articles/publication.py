@@ -63,17 +63,11 @@ def reproduce_article_publication(
     if snapshot.read_bytes() != rebuilt_snapshot.json_bytes:
         raise PublicationReproductionError("selection snapshot differs from inputs")
     try:
-        rebuilt_writer_input = build_writer_input(
-            snapshot, profile, repository_root
-        )
+        rebuilt_writer_input = build_writer_input(snapshot, profile, repository_root)
     except WriterInputBuildError as exc:
-        raise PublicationReproductionError(
-            "writer input cannot be rebuilt"
-        ) from exc
+        raise PublicationReproductionError("writer input cannot be rebuilt") from exc
     if writer_input.read_bytes() != rebuilt_writer_input.json_bytes:
-        raise PublicationReproductionError(
-            "writer input differs from public evidence"
-        )
+        raise PublicationReproductionError("writer input differs from public evidence")
     reproduce_article_package(
         snapshot,
         profile,
@@ -82,9 +76,13 @@ def reproduce_article_publication(
         editorial_path=editorial,
     )
     relative_article_dir = os.path.relpath(article_dir, published_guide.parent)
-    projected = (article_dir / "article.md").read_text(encoding="utf-8").replace(
-        "](charts/",
-        f"]({relative_article_dir}/charts/",
+    projected = (
+        (article_dir / "article.md")
+        .read_text(encoding="utf-8")
+        .replace(
+            "](charts/",
+            f"]({relative_article_dir}/charts/",
+        )
     )
     if published_guide.read_text(encoding="utf-8") != projected:
         raise PublicationReproductionError(

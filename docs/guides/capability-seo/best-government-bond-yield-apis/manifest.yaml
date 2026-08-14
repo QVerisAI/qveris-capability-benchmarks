@@ -1,5 +1,5 @@
 schema_version: 1
-benchmark_id: govt-bond-yield-2026-q3-v1
+benchmark_id: govt-bond-yield-2026-q3-v2
 article_slug: best-government-bond-yield-apis
 edition: "2026-08-14"
 publication_package:
@@ -10,18 +10,19 @@ publication_package:
   release_sections: [release, market_coverage_release]
   adapter_sources:
     - src/qveris_bench/articles/factory.py
+    - src/qveris_bench/articles/factory_v2.py
     - src/qveris_bench/articles/publication.py
     - src/qveris_bench/articles/writer.py
     - src/qveris_bench/cap_packs/govt_bond_yield/publication.py
     - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:db9bb4f9684af5bce45c266b1b0a43b679caa4be9947b7804d9556cb8fc3945d
+  adapter_digest: sha256:b91e556074a35afa5d1b8951a2a610c597d78d5f88303e8627565d46aa9a7cc1
 release:
-  directory: releases/govt-bond-yield-2026-q3-v1
-  digest: sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532
+  directory: releases/govt-bond-yield-2026-q3-v2
+  digest: sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af
 market_coverage_release:
-  directory: releases/govt-bond-yield-markets-2026-q3-v1
-  digest: sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d
+  directory: releases/govt-bond-yield-markets-2026-q3-v2
+  digest: sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a
 artifacts:
   article_package: docs/guides/capability-seo/best-government-bond-yield-apis
   published_guide: docs/guides/best-government-bond-yield-apis.md

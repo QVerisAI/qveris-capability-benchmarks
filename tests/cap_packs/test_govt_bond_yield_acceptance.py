@@ -190,9 +190,7 @@ def test_ac4_rejects_binding_source_digest_drift() -> None:
     first = registry.bindings[0].model_copy(
         update={"source_digest": "sha256:" + "0" * 64}
     )
-    tampered = registry.model_copy(
-        update={"bindings": (first, *registry.bindings[1:])}
-    )
+    tampered = registry.model_copy(update={"bindings": (first, *registry.bindings[1:])})
 
     with pytest.raises(DirectBindingRegistryError, match="source digest"):
         validate_government_bond_request_identities(tampered, _compile("baseline"))

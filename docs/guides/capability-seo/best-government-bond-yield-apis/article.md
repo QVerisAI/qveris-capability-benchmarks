@@ -20,8 +20,8 @@ This comparison is for developers choosing a country-qualified sovereign yield p
 
 | Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call | Official Provider pricing |
 |---|---|---|---:|---:|---|
-| Federal Reserve Economic Data (FRED) · QVeris connector · [Official site](https://fred.stlouisfed.org/) · [Try it in QVeris](https://qveris.ai/providers/stlouisfed_fred) | Positive 2/2; invalid control 2/2 | AU, CA, DE, JP, UK, US | 540 ms (n=2) | 1 | Evidence insufficient |
-| QVeris Finance · QVeris connector · [Official site](https://qveris.ai/guides/finance-capabilities/) · [Try it in QVeris](https://qveris.ai/providers/qveris_finance) | Positive 2/2; invalid control 0/2 | US | 3336 ms (n=2) | 1 | Evidence insufficient |
+| FRED · QVeris connector · [Official site](https://fred.stlouisfed.org/) · [Try it in QVeris](https://qveris.ai/providers/stlouisfed_fred) | Positive 2/2; invalid control 2/2 | AU, CA, DE, JP, UK, US | 1408 ms (n=2) | 1 | Evidence insufficient |
+| QVeris Finance · QVeris connector · [Official site](https://qveris.ai/guides/finance-capabilities/) · [Try it in QVeris](https://qveris.ai/providers/qveris_finance) | Positive 2/2; invalid control 0/2 | US | 7345 ms (n=2) | 1 | Evidence insufficient |
 
 “Verified” means every frozen round met the CAP contract. “Provider-negative” means every round returned an explicit Provider-level negative outcome; it does not prove permanent lack of support. “Not applicable” means the frozen plan excluded that market. “Evidence insufficient” means the Release did not establish either a positive or Provider-negative conclusion.
 
@@ -31,29 +31,29 @@ Read verified as every frozen round meeting the country, tenor, date, value, and
 
 ### Broadest released country verification
 
-**Evidence-backed shortlist:** Federal Reserve Economic Data (FRED) · QVeris connector. Choose the selected path when the priority is the broadest set of country cells that met the frozen identity and yield contract. Keep its inconclusive country cell unknown rather than treating neighboring verified cells as a substitute.
+**Evidence-backed shortlist:** FRED · QVeris connector. Choose the selected path when the priority is the broadest set of country cells that met the frozen identity and yield contract. Keep its inconclusive country cell unknown rather than treating neighboring verified cells as a substitute.
 
 ### A country verified through both tested paths
 
-**Evidence-backed shortlist:** QVeris Finance · QVeris connector, Federal Reserve Economic Data (FRED) · QVeris connector. Either selected path is release-backed for this country cell, so make the next decision using observed latency, source semantics, and invalid-input behavior. This shared result does not extend to another country or tenor.
+**Evidence-backed shortlist:** QVeris Finance · QVeris connector, FRED · QVeris connector. Either selected path is release-backed for this country cell, so make the next decision using observed latency, source semantics, and invalid-input behavior. This shared result does not extend to another country or tenor.
 
 ### Lowest observed gateway latency
 
-**Evidence-backed shortlist:** Federal Reserve Economic Data (FRED) · QVeris connector. Choose the selected path when the small released gateway sample is the leading runtime constraint. Pair that observation with the target-country cell and treat it as measurement evidence rather than a service-level commitment.
+**Evidence-backed shortlist:** FRED · QVeris connector. Choose the selected path when the small released gateway sample is the leading runtime constraint. Pair that observation with the target-country cell and treat it as measurement evidence rather than a service-level commitment.
 
 ### Lowest public gateway list price
 
-**Evidence-backed shortlist:** QVeris Finance · QVeris connector, Federal Reserve Economic Data (FRED) · QVeris connector. The selected paths are tied on the frozen public list-price dimension, so price alone does not distinguish them. Continue with country identity, latency, and error behavior, and keep list price separate from account billing or a direct subscription plan.
+**Evidence-backed shortlist:** QVeris Finance · QVeris connector, FRED · QVeris connector. The selected paths are tied on the frozen public list-price dimension, so price alone does not distinguish them. Continue with country identity, latency, and error behavior, and keep list price separate from account billing or a direct subscription plan.
 
 ### Explicit unsupported-country rejection
 
-**Evidence-backed shortlist:** Federal Reserve Economic Data (FRED) · QVeris connector. Choose the selected path when the tested unsupported-country request must surface as an explicit validation outcome. The other path did not establish that behavior, so application code should still normalize empty, mismatched, and blocked responses separately.
+**Evidence-backed shortlist:** FRED · QVeris connector. Choose the selected path when the tested unsupported-country request must surface as an explicit validation outcome. The other path did not establish that behavior, so application code should still normalize empty, mismatched, and blocked responses separately.
 
 These are conditional recommendations from separate evidence dimensions, never an overall score or winner.
 
 ## Evidence and Provider differences
 
-### Why Government Bond Yield is harder than a basic lookup
+### Why 10Y Sovereign Yield is harder than a basic lookup
 
 A usable sovereign benchmark observation must preserve country and tenor identity together with an in-window date and a finite numeric yield. A plausible yield for the wrong country is unsafe, so the CAP separates verified identity, Provider-negative identity mismatch, explicit invalid-input rejection, and infrastructure blocking.
 
@@ -73,11 +73,11 @@ The comparison table keeps official Provider pricing beside, but separate from, 
 
 ### Representative samples across seven markets
 
-[![Government Bond Yield test matrix for representative markets and Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
+[![10Y Sovereign Yield test matrix for representative markets and Access Paths](charts/market-coverage.png)](charts/market-coverage.png)
 
 | Provider × Access Path | AU | CA | CN | DE | JP | UK | US |
 |---|---|---|---|---|---|---|---|
-| Federal Reserve Economic Data (FRED) · QVeris connector | 2/2 verified | 2/2 verified | 0/2 Evidence insufficient | 2/2 verified | 2/2 verified | 2/2 verified | 2/2 verified |
+| FRED · QVeris connector | 2/2 verified | 2/2 verified | 0/2 Evidence insufficient | 2/2 verified | 2/2 verified | 2/2 verified | 2/2 verified |
 | QVeris Finance · QVeris connector | 0/2 provider-negative | 0/2 provider-negative | 0/2 provider-negative | 0/2 provider-negative | 0/2 provider-negative | 0/2 provider-negative | 2/2 verified |
 
 Each cell is one representative symbol per market from the market Release. A fraction reports passed rounds over frozen rounds; it is not the percentage of all symbols or exchanges supported.
@@ -86,15 +86,15 @@ Read each row as one structurally identified Access Path and each column as one 
 
 ### Provider-by-Provider analysis
 
-#### Federal Reserve Economic Data (FRED) · QVeris connector
+#### FRED · QVeris connector
 
-A released successful sample returned benchmark `IRLTLT01AUM156N`, observation date `2024-12-01`, yield value `4.313`, observed source `FRED`, identity verification `true`. Verified representative markets: AU, CA, DE, JP, UK, US. Observed median gateway latency: 540 ms (n=2). QVeris Inspect list price: 1 credits/call.
+A released successful sample recorded benchmark `IRLTLT01AUM156N`, observation date `2024-12-01`, yield value `4.313`, observed source `FRED`, identity verification `true`, identity basis `request_bound`. Verified representative markets: AU, CA, DE, JP, UK, US. Observed median gateway latency: 1408 ms (n=2). QVeris Inspect list price: 1 credits/call.
 
-This path fits developers prioritizing broad released country verification, lower observed gateway latency, and explicit rejection of the tested unsupported identifier. One country cell remained evidence-insufficient after runtime blocking, so the broader matrix still cannot be promoted into universal country support. Consumers should also preserve each series sampling frequency and reported date.
+The released FRED payload did not independently echo benchmark identity; verification was bound to the frozen request series. This path fits developers prioritizing broad released country verification, lower observed gateway latency, and explicit rejection of the tested unsupported identifier. One country cell remained evidence-insufficient after runtime blocking, so the broader matrix still cannot be promoted into universal country support. Consumers must preserve the series-to-country mapping, sampling frequency, and reported date.
 
 #### QVeris Finance · QVeris connector
 
-A released successful sample returned benchmark `10-Year Treasury Constant Maturity Rate`, observation date `2024-12-31`, yield value `4.58`, reported unit `percent`, observed source `alphavantage`, identity verification `true`. Verified representative markets: US. Observed median gateway latency: 3336 ms (n=2). QVeris Inspect list price: 1 credits/call.
+A released successful sample recorded benchmark `10-Year Treasury Constant Maturity Rate`, observation date `2024-12-31`, yield value `4.58`, reported unit `percent`, observed source `alphavantage`, identity verification `true`, identity basis `response_field`. Verified representative markets: US. Observed median gateway latency: 7345 ms (n=2). QVeris Inspect list price: 1 credits/call.
 
 This path fits a country cell where the released response identity is verified and source routing is acceptable to the application. In the other tested country cells it returned a plausible benchmark tied to a different country identity, so agents must validate the returned benchmark instead of trusting the request parameters alone. Its unsupported-country control also did not establish explicit rejection.
 
@@ -102,10 +102,10 @@ This path fits a country cell where the released response identity is verified a
 
 | Provider × Access Path | Invalid-input handling | Integration note |
 |---|---:|---|
-| Federal Reserve Economic Data (FRED) · QVeris connector | 2/2 | Explicit rejection is release-backed. |
+| FRED · QVeris connector | 2/2 | Explicit rejection is release-backed. |
 | QVeris Finance · QVeris connector | 0/2 | No explicit rejection observed; handle failures defensively. |
 
-The evidence makes returned benchmark identity the first application-side guardrail. Agents should also preserve observation date and unit, distinguish source routing from the named Access Path, and keep explicit validation, Provider-negative mismatch, rate limiting, entitlement, and infrastructure blocking as separate states. Pagination, schema stability, language mapping, and single-tool behavior remain unmeasured.
+The evidence makes identity basis the first application-side guardrail: validate response-field identity when present, and preserve the frozen request-series mapping when a payload does not echo identity. Agents should also preserve observation date and unit, distinguish source routing from the named Access Path, and keep explicit validation, Provider-negative mismatch, rate limiting, entitlement, and infrastructure blocking as separate states. Pagination, schema stability, language mapping, and single-tool behavior remain unmeasured.
 
 This is not an AI-friendly score. The current Release does not establish pagination behavior, schema stability across versions, language mapping, single-tool completion. Validate returned country identity, tenor semantics, observation date, yield unit, source routing, invalid-input behavior in the application boundary.
 
@@ -115,7 +115,7 @@ This is not an AI-friendly score. The current Release does not establish paginat
 
 The baseline suite froze one US 10-year benchmark request and one unsupported-country control for each included Access Path. The market suite ran one country-qualified 10-year benchmark case in two rounds across all seven frozen countries. Public terminal evidence is sanitized and digest-bound; private raw responses remain outside the repository.
 
-The baseline Release digest is `sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532`. The market Release digest is `sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d`.
+The baseline Release digest is `sha256:960e8586be949d52a1663cdafc8562c8dd420cf13d87d9b00a90021656c372af`. The market Release digest is `sha256:1016ff6979c087626a2bbbcfd78b986e21f316d8420aa79966fcc9d6e267c83a`.
 
 ### No key required: reproduce the publication offline
 

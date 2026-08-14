@@ -1,0 +1,1030 @@
+[
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "au-10y-market",
+    "case_input": {
+      "country": "AU",
+      "end_date": "2024-12-31",
+      "market": "AU",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "AU"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01AUM156N",
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01AUM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:au-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "au-10y-market",
+    "case_input": {
+      "country": "AU",
+      "end_date": "2024-12-31",
+      "market": "AU",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "AU"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01AUM156N",
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01AUM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:au-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "au-10y-market",
+    "case_input": {
+      "country": "AU",
+      "end_date": "2024-12-31",
+      "market": "AU",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "AU"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01AUM156N",
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01AUM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:au-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "au-10y-market",
+    "case_input": {
+      "country": "AU",
+      "end_date": "2024-12-31",
+      "market": "AU",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "AU"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01AUM156N",
+            "AU10Y",
+            "Australia 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01AUM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:au-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "ca-10y-market",
+    "case_input": {
+      "country": "CA",
+      "end_date": "2024-12-31",
+      "market": "CA",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "CA"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CAM156N",
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CAM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:ca-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "ca-10y-market",
+    "case_input": {
+      "country": "CA",
+      "end_date": "2024-12-31",
+      "market": "CA",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "CA"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CAM156N",
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CAM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:ca-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "ca-10y-market",
+    "case_input": {
+      "country": "CA",
+      "end_date": "2024-12-31",
+      "market": "CA",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "CA"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CAM156N",
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CAM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:ca-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "ca-10y-market",
+    "case_input": {
+      "country": "CA",
+      "end_date": "2024-12-31",
+      "market": "CA",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "CA"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CAM156N",
+            "CA10Y",
+            "Canada 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CAM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:ca-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-10y-market",
+    "case_input": {
+      "country": "CN",
+      "end_date": "2024-12-31",
+      "market": "CN",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CGB10Y",
+            "CN10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "CN"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CNM156N",
+            "CGB10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CNM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:cn-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-10y-market",
+    "case_input": {
+      "country": "CN",
+      "end_date": "2024-12-31",
+      "market": "CN",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CGB10Y",
+            "CN10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "CN"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CNM156N",
+            "CGB10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CNM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:cn-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-10y-market",
+    "case_input": {
+      "country": "CN",
+      "end_date": "2024-12-31",
+      "market": "CN",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CGB10Y",
+            "CN10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "CN"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CNM156N",
+            "CGB10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CNM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:cn-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "infra_blocked"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "cn-10y-market",
+    "case_input": {
+      "country": "CN",
+      "end_date": "2024-12-31",
+      "market": "CN",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "CGB10Y",
+            "CN10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "CN"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01CNM156N",
+            "CGB10Y",
+            "China 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01CNM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:cn-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "infra_blocked"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "de-10y-market",
+    "case_input": {
+      "country": "DE",
+      "end_date": "2024-12-31",
+      "market": "DE",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "DE"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01DEM156N",
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01DEM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:de-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "de-10y-market",
+    "case_input": {
+      "country": "DE",
+      "end_date": "2024-12-31",
+      "market": "DE",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "DE"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01DEM156N",
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01DEM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:de-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "de-10y-market",
+    "case_input": {
+      "country": "DE",
+      "end_date": "2024-12-31",
+      "market": "DE",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "DE"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01DEM156N",
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01DEM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:de-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "de-10y-market",
+    "case_input": {
+      "country": "DE",
+      "end_date": "2024-12-31",
+      "market": "DE",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "DE"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01DEM156N",
+            "DE10Y",
+            "Germany 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01DEM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:de-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "jp-10y-market",
+    "case_input": {
+      "country": "JP",
+      "end_date": "2024-12-31",
+      "market": "JP",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "JGB10Y",
+            "JP10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "JP"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01JPM156N",
+            "JGB10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01JPM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:jp-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "jp-10y-market",
+    "case_input": {
+      "country": "JP",
+      "end_date": "2024-12-31",
+      "market": "JP",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "JGB10Y",
+            "JP10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "JP"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01JPM156N",
+            "JGB10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01JPM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:jp-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "jp-10y-market",
+    "case_input": {
+      "country": "JP",
+      "end_date": "2024-12-31",
+      "market": "JP",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "JGB10Y",
+            "JP10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "JP"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01JPM156N",
+            "JGB10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01JPM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:jp-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "jp-10y-market",
+    "case_input": {
+      "country": "JP",
+      "end_date": "2024-12-31",
+      "market": "JP",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "JGB10Y",
+            "JP10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "JP"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01JPM156N",
+            "JGB10Y",
+            "Japan 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01JPM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:jp-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "uk-10y-market",
+    "case_input": {
+      "country": "UK",
+      "end_date": "2024-12-31",
+      "market": "UK",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "GB10Y",
+            "UK10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "UK"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01GBM156N",
+            "GB10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01GBM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:uk-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "uk-10y-market",
+    "case_input": {
+      "country": "UK",
+      "end_date": "2024-12-31",
+      "market": "UK",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "GB10Y",
+            "UK10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "UK"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01GBM156N",
+            "GB10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01GBM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": "empty_or_partial_data",
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:uk-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "provider_negative"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "uk-10y-market",
+    "case_input": {
+      "country": "UK",
+      "end_date": "2024-12-31",
+      "market": "UK",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "GB10Y",
+            "UK10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "UK"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01GBM156N",
+            "GB10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01GBM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:uk-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "uk-10y-market",
+    "case_input": {
+      "country": "UK",
+      "end_date": "2024-12-31",
+      "market": "UK",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "GB10Y",
+            "UK10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "UK"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "IRLTLT01GBM156N",
+            "GB10Y",
+            "United Kingdom 10-Year"
+          ],
+          "vendor_identifier": "IRLTLT01GBM156N"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:uk-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "us-10y-market",
+    "case_input": {
+      "country": "US",
+      "end_date": "2024-12-31",
+      "market": "US",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "UST10Y",
+            "US10Y",
+            "United States 10-Year",
+            "10-Year Treasury Constant Maturity Rate"
+          ],
+          "vendor_identifier": "US"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DGS10",
+            "UST10Y",
+            "United States 10-Year"
+          ],
+          "vendor_identifier": "DGS10"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:us-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "us-10y-market",
+    "case_input": {
+      "country": "US",
+      "end_date": "2024-12-31",
+      "market": "US",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "UST10Y",
+            "US10Y",
+            "United States 10-Year",
+            "10-Year Treasury Constant Maturity Rate"
+          ],
+          "vendor_identifier": "US"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DGS10",
+            "UST10Y",
+            "United States 10-Year"
+          ],
+          "vendor_identifier": "DGS10"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "qveris-finance",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:us-10y-market:qveris-finance:qveris-finance-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "us-10y-market",
+    "case_input": {
+      "country": "US",
+      "end_date": "2024-12-31",
+      "market": "US",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "UST10Y",
+            "US10Y",
+            "United States 10-Year",
+            "10-Year Treasury Constant Maturity Rate"
+          ],
+          "vendor_identifier": "US"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DGS10",
+            "UST10Y",
+            "United States 10-Year"
+          ],
+          "vendor_identifier": "DGS10"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 1,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:us-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:1",
+    "state": "completed"
+  },
+  {
+    "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+    "applicability_reason": null,
+    "applicable": true,
+    "case_id": "us-10y-market",
+    "case_input": {
+      "country": "US",
+      "end_date": "2024-12-31",
+      "market": "US",
+      "provider_identities": {
+        "qveris-finance-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "UST10Y",
+            "US10Y",
+            "United States 10-Year",
+            "10-Year Treasury Constant Maturity Rate"
+          ],
+          "vendor_identifier": "US"
+        },
+        "stlouisfed-fred-govt-bond-yield-qveris": {
+          "response_aliases": [
+            "DGS10",
+            "UST10Y",
+            "United States 10-Year"
+          ],
+          "vendor_identifier": "DGS10"
+        }
+      },
+      "start_date": "2024-01-01",
+      "tenor": "10Y"
+    },
+    "failure_attribution": null,
+    "mode": "direct",
+    "provider_id": "stlouisfed-fred",
+    "round": 2,
+    "run_key": "govt-bond-yield-market-v1:70cfcd622407:us-10y-market:stlouisfed-fred:stlouisfed-fred-govt-bond-yield-qveris:direct:2",
+    "state": "completed"
+  }
+]

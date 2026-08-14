@@ -27,8 +27,8 @@ publication_manifest: docs/guides/capability-seo/best-government-bond-yield-apis
 publication_attestation: docs/guides/publication-attestations/best-government-bond-yield-apis-2026-08-14-v1.json
 live_rerun_command: gh workflow run live-govt-bond-yield-baseline-e2e.yml && gh workflow run live-govt-bond-yield-market-e2e.yml
 writer_evidence_releases:
-  - releases/govt-bond-yield-2026-q3-v1
-  - releases/govt-bond-yield-markets-2026-q3-v1
+  - releases/govt-bond-yield-2026-q3-v2
+  - releases/govt-bond-yield-markets-2026-q3-v2
 allowed_links:
   - https://fred.stlouisfed.org/
   - https://qveris.ai/providers/stlouisfed_fred
