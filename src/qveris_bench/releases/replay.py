@@ -257,10 +257,10 @@ def _validate_public_evidence_manifest(
     path = release_dir / _PUBLIC_EVIDENCE_MANIFEST
     if not path.is_file():
         return
-    document = _validate_json_object(
-        _read_required_file(release_dir, _PUBLIC_EVIDENCE_MANIFEST),
-        _PUBLIC_EVIDENCE_MANIFEST,
-    )
+    manifest_bytes = _read_required_file(release_dir, _PUBLIC_EVIDENCE_MANIFEST)
+    if sha256_digest(manifest_bytes) != release.public_evidence_manifest_digest:
+        raise ReleaseReplayError("public evidence manifest digest mismatch")
+    document = _validate_json_object(manifest_bytes, _PUBLIC_EVIDENCE_MANIFEST)
     _validate_github_attestation(release_dir, document, release)
     _validate_binding_registry(release_dir, document)
     entries = document.get("evidence")

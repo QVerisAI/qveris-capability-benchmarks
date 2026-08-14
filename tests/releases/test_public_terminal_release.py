@@ -245,6 +245,17 @@ def test_replay_rejects_tampered_attestation_or_binding_registry(
         )
 
     (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    manifest = release_dir / "public-evidence-manifest.json"
+    document = json.loads(manifest.read_text())
+    document.pop("github_artifacts_manifest_digest")
+    manifest.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ReleaseReplayError, match="public evidence manifest digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )
+
+    artifacts.write(release_dir)
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
     registry = release_dir / "direct-binding-registry.json"
     registry.write_text(
         registry.read_text(encoding="utf-8").replace("AAPL", "MSFT", 1),
