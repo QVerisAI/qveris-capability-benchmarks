@@ -172,6 +172,54 @@ def test_v2_positive_extraction_rejects_wrong_response_identity() -> None:
     assert "identity_verified" in terminal.unmet_conditions
 
 
+def test_v2_positive_extraction_preserves_exchange_identity() -> None:
+    case = BenchmarkCase(
+        case_id="hk-0700-split-market",
+        cap_id="corporate-actions",
+        question="test",
+        input={
+            "market": "HK",
+            "symbol": "0700.HK",
+            "start_date": "2014-01-01",
+            "end_date": "2014-12-31",
+        },
+        expected_observations=("symbol", "identity_verified", "action_type", "date"),
+        completion_conditions=("symbol", "identity_verified", "action_type", "date"),
+        disclosure_limits=("sanitized_public",),
+    )
+    identity = CorporateActionRequestIdentity(
+        market="HK", canonical_symbol="0700.HK", vendor_symbol="0700:HKEX"
+    )
+
+    wrong_exchange = evaluate_corporate_action_document(
+        "twelve-data",
+        {
+            "status_code": 200,
+            "data": {
+                "meta": {"symbol": "0700:SSE"},
+                "splits": [{"date": "2014-05-15", "ratio": 5}],
+            },
+        },
+        case,
+        request_identity=identity,
+    )
+    exact_vendor = evaluate_corporate_action_document(
+        "twelve-data",
+        {
+            "status_code": 200,
+            "data": {
+                "meta": {"symbol": "0700:HKEX"},
+                "splits": [{"date": "2014-05-15", "ratio": 5}],
+            },
+        },
+        case,
+        request_identity=identity,
+    )
+
+    assert wrong_exchange.state is CellState.PROVIDER_NEGATIVE
+    assert exact_vendor.state is CellState.COMPLETED
+
+
 def test_v2_negative_control_does_not_treat_transport_failure_as_rejection() -> None:
     case = BenchmarkCase(
         case_id="invalid-corporate-actions-symbol-v2",

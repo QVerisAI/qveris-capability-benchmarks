@@ -95,16 +95,13 @@ def evaluate_corporate_action_document(
             FailureAttribution.EMPTY_OR_PARTIAL_DATA,
         )
     event_date, ratio, returned_symbol = event
-    identity_verified = returned_symbol is None or _symbol_base(returned_symbol) in {
-        _symbol_base(request_identity.vendor_symbol),
-        _symbol_base(request_identity.canonical_symbol),
-    }
+    identity_verified, identity_basis = _identity_evaluation(
+        returned_symbol, request_identity
+    )
     facts: dict[str, object] = {
         "symbol": request_identity.canonical_symbol,
         "identity_verified": identity_verified,
-        "identity_basis": (
-            "request_bound" if returned_symbol is None else "response_field"
-        ),
+        "identity_basis": identity_basis,
         "action_type": "split",
         "date": event_date,
     }
@@ -181,9 +178,7 @@ def _first_string(row: Mapping[str, Any], fields: tuple[str, ...]) -> str | None
     return None
 
 
-def _positive_ratio(
-    row: Mapping[str, Any], fields: tuple[str, ...]
-) -> float | None:
+def _positive_ratio(row: Mapping[str, Any], fields: tuple[str, ...]) -> float | None:
     for field in fields:
         value = row.get(field)
         if not isinstance(value, (str, int, float)) or isinstance(value, bool):
@@ -224,8 +219,30 @@ def _explicit_rejection(data: object, status_code: object) -> bool:
     return False
 
 
-def _symbol_base(value: str) -> str:
-    return value.strip().upper().split(":", 1)[0].split(".", 1)[0].lstrip("0") or "0"
+def _identity_evaluation(
+    returned_symbol: str | None, identity: CorporateActionRequestIdentity
+) -> tuple[bool, str]:
+    if returned_symbol is None:
+        return True, "request_bound"
+    returned = returned_symbol.strip().upper()
+    expected = {
+        identity.vendor_symbol.strip().upper(),
+        identity.canonical_symbol.strip().upper(),
+    }
+    if returned in expected:
+        return True, "response_field"
+    if (
+        ":" not in returned
+        and "." not in returned
+        and _symbol_code(returned) in {_symbol_code(item) for item in expected}
+    ):
+        return True, "request_bound"
+    return False, "response_field"
+
+
+def _symbol_code(value: str) -> str:
+    code = value.split(":", 1)[0].split(".", 1)[0].lstrip("0")
+    return code or "0"
 
 
 def validate_public_outcome(
@@ -255,21 +272,14 @@ def validate_public_outcome(
         )
         basis = facts.get("identity_basis")
         returned = facts.get("returned_symbol")
+        expected_verified, expected_basis = _identity_evaluation(
+            returned if isinstance(returned, str) else None, identity
+        )
         identity_valid = (
             facts.get("identity_verified") is True
             and identity.canonical_symbol == symbol
-            and (
-                (basis == "request_bound" and returned is None)
-                or (
-                    basis == "response_field"
-                    and isinstance(returned, str)
-                    and _symbol_base(returned)
-                    in {
-                        _symbol_base(identity.vendor_symbol),
-                        _symbol_base(identity.canonical_symbol),
-                    }
-                )
-            )
+            and expected_verified
+            and basis == expected_basis
         )
     if (
         facts.get("symbol") == symbol

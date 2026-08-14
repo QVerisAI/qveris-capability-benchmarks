@@ -2,9 +2,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
+from qveris_bench.cap_packs.corporate_actions.models import (
+    validate_corporate_action_request_identities,
+)
+from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.execution.direct_binding import (
+    DirectBindingRegistryError,
     load_direct_binding_registry,
     validate_direct_binding_registry,
 )
@@ -50,6 +56,10 @@ def test_ac1_v2_keeps_exact_harbor_contract_provenance() -> None:
 
 def test_ac2_private_candidate_snapshot_has_terminal_dispositions() -> None:
     document = _yaml(PACK / "candidate-dispositions.yaml")
+    source_manifest = _yaml(PACK / str(document["source_manifest"]))
+    assert document["source_manifest_digest"] == sha256_digest(
+        (PACK / str(document["source_manifest"])).read_bytes()
+    )
     source = document["source_snapshot"]
     assert isinstance(source, dict)
     assert source == {
@@ -62,6 +72,16 @@ def test_ac2_private_candidate_snapshot_has_terminal_dispositions() -> None:
     assert len(candidates) == 55
     assert len({item["tool_id"] for item in candidates}) == 55
     assert len({item["source_provider_id"] for item in candidates}) == 12
+    source_candidates = {
+        tuple(str(value).split("|", 1)) for value in source_manifest["candidates"]
+    }
+    disposition_candidates = {
+        (str(item["source_provider_id"]), str(item["tool_id"])) for item in candidates
+    }
+    assert source_manifest["source_snapshot_digest"] == SOURCE_SNAPSHOT_DIGEST
+    assert source_manifest["row_count"] == 55
+    assert source_manifest["provider_identity_count"] == 12
+    assert source_candidates == disposition_candidates
     assert all(
         item["disposition"] in {"included", "excluded", "not_applicable"}
         and item.get("reason")
@@ -130,11 +150,48 @@ def test_ac6_every_applicable_cell_has_one_frozen_direct_binding() -> None:
             ROOT / "providers",
             cap_path=PACK / "cap.yaml",
         )
+        compiled = _compile(f"{prefix}-suite.yaml", f"{prefix}-cases.yaml")
+        validate_corporate_action_request_identities(registry, compiled)
         assert all(
             binding.request_identity
             for binding in registry.bindings
             if "invalid" not in binding.case_id
         )
+
+
+@pytest.mark.parametrize(
+    ("identity_update", "parameters"),
+    [
+        ({"market": "HK"}, None),
+        ({"canonical_symbol": "MSFT"}, None),
+        ({}, {"symbol": "MSFT"}),
+    ],
+)
+def test_ac6_rejects_request_identity_drift(
+    identity_update: dict[str, str], parameters: dict[str, object] | None
+) -> None:
+    registry = load_direct_binding_registry(PACK / "baseline-direct-bindings.json")
+    compiled = _compile("baseline-suite.yaml", "baseline-cases.yaml")
+    binding = next(item for item in registry.bindings if "invalid" not in item.case_id)
+    identity = dict(binding.request_identity or {})
+    identity.update(identity_update)
+    changed = binding.model_copy(
+        update={
+            "request_identity": identity,
+            "parameters": parameters or binding.parameters,
+        }
+    )
+    mutated = registry.model_copy(
+        update={
+            "bindings": tuple(
+                changed if item.binding_id == binding.binding_id else item
+                for item in registry.bindings
+            )
+        }
+    )
+
+    with pytest.raises(DirectBindingRegistryError):
+        validate_corporate_action_request_identities(mutated, compiled)
 
 
 def test_ac7_live_workflows_match_frozen_bindings_and_rounds() -> None:
@@ -143,9 +200,7 @@ def test_ac7_live_workflows_match_frozen_bindings_and_rounds() -> None:
             ROOT / ".github/workflows" / f"live-corporate-actions-{prefix}-e2e.yml"
         )
         matrix = workflow["jobs"]["direct"]["strategy"]["matrix"]
-        registry = load_direct_binding_registry(
-            PACK / f"{prefix}-direct-bindings.json"
-        )
+        registry = load_direct_binding_registry(PACK / f"{prefix}-direct-bindings.json")
 
         assert matrix["round"] == rounds
         assert set(matrix["binding_id"]) == {
@@ -158,6 +213,4 @@ def test_ac13_stage_one_manifest_forbids_article_outputs() -> None:
 
     assert document["stage"] == "test_and_evidence"
     assert document["article_generation"] == "forbidden"
-    assert not any(
-        "docs/guides" in path for path in document["allowed_output_roots"]
-    )
+    assert not any("docs/guides" in path for path in document["allowed_output_roots"])

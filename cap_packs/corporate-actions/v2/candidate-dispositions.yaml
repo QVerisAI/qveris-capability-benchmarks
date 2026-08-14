@@ -1,4 +1,6 @@
 schema_version: 1
+source_manifest: candidate-source-manifest.yaml
+source_manifest_digest: sha256:da0b962ce9aeda877c6a3962ccf4a0791da549f99978929b0ebe14643773aa3c
 source_snapshot:
   digest: sha256:7579d22a0e6a552f5c1225e5e208a0834fca8173c5b8253d949eb96d294cf7a4
   row_count: 55

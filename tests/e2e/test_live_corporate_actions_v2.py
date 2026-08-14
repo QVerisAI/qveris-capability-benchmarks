@@ -124,7 +124,9 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
     api_key = os.environ.get("QVERIS_API_KEY")
     if not api_key:
         pytest.skip("QVERIS_API_KEY is required")
-    raw_store = RawArtifactStore(tmp_path / "raw", ROOT)
+    raw_store = RawArtifactStore(
+        Path(os.environ.get("LIVE_RAW_EVIDENCE_ROOT", tmp_path / "raw")), ROOT
+    )
 
     async def run() -> QverisDirectExecution:
         client = QverisToolClient(httpx.AsyncClient(), raw_store, api_key)

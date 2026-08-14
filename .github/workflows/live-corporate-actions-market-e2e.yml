@@ -56,9 +56,17 @@ jobs:
           CORPORATE_ACTIONS_BINDING_ID: ${{ matrix.binding_id }}
           CORPORATE_ACTIONS_ROUND: ${{ matrix.round }}
           LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+          LIVE_RAW_EVIDENCE_ROOT: ${{ runner.temp }}/private-raw-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: corporate-actions-market-${{ matrix.binding_id }}-round-${{ matrix.round }}
           path: ${{ runner.temp }}/public-evidence
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-corporate-actions-market-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/private-raw-evidence
+          if-no-files-found: error
+          retention-days: 30
