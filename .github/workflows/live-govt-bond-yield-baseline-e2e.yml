@@ -1,0 +1,52 @@
+name: Live Government Bond Yield Baseline E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  direct:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-live-govt-bond-yield-baseline'
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2]
+        binding_id:
+          - fred-us-10y-baseline
+          - fred-unsupported-country-10y
+          - qveris-finance-us-10y-baseline
+          - qveris-finance-unsupported-country-10y
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: uv run pytest tests/e2e/test_live_govt_bond_yield.py -q
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          RUN_LIVE_GOVT_BOND_YIELD: "1"
+          GOVT_BOND_YIELD_SUITE: baseline
+          GOVT_BOND_YIELD_BINDING_ID: ${{ matrix.binding_id }}
+          GOVT_BOND_YIELD_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+          LIVE_RAW_EVIDENCE_ROOT: ${{ runner.temp }}/private-raw-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: govt-bond-yield-baseline-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-govt-bond-yield-baseline-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/private-raw-evidence
+          if-no-files-found: error
+          retention-days: 30
