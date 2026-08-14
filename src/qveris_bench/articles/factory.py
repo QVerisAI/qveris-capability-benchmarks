@@ -537,8 +537,8 @@ def _reproduce_command(profile: dict[str, Any]) -> str:
         )
     return (
         "qveris-bench publication reproduce --package "
-        f"{manifest} --expected-package-digest \"$(python -c \"import json; "
-        f"print(json.load(open('{attestation}'))['package_digest'])\")\""
+        f"{manifest} --expected-package-digest \"$(uv run python -c "
+        f"'import json; print(json.load(open(\"{attestation}\"))[\"package_digest\"])')\""
     )
 
 

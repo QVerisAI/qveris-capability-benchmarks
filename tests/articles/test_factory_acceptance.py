@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
+import subprocess
 
 import pytest
 from typer.testing import CliRunner
@@ -164,8 +166,21 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         "--package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml"
         in article
     )
+    assert "uv run python -c" in article
     assert "best-corporate-actions-apis-2026-08-14-v2.json" in article
     assert result.market_chart.is_file()
+
+    command = re.search(r"Reproduce the package offline with `(.*?)`", article)
+    assert command is not None
+    reproduced = subprocess.run(
+        command.group(1),
+        cwd=ROOT,
+        shell=True,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert reproduced.returncode == 0, reproduced.stderr
 
 
 def test_rejects_an_unapproved_profile_link(tmp_path: Path) -> None:
