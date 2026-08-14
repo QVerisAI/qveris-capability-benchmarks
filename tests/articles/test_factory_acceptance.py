@@ -265,6 +265,17 @@ def test_ac3_chart_pixel_comparison_rejects_rgb_tampering(tmp_path: Path) -> Non
     )
 
 
+def test_ac3_chart_pixel_comparison_rejects_alpha_tampering(tmp_path: Path) -> None:
+    expected = tmp_path / "expected.png"
+    tampered = tmp_path / "tampered.png"
+    Image.new("RGBA", (1, 1), (255, 0, 0, 255)).save(expected)
+    Image.new("RGBA", (1, 1), (255, 0, 0, 0)).save(tampered)
+
+    assert not _same_pixels(expected, tampered), (
+        "AC3: an alpha-only chart mutation was accepted"
+    )
+
+
 def test_corporate_actions_skill_article_matches_golden_reader_structure(
     tmp_path: Path,
 ) -> None:

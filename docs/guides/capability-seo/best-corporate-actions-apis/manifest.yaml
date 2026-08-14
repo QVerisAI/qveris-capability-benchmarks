@@ -14,7 +14,7 @@ publication_package:
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
     - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:04003296b884765ee169ae1a117c5cb8204a94126334bc3b965bdf8faee17a80
+  adapter_digest: sha256:e448d50beccfc762f48962f448b2d44a528f5da91cfc58cca0b5d3fcb4517561
 release:
   directory: releases/corporate-actions-v2-baseline-2026-q3-v1
   digest: sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae

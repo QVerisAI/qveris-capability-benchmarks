@@ -16,7 +16,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch, Rectangle
-from PIL import Image, ImageChops
+from PIL import Image
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import SelectionSnapshot, SelectionSnapshotRow
@@ -1043,11 +1043,11 @@ def _digest(value: bytes) -> str:
 
 def _same_pixels(first: Path, second: Path) -> bool:
     with Image.open(first) as expected, Image.open(second) as actual:
-        expected_rgb = expected.convert("RGB")
-        actual_rgb = actual.convert("RGB")
+        expected_rgba = expected.convert("RGBA")
+        actual_rgba = actual.convert("RGBA")
         return (
-            expected_rgb.size == actual_rgb.size
-            and ImageChops.difference(expected_rgb, actual_rgb).getbbox() is None
+            expected_rgba.size == actual_rgba.size
+            and expected_rgba.tobytes() == actual_rgba.tobytes()
         )
 
 
