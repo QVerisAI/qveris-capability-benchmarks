@@ -68,5 +68,7 @@ class CorporateActionsPublicationAdapter:
             "](capability-seo/best-corporate-actions-apis/charts/",
         )
         if published_guide.read_text(encoding="utf-8") != projected:
-            raise PublicationReproductionError("published guide differs from article package")
+            raise PublicationReproductionError(
+                "published guide differs from article package"
+            )
         return ("selection_snapshot", "charts", "article_facts", "links")
