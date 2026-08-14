@@ -11,7 +11,7 @@ publication_package:
   adapter_sources:
     - src/qveris_bench/articles/factory.py
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
-  adapter_digest: sha256:4ee0c81f04bee163526911d5e475cdcaa13b6da7d6718737d1d661ad2e9ca238
+  adapter_digest: sha256:28df8dca70a453a111c2185dd56b7694ad9212f35d0b08599cf77cecc0179baa
 release:
   directory: releases/corporate-actions-2026-q3-v3
   digest: sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb
@@ -20,6 +20,7 @@ market_coverage_release:
   digest: sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9
 artifacts:
   article_package: docs/guides/capability-seo/best-corporate-actions-apis
+  published_guide: docs/guides/best-corporate-actions-apis.md
   article: docs/guides/capability-seo/best-corporate-actions-apis/article.md
   article_facts: docs/guides/capability-seo/best-corporate-actions-apis/article-facts.json
   charts:
