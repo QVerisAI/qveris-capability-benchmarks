@@ -1,9 +1,9 @@
 schema_version: 1
-benchmark_id: corporate-actions-2026-q3-v3
+benchmark_id: corporate-actions-v2-2026-q3-v1
 article_slug: best-corporate-actions-apis
 edition: "2026-08-14"
 publication_package:
-  package_id: best-corporate-actions-apis-2026-08-14
+  package_id: best-corporate-actions-apis-2026-08-14-v2
   adapter_id: corporate-actions-v1
   adapter_version: 1.0.0
   cap_id: corporate-actions
@@ -11,14 +11,15 @@ publication_package:
   adapter_sources:
     - src/qveris_bench/articles/factory.py
     - src/qveris_bench/cap_packs/corporate_actions/publication.py
+    - src/qveris_bench/models/selection.py
     - src/qveris_bench/profiles/selection.py
-  adapter_digest: sha256:fc26653590324db8eb1c80ab57c0a9c5928f9c3fb9b237424bb2bb5dc32c5614
+  adapter_digest: sha256:93e59e2c3d9e4275c00b8f64ed540f8252be524081d0c2968213c6b9595504bf
 release:
-  directory: releases/corporate-actions-2026-q3-v3
-  digest: sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb
+  directory: releases/corporate-actions-v2-baseline-2026-q3-v1
+  digest: sha256:3104ce0ca902bf2aeff7954fc175bd6632adc5b5e56a56011d7a0adf6f89a0ae
 market_coverage_release:
-  directory: releases/corporate-actions-us-market-2026-q3-v2
-  digest: sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9
+  directory: releases/corporate-actions-v2-nine-market-2026-q3-v1
+  digest: sha256:ad621c183b893b54f8aec930ac225066aa9f288c161fdf6a0587e115f1b23463
 artifacts:
   article_package: docs/guides/capability-seo/best-corporate-actions-apis
   published_guide: docs/guides/best-corporate-actions-apis.md
@@ -28,6 +29,11 @@ artifacts:
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/latency-list-price-tradeoff.png
     - docs/guides/capability-seo/best-corporate-actions-apis/charts/market-coverage.png
   publication_profile: docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml
-  selection_snapshot_input: docs/guides/capability-seo/best-corporate-actions-apis/selection-snapshot.yaml
-  selection_snapshot: docs/guides/capability-seo/best-corporate-actions-apis/selection-snapshot.json
-  qveris_list_pricing: docs/guides/capability-seo/best-corporate-actions-apis/qveris-list-pricing.json
+  selection_snapshot_input: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.yaml
+  selection_snapshot: selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json
+  qveris_list_pricing: selection_snapshots/corporate-actions-v2/qveris-list-pricing.json
+seo:
+  primary_keyword: corporate actions API
+  secondary_keywords: [stock splits API, corporate actions data API]
+  publication_action: refresh_existing
+  inventory_checked_at: "2026-08-14"

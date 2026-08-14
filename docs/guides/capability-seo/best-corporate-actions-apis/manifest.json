@@ -1,14 +1,14 @@
 {
   "cap_id": "corporate-actions",
   "charts": {
-    "latency-list-price-tradeoff.png": "sha256:7689832f8541324a610c09f4e663abcaff5e58a60bfba5e6a373506b60fd94ea",
-    "market-coverage.png": "sha256:9c4ce318ec3417da3dd8f15b8197ad3129240ce5956abc3d46b67cd2d35b0aea"
+    "latency-list-price-tradeoff.png": "sha256:cec8c4523f98e6af14d4499bfd714c073267364de073a67db270964738184f44",
+    "market-coverage.png": "sha256:0af60a93daf7098ce63fdc220ff7c21fca02d0d88a7d430ddb482cb3f2917498"
   },
   "edition": "2026-08-14",
   "input_digests": {
-    "article_facts": "sha256:b880079660421ccf0e0fcb0b89ede8e8bffba7bf661adc0fe2355650e669bf8f",
-    "profile": "sha256:45b0ffc81ad9db51c5dfac30d91f805f6cdc14dcc8069cd922b83c117e439501",
-    "selection_snapshot": "sha256:5e2d4dd0a5793d87c34e6c9d742e0d7f48f8a1f5fca0de3a15a14c8d85b702f5"
+    "article_facts": "sha256:70fe79e6cf099cea8d6d39b83a1c8a1b68c517f525ad8fa2588e9cff23ebe27e",
+    "profile": "sha256:5d2b0d8c73258e48c2a7dae56597557fca218d2743f18347cb6a3b22202588d6",
+    "selection_snapshot": "sha256:799eb7876b5e9ba319775e7895164c896a228a2669cf96c7a7134f2744d226d1"
   },
   "outputs": {
     "article": "article.md",

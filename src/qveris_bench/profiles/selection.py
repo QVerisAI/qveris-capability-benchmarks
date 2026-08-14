@@ -352,6 +352,9 @@ def build_selection_snapshot(input_path: Path, root: Path) -> SelectionSnapshotB
                         market_evidence_by_run_key,
                         market_release_digest,
                         market_observation_date,
+                        include_run_observations=(
+                            config.get("include_market_run_observations") is True
+                        ),
                     )
                     if market_release_digest is not None
                     and market_observation_date is not None
@@ -780,6 +783,8 @@ def _market_coverage(
     evidence_by_run_key: dict[str, dict[str, Any]],
     release_digest_value: str,
     observation_date: date,
+    *,
+    include_run_observations: bool = False,
 ) -> MarketCoverageSnapshot:
     by_market: dict[str, list[dict[str, Any]]] = {}
     for cell in cells:
@@ -841,10 +846,21 @@ def _market_coverage(
                 evidence_refs=refs,
             )
         )
+    run_refs = tuple(
+        sorted(
+            str(evidence_by_run_key[str(cell["run_key"])]["public_digest"])
+            for cell in cells
+            if str(cell["run_key"]) in evidence_by_run_key
+            and evidence_by_run_key[str(cell["run_key"])].get("public_digest")
+        )
+    )
     return MarketCoverageSnapshot(
         release_digest=release_digest_value,
         observation_date=observation_date,
         results=tuple(results),
+        run_observations=(
+            _run_observations(cells, run_refs) if include_run_observations else None
+        ),
     )
 
 

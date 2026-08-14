@@ -59,6 +59,7 @@ class CorporateActionsPublicationAdapter:
             raise PublicationReproductionError(
                 "selection snapshot cannot be rebuilt"
             ) from exc
+        _validate_snapshot_release_refs(rebuilt_snapshot, document)
         if snapshot.read_bytes() != rebuilt_snapshot.json_bytes:
             raise PublicationReproductionError("selection snapshot differs from inputs")
         reproduce_article_package(snapshot, profile, article_dir)
@@ -72,3 +73,24 @@ class CorporateActionsPublicationAdapter:
                 "published guide differs from article package"
             )
         return ("selection_snapshot", "charts", "article_facts", "links")
+
+
+def _validate_snapshot_release_refs(
+    rebuilt_snapshot: Any,
+    document: Mapping[str, Any],
+) -> None:
+    try:
+        cap_release_digest = document["release"]["digest"]
+        market_release_digest = document["market_coverage_release"]["digest"]
+    except (KeyError, TypeError) as exc:
+        raise PublicationReproductionError(
+            "publication release references are incomplete"
+        ) from exc
+    snapshot = rebuilt_snapshot.snapshot
+    if (
+        snapshot.cap_release_digest != cap_release_digest
+        or snapshot.market_coverage_release_digest != market_release_digest
+    ):
+        raise PublicationReproductionError(
+            "selection snapshot release references differ from publication package"
+        )

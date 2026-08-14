@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -18,6 +20,14 @@ from qveris_bench.cli import app
 ROOT = Path(__file__).resolve().parents[2]
 SNAPSHOT = (
     ROOT / "docs/guides/capability-seo/best-dividend-apis/selection-snapshot.json"
+)
+CORPORATE_ACTIONS_V2_SNAPSHOT = (
+    ROOT
+    / "selection_snapshots/corporate-actions-v2-publication/selection-snapshot.json"
+)
+CORPORATE_ACTIONS_PROFILE = (
+    ROOT
+    / "docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml"
 )
 
 
@@ -137,6 +147,41 @@ def test_ac3_refuses_to_publish_when_no_runtime_chart_has_release_backed_data(
             _profile(tmp_path / "profile.yaml"),
             tmp_path / "publication",
         )
+
+
+def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidence(
+    tmp_path: Path,
+) -> None:
+    result = build_article_package(
+        CORPORATE_ACTIONS_V2_SNAPSHOT,
+        CORPORATE_ACTIONS_PROFILE,
+        tmp_path / "publication",
+    )
+
+    article = result.article.read_text(encoding="utf-8")
+    assert "nine representative markets" in article
+    assert "72 release-backed live calls" in article
+    assert "0/2 Evidence insufficient" in article
+    assert "<package-manifest>" not in article
+    assert (
+        "--package docs/guides/capability-seo/best-corporate-actions-apis/manifest.yaml"
+        in article
+    )
+    assert "uv run python -c" in article
+    assert "best-corporate-actions-apis-2026-08-14-v2.json" in article
+    assert result.market_chart.is_file()
+
+    command = re.search(r"Reproduce the package offline with `(.*?)`", article)
+    assert command is not None
+    reproduced = subprocess.run(
+        command.group(1),
+        cwd=ROOT,
+        shell=True,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert reproduced.returncode == 0, reproduced.stderr
 
 
 def test_rejects_an_unapproved_profile_link(tmp_path: Path) -> None:
