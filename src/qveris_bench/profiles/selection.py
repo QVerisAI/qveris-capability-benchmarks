@@ -481,10 +481,16 @@ def _gateway_metrics(
 
 def _include_gateway_account_costs(config: dict[str, Any]) -> bool:
     configured = config.get("include_gateway_account_costs")
-    if configured is not None:
-        return bool(configured)
+    if configured is not None and not isinstance(configured, bool):
+        raise SelectionSnapshotBuildError("include_gateway_account_costs must be bool")
+    if str(config.get("version")) != "1.0.0":
+        if configured:
+            raise SelectionSnapshotBuildError(
+                "public v2 Selection Snapshots cannot include account costs"
+            )
+        return False
     # v1 已发布包保留字节级复现；v2 起公开事实默认排除账号实扣。
-    return str(config.get("version")) == "1.0.0"
+    return configured is not False
 
 
 def _load_qveris_list_prices(

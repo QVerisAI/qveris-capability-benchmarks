@@ -5,7 +5,13 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from qveris_bench.profiles.selection import build_selection_snapshot
+import pytest
+import yaml
+
+from qveris_bench.profiles.selection import (
+    SelectionSnapshotBuildError,
+    build_selection_snapshot,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / "selection_snapshots/corporate-actions-v2/selection-snapshot.yaml"
@@ -87,6 +93,16 @@ def test_ac4_corporate_v2_snapshot_uses_inspect_prices_not_account_costs() -> No
     ):
         for path in (ROOT / relative_root).glob("*.json"):
             assert '"cost_credits"' not in path.read_text(encoding="utf-8")
+
+
+def test_ac4_corporate_v2_rejects_account_cost_opt_in(tmp_path: Path) -> None:
+    config = yaml.safe_load(INPUT.read_text(encoding="utf-8"))
+    config["include_gateway_account_costs"] = True
+    input_path = tmp_path / "selection-snapshot.yaml"
+    input_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    with pytest.raises(SelectionSnapshotBuildError, match="account costs"):
+        build_selection_snapshot(input_path, ROOT)
 
 
 def test_ac5_corporate_v2_snapshot_builds_through_installed_cli(tmp_path: Path) -> None:

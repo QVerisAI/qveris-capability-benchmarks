@@ -55,7 +55,7 @@ def _public_terminal(
     suite_fingerprint: str,
     registry_digest: str,
     latency_ms: float | None,
-    cost_credits: float | None,
+    _cost_credits: float | None,
 ) -> bytes:
     return (
         json.dumps(
@@ -77,7 +77,6 @@ def _public_terminal(
                 "disclosure_level": "sanitized_public",
                 "license_status": "cleared",
                 "latency_ms": latency_ms,
-                "cost_credits": cost_credits,
                 "github_run_id": os.environ.get("GITHUB_RUN_ID"),
                 "github_sha": os.environ.get("GITHUB_SHA"),
             },
@@ -200,6 +199,7 @@ def test_public_terminal_does_not_include_request_parameters_or_credentials() ->
     assert "Authorization" not in content
     assert "AAPL.US" not in content
     assert '"parameters"' not in content
+    assert '"cost_credits"' not in content
 
 
 def test_public_terminal_preserves_sanitized_infra_outcome() -> None:
