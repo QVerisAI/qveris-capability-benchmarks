@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -52,7 +53,10 @@ def evaluate_government_bond_document(
     if status_code != 200 or request_identity is None:
         return _infra_result(case, FailureAttribution.EMPTY_OR_PARTIAL_DATA)
 
-    extracted = _extract_latest(provider_id, payload.get("data"), case)
+    response_data = payload.get("data")
+    if provider_id == "qveris-finance" and not isinstance(response_data, Mapping):
+        response_data = payload
+    extracted = _extract_latest(provider_id, response_data, case)
     if extracted is None:
         return GovernmentBondDirectResult(
             CellState.PROVIDER_NEGATIVE,
@@ -77,7 +81,7 @@ def evaluate_government_bond_document(
     for key, aliases in {
         "unit": ("unit", "units"),
         "currency": ("currency",),
-        "source": ("source", "provider"),
+        "source": ("source", "provider", "source_provider"),
     }.items():
         value = _first_string(row, aliases) or _first_string(metadata, aliases)
         if value is not None:
@@ -170,8 +174,13 @@ def _extract_latest(
         series = data.get("seriess") or data.get("series")
         if isinstance(series, list) and series and isinstance(series[0], Mapping):
             metadata = series[0]
+        else:
+            metadata = {}
     elif provider_id == "qveris-finance":
         candidate_rows = data.get("data") or data.get("results") or data.get("rows")
+        truncated = data.get("truncated_content")
+        if candidate_rows is None and isinstance(truncated, str):
+            candidate_rows = _partial_json_objects(truncated)
         if isinstance(candidate_rows, Mapping):
             metadata = candidate_rows
             candidate_rows = (
@@ -179,6 +188,9 @@ def _extract_latest(
                 or candidate_rows.get("results")
                 or candidate_rows.get("rows")
             )
+        meta = data.get("_meta")
+        if isinstance(meta, Mapping):
+            metadata = meta
         value_fields = ("close", "yield", "value", "rate")
     else:
         return None
@@ -197,6 +209,22 @@ def _extract_latest(
         return None
     parsed_date, row, value = max(valid, key=lambda item: item[0])
     return row, parsed_date.isoformat(), value, metadata
+
+
+def _partial_json_objects(value: str) -> list[Mapping[str, Any]]:
+    decoder = json.JSONDecoder()
+    rows: list[Mapping[str, Any]] = []
+    offset = 0
+    while (start := value.find("{", offset)) >= 0:
+        try:
+            row, end = decoder.raw_decode(value, start)
+        except json.JSONDecodeError:
+            offset = start + 1
+            continue
+        if isinstance(row, Mapping):
+            rows.append(row)
+        offset = end
+    return rows
 
 
 def _identity_evaluation(

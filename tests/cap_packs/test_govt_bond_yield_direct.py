@@ -106,6 +106,42 @@ def test_qveris_finance_accepts_finite_zero_or_negative_yields(value: float) -> 
     assert result.facts["identity_basis"] == "response_field"
 
 
+def test_qveris_finance_extracts_a_complete_row_from_truncated_content() -> None:
+    result = evaluate_government_bond_document(
+        "qveris-finance",
+        {
+            "status_code": 200,
+            "_meta": {"source_provider": "alphavantage"},
+            "truncated_content": (
+                '[{"date":"2025-01-02","close":4.5,'
+                '"symbol":"10-Year Treasury Constant Maturity Rate"},'
+                '{"date":"2024-12-31","close":4.38,'
+                '"symbol":"10-Year Treasury Constant Maturity Rate",'
+                '"unit":"percent"},{"date":"2024-12-30","close":4'
+            ),
+        },
+        _case(),
+        request_identity=GovernmentBondRequestIdentity(
+            country="US",
+            tenor="10Y",
+            vendor_identifier="US",
+            parameter_path=("country",),
+            response_aliases=("10-Year Treasury Constant Maturity Rate",),
+        ),
+    )
+
+    assert result.state is CellState.COMPLETED
+    assert result.facts == {
+        "symbol": "10-Year Treasury Constant Maturity Rate",
+        "date": "2024-12-31",
+        "close": 4.38,
+        "identity_verified": True,
+        "identity_basis": "response_field",
+        "unit": "percent",
+        "source": "alphavantage",
+    }
+
+
 @pytest.mark.parametrize("value", [math.nan, math.inf, "not-a-number"])
 def test_non_finite_or_non_numeric_yields_do_not_pass(value: object) -> None:
     result = evaluate_government_bond_document(

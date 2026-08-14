@@ -6,13 +6,13 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from qveris_bench.cap_packs.corporate_actions.direct import (
-    evaluate_corporate_action_document,
+from qveris_bench.cap_packs.govt_bond_yield.direct import (
+    evaluate_government_bond_document,
     validate_public_outcome,
 )
-from qveris_bench.cap_packs.corporate_actions.models import (
-    corporate_action_request_identity,
-    validate_corporate_action_request_identities,
+from qveris_bench.cap_packs.govt_bond_yield.models import (
+    GovernmentBondRequestIdentity,
+    validate_government_bond_request_identities,
 )
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.execution.direct_binding import (
@@ -36,7 +36,7 @@ from qveris_bench.suites.compiler import compile_suite
 from qveris_bench.suites.fingerprint import canonical_json_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
-PACK = ROOT / "cap_packs/corporate-actions/v2"
+PACK = ROOT / "cap_packs/govt-bond-yield"
 REPOSITORY = "QVerisAI/qveris-capability-benchmarks"
 
 
@@ -48,15 +48,16 @@ def build_release_from_artifacts(
     *,
     suite_name: str,
     release_id: str,
+    github_merge_commit_export: Path | None = None,
 ) -> str:
     if suite_name not in {"baseline", "market"}:
         raise ValueError("suite must be baseline or market")
     run = json_object(github_run_export)
-    expected_workflow = f".github/workflows/live-corporate-actions-{suite_name}-e2e.yml"
+    expected_workflow = f".github/workflows/live-govt-bond-yield-{suite_name}-e2e.yml"
     if (
         run.get("status") != "completed"
         or run.get("conclusion") != "success"
-        or run.get("event") != "workflow_dispatch"
+        or run.get("event") not in {"workflow_dispatch", "pull_request"}
         or run.get("path") != expected_workflow
         or nested(run, "repository", "full_name") != REPOSITORY
         or not isinstance(run.get("id"), int)
@@ -65,10 +66,40 @@ def build_release_from_artifacts(
         raise ValueError("GitHub run export does not match the trusted workflow")
     github_run_id = str(run["id"])
     github_sha = str(run["head_sha"])
+    if run["event"] == "pull_request":
+        if github_merge_commit_export is None:
+            raise ValueError("pull-request evidence requires a merge commit export")
+        merge_commit = json_object(github_merge_commit_export)
+        parent_shas = {
+            parent.get("sha")
+            for parent in merge_commit.get("parents", ())
+            if isinstance(parent, dict)
+        }
+        pull_requests = run.get("pull_requests")
+        base_sha = (
+            nested(pull_requests[0], "base", "sha")
+            if isinstance(pull_requests, list) and pull_requests
+            else None
+        )
+        if (
+            not isinstance(merge_commit.get("sha"), str)
+            or github_sha not in parent_shas
+            or base_sha not in parent_shas
+        ):
+            raise ValueError("merge commit export does not bind the pull request run")
+        github_sha = str(merge_commit["sha"])
 
-    suite_path = PACK / f"{suite_name}-suite.yaml"
-    cases_path = PACK / f"{suite_name}-cases.yaml"
-    registry_path = PACK / f"{suite_name}-direct-bindings.json"
+    suite_path = PACK / (
+        "suite.yaml" if suite_name == "baseline" else "market-suite.yaml"
+    )
+    cases_path = PACK / (
+        "cases.yaml" if suite_name == "baseline" else "market-cases.yaml"
+    )
+    registry_path = PACK / (
+        "direct-bindings.json"
+        if suite_name == "baseline"
+        else "market-direct-bindings.json"
+    )
     evidence_dir = output_root / "evidence" / release_id
     release_dir = output_root / "releases" / release_id
     if evidence_dir.exists() or release_dir.exists():
@@ -84,17 +115,20 @@ def build_release_from_artifacts(
         ROOT / "providers",
         cap_path=PACK / "cap.yaml",
     )
-    validate_corporate_action_request_identities(registry, compiled)
+    validate_government_bond_request_identities(registry, compiled)
     cells = {cell.run_key: cell for cell in compiled.run_plan.cells if cell.applicable}
     bindings_by_cell = {
         (binding.case_id, binding.access_path_id): binding
         for binding in registry.bindings
     }
     cases = {case.case_id: case for case in compiled.cases}
-    evidence_ids = set()
-    for cell in cells.values():
-        binding = bindings_by_cell[(cell.case_id, cell.access_path_id)]
-        evidence_ids.add(f"{binding.binding_id}-round-{cell.round}")
+    evidence_ids = {
+        (
+            f"{bindings_by_cell[(cell.case_id, cell.access_path_id)].binding_id}"
+            f"-round-{cell.round}"
+        )
+        for cell in cells.values()
+    }
 
     artifact_export = json_object(github_artifacts_export)
     artifact_rows = artifact_export.get("artifacts")
@@ -111,8 +145,8 @@ def build_release_from_artifacts(
         name
         for evidence_id in evidence_ids
         for name in (
-            f"corporate-actions-{suite_name}-{evidence_id}",
-            f"private-corporate-actions-{suite_name}-{evidence_id}",
+            f"govt-bond-yield-{suite_name}-{evidence_id}",
+            f"private-govt-bond-yield-{suite_name}-{evidence_id}",
         )
     }
     if artifacts_by_name.keys() != expected_names:
@@ -121,8 +155,8 @@ def build_release_from_artifacts(
     terminals: dict[str, tuple[PublicTerminal, bytes]] = {}
     attested_artifacts = []
     for evidence_id in sorted(evidence_ids):
-        public_name = f"corporate-actions-{suite_name}-{evidence_id}"
-        private_name = f"private-corporate-actions-{suite_name}-{evidence_id}"
+        public_name = f"govt-bond-yield-{suite_name}-{evidence_id}"
+        private_name = f"private-govt-bond-yield-{suite_name}-{evidence_id}"
         public_row = artifacts_by_name[public_name]
         private_row = artifacts_by_name[private_name]
         public_entries, public_archive_digest = verified_archive(
@@ -134,8 +168,8 @@ def build_release_from_artifacts(
         if len(public_entries) != 1:
             raise ValueError("public artifact must contain exactly one terminal")
         public_path, public_bytes = next(iter(public_entries.items()))
-        public_digest = sha256_digest(public_bytes)
-        suffix = public_digest.removeprefix("sha256:")
+        source_public_digest = sha256_digest(public_bytes)
+        suffix = source_public_digest.removeprefix("sha256:")
         if PurePosixPath(public_path).name != f"{evidence_id}-{suffix}.json":
             raise ValueError("public artifact filename does not bind its digest")
         try:
@@ -160,23 +194,24 @@ def build_release_from_artifacts(
             binding.tool_id,
             binding.parameters,
         )
-        payload: dict[str, Any]
         if execution_envelope.response_status_code >= 400:
-            payload = {
+            payload: dict[str, Any] = {
                 "status_code": execution_envelope.response_status_code,
                 "data": raw_document,
             }
         else:
             result_payload = raw_document.get("result")
-            if not isinstance(result_payload, dict):
-                raise ValueError("private raw execution is missing result")
-            payload = result_payload
+            payload = (
+                result_payload
+                if isinstance(result_payload, dict)
+                else {"status_code": 520, "data": {"protocol_error": "invalid result"}}
+            )
         case = cases[binding.case_id]
-        raw_outcome = evaluate_corporate_action_document(
+        raw_outcome = evaluate_government_bond_document(
             str(binding.provider_id),
             payload,
             case,
-            request_identity=corporate_action_request_identity(
+            request_identity=GovernmentBondRequestIdentity.model_validate(
                 binding.request_identity
             ),
         )
@@ -187,24 +222,18 @@ def build_release_from_artifacts(
             or terminal.failure_attribution is not raw_outcome.failure_attribution
         ):
             raise ValueError("public terminal does not match private raw outcome")
-        latency_ms, cost_credits = gateway_metrics(raw_document)
-        if terminal.latency_ms != latency_ms or terminal.cost_credits not in (
-            None,
-            cost_credits,
-        ):
-            raise ValueError(
-                "public terminal metrics do not match private raw evidence"
-            )
-        published_terminal = terminal.model_copy(update={"cost_credits": None})
+        latency_ms, _ = gateway_metrics(raw_document)
+        if terminal.latency_ms != latency_ms or terminal.cost_credits is not None:
+            raise ValueError("public terminal metrics violate publication policy")
         published_bytes = (
             json.dumps(
-                published_terminal.model_dump(mode="json", exclude={"cost_credits"}),
+                terminal.model_dump(mode="json", exclude={"cost_credits"}),
                 sort_keys=True,
             )
             + "\n"
         ).encode()
         published_digest = sha256_digest(published_bytes)
-        terminals[evidence_id] = published_terminal, published_bytes
+        terminals[evidence_id] = terminal, published_bytes
         attested_artifacts.append(
             {
                 "name": evidence_id,
@@ -212,7 +241,7 @@ def build_release_from_artifacts(
                 "public_archive_digest": public_archive_digest,
                 "private_artifact_id": private_row["id"],
                 "private_archive_digest": private_archive_digest,
-                "source_public_digest": public_digest,
+                "source_public_digest": source_public_digest,
                 "public_digest": published_digest,
                 "raw_digest": terminal.raw_digest,
             }
@@ -232,12 +261,13 @@ def build_release_from_artifacts(
         for evidence_id, (terminal, source_bytes) in terminals.items()
     }
     limitations = (
-        "This release measures the frozen split-event workflow only.",
+        "This Release measures the frozen 2024 10-year sovereign benchmark "
+        "workflow only.",
         "Provider and Access Path conclusions apply only to the released cells.",
-        "Provider-negative is not evidence that a Provider never supports a market.",
+        "Provider-negative is not evidence that a Provider never supports a country.",
         "Offline replay does not call QVeris or a data Provider.",
     )
-    with tempfile.TemporaryDirectory(prefix="corporate-actions-v2-release-") as temp:
+    with tempfile.TemporaryDirectory(prefix="govt-bond-yield-release-") as temp:
         terminal_paths = []
         for evidence_id, (_, source_bytes) in sorted(terminals.items()):
             target = Path(temp) / f"{evidence_id}.json"
@@ -249,7 +279,7 @@ def build_release_from_artifacts(
             binding_registry_digest=direct_binding_registry_digest(registry_path),
             terminal_paths=tuple(terminal_paths),
             release_id=release_id,
-            version="2.0.0",
+            version="1.0.0",
             limitations=limitations,
             outcome_validator=validate_public_outcome,
             expected_github_run_id=github_run_id,
@@ -271,19 +301,22 @@ def main() -> None:
     parser.add_argument("--github-run-export", type=Path, required=True)
     parser.add_argument("--github-artifacts-export", type=Path, required=True)
     parser.add_argument("--artifact-archive-root", type=Path, required=True)
+    parser.add_argument("--github-merge-commit-export", type=Path)
     parser.add_argument("--output-root", type=Path, default=ROOT)
     parser.add_argument("--suite", choices=("baseline", "market"), required=True)
     parser.add_argument("--release-id", required=True)
     args = parser.parse_args()
-    digest = build_release_from_artifacts(
-        args.github_run_export,
-        args.github_artifacts_export,
-        args.artifact_archive_root,
-        args.output_root,
-        suite_name=args.suite,
-        release_id=args.release_id,
+    print(
+        build_release_from_artifacts(
+            args.github_run_export,
+            args.github_artifacts_export,
+            args.artifact_archive_root,
+            args.output_root,
+            suite_name=args.suite,
+            release_id=args.release_id,
+            github_merge_commit_export=args.github_merge_commit_export,
+        )
     )
-    print(digest)
 
 
 if __name__ == "__main__":
