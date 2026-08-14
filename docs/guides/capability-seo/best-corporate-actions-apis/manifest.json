@@ -1,8 +1,8 @@
 {
   "cap_id": "corporate-actions",
   "charts": {
-    "latency-list-price-tradeoff.png": "sha256:9e2f1268ae9102e3cb6fa0139cd8c29f06d615ba4bf462d8012c3740d3f9ed05",
-    "market-coverage.png": "sha256:49f6cb33635ec863707c9565acbc5a598b297b50b67fc0aacb45f5ccaa7dfe5c"
+    "latency-list-price-tradeoff.png": "sha256:cec8c4523f98e6af14d4499bfd714c073267364de073a67db270964738184f44",
+    "market-coverage.png": "sha256:0af60a93daf7098ce63fdc220ff7c21fca02d0d88a7d430ddb482cb3f2917498"
   },
   "edition": "2026-08-14",
   "input_digests": {

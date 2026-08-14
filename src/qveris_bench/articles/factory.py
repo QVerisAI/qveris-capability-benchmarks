@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import platform
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,6 +15,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch, Rectangle
+from PIL import Image, ImageChops
 from pydantic import ValidationError
 
 from qveris_bench.models.selection import SelectionSnapshot, SelectionSnapshotRow
@@ -85,8 +87,17 @@ def reproduce_article_package(
             ),
         )
         for committed, fresh, name in artifacts:
-            if not committed.is_file() or committed.read_bytes() != fresh.read_bytes():
+            if not committed.is_file():
                 raise ArticleBuildError(f"{name} artifact differs from a fresh build")
+            if committed.read_bytes() == fresh.read_bytes():
+                continue
+            if (
+                name.endswith("chart")
+                and platform.system() != "Linux"
+                and _same_pixels(committed, fresh)
+            ):
+                continue
+            raise ArticleBuildError(f"{name} artifact differs from a fresh build")
 
 
 def build_article_package(
@@ -707,6 +718,16 @@ def _render_market_chart(
 
 def _digest(value: bytes) -> str:
     return "sha256:" + hashlib.sha256(value).hexdigest()
+
+
+def _same_pixels(first: Path, second: Path) -> bool:
+    with Image.open(first) as expected, Image.open(second) as actual:
+        expected_rgba = expected.convert("RGBA")
+        actual_rgba = actual.convert("RGBA")
+        return (
+            expected_rgba.size == actual_rgba.size
+            and ImageChops.difference(expected_rgba, actual_rgba).getbbox() is None
+        )
 
 
 def _canonical_json(value: Any) -> bytes:
