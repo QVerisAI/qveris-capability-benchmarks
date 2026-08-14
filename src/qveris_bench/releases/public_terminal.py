@@ -231,7 +231,7 @@ def assemble_public_terminal_release(
                 {
                     "evidence_id": item.evidence_id,
                     "run_key": item.run_key,
-                    "path": f"../../evidence/{release_id}/{item.evidence_id}.json",
+                    "path": f"evidence/{release_id}/{item.evidence_id}.json",
                     "public_digest": item.public_digest,
                     "raw_digest": item.raw_digest,
                 }

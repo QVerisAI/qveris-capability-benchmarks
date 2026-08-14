@@ -1,0 +1,192 @@
+{
+  "access_path_count": 4,
+  "cap_id": "corporate-actions",
+  "cap_release_digest": "sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa",
+  "edition": "2026-08-14",
+  "market_release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+  "markets": [
+    "US"
+  ],
+  "planned_observations": 24,
+  "provider_count": 4,
+  "rows": [
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 0,
+        "state": "measured",
+        "total": 3
+      },
+      "latency_max_ms": 4263.01,
+      "latency_median_ms": 479.75,
+      "latency_min_ms": 475.77,
+      "latency_samples": 3,
+      "list_price_credits": 2.0,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "US",
+          "passed": 3,
+          "state": "verified",
+          "total": 3
+        }
+      ],
+      "negative": [
+        {
+          "passed": 0,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "planned_observations": 6,
+      "positive": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "provider_id": "alpha-vantage",
+      "provider_name": "Alpha Vantage",
+      "terminal_observations": 6,
+      "verified_markets": [
+        "US"
+      ]
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 3,
+        "state": "measured",
+        "total": 3
+      },
+      "latency_max_ms": 1073.41,
+      "latency_median_ms": 976.03,
+      "latency_min_ms": 733.14,
+      "latency_samples": 3,
+      "list_price_credits": 2.81,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "US",
+          "passed": 3,
+          "state": "verified",
+          "total": 3
+        }
+      ],
+      "negative": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "planned_observations": 6,
+      "positive": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "provider_id": "eodhd",
+      "provider_name": "EODHD",
+      "terminal_observations": 6,
+      "verified_markets": [
+        "US"
+      ]
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 0,
+        "state": "measured",
+        "total": 3
+      },
+      "latency_max_ms": 1186.96,
+      "latency_median_ms": 1035.74,
+      "latency_min_ms": 754.23,
+      "latency_samples": 3,
+      "list_price_credits": 1.0,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "US",
+          "passed": 3,
+          "state": "verified",
+          "total": 3
+        }
+      ],
+      "negative": [
+        {
+          "passed": 0,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "planned_observations": 6,
+      "positive": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "provider_id": "massive-stocks",
+      "provider_name": "Massive",
+      "terminal_observations": 6,
+      "verified_markets": [
+        "US"
+      ]
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 3,
+        "state": "measured",
+        "total": 3
+      },
+      "latency_max_ms": 2029.23,
+      "latency_median_ms": 1045.36,
+      "latency_min_ms": 471.42,
+      "latency_samples": 3,
+      "list_price_credits": 2.37,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "US",
+          "passed": 3,
+          "state": "verified",
+          "total": 3
+        }
+      ],
+      "negative": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "planned_observations": 6,
+      "positive": [
+        {
+          "passed": 3,
+          "state": "measured",
+          "total": 3
+        }
+      ],
+      "provider_id": "twelve-data",
+      "provider_name": "Twelve Data",
+      "terminal_observations": 6,
+      "verified_markets": [
+        "US"
+      ]
+    }
+  ],
+  "scope": "Historical US equity stock-split retrieval and an explicit invalid-symbol control through the tested QVeris Access Paths.",
+  "terminal_observations": 24
+}

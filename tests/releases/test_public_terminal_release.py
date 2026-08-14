@@ -100,6 +100,11 @@ def test_assembles_every_applicable_cell_and_preserves_negative_results() -> Non
     assert artifacts.release.cap_version == "1.0.0"
     assert artifacts.release.cap_sources == artifacts.run_plan.cap_sources
     assert artifacts.release_bytes == artifacts.rebuild()
+    manifest = json.loads(artifacts.public_evidence_manifest_bytes)
+    assert all(
+        item["path"].startswith("evidence/dividend-events-market-coverage-")
+        for item in manifest["evidence"]
+    )
 
 
 def test_committed_market_release_exactly_matches_public_terminals() -> None:

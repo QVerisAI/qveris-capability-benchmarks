@@ -408,9 +408,9 @@ def _market_row(row: dict[str, Any], markets: tuple[str, ...]) -> str:
 def _agent_row(row: dict[str, Any]) -> str:
     invalid_input = _fraction(row["invalid_input"])
     note = (
-        "Explicit result is release-backed."
-        if invalid_input != "Evidence insufficient"
-        else "No release-backed signal; handle failures defensively."
+        "Explicit rejection is release-backed."
+        if row["invalid_input"].get("passed", 0) > 0
+        else "No explicit rejection observed; handle failures defensively."
     )
     return f"| {row['provider_name']} · {_path_label(row)} | {invalid_input} | {note} |"
 

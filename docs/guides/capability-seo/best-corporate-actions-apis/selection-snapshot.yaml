@@ -1,0 +1,33 @@
+snapshot_id: corporate-actions-selection-2026-q3-v1
+version: 1.0.0
+edition: "2026-08-14"
+cap_id: corporate-actions
+historical_execution_contract:
+  suite_fingerprint: 0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20
+  execution_contract_digest: sha256:0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20
+cap_release:
+  release: releases/corporate-actions-2026-q3-v2/release.json
+  digest: sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa
+suite: cap_packs/corporate-actions/suite.yaml
+cases: cap_packs/corporate-actions/cases.yaml
+providers_root: providers
+qveris_list_pricing:
+  snapshot: docs/guides/capability-seo/best-corporate-actions-apis/qveris-list-pricing.json
+  bindings: cap_packs/corporate-actions/direct-bindings.json
+observation_window:
+  start: "2026-08-13"
+  end: "2026-08-13"
+market_coverage_release:
+  release: releases/corporate-actions-us-market-2026-q3-v1/release.json
+  digest: sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587
+  suite: cap_packs/corporate-actions/market-suite.yaml
+  cases: cap_packs/corporate-actions/market-cases.yaml
+  historical_execution_contract:
+    suite_fingerprint: 0b76325ee2d44b943dca649d61a359cc1d5cd7d25f314e155e4f554d2a126f3a
+    execution_contract_digest: sha256:0b76325ee2d44b943dca649d61a359cc1d5cd7d25f314e155e4f554d2a126f3a
+include_release_identity: true
+include_case_observations: true
+gateway_latency_scope: positive_cases
+limitations:
+  - The US matrix is the released AAPL stock-split sample, not full provider market coverage.
+  - QVeris list credits are sanitized inspect list prices, not account billing.
