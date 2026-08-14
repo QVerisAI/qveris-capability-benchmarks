@@ -13,6 +13,9 @@ from typer.testing import CliRunner
 
 from qveris_bench.articles.factory import (
     ArticleBuildError,
+    _load_snapshot,
+    _market_rows,
+    _render_market_chart,
     build_article_package,
     reproduce_article_package,
 )
@@ -192,6 +195,59 @@ def test_corporate_actions_v2_article_projects_nine_markets_and_all_live_evidenc
         env={**os.environ, "UV_CACHE_DIR": str(tmp_path / "uv-cache")},
     )
     assert reproduced.returncode == 0, reproduced.stderr
+
+
+def test_ac1_market_chart_omits_redundant_access_path_type(tmp_path: Path) -> None:
+    rows = tuple(
+        sorted(
+            _load_snapshot(CORPORATE_ACTIONS_V2_SNAPSHOT).rows,
+            key=lambda row: (row.provider_name, row.access_path_id),
+        )
+    )
+    chart = tmp_path / "market-coverage.svg"
+
+    _render_market_chart(
+        _market_rows(rows),
+        {row.provider_id: row.provider_name for row in rows},
+        "Corporate Actions",
+        chart,
+    )
+
+    rendered = chart.read_text(encoding="utf-8")
+    assert "<!-- Alpha Vantage -->" in rendered, "AC1: Provider label is missing"
+    assert "QVeris connector" not in rendered, "AC1: repeated path type remains"
+
+
+def test_ac2_market_chart_distinguishes_multiple_paths_for_one_provider(
+    tmp_path: Path,
+) -> None:
+    row = _market_rows((_load_snapshot(CORPORATE_ACTIONS_V2_SNAPSHOT).rows[0],))[0]
+    alternate = row.model_copy(update={"access_path_id": "alternate-qveris-path"})
+    chart = tmp_path / "market-coverage.svg"
+
+    _render_market_chart(
+        (row, alternate),
+        {row.provider_id: row.provider_name},
+        "Corporate Actions",
+        chart,
+    )
+
+    rendered = chart.read_text(encoding="utf-8")
+    assert row.access_path_id in rendered, "AC2: original Access Path is ambiguous"
+    assert alternate.access_path_id in rendered, "AC2: alternate Access Path is ambiguous"
+
+
+def test_ac4_article_skill_requires_non_redundant_chart_labels() -> None:
+    blueprint = (
+        ROOT / ".agents/skills/cap-article-writer/references/article-blueprint.md"
+    ).read_text(encoding="utf-8")
+
+    assert "omit a repeated Access Path type" in blueprint, (
+        "AC4: chart-label guidance is missing from the Article Writer Skill"
+    )
+    assert "retain enough Access Path identity" in blueprint, (
+        "AC4: duplicate Provider rows could become ambiguous"
+    )
 
 
 def test_corporate_actions_skill_article_matches_golden_reader_structure(

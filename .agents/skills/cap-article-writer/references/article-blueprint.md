@@ -9,6 +9,7 @@ Use this reader sequence:
 3. How developers should choose: provide at least four distinct scenarios. Each scenario must have a structured Access Path selection and evidence-backed trade-off.
 4. Evidence and Provider differences: use a dedicated `cap_explainer` to explain why the CAP is non-trivial and what the completion contract proves. Do not repeat the evidence-state definitions from Results at a glance.
 5. Chart explanations: explain axes, cells, denominators, observation scope, and why the chart changes a decision. Never merely repeat the title.
+   In chart row labels, omit a repeated Access Path type when each Provider appears once. If a Provider has multiple rows, retain enough Access Path identity to keep those observations distinct.
 6. Provider-by-Provider analysis: cover every Provider × Access Path once. Explain best fit, observed strength, observed risk, and evidence boundary.
 7. Agent integration: separate observed invalid-input behavior from unmeasured identity, schema, pagination, and semantic risks.
 8. Method, offline reproduction, live rerun, contribution, disclosure, correction policy, and FAQ.
