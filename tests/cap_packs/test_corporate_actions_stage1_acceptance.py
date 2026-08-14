@@ -164,11 +164,17 @@ def test_ac6_every_applicable_cell_has_one_frozen_direct_binding() -> None:
     [
         ({"market": "HK"}, None),
         ({"canonical_symbol": "MSFT"}, None),
+        ({"vendor_symbol": "MSFT.US"}, {"symbol": "MSFT.US"}),
         ({}, {"symbol": "MSFT"}),
+        ({}, {"symbol": "MSFT.US", "from": "AAPL.US"}),
+        (
+            {"parameter_path": ["from"]},
+            {"symbol": "MSFT.US", "from": "AAPL.US"},
+        ),
     ],
 )
 def test_ac6_rejects_request_identity_drift(
-    identity_update: dict[str, str], parameters: dict[str, object] | None
+    identity_update: dict[str, object], parameters: dict[str, object] | None
 ) -> None:
     registry = load_direct_binding_registry(PACK / "baseline-direct-bindings.json")
     compiled = _compile("baseline-suite.yaml", "baseline-cases.yaml")

@@ -110,7 +110,10 @@ def test_v2_positive_extraction_uses_frozen_request_identity_and_case_window() -
         disclosure_limits=("sanitized_public",),
     )
     identity = CorporateActionRequestIdentity(
-        market="HK", canonical_symbol="0700.HK", vendor_symbol="00700"
+        market="HK",
+        canonical_symbol="0700.HK",
+        vendor_symbol="00700",
+        parameter_path=("symbol",),
     )
     terminal = evaluate_corporate_action_document(
         "rongjuhui",
@@ -164,7 +167,10 @@ def test_v2_positive_extraction_rejects_wrong_response_identity() -> None:
         },
         case,
         request_identity=CorporateActionRequestIdentity(
-            market="US", canonical_symbol="AAPL", vendor_symbol="AAPL"
+            market="US",
+            canonical_symbol="AAPL",
+            vendor_symbol="AAPL",
+            parameter_path=("symbol",),
         ),
     )
 
@@ -188,7 +194,10 @@ def test_v2_positive_extraction_preserves_exchange_identity() -> None:
         disclosure_limits=("sanitized_public",),
     )
     identity = CorporateActionRequestIdentity(
-        market="HK", canonical_symbol="0700.HK", vendor_symbol="0700:HKEX"
+        market="HK",
+        canonical_symbol="0700.HK",
+        vendor_symbol="0700:HKEX",
+        parameter_path=("symbol",),
     )
 
     wrong_exchange = evaluate_corporate_action_document(
