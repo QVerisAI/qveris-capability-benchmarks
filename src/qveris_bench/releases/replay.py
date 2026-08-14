@@ -12,6 +12,10 @@ from qveris_bench.catalog.harbor_snapshot import (
     validate_harbor_source,
 )
 from qveris_bench.evidence.hashing import sha256_digest
+from qveris_bench.execution.direct_binding import (
+    direct_binding_registry_digest,
+    load_direct_binding_registry,
+)
 from qveris_bench.models.enums import CellState
 from qveris_bench.models.evidence import EvidenceBundle
 from qveris_bench.models.metric import MetricDefinition
@@ -104,7 +108,7 @@ def replay_release_dir(
                 raise ReleaseReplayError("Harbor CAP provenance is invalid") from exc
     _validate_cell_topology(run_plan.cells, cells)
     _validate_run_keys(run_plan)
-    _validate_public_evidence_manifest(release_dir, evidence)
+    _validate_public_evidence_manifest(release_dir, evidence, release)
 
     try:
         rebuilt = build_release(
@@ -246,7 +250,9 @@ def _validate_run_keys(run_plan: RunPlan) -> None:
 
 
 def _validate_public_evidence_manifest(
-    release_dir: Path, evidence: tuple[EvidenceBundle, ...]
+    release_dir: Path,
+    evidence: tuple[EvidenceBundle, ...],
+    release: BenchmarkRelease,
 ) -> None:
     path = release_dir / _PUBLIC_EVIDENCE_MANIFEST
     if not path.is_file():
@@ -255,6 +261,8 @@ def _validate_public_evidence_manifest(
         _read_required_file(release_dir, _PUBLIC_EVIDENCE_MANIFEST),
         _PUBLIC_EVIDENCE_MANIFEST,
     )
+    _validate_github_attestation(release_dir, document, release)
+    _validate_binding_registry(release_dir, document)
     entries = document.get("evidence")
     historical_layout = entries is None
     if historical_layout:
@@ -306,3 +314,32 @@ def _validate_public_evidence_manifest(
             observed[evidence_id] = (run_key_text, digest)
     if observed != expected:
         raise ReleaseReplayError("public evidence manifest does not match release")
+
+
+def _validate_github_attestation(
+    release_dir: Path, document: dict[str, Any], release: BenchmarkRelease
+) -> None:
+    expected = document.get("github_artifacts_manifest_digest")
+    if expected is None:
+        return
+    attestation = release_dir / "github-artifacts.json"
+    if not isinstance(expected, str) or not attestation.is_file():
+        raise ReleaseReplayError("GitHub artifact attestation is missing")
+    digest = sha256_digest(attestation.read_bytes())
+    if digest != expected or digest != release.github_artifacts_manifest_digest:
+        raise ReleaseReplayError("GitHub artifact attestation digest mismatch")
+
+
+def _validate_binding_registry(release_dir: Path, document: dict[str, Any]) -> None:
+    expected = document.get("binding_registry_digest")
+    if expected is None:
+        return
+    registry_path = release_dir / "direct-binding-registry.json"
+    if not isinstance(expected, str) or not registry_path.is_file():
+        raise ReleaseReplayError("Direct binding registry is missing")
+    try:
+        load_direct_binding_registry(registry_path)
+    except ValueError as exc:
+        raise ReleaseReplayError("Direct binding registry is invalid") from exc
+    if direct_binding_registry_digest(registry_path) != expected:
+        raise ReleaseReplayError("Direct binding registry digest mismatch")

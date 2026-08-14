@@ -75,6 +75,7 @@ class PublicTerminalReleaseArtifacts:
     release: BenchmarkRelease
     release_bytes: bytes
     public_evidence_manifest_bytes: bytes
+    binding_registry_bytes: bytes
 
     def rebuild(self) -> bytes:
         return build_release(self.release, self.cells, self.evidence)
@@ -98,6 +99,7 @@ class PublicTerminalReleaseArtifacts:
             ),
             "release.json": self.release_bytes,
             "public-evidence-manifest.json": self.public_evidence_manifest_bytes,
+            "direct-binding-registry.json": self.binding_registry_bytes,
         }
 
     def write(self, output_dir: Path) -> None:
@@ -122,6 +124,7 @@ def assemble_public_terminal_release(
     expected_github_sha: str,
     expected_provenance: dict[str, tuple[str, str]],
     github_artifacts_manifest_bytes: bytes,
+    binding_registry_bytes: bytes,
 ) -> PublicTerminalReleaseArtifacts:
     planned = {cell.run_key: cell for cell in compiled.run_plan.cells}
     applicable = {key: cell for key, cell in planned.items() if cell.applicable}
@@ -227,6 +230,7 @@ def assemble_public_terminal_release(
             "github_artifacts_manifest_digest": sha256_digest(
                 github_artifacts_manifest_bytes
             ),
+            "binding_registry_digest": binding_registry_digest,
             "evidence": [
                 {
                     "evidence_id": item.evidence_id,
@@ -262,4 +266,5 @@ def assemble_public_terminal_release(
         release=release,
         release_bytes=build_release(release, ordered_cells, ordered_evidence),
         public_evidence_manifest_bytes=public_manifest_bytes,
+        binding_registry_bytes=binding_registry_bytes,
     )

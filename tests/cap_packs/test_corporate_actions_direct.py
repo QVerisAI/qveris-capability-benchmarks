@@ -1,5 +1,10 @@
-from qveris_bench.cap_packs.corporate_actions.direct import evaluate
+from qveris_bench.cap_packs.corporate_actions.direct import (
+    evaluate,
+    validate_public_outcome,
+)
+from qveris_bench.execution.direct_binding import DirectBinding
 from qveris_bench.models.enums import CellState, FailureAttribution
+from qveris_bench.models.suite import BenchmarkCase
 
 
 def test_positive_responses_extract_only_the_cap_contract() -> None:
@@ -50,3 +55,36 @@ def test_only_explicit_negative_responses_complete_the_control() -> None:
     assert eodhd.state is twelve.state is CellState.COMPLETED
     assert eodhd.attribution is FailureAttribution.PROVIDER_VALIDATION_ERROR
     assert alpha.state is CellState.PROVIDER_NEGATIVE
+
+
+def test_public_positive_outcome_requires_an_iso_date_in_the_case_window() -> None:
+    case = BenchmarkCase(
+        case_id="aapl-splits-fixed-window",
+        cap_id="corporate-actions",
+        question="test",
+        input={"symbol": "AAPL", "start_date": "2020-01-01", "end_date": "2026-08-13"},
+        expected_observations=("symbol", "action_type", "date"),
+        completion_conditions=("test",),
+        disclosure_limits=("sanitized_public",),
+        applicable_provider_ids=("eodhd",),
+    )
+    binding = DirectBinding(
+        binding_id="eodhd-aapl-splits",
+        suite_id="corporate-actions-v1",
+        version="1.0.0",
+        case_id=case.case_id,
+        access_path_id="eodhd-corporate-actions-qveris",
+        provider_id="eodhd",
+        transport="qveris_connector",
+        source_digest="sha256:" + "a" * 64,
+        tool_id="tool",
+        parameters={},
+        discovery_query="tool",
+    )
+    for value in ("abcdefghij", "2014-01-01"):
+        outcome = validate_public_outcome(
+            case,
+            binding,
+            {"symbol": "AAPL", "action_type": "split", "date": value},
+        )
+        assert outcome.state is CellState.INFRA_BLOCKED

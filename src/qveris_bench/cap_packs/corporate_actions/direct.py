@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import date
 from io import StringIO
 from typing import Any
 
@@ -48,11 +49,12 @@ def validate_public_outcome(
             FailureAttribution.EMPTY_OR_PARTIAL_DATA,
         )
     symbol = case.input.get("symbol")
+    event_date = facts.get("date")
     if (
         facts.get("symbol") == symbol
         and facts.get("action_type") == "split"
-        and isinstance(facts.get("date"), str)
-        and len(facts["date"]) == 10
+        and isinstance(event_date, str)
+        and _within_case_window(event_date, case)
     ):
         return ValidatedTerminalOutcome(CellState.COMPLETED, (), None)
     return ValidatedTerminalOutcome(
@@ -60,6 +62,16 @@ def validate_public_outcome(
         ("symbol", "action_type", "date"),
         FailureAttribution.EMPTY_OR_PARTIAL_DATA,
     )
+
+
+def _within_case_window(value: str, case: BenchmarkCase) -> bool:
+    try:
+        observed = date.fromisoformat(value)
+        start = date.fromisoformat(str(case.input["start_date"]))
+        end = date.fromisoformat(str(case.input["end_date"]))
+    except (KeyError, TypeError, ValueError):
+        return False
+    return start <= observed <= end
 
 
 def _positive(provider_id: str, payload: Mapping[str, Any]) -> dict[str, object] | None:

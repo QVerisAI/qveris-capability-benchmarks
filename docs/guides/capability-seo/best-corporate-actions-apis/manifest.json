@@ -6,9 +6,9 @@
   },
   "edition": "2026-08-14",
   "input_digests": {
-    "article_facts": "sha256:99c0d4e18f4d4e26a17de83df6c847e87ecabc64834fb3b6e1700836dc0acc78",
-    "profile": "sha256:a741748a28a6642765ef5a721a47b6925c485c527aa99f4598e224db0f984b65",
-    "selection_snapshot": "sha256:cf4a49e64f574d6eeb49575c0f9efc653ce5f31ac5790f47f7cc98d95cc8e84d"
+    "article_facts": "sha256:b880079660421ccf0e0fcb0b89ede8e8bffba7bf661adc0fe2355650e669bf8f",
+    "profile": "sha256:45b0ffc81ad9db51c5dfac30d91f805f6cdc14dcc8069cd922b83c117e439501",
+    "selection_snapshot": "sha256:5e2d4dd0a5793d87c34e6c9d742e0d7f48f8a1f5fca0de3a15a14c8d85b702f5"
   },
   "outputs": {
     "article": "article.md",

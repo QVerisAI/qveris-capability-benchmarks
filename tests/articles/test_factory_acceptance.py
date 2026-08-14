@@ -27,6 +27,24 @@ def _profile(path: Path) -> Path:
 meta_description: Evidence-backed comparison of dividend event access paths, with measured latency, QVeris list credits, markets, and Agent integration signals.
 cap_label: Dividend Event
 scope: Historical dividend-event retrieval through the tested QVeris and Native Access Paths.
+allowed_links:
+  - https://www.alphavantage.co/
+  - https://qveris.ai/providers/alphavantage
+  - https://eodhd.com/
+  - https://qveris.ai/providers/eodhd
+  - https://www.gildata.com/
+  - https://www.gildata.com/products/core-data.html
+  - https://qveris.ai/providers/hangseng_polysource
+  - https://quantapi.51ifind.com/
+  - https://massive.io/
+  - https://qveris.ai/providers/massive_stocks
+  - https://twelvedata.com/
+  - https://qveris.ai/providers/twelvedata
+  - https://www.alphavantage.co/premium/
+  - https://eodhd.com/pricing
+  - https://massive.com/pricing?product=stocks
+  - https://mcp.51ifind.com/?syncCookieTimes=1#/pricing
+  - https://twelvedata.com/pricing
 provider_links:
   alpha-vantage:
     name: Alpha Vantage
@@ -119,6 +137,20 @@ def test_ac3_refuses_to_publish_when_no_runtime_chart_has_release_backed_data(
             _profile(tmp_path / "profile.yaml"),
             tmp_path / "publication",
         )
+
+
+def test_rejects_an_unapproved_profile_link(tmp_path: Path) -> None:
+    profile = _profile(tmp_path / "profile.yaml")
+    profile.write_text(
+        profile.read_text(encoding="utf-8").replace(
+            "official: https://www.alphavantage.co/",
+            "official: https://unapproved.example/",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ArticleBuildError, match="unapproved link"):
+        build_article_package(SNAPSHOT, profile, tmp_path / "publication")
 
 
 def test_ac6_cli_builds_the_offline_article_package(tmp_path: Path) -> None:

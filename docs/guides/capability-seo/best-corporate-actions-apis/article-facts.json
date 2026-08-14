@@ -1,9 +1,9 @@
 {
   "access_path_count": 4,
   "cap_id": "corporate-actions",
-  "cap_release_digest": "sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa",
+  "cap_release_digest": "sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb",
   "edition": "2026-08-14",
-  "market_release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+  "market_release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
   "markets": [
     "US"
   ],
@@ -39,6 +39,23 @@
           "total": 3
         }
       ],
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "25 API requests per day",
+        "license_status": "cleared",
+        "paid_plans": "Premium from USD 49.99/month",
+        "pricing_id": "alpha-vantage-official-pricing",
+        "pricing_url": "https://www.alphavantage.co/premium/",
+        "source_digest": "8c1c5dc3b6635a7d3d58f64378fab701c4d8ec5f122302aa00981aa81da90baa",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
       "planned_observations": 6,
       "positive": [
         {
@@ -83,6 +100,23 @@
           "total": 3
         }
       ],
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "20 API calls per day",
+        "license_status": "cleared",
+        "paid_plans": "All-in-One USD 99.99/month",
+        "pricing_id": "eodhd-official-pricing",
+        "pricing_url": "https://eodhd.com/pricing",
+        "source_digest": "3e9250bf0e6934ad97e93fd10f0ad9274d68a0ba26f965324daa296394191b5f",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
       "planned_observations": 6,
       "positive": [
         {
@@ -127,6 +161,21 @@
           "total": 3
         }
       ],
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
       "planned_observations": 6,
       "positive": [
         {
@@ -171,6 +220,23 @@
           "total": 3
         }
       ],
+      "official_pricing": {
+        "applies_to": "provider_wide",
+        "currencies": [
+          "USD"
+        ],
+        "disclosure_level": "sanitized_public",
+        "extractor_version": "1.0.0",
+        "free_tier": "Basic with 8 API credits per minute and 800 per day",
+        "license_status": "cleared",
+        "paid_plans": "Grow from USD 29/month",
+        "pricing_id": "twelve-data-official-pricing",
+        "pricing_url": "https://twelvedata.com/pricing",
+        "source_digest": "00bd84cd0b0d9ce97da479e2a5ebfa25365bc3efa46f7b27c53f8384cb80f27d",
+        "state": "declared",
+        "suite_fingerprint": "66900ca1b6678662e47832dfb020e9cf546b4425ca9d4acda5b731b14202261f",
+        "verified_at": "2026-08-10"
+      },
       "planned_observations": 6,
       "positive": [
         {

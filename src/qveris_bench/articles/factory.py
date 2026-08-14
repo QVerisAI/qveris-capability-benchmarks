@@ -166,6 +166,16 @@ def _load_profile(path: Path) -> dict[str, Any]:
         raise ArticleBuildError("article profile is missing required English copy")
     if not isinstance(profile.get("provider_links"), dict):
         raise ArticleBuildError("article profile is missing provider links")
+    allowed_links = profile.get("allowed_links")
+    if (
+        not isinstance(allowed_links, list)
+        or not allowed_links
+        or not all(
+            isinstance(item, str) and item.startswith("https://")
+            for item in allowed_links
+        )
+    ):
+        raise ArticleBuildError("article profile is missing an HTTPS link allowlist")
     return profile
 
 
@@ -191,6 +201,18 @@ def _validate_publishable_rows(
             raise ArticleBuildError(
                 f"article profile has no QVeris link for {row.provider_id}"
             )
+        for key in ("official", "qveris"):
+            url = links.get(key)
+            if url is not None and (
+                not isinstance(url, str) or url not in profile["allowed_links"]
+            ):
+                raise ArticleBuildError("article profile contains an unapproved link")
+        pricing = row.official_pricing
+        if (
+            pricing.state == "declared"
+            and str(pricing.pricing_url) not in profile["allowed_links"]
+        ):
+            raise ArticleBuildError("article profile contains an unapproved link")
         if row.market_coverage is None:
             continue
         markets = {item.market for item in row.market_coverage.results}
@@ -255,6 +277,7 @@ def _article_facts(
                     if row.qveris_list_price.inspected_at is not None
                     else None
                 ),
+                "official_pricing": row.official_pricing.model_dump(mode="json"),
                 "invalid_input": _observation(
                     row.agent_interface.invalid_input_handling
                 ),
@@ -299,7 +322,8 @@ def _render_article(facts: dict[str, Any], profile: dict[str, Any]) -> str:
     ]
     fastest = min(runtime_rows, key=lambda row: row["latency_median_ms"])
     cheapest = min(runtime_rows, key=lambda row: row["list_price_credits"])
-    broadest = max(rows, key=lambda row: len(row["verified_markets"]))
+    broadest_count = max(len(row["verified_markets"]) for row in rows)
+    broadest = [row for row in rows if len(row["verified_markets"]) == broadest_count]
     comparison = "\n".join(_comparison_row(row, profile) for row in rows)
     market_rows = "\n".join(_market_row(row, facts["markets"]) for row in rows)
     agent_rows = "\n".join(_agent_row(row) for row in rows)
@@ -313,14 +337,14 @@ def _render_article(facts: dict[str, Any], profile: dict[str, Any]) -> str:
 
 - **Lowest observed QVeris list price:** {cheapest["provider_name"]} · {_path_label(cheapest)} at {cheapest["list_price_credits"]:g} credits/call in this frozen inspect snapshot.
 - **Lowest observed gateway latency:** {fastest["provider_name"]} · {_path_label(fastest)} at a {fastest["latency_median_ms"]:.0f} ms median across {fastest["latency_samples"]} samples.
-- **Broadest representative-market evidence:** {broadest["provider_name"]} · {_path_label(broadest)} verified {len(broadest["verified_markets"])} of {len(facts["markets"])} tested markets.
+{_market_recommendation(broadest, facts["markets"])}
 
 These are separate trade-offs, not an overall winner.
 
 ## Comparison table
 
-| Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call |
-|---|---|---|---:|---:|
+| Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call | Official provider pricing |
+|---|---|---|---:|---:|---|
 {comparison}
 
 “Verified” means every frozen round met the CAP contract. “Provider-negative” means every round returned an explicit provider-level negative outcome; it does not prove permanent lack of support. “Not applicable” means the frozen plan explicitly excluded that market.
@@ -380,7 +404,7 @@ def _comparison_row(row: dict[str, Any], profile: dict[str, Any]) -> str:
     cta = f" · [Try it in QVeris]({links['qveris']})" if "qveris" in links else ""
     return (
         f"| {row['provider_name']} · {_path_label(row)} · [Official site]({links['official']}){cta} "
-        f"| {outcome} | {market} | {_runtime_value(row)} | {_price_value(row)} |"
+        f"| {outcome} | {market} | {_runtime_value(row)} | {_price_value(row)} | {_official_price_value(row)} |"
     )
 
 
@@ -398,7 +422,7 @@ def _market_row(row: dict[str, Any], markets: tuple[str, ...]) -> str:
         cells.append(
             "N/A"
             if result["state"] == "not_applicable"
-            else f"{result['passed']}/{result['total']}"
+            else f"{result['passed']}/{result['total']} {result['state'].replace('_', '-')}"
         )
     return (
         f"| {row['provider_name']} · {_path_label(row)} | " + " | ".join(cells) + " |"
@@ -445,6 +469,31 @@ def _price_value(row: dict[str, Any]) -> str:
             else "Evidence insufficient"
         )
     return f"{row['list_price_credits']:g}"
+
+
+def _official_price_value(row: dict[str, Any]) -> str:
+    price = row["official_pricing"]
+    if price["state"] != "declared":
+        return "Evidence insufficient"
+    return (
+        f"{price['free_tier']}; {price['paid_plans']} "
+        f"([official pricing]({price['pricing_url']}); verified {price['verified_at']})"
+    )
+
+
+def _market_recommendation(rows: list[dict[str, Any]], markets: tuple[str, ...]) -> str:
+    if len(rows) == 1:
+        row = rows[0]
+        return (
+            f"- **Broadest representative-market evidence:** {row['provider_name']} · "
+            f"{_path_label(row)} verified {len(row['verified_markets'])} of "
+            f"{len(markets)} tested markets."
+        )
+    names = ", ".join(row["provider_name"] for row in rows)
+    return (
+        f"- **Representative-market evidence:** {names} are tied at "
+        f"{len(rows[0]['verified_markets'])} of {len(markets)} tested markets."
+    )
 
 
 def _runtime_rows(

@@ -173,6 +173,7 @@ def main() -> None:
         expected_github_sha=args.github_sha,
         expected_provenance=expected_provenance,
         github_artifacts_manifest_bytes=attestation_bytes,
+        binding_registry_bytes=registry_path.read_bytes(),
     )
     artifacts.write(output_dir)
     (output_dir / "github-artifacts.json").write_bytes(attestation_bytes)

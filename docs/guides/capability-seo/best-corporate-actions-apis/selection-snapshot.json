@@ -1,13 +1,13 @@
 {
   "cap_id": "corporate-actions",
-  "cap_release_digest": "sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa",
-  "cap_release_id": "corporate-actions-2026-q3-v2",
+  "cap_release_digest": "sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb",
+  "cap_release_id": "corporate-actions-2026-q3-v3",
   "edition": "2026-08-14",
   "input_digests": {
     "cases": "sha256:e25e8d57783f48ea74543dbe5b69a589af14327a3923466365424d2c4ebd019d",
-    "input": "sha256:46806e148f0311ca5966eb32b2a71ffa022da233cb1dd3b484d9a180e19b754e",
+    "input": "sha256:2ae6228ab10a50df1035a1326af07548cb5a32489c2688cbf10310807b9ffca0",
     "market_coverage_cases": "sha256:3c847e627f2912bb1548adfc4091b1609231b184d883b39f79378f7803c587b3",
-    "market_coverage_release": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+    "market_coverage_release": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
     "market_coverage_suite": "sha256:e1f52de29e903aa7ebd84484c45f0af7e3bb90d63f766495588d53810e99e237",
     "providers": {
       "alpha-vantage": "sha256:7a605e02c351b685f9986d2509702ccda7cae0ab282c6ec0ad46c55f634a9462",
@@ -17,14 +17,14 @@
     },
     "qveris_direct_bindings": "sha256:ef3b115266be4ad0c27b9fbca6cea7fad5c76648b6d704b6c2fa821caea7aa64",
     "qveris_list_pricing": "sha256:4d57ab27b77e6c2f61b4529525586b168ac0945dbf871f2076f3ddca0b92c7eb",
-    "release": "sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa",
+    "release": "sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb",
     "suite": "sha256:70c1d6cc8d359f2603c52b65e4017120513202d94278b8b9dfe639dca092d096"
   },
   "limitations": [
     "The US matrix is the released AAPL stock-split sample, not full provider market coverage.",
     "QVeris list credits are sanitized inspect list prices, not account billing."
   ],
-  "market_coverage_release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+  "market_coverage_release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
   "rows": [
     {
       "access_path_id": "alpha-vantage-corporate-actions-qveris",
@@ -123,7 +123,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-13",
-        "release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+        "release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
         "results": [
           {
             "applicability_reason": null,
@@ -286,7 +286,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-13",
-        "release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+        "release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
         "results": [
           {
             "applicability_reason": null,
@@ -449,7 +449,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-13",
-        "release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+        "release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
         "results": [
           {
             "applicability_reason": null,
@@ -610,7 +610,7 @@
       },
       "market_coverage": {
         "observation_date": "2026-08-13",
-        "release_digest": "sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587",
+        "release_digest": "sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9",
         "results": [
           {
             "applicability_reason": null,

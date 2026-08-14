@@ -1,75 +1,31 @@
 schema_version: 1
-benchmark_id: corporate-actions-2026-08
+benchmark_id: corporate-actions-2026-q3-v3
 article_slug: best-corporate-actions-apis
-edition: "2026-08-08"
-search_intent: 对比公司行动数据 API 的实测成本、延迟与覆盖，帮助开发者选择分红、拆股与除权数据源
-primary_capability_ids: [MKT.CORPORATE_ACTIONS]
-related_capability_ids: [MKT.DIVIDENDS, MKT.SPLITS]
-comparison_shortlist:
-  - 恒生聚源
-  - EODHD
-  - Twelve Data
-  - Massive
-  - Financial Modeling Prep
-  - Alpha Vantage
-  - 同花顺 iFinD
-  - 雅虎财经
-supplier_entities:
-  恒生聚源: gildata.com
-  EODHD: eodhd.com
-  Twelve Data: twelvedata.com
-  Massive: massive.io
-  Financial Modeling Prep: financialmodelingprep.com
-  Alpha Vantage: alphavantage.co
-  同花顺 iFinD: 51ifind.com
-  雅虎财经: yahoo.com
-scenarios:
-  - {id: a_share_dividend_split, article_label: A 股分红拆股, minimum_rounds: 2}
-  - {id: us_dividend_split, article_label: 美股分红拆股, minimum_rounds: 2}
-  - {id: invalid_symbol_control, article_label: 无效代码控制, minimum_rounds: 2}
-publication_policy:
-  one_tool_per_supplier_per_scenario: true
-  freeze_shortlist_after_baseline: true
-  states: [qualified, not_qualified, not_applicable]
-seo:
-  title: "2026 公司行动数据 API 对比：7 家分红、拆股与除权数据源实测"
-  meta_description: "2026 年 8 月实测：对比 7 家公司行动数据 API 的单次费用、延迟与覆盖市场，帮助开发者选择分红、拆股与除权数据源。"
-  primary_keyword: 公司行动数据 API
-  secondary_keywords: [分红数据 API, 拆股数据 API, 除权除息数据 API, corporate actions API]
-  publication_action: new_page
-  inventory_checked_at: "2026-08-08"
-  target_slug: best-corporate-actions-apis
-  provider_inventory_checked_at: "2026-08-08"
-  competing_urls: []
-  supplier_sites:
-    恒生聚源: https://www.gildata.com/
-    EODHD: https://eodhd.com/
-    Twelve Data: https://twelvedata.com/
-    Massive: https://massive.io/
-    Financial Modeling Prep: https://financialmodelingprep.com/
-    Alpha Vantage: https://www.alphavantage.co/
-    同花顺 iFinD: https://quantapi.51ifind.com/
-    雅虎财经: https://finance.yahoo.com/
-  provider_pages:
-    恒生聚源: https://qveris.ai/providers/hangseng_polysource
-    EODHD: https://qveris.ai/providers/eodhd
-    Twelve Data: https://qveris.ai/providers/twelvedata
-    Massive: https://qveris.ai/providers/massive_stocks
-    Financial Modeling Prep: https://qveris.ai/providers/financialmodelingprep
-    Alpha Vantage: https://qveris.ai/providers/alphavantage
-    同花顺 iFinD: https://qveris.ai/providers/ths_ifind
-    雅虎财经: https://qveris.ai/providers/yahoo_finance
-  official_sources:
-    恒生聚源基础数据库: https://www.gildata.com/products/core-data.html
-    EODHD 金融 API: https://eodhd.com/financial-apis/
-    Twelve Data API: https://twelvedata.com/docs
-    FMP 开发者文档: https://financialmodelingprep.com/developer/docs/
-    Alpha Vantage 文档: https://www.alphavantage.co/documentation/
-  related_guides:
-    Market data API for AI agents: https://qveris.ai/guides/market-data-api-for-ai-agents/
-    AI stock research agent: https://qveris.ai/guides/ai-stock-research-agent/
-    Best Free Stock APIs: https://qveris.ai/guides/stock-api-free-comparison/
+edition: "2026-08-14"
+publication_package:
+  package_id: best-corporate-actions-apis-2026-08-14
+  adapter_id: corporate-actions-v1
+  adapter_version: 1.0.0
+  cap_id: corporate-actions
+  release_sections: [release, market_coverage_release]
+  adapter_sources:
+    - src/qveris_bench/articles/factory.py
+    - src/qveris_bench/cap_packs/corporate_actions/publication.py
+  adapter_digest: sha256:f97e87304725b0f3df714865a9974e44a970af49fd320a76408da32a349058f4
+release:
+  directory: releases/corporate-actions-2026-q3-v3
+  digest: sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb
+market_coverage_release:
+  directory: releases/corporate-actions-us-market-2026-q3-v2
+  digest: sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9
 artifacts:
-  article: docs/guides/best-corporate-actions-apis.md
-  evidence_snapshot: harbor-explore-coverage-2026-08-08
-  agent_param_fill_snapshot: evidence/private/agent-param-fill.jsonl
+  article_package: docs/guides/capability-seo/best-corporate-actions-apis
+  article: docs/guides/capability-seo/best-corporate-actions-apis/article.md
+  article_facts: docs/guides/capability-seo/best-corporate-actions-apis/article-facts.json
+  charts:
+    - docs/guides/capability-seo/best-corporate-actions-apis/charts/latency-list-price-tradeoff.png
+    - docs/guides/capability-seo/best-corporate-actions-apis/charts/market-coverage.png
+  publication_profile: docs/guides/capability-seo/best-corporate-actions-apis/publication-profile.yaml
+  selection_snapshot_input: docs/guides/capability-seo/best-corporate-actions-apis/selection-snapshot.yaml
+  selection_snapshot: docs/guides/capability-seo/best-corporate-actions-apis/selection-snapshot.json
+  qveris_list_pricing: docs/guides/capability-seo/best-corporate-actions-apis/qveris-list-pricing.json

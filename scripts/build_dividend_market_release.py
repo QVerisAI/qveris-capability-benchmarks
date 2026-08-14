@@ -90,6 +90,7 @@ def main() -> None:
         expected_github_sha=attestation["github_sha"],
         expected_provenance=observed_artifacts,
         github_artifacts_manifest_bytes=attestation_bytes,
+        binding_registry_bytes=registry_path.read_bytes(),
     )
     artifacts.write(OUTPUT)
     print(release_digest(artifacts.release_bytes))

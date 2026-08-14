@@ -8,18 +8,18 @@ Historical US equity stock-split retrieval and an explicit invalid-symbol contro
 
 - **Lowest observed QVeris list price:** Massive · QVeris connector at 1 credits/call in this frozen inspect snapshot.
 - **Lowest observed gateway latency:** Alpha Vantage · QVeris connector at a 480 ms median across 3 samples.
-- **Broadest representative-market evidence:** Alpha Vantage · QVeris connector verified 1 of 1 tested markets.
+- **Representative-market evidence:** Alpha Vantage, EODHD, Massive, Twelve Data are tied at 1 of 1 tested markets.
 
 These are separate trade-offs, not an overall winner.
 
 ## Comparison table
 
-| Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call |
-|---|---|---|---:|---:|
-| Alpha Vantage · QVeris connector · [Official site](https://www.alphavantage.co/) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | Positive 3/3; invalid control 0/3 | US | 480 ms (n=3) | 2 |
-| EODHD · QVeris connector · [Official site](https://eodhd.com/) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | Positive 3/3; invalid control 3/3 | US | 976 ms (n=3) | 2.81 |
-| Massive · QVeris connector · [Official site](https://massive.io/) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | Positive 3/3; invalid control 0/3 | US | 1036 ms (n=3) | 1 |
-| Twelve Data · QVeris connector · [Official site](https://twelvedata.com/) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | Positive 3/3; invalid control 3/3 | US | 1045 ms (n=3) | 2.37 |
+| Provider × Access Path | Fixed-sample outcome | Verified representative markets | Median gateway latency | QVeris list credits/call | Official provider pricing |
+|---|---|---|---:|---:|---|
+| Alpha Vantage · QVeris connector · [Official site](https://www.alphavantage.co/) · [Try it in QVeris](https://qveris.ai/providers/alphavantage) | Positive 3/3; invalid control 0/3 | US | 480 ms (n=3) | 2 | 25 API requests per day; Premium from USD 49.99/month ([official pricing](https://www.alphavantage.co/premium/); verified 2026-08-10) |
+| EODHD · QVeris connector · [Official site](https://eodhd.com/) · [Try it in QVeris](https://qveris.ai/providers/eodhd) | Positive 3/3; invalid control 3/3 | US | 976 ms (n=3) | 2.81 | 20 API calls per day; All-in-One USD 99.99/month ([official pricing](https://eodhd.com/pricing); verified 2026-08-10) |
+| Massive · QVeris connector · [Official site](https://massive.io/) · [Try it in QVeris](https://qveris.ai/providers/massive_stocks) | Positive 3/3; invalid control 0/3 | US | 1036 ms (n=3) | 1 | Evidence insufficient |
+| Twelve Data · QVeris connector · [Official site](https://twelvedata.com/) · [Try it in QVeris](https://qveris.ai/providers/twelvedata) | Positive 3/3; invalid control 3/3 | US | 1045 ms (n=3) | 2.37 | Basic with 8 API credits per minute and 800 per day; Grow from USD 29/month ([official pricing](https://twelvedata.com/pricing); verified 2026-08-10) |
 
 “Verified” means every frozen round met the CAP contract. “Provider-negative” means every round returned an explicit provider-level negative outcome; it does not prove permanent lack of support. “Not applicable” means the frozen plan explicitly excluded that market.
 
@@ -27,10 +27,10 @@ These are separate trade-offs, not an overall winner.
 
 | Provider × Access Path | US |
 |---|---|
-| Alpha Vantage · QVeris connector | 3/3 |
-| EODHD · QVeris connector | 3/3 |
-| Massive · QVeris connector | 3/3 |
-| Twelve Data · QVeris connector | 3/3 |
+| Alpha Vantage · QVeris connector | 3/3 verified |
+| EODHD · QVeris connector | 3/3 verified |
+| Massive · QVeris connector | 3/3 verified |
+| Twelve Data · QVeris connector | 3/3 verified |
 
 The matrix is one representative symbol per market from the market Release; it is not a claim of full market coverage.
 
@@ -55,7 +55,7 @@ Do not treat this as an AI-friendly score. Validate the returned instrument iden
 
 ## How we tested, reproduce, and contribute
 
-The baseline Release digest is `sha256:46d41a05b136affcf2b1424f6c331fac9aacf65d33c8ef9233f032e5506264aa`. The market Release digest is `sha256:a67160d4a075c6a0def5bf76426999a176a2d14a8557b51dbdaeb72b3dd68587`. Reproduce the package offline with `qveris-bench publication reproduce --package <package-manifest> --expected-package-digest <published-digest>`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
+The baseline Release digest is `sha256:6e6b8e0235d3beb677f39a973fa5ceda6cca5f2fb5a4ab7269e53b7d2ce342cb`. The market Release digest is `sha256:6ad10146c31b35fb19bbf2aa4cb04188194b4b63cd0fa319932a3f85229cb2b9`. Reproduce the package offline with `qveris-bench publication reproduce --package <package-manifest> --expected-package-digest <published-digest>`. To create a new edition, run the CAP with your own `QVERIS_API_KEY`; a rerun must use a new Release ID and never overwrite this evidence.
 
 Suppliers may submit a binding, reproducible case, or factual correction through the repository. Inclusion and conclusions cannot be purchased.
 

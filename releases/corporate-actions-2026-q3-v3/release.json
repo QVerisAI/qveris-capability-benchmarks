@@ -1,0 +1,793 @@
+{
+  "cells": [
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "aapl-splits-fixed-window",
+      "case_input": {
+        "end_date": "2026-08-13",
+        "market": "US",
+        "start_date": "2020-01-01",
+        "symbol": "AAPL"
+      },
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "alpha-vantage-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "alpha-vantage",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "eodhd-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "eodhd",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "massive-stocks-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "empty_or_partial_data",
+      "mode": "direct",
+      "provider_id": "massive-stocks",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:3",
+      "state": "provider_negative"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 1,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 2,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "state": "completed"
+    },
+    {
+      "access_path_id": "twelve-data-corporate-actions-qveris",
+      "applicability_reason": null,
+      "applicable": true,
+      "case_id": "invalid-corporate-actions-symbol",
+      "case_input": {
+        "market": "US",
+        "symbol": "NOTASTOCK"
+      },
+      "failure_attribution": "provider_validation_error",
+      "mode": "direct",
+      "provider_id": "twelve-data",
+      "round": 3,
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:3",
+      "state": "completed"
+    }
+  ],
+  "evidence": [
+    {
+      "cost_credits": 2.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-aapl-splits-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 475.77,
+      "license_status": "cleared",
+      "public_digest": "sha256:978b5de8580ddafc348ceba9bb829675c3a16553f8b53ea8ff96153d031f61af",
+      "raw_digest": "sha256:4359de8471b192f4292f496995492baa33c8f7b220ff8f39dbd622514a16667b",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-aapl-splits-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 479.75,
+      "license_status": "cleared",
+      "public_digest": "sha256:1f7ed1fd9c3b65c58031f9eec83831942915bec14817a366cfe0bb39040551a2",
+      "raw_digest": "sha256:0403bc0d2773d061d02745136f4d35f3b879974bf992d0d7d2fb098560cc7608",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-aapl-splits-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 4263.01,
+      "license_status": "cleared",
+      "public_digest": "sha256:9ce1c28682e7e4caff5d62d19019041ca4c05714ac4f004f7ba82abe5612051c",
+      "raw_digest": "sha256:13c2dc050d646ce5d17bab644079c957f55619e673cecd9bff5a73b597967156",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-invalid-corporate-actions-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 355.47,
+      "license_status": "cleared",
+      "public_digest": "sha256:c868495d0537444b3fcbc7ea40c77d9df55670c485c70e5da0705eb161a4e795",
+      "raw_digest": "sha256:08b5aa9929108f4f5c18244ec3fd61af0cd99347d70f7a7dfb96f1af5b145e06",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-invalid-corporate-actions-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 460.86,
+      "license_status": "cleared",
+      "public_digest": "sha256:53531cd42260070cad8c83896785d1b41a762949a6bc3affb33ffcd25a21f338",
+      "raw_digest": "sha256:6fb9b42a336fbec5cc4ecab22b7bc7377de949fc03406552cbd7a82c6ba50e77",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "alpha-vantage-invalid-corporate-actions-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 346.28,
+      "license_status": "cleared",
+      "public_digest": "sha256:7b38ccb406b378d66e5df78aae76837880ea3144f476b3d36bc8723762ec704f",
+      "raw_digest": "sha256:06477765f6f91ebfb255018e90e49f0fa96500d4fc567f62e5cf7b4b62501a5a",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:alpha-vantage:alpha-vantage-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.81,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-splits-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1073.41,
+      "license_status": "cleared",
+      "public_digest": "sha256:636db4a1cd599895d2c6a18dcc30b605eb1da28c997519ca916a51dfcc64c45e",
+      "raw_digest": "sha256:fb2ae1004c6265e7ad8a12278855df114a9e525f066e36f2469a0ae2ee7f7f12",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.81,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-splits-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 976.03,
+      "license_status": "cleared",
+      "public_digest": "sha256:8a82feae147c925243729f04c16be6bc639ad2aee0e9b9957fb995bafc62c3d6",
+      "raw_digest": "sha256:ffa677b8aef4d31991cb328892448f2c2fbc80be8acb6d9b73e9db5611145804",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.81,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-aapl-splits-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 733.14,
+      "license_status": "cleared",
+      "public_digest": "sha256:204b57f5d072486de6b06bad40c17ee1d789c0a505af045a9b4fb62b1300ded8",
+      "raw_digest": "sha256:2717aa9945b37efac75ae987d2ea9c159d7714c27246dcce767ff1eeacc83823",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:eodhd:eodhd-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-corporate-actions-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 864.42,
+      "license_status": "cleared",
+      "public_digest": "sha256:09bf99c7b53f44a7e3d971c4ddf6ce6af04026f184702db13546f97b3e5bfa77",
+      "raw_digest": "sha256:948c13ed75352f96dfb5edc72509632aec726b4d3d91bced009b08ff30db8f4f",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-corporate-actions-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1434.27,
+      "license_status": "cleared",
+      "public_digest": "sha256:bb8e551ddaa218ff3b749c41d6d09ad38da3bf8f6e80ecd9044e4dcac983ec8b",
+      "raw_digest": "sha256:83a16a956aed69f23c38e7c12f59989839832e2bca0093d94cc7b492778006d4",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "eodhd-invalid-corporate-actions-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 725.42,
+      "license_status": "cleared",
+      "public_digest": "sha256:daeabe3a21d05554f5808551d298bee7a10c36bc6393184cdbe13b2dd59ec664",
+      "raw_digest": "sha256:3ec5777add65cd6f7459aa27957839ad5a0bfa21b8f815513c75316cd978f181",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:eodhd:eodhd-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 1.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-aapl-splits-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1186.96,
+      "license_status": "cleared",
+      "public_digest": "sha256:8ab93dd658d3232b3787ddb8776593eac9192063d4c30a2114dff8cf8b82ed5a",
+      "raw_digest": "sha256:167f1103bc93d8dfe4846148f534dc6a243dcdd0d8fc94a423757bb71f1ae28c",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 1.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-aapl-splits-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1035.74,
+      "license_status": "cleared",
+      "public_digest": "sha256:5558ed7d7726714de6cb190e24d1c89432c7624f9671e04302393dcc0ad4dece",
+      "raw_digest": "sha256:863f4da9c021ac31bdb6ed3275010db183927dc1e7a8d96aa901f20a4f42bda0",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 1.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-aapl-splits-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 754.23,
+      "license_status": "cleared",
+      "public_digest": "sha256:de4a34ad7347922d28504365701ad39bf39d4f5347a76a13610cf3d9df33cb53",
+      "raw_digest": "sha256:08ca14eb9126393bb0d8b8079281ba70c9ad3431c158f80a472c83a4c7c14c98",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:massive-stocks:massive-stocks-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-invalid-corporate-actions-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 764.25,
+      "license_status": "cleared",
+      "public_digest": "sha256:39174cf2f0ea3bedac6fd7823287c942425155389d0244f8cdd6cb768df75be9",
+      "raw_digest": "sha256:67ca8af985a1016aabdecc0423944e88cb1473af74dbe4ec0b4058a224dd71c0",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-invalid-corporate-actions-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 3115.36,
+      "license_status": "cleared",
+      "public_digest": "sha256:f50bed35a26e5b42ff8b2e4c8bb500aa86481c5366845dad7dc9bcbb9558b4d1",
+      "raw_digest": "sha256:85f84e7dba7b2e75b00ff798e2f67577debaf8fbcc6d846becb2dcfea0ce23f9",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "massive-invalid-corporate-actions-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1032.39,
+      "license_status": "cleared",
+      "public_digest": "sha256:d3bbaee00a1770c172a8ba3dacf283108ccc04162dbc27c45548c90fccdf9e3a",
+      "raw_digest": "sha256:0b9cd4cf2e061add7671e241eb0312561ace33932e01cef7126652ee60b3c4e7",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:massive-stocks:massive-stocks-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.37,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-aapl-splits-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 1045.36,
+      "license_status": "cleared",
+      "public_digest": "sha256:3db2a7f2f1c236c47c02bb9e670d420b696070172e0129d43b693fc40bdd429f",
+      "raw_digest": "sha256:80961ec4777412054319d8ae5238094955444f44e790fe7b00d00c3b1e3688c4",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.37,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-aapl-splits-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 471.42,
+      "license_status": "cleared",
+      "public_digest": "sha256:b0fa3ba1c39c96bcbf29f576df8c7058bbd0ac30da440464f5d711b79ae23cb7",
+      "raw_digest": "sha256:374d25de9014dbcc4c1b8d561ee839dc953afba76b9cd9ed69416081cd91bcce",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 2.37,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-aapl-splits-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 2029.23,
+      "license_status": "cleared",
+      "public_digest": "sha256:e303964df02744a364e049047b22c0019f0c2b60d47dbbd93ec50be3d48f3f67",
+      "raw_digest": "sha256:ded642830ac1acf90f6856c012522bf2793553251cac68c14c809836e348de09",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:aapl-splits-fixed-window:twelve-data:twelve-data-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-invalid-corporate-actions-symbol-round-1",
+      "extractor_version": "1.0.0",
+      "latency_ms": 409.22,
+      "license_status": "cleared",
+      "public_digest": "sha256:f20ea0c34f3f7618994b56d35a1133e898928aeafa09000bfcaf652304bbdeaf",
+      "raw_digest": "sha256:ee293404bce8fe25eea3e74a51ddfeec422d1c07077e52ef29d5cb1ada521ac3",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:1",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-invalid-corporate-actions-symbol-round-2",
+      "extractor_version": "1.0.0",
+      "latency_ms": 504.04,
+      "license_status": "cleared",
+      "public_digest": "sha256:9ef0adb18921d9e47ea5f610aa726d505091c17ae2797b7b82f9fb15e236e87b",
+      "raw_digest": "sha256:c34fab8f441e751261ce1ba69d00bcf43076cf9ac9fad2b15f1b06311366b2be",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:2",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    },
+    {
+      "cost_credits": 0.0,
+      "disclosure_level": "sanitized_public",
+      "evidence_id": "twelve-data-invalid-corporate-actions-symbol-round-3",
+      "extractor_version": "1.0.0",
+      "latency_ms": 382.99,
+      "license_status": "cleared",
+      "public_digest": "sha256:3746c5ca613047f92d653ee1028aa58d8d59381ab598965cce69b8048fcccdb5",
+      "raw_digest": "sha256:0bf5efb4690cf2b434f9ddd9624e895664aaffcbd359147b643584949e0b3b78",
+      "redaction_status": "sanitized",
+      "run_key": "corporate-actions-v1:0ffa523033c0:invalid-corporate-actions-symbol:twelve-data:twelve-data-corporate-actions-qveris:direct:3",
+      "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20"
+    }
+  ],
+  "release": {
+    "cap_id": "corporate-actions",
+    "cap_sources": [
+      {
+        "catalog_snapshot_digest": "e30cafae2a5001ae312f70c727b2b826ff48400f8924c893b8e874d09cfd2fbe",
+        "contract_digest": "70d5687f6cdb493df3d8af69fc38f8fb41d027139c423bf3018b861f593b3f8d",
+        "contract_version": 1,
+        "harbor_capability_id": "MKT.CORPORATE_ACTIONS",
+        "source_type": "harbor_catalog"
+      }
+    ],
+    "cap_version": "1.0.0",
+    "developer_selection_facts": [],
+    "evidence_ids": [
+      "alpha-vantage-aapl-splits-round-1",
+      "alpha-vantage-aapl-splits-round-2",
+      "alpha-vantage-aapl-splits-round-3",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-1",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-2",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-3",
+      "eodhd-aapl-splits-round-1",
+      "eodhd-aapl-splits-round-2",
+      "eodhd-aapl-splits-round-3",
+      "eodhd-invalid-corporate-actions-symbol-round-1",
+      "eodhd-invalid-corporate-actions-symbol-round-2",
+      "eodhd-invalid-corporate-actions-symbol-round-3",
+      "massive-aapl-splits-round-1",
+      "massive-aapl-splits-round-2",
+      "massive-aapl-splits-round-3",
+      "massive-invalid-corporate-actions-symbol-round-1",
+      "massive-invalid-corporate-actions-symbol-round-2",
+      "massive-invalid-corporate-actions-symbol-round-3",
+      "twelve-data-aapl-splits-round-1",
+      "twelve-data-aapl-splits-round-2",
+      "twelve-data-aapl-splits-round-3",
+      "twelve-data-invalid-corporate-actions-symbol-round-1",
+      "twelve-data-invalid-corporate-actions-symbol-round-2",
+      "twelve-data-invalid-corporate-actions-symbol-round-3"
+    ],
+    "github_artifacts_manifest_digest": "sha256:657d3e03ab0bbf627595945ea37c425e347bb0bb38516d88388888d3c3e938bc",
+    "limitations": [
+      "This release measures historical US-equity stock-split retrieval for AAPL and one invalid-symbol control through the frozen QVeris Access Paths.",
+      "Positive evidence proves required split fields for the frozen sample; it does not establish provider-wide corporate-actions coverage.",
+      "A provider-negative invalid control means no explicit validation error was returned in observed rounds; it is not support evidence.",
+      "Offline replay verifies released evidence and provenance without calling QVeris or a provider."
+    ],
+    "outcome_ids": [
+      "alpha-vantage-aapl-splits-round-1-completed",
+      "alpha-vantage-aapl-splits-round-2-completed",
+      "alpha-vantage-aapl-splits-round-3-completed",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-1-provider-negative",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-2-provider-negative",
+      "alpha-vantage-invalid-corporate-actions-symbol-round-3-provider-negative",
+      "eodhd-aapl-splits-round-1-completed",
+      "eodhd-aapl-splits-round-2-completed",
+      "eodhd-aapl-splits-round-3-completed",
+      "eodhd-invalid-corporate-actions-symbol-round-1-completed",
+      "eodhd-invalid-corporate-actions-symbol-round-2-completed",
+      "eodhd-invalid-corporate-actions-symbol-round-3-completed",
+      "massive-aapl-splits-round-1-completed",
+      "massive-aapl-splits-round-2-completed",
+      "massive-aapl-splits-round-3-completed",
+      "massive-invalid-corporate-actions-symbol-round-1-provider-negative",
+      "massive-invalid-corporate-actions-symbol-round-2-provider-negative",
+      "massive-invalid-corporate-actions-symbol-round-3-provider-negative",
+      "twelve-data-aapl-splits-round-1-completed",
+      "twelve-data-aapl-splits-round-2-completed",
+      "twelve-data-aapl-splits-round-3-completed",
+      "twelve-data-invalid-corporate-actions-symbol-round-1-completed",
+      "twelve-data-invalid-corporate-actions-symbol-round-2-completed",
+      "twelve-data-invalid-corporate-actions-symbol-round-3-completed"
+    ],
+    "provider_feedback_facts": {},
+    "public_evidence_manifest_digest": "sha256:96ffdf1ede558fbc8cfe2d1f5d3b46904885f66fe8f77eb948b81e7c19655eec",
+    "release_id": "corporate-actions-2026-q3-v3",
+    "run_plan_digest": "sha256:104baf521ee4d734b0019e78ac8dc0ce7fbdde7629da713670b376fa1e9f118f",
+    "suite_fingerprint": "0ffa523033c0437200ff3997772a7ab9279036dc068e521ea6da8fb967cdbd20",
+    "version": "1.0.0"
+  }
+}

@@ -82,6 +82,7 @@ def _assemble(
         expected_github_sha=ATTESTATION["github_sha"],
         expected_provenance=provenance or PROVENANCE,
         github_artifacts_manifest_bytes=ATTESTATION_BYTES,
+        binding_registry_bytes=registry_path.read_bytes(),
     )
 
 
@@ -220,3 +221,36 @@ def test_replay_rejects_tampered_public_terminal(tmp_path: Path) -> None:
         ReleaseReplayError, match="public evidence bytes digest mismatch"
     ):
         replay_release_dir(release_dir)
+
+
+def test_replay_rejects_tampered_attestation_or_binding_registry(
+    tmp_path: Path,
+) -> None:
+    artifacts = _assemble()
+    release_dir = tmp_path / "releases" / RELEASE.name
+    evidence_dir = tmp_path / "evidence" / RELEASE.name
+    artifacts.write(release_dir)
+    evidence_dir.mkdir(parents=True)
+    for item in PUBLIC_EVIDENCE.glob("*.json"):
+        (evidence_dir / item.name).write_bytes(item.read_bytes())
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    replay_release_dir(
+        release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+    )
+
+    (release_dir / "github-artifacts.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(ReleaseReplayError, match="attestation digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )
+
+    (release_dir / "github-artifacts.json").write_bytes(ATTESTATION_BYTES)
+    registry = release_dir / "direct-binding-registry.json"
+    registry.write_text(
+        registry.read_text(encoding="utf-8").replace("AAPL", "MSFT", 1),
+        encoding="utf-8",
+    )
+    with pytest.raises(ReleaseReplayError, match="binding registry digest"):
+        replay_release_dir(
+            release_dir, harbor_contracts_path=ROOT / "harbor_catalog/contracts.json"
+        )
