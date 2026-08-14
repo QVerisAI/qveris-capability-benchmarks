@@ -189,6 +189,54 @@ def test_ac_qveris_direct_execution_rejects_a_tool_absent_from_exact_lookup(
     asyncio.run(run())
 
 
+def test_ac_qveris_direct_execution_captures_http_error_with_request_envelope(
+    tmp_path: Path,
+) -> None:
+    async def run() -> None:
+        def handler(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/api/v1/search":
+                return httpx.Response(
+                    200,
+                    json={
+                        "search_id": "search-123",
+                        "results": [{"tool_id": "frozen-tool"}],
+                    },
+                )
+            return httpx.Response(403, json={"error": "entitlement required"})
+
+        client = QverisToolClient(
+            httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            _store(tmp_path),
+            "controlled-key",
+        )
+        try:
+            execution = await execute_discovered_tool(
+                client,
+                "cell-1-search",
+                "Corporate Actions",
+                "frozen-tool",
+                {"symbol": "NOTASTOCK"},
+                capture_execute_http_error=True,
+            )
+        finally:
+            await client.close()
+
+        envelope = json.loads(execution.envelope_path.read_text())
+        assert execution.result.status_code == 403
+        assert envelope == {
+            "artifact_id": "cell-1-search",
+            "parameters": {"symbol": "NOTASTOCK"},
+            "response_digest": execution.result.raw_digest,
+            "response_status_code": 403,
+            "schema_version": "1.0.0",
+            "search_id": "search-123",
+            "tool_id": "frozen-tool",
+        }
+        assert execution.envelope_digest.startswith("sha256:")
+
+    asyncio.run(run())
+
+
 def test_ac_qveris_response_shape_exposes_no_provider_values() -> None:
     shape = public_response_shape(
         {

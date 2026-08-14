@@ -29,7 +29,7 @@ from qveris_bench.execution.qveris import (
     execute_discovered_tool,
     gateway_metrics,
 )
-from qveris_bench.models.enums import CellState
+from qveris_bench.models.enums import CellState, FailureAttribution
 from qveris_bench.suites.compiler import compile_suite
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -137,15 +137,21 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
                 str(binding.discovery_query),
                 binding.tool_id,
                 binding.parameters,
+                capture_execute_http_error=True,
             )
         finally:
             await client.close()
 
     execution = asyncio.run(run())
     document = json.loads(execution.result.raw_path.read_text(encoding="utf-8"))
-    payload = document.get("result")
-    if not isinstance(payload, dict):
-        raise AssertionError("QVeris execution response is missing result")
+    if execution.result.status_code >= 400:
+        payload = {"status_code": execution.result.status_code, "data": document}
+    else:
+        payload = document.get("result")
+        if not isinstance(payload, dict):
+            raise AssertionError("QVeris execution response is missing result")
+    if execution.envelope_digest is None or execution.envelope_path is None:
+        raise AssertionError("QVeris execution envelope is missing")
     latency_ms, cost_credits = gateway_metrics(document)
     result = evaluate_corporate_action_document(
         str(binding.provider_id),
@@ -161,7 +167,7 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
         _public_terminal(
             binding,
             cell.run_key,
-            execution.result.raw_digest,
+            execution.envelope_digest,
             result,
             compiled.fingerprint,
             direct_binding_registry_digest(registry_path),
@@ -169,8 +175,12 @@ def test_live_corporate_action_cell_produces_sanitized_terminal(
             cost_credits,
         ),
     )
-    assert public.digest != execution.result.raw_digest
-    assert result.state in {CellState.COMPLETED, CellState.PROVIDER_NEGATIVE}
+    assert public.digest != execution.envelope_digest
+    assert result.state in {
+        CellState.COMPLETED,
+        CellState.PROVIDER_NEGATIVE,
+        CellState.INFRA_BLOCKED,
+    }
 
 
 def test_public_terminal_does_not_include_request_parameters_or_credentials() -> None:
@@ -190,3 +200,28 @@ def test_public_terminal_does_not_include_request_parameters_or_credentials() ->
     assert "Authorization" not in content
     assert "AAPL.US" not in content
     assert '"parameters"' not in content
+
+
+def test_public_terminal_preserves_sanitized_infra_outcome() -> None:
+    registry = load_direct_binding_registry(PACK / "baseline-direct-bindings.json")
+    binding = registry.bindings[0]
+    content = _public_terminal(
+        binding,
+        "run-key",
+        "sha256:" + "a" * 64,
+        CorporateDirectResult(
+            CellState.INFRA_BLOCKED,
+            {"execution_failure": "rate_limited"},
+            ("validation_error",),
+            FailureAttribution.RATE_LIMITED,
+        ),
+        "b" * 64,
+        "sha256:" + "c" * 64,
+        1.0,
+        2.0,
+    )
+    document = json.loads(content)
+
+    assert document["state"] == "infra_blocked"
+    assert document["facts"] == {"execution_failure": "rate_limited"}
+    assert document["failure_attribution"] == "rate_limited"

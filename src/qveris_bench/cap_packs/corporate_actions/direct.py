@@ -55,15 +55,10 @@ def evaluate_corporate_action_document(
     request_identity: CorporateActionRequestIdentity | None = None,
 ) -> CorporateDirectResult:
     status_code = payload.get("status_code")
-    if status_code in {401, 429} or (
+    if status_code in {401, 402, 403, 429} or (
         isinstance(status_code, int) and status_code >= 500
     ):
-        return CorporateDirectResult(
-            CellState.INFRA_BLOCKED,
-            {},
-            tuple(case.completion_conditions),
-            _transport_attribution(payload),
-        )
+        return _infra_result(case, _transport_attribution(payload))
     if case.negative_control:
         if _explicit_rejection(payload.get("data"), status_code):
             return CorporateDirectResult(
@@ -79,12 +74,7 @@ def evaluate_corporate_action_document(
             FailureAttribution.EMPTY_OR_PARTIAL_DATA,
         )
     if status_code != 200 or request_identity is None:
-        return CorporateDirectResult(
-            CellState.INFRA_BLOCKED,
-            {},
-            tuple(case.completion_conditions),
-            FailureAttribution.EMPTY_OR_PARTIAL_DATA,
-        )
+        return _infra_result(case, FailureAttribution.EMPTY_OR_PARTIAL_DATA)
 
     event = _extract_event(provider_id, payload.get("data"), case)
     if event is None:
@@ -248,6 +238,24 @@ def _symbol_code(value: str) -> str:
 def validate_public_outcome(
     case: BenchmarkCase, binding: DirectBinding, facts: dict[str, Any]
 ) -> ValidatedTerminalOutcome:
+    execution_failure = facts.get("execution_failure")
+    if isinstance(execution_failure, str):
+        allowed = {
+            FailureAttribution.AUTH_OR_ENTITLEMENT,
+            FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+            FailureAttribution.PROVIDER_RUNTIME_ERROR,
+            FailureAttribution.RATE_LIMITED,
+        }
+        try:
+            attribution = FailureAttribution(execution_failure)
+        except ValueError:
+            attribution = None
+        if attribution in allowed and facts == {"execution_failure": execution_failure}:
+            return ValidatedTerminalOutcome(
+                CellState.INFRA_BLOCKED,
+                tuple(case.completion_conditions),
+                attribution,
+            )
     if case.negative_control:
         if facts == {"validation_error": "provider_validation_error"}:
             return ValidatedTerminalOutcome(
@@ -301,6 +309,17 @@ def validate_public_outcome(
             else ("symbol", "action_type", "date")
         ),
         FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+    )
+
+
+def _infra_result(
+    case: BenchmarkCase, attribution: FailureAttribution
+) -> CorporateDirectResult:
+    return CorporateDirectResult(
+        CellState.INFRA_BLOCKED,
+        {"execution_failure": attribution.value},
+        tuple(case.completion_conditions),
+        attribution,
     )
 
 
@@ -399,7 +418,7 @@ def _blocked(attribution: FailureAttribution) -> CorporateTerminal:
 
 def _transport_attribution(payload: Mapping[str, Any]) -> FailureAttribution:
     status_code = payload.get("status_code")
-    if status_code == 401:
+    if status_code in {401, 402, 403}:
         return FailureAttribution.AUTH_OR_ENTITLEMENT
     if status_code == 429:
         return FailureAttribution.RATE_LIMITED

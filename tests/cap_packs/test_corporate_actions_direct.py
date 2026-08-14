@@ -252,3 +252,91 @@ def test_v2_negative_control_does_not_treat_transport_failure_as_rejection() -> 
     assert rate_limited.failure_attribution is FailureAttribution.RATE_LIMITED
     assert rejected.state is CellState.COMPLETED
     assert rejected.facts == {"validation_error": "provider_validation_error"}
+
+
+def test_v2_entitlement_failures_are_infra_blocked_for_all_case_types() -> None:
+    negative = BenchmarkCase(
+        case_id="invalid-corporate-actions-symbol-v2",
+        cap_id="corporate-actions",
+        question="test",
+        input={"symbol": "NOTASTOCK"},
+        negative_control=True,
+        expected_observations=("validation_error",),
+        completion_conditions=("validation_error",),
+        disclosure_limits=("sanitized_public",),
+    )
+    positive = BenchmarkCase(
+        case_id="us-aapl-split-market",
+        cap_id="corporate-actions",
+        question="test",
+        input={
+            "market": "US",
+            "symbol": "AAPL",
+            "start_date": "2020-01-01",
+            "end_date": "2020-12-31",
+        },
+        expected_observations=("symbol", "identity_verified", "action_type", "date"),
+        completion_conditions=("symbol", "identity_verified", "action_type", "date"),
+        disclosure_limits=("sanitized_public",),
+    )
+    identity = CorporateActionRequestIdentity(
+        market="US",
+        canonical_symbol="AAPL",
+        vendor_symbol="AAPL",
+        parameter_path=("symbol",),
+    )
+
+    for status_code in (402, 403):
+        negative_result = evaluate_corporate_action_document(
+            "eodhd", {"status_code": status_code, "data": "forbidden"}, negative
+        )
+        positive_result = evaluate_corporate_action_document(
+            "eodhd",
+            {"status_code": status_code, "data": "forbidden"},
+            positive,
+            request_identity=identity,
+        )
+
+        assert negative_result.state is CellState.INFRA_BLOCKED
+        assert positive_result.state is CellState.INFRA_BLOCKED
+        assert (
+            negative_result.failure_attribution
+            is positive_result.failure_attribution
+            is FailureAttribution.AUTH_OR_ENTITLEMENT
+        )
+
+
+def test_v2_infra_outcome_is_replayable_from_sanitized_public_facts() -> None:
+    case = BenchmarkCase(
+        case_id="invalid-corporate-actions-symbol-v2",
+        cap_id="corporate-actions",
+        question="test",
+        input={"symbol": "NOTASTOCK"},
+        negative_control=True,
+        expected_observations=("validation_error",),
+        completion_conditions=("validation_error",),
+        disclosure_limits=("sanitized_public",),
+    )
+    binding = DirectBinding(
+        binding_id="eodhd-invalid-corporate-actions-symbol-v2",
+        suite_id="corporate-actions-v2",
+        version="2.0.0",
+        case_id=case.case_id,
+        access_path_id="eodhd-corporate-actions-qveris",
+        provider_id="eodhd",
+        transport="qveris_connector",
+        source_digest="sha256:" + "a" * 64,
+        tool_id="tool",
+        parameters={"symbol": "NOTASTOCK"},
+        discovery_query="tool",
+    )
+
+    terminal = evaluate_corporate_action_document(
+        "eodhd", {"status_code": 429, "data": "rate limited"}, case
+    )
+    replayed = validate_public_outcome(case, binding, terminal.facts)
+
+    assert terminal.facts == {"execution_failure": "rate_limited"}
+    assert replayed.state is CellState.INFRA_BLOCKED
+    assert replayed.unmet_conditions == ("validation_error",)
+    assert replayed.failure_attribution is FailureAttribution.RATE_LIMITED

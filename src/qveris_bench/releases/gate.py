@@ -25,6 +25,7 @@ class ReleaseGateError(ValueError):
 _TERMINAL = {
     CellState.COMPLETED,
     CellState.PROVIDER_NEGATIVE,
+    CellState.INFRA_BLOCKED,
     CellState.EXCLUDED,
     CellState.NOT_APPLICABLE,
 }
@@ -93,6 +94,7 @@ def validate_release_inputs(
     _validate_metrics(release, cells, evidence, metric_registry)
     if require_attribution:
         _validate_provider_negative_attribution(cells)
+        _validate_infra_blocked_attribution(cells)
 
 
 def _validate_metrics(
@@ -342,4 +344,16 @@ def _validate_provider_negative_attribution(
         raise ReleaseGateError(
             "provider_negative cells require a provider-side failure attribution: "
             + ", ".join(invalid)
+        )
+
+
+def _validate_infra_blocked_attribution(cells: tuple[RunCell, ...]) -> None:
+    invalid = [
+        cell.run_key
+        for cell in cells
+        if cell.state is CellState.INFRA_BLOCKED and cell.failure_attribution is None
+    ]
+    if invalid:
+        raise ReleaseGateError(
+            "infra_blocked cells require a failure attribution: " + ", ".join(invalid)
         )
