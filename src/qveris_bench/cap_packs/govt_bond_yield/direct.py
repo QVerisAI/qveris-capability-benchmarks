@@ -154,6 +154,18 @@ def validate_public_outcome(
         and identity_valid
     ):
         return ValidatedTerminalOutcome(CellState.COMPLETED, (), None)
+    if (
+        value is not None
+        and isinstance(observed_date, str)
+        and _within_case_window(observed_date, case)
+        and facts.get("identity_verified") is False
+        and basis == expected_basis
+    ):
+        return ValidatedTerminalOutcome(
+            CellState.PROVIDER_NEGATIVE,
+            ("identity_verified",),
+            FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+        )
     return ValidatedTerminalOutcome(
         CellState.PROVIDER_NEGATIVE,
         tuple(case.completion_conditions),

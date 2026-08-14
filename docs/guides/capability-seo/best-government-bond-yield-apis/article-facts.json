@@ -1,0 +1,218 @@
+{
+  "access_path_count": 2,
+  "cap_id": "govt-bond-yield",
+  "cap_release_digest": "sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532",
+  "edition": "2026-08-14",
+  "market_release_digest": "sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d",
+  "market_terminal_observations": 28,
+  "markets": [
+    "AU",
+    "CA",
+    "CN",
+    "DE",
+    "JP",
+    "UK",
+    "US"
+  ],
+  "planned_observations": 8,
+  "provider_count": 2,
+  "rows": [
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 2,
+        "state": "measured",
+        "total": 2
+      },
+      "latency_max_ms": 588.69,
+      "latency_median_ms": 540.165,
+      "latency_min_ms": 491.64,
+      "latency_samples": 2,
+      "list_price_credits": 1.0,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "AU",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "CA",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 0,
+          "state": "evidence_insufficient",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "UK",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        },
+        {
+          "market": "US",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        }
+      ],
+      "negative": [
+        {
+          "passed": 2,
+          "state": "measured",
+          "total": 2
+        }
+      ],
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "planned_observations": 4,
+      "positive": [
+        {
+          "passed": 2,
+          "state": "measured",
+          "total": 2
+        }
+      ],
+      "provider_id": "stlouisfed-fred",
+      "provider_name": "Federal Reserve Economic Data (FRED)",
+      "terminal_observations": 4,
+      "verified_markets": [
+        "AU",
+        "CA",
+        "DE",
+        "JP",
+        "UK",
+        "US"
+      ]
+    },
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "access_path_type": "qveris_connector",
+      "invalid_input": {
+        "passed": 0,
+        "state": "measured",
+        "total": 2
+      },
+      "latency_max_ms": 4440.5,
+      "latency_median_ms": 3335.5699999999997,
+      "latency_min_ms": 2230.64,
+      "latency_samples": 2,
+      "list_price_credits": 1.0,
+      "list_price_inspected_at": "2026-08-14",
+      "market_results": [
+        {
+          "market": "AU",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "CA",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "CN",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "DE",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "JP",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "UK",
+          "passed": 0,
+          "state": "provider_negative",
+          "total": 2
+        },
+        {
+          "market": "US",
+          "passed": 2,
+          "state": "verified",
+          "total": 2
+        }
+      ],
+      "negative": [
+        {
+          "passed": 0,
+          "state": "measured",
+          "total": 2
+        }
+      ],
+      "official_pricing": {
+        "applies_to": null,
+        "currencies": [],
+        "disclosure_level": null,
+        "extractor_version": null,
+        "free_tier": null,
+        "license_status": null,
+        "paid_plans": null,
+        "pricing_id": null,
+        "pricing_url": null,
+        "source_digest": null,
+        "state": "evidence_insufficient",
+        "suite_fingerprint": null,
+        "verified_at": null
+      },
+      "planned_observations": 4,
+      "positive": [
+        {
+          "passed": 2,
+          "state": "measured",
+          "total": 2
+        }
+      ],
+      "provider_id": "qveris-finance",
+      "provider_name": "QVeris Finance",
+      "terminal_observations": 4,
+      "verified_markets": [
+        "US"
+      ]
+    }
+  ],
+  "scope": "Fixed-window 10-year sovereign benchmark yield retrieval for US, CN, UK, DE, JP, AU, and CA, plus an unsupported-country control through the tested QVeris Access Paths.",
+  "terminal_observations": 8
+}

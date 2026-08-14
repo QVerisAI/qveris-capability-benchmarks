@@ -1,0 +1,16 @@
+{
+  "source": "qveris_inspect",
+  "inspected_at": "2026-08-14",
+  "extractor_version": "1.0.0",
+  "disclosure_level": "sanitized_public",
+  "license_status": "cleared",
+  "bindings_digest": "sha256:10a4a0301a885fecbcd9b4839e1aecb528cb47e0fa462e15d4d1228eed629554",
+  "responses": [
+    {"tool_id":"stlouisfed_fred.fred_series_observations.get.v1","provider_id":"stlouisfed_fred","amount_credits":1,"billing_unit":"call","per":1,"snapshot_version":null},
+    {"tool_id":"qveris_finance.rates_govt_benchmark","provider_id":"qveris_finance","amount_credits":1,"billing_unit":"call","per":1,"snapshot_version":null}
+  ],
+  "prices": [
+    {"provider_id":"stlouisfed-fred","access_path_id":"stlouisfed-fred-govt-bond-yield-qveris","tool_id":"stlouisfed_fred.fred_series_observations.get.v1","qveris_provider_id":"stlouisfed_fred","amount_credits":1,"snapshot_version":null,"inspect_response_digest":"sha256:c627a68127470f6c0fa360ce7e82c8e3a82cf68ff6bb433385ab8df7330e0967"},
+    {"provider_id":"qveris-finance","access_path_id":"qveris-finance-govt-bond-yield-qveris","tool_id":"qveris_finance.rates_govt_benchmark","qveris_provider_id":"qveris_finance","amount_credits":1,"snapshot_version":null,"inspect_response_digest":"sha256:477dd0955535455d516ad136e19db0e0fd29611bc37a6d622d3857bbb0a63c14"}
+  ]
+}

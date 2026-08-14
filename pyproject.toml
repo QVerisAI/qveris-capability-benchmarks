@@ -36,6 +36,7 @@ qveris-bench = "qveris_bench.cli:app"
 crypto-spot-quote-v1 = "qveris_bench.cap_packs.crypto_spot_quote.publication:CryptoSpotQuotePublicationAdapter"
 dividend-events-v1 = "qveris_bench.cap_packs.dividend_events.publication:DividendEventsPublicationAdapter"
 corporate-actions-v1 = "qveris_bench.cap_packs.corporate_actions.publication:CorporateActionsPublicationAdapter"
+govt-bond-yield-v1 = "qveris_bench.cap_packs.govt_bond_yield.publication:GovernmentBondYieldPublicationAdapter"
 
 [dependency-groups]
 dev = [

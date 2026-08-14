@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "skill_id": "cap-article-writer",
+  "skill_version": "1.0.0",
+  "lead": {
+    "copy": "This comparison is for developers choosing a country-qualified sovereign yield path, not for readers looking for a provider-wide rank. The released evidence is strongest when identity, observation date, runtime behavior, and public list price are read as separate constraints.",
+    "fact_refs": ["article:scope", "article:no-overall-winner", "article:limitations"]
+  },
+  "decision_scenarios": [
+    {
+      "heading": "Broadest released country verification",
+      "copy": "Choose the selected path when the priority is the broadest set of country cells that met the frozen identity and yield contract. Keep its inconclusive country cell unknown rather than treating neighboring verified cells as a substitute.",
+      "decision_type": "broadest_market_coverage",
+      "recommended_access_path_ids": ["stlouisfed-fred-govt-bond-yield-qveris"],
+      "fact_refs": ["path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage", "article:evidence-states", "article:limitations"]
+    },
+    {
+      "heading": "A country verified through both tested paths",
+      "copy": "Either selected path is release-backed for this country cell, so make the next decision using observed latency, source semantics, and invalid-input behavior. This shared result does not extend to another country or tenor.",
+      "decision_type": "verified_market",
+      "market": "US",
+      "recommended_access_path_ids": ["qveris-finance-govt-bond-yield-qveris", "stlouisfed-fred-govt-bond-yield-qveris"],
+      "fact_refs": ["path:qveris-finance-govt-bond-yield-qveris:market-coverage", "path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage", "article:limitations"]
+    },
+    {
+      "heading": "Lowest observed gateway latency",
+      "copy": "Choose the selected path when the small released gateway sample is the leading runtime constraint. Pair that observation with the target-country cell and treat it as measurement evidence rather than a service-level commitment.",
+      "decision_type": "lowest_latency",
+      "recommended_access_path_ids": ["stlouisfed-fred-govt-bond-yield-qveris"],
+      "fact_refs": ["path:stlouisfed-fred-govt-bond-yield-qveris:latency", "path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage", "article:limitations"]
+    },
+    {
+      "heading": "Lowest public gateway list price",
+      "copy": "The selected paths are tied on the frozen public list-price dimension, so price alone does not distinguish them. Continue with country identity, latency, and error behavior, and keep list price separate from account billing or a direct subscription plan.",
+      "decision_type": "lowest_list_price",
+      "recommended_access_path_ids": ["qveris-finance-govt-bond-yield-qveris", "stlouisfed-fred-govt-bond-yield-qveris"],
+      "fact_refs": ["path:qveris-finance-govt-bond-yield-qveris:list-price", "path:stlouisfed-fred-govt-bond-yield-qveris:list-price", "article:runtime-tradeoff"]
+    },
+    {
+      "heading": "Explicit unsupported-country rejection",
+      "copy": "Choose the selected path when the tested unsupported-country request must surface as an explicit validation outcome. The other path did not establish that behavior, so application code should still normalize empty, mismatched, and blocked responses separately.",
+      "decision_type": "explicit_invalid_input",
+      "recommended_access_path_ids": ["stlouisfed-fred-govt-bond-yield-qveris"],
+      "fact_refs": ["path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input", "path:qveris-finance-govt-bond-yield-qveris:invalid-input", "article:agent-boundary"]
+    }
+  ],
+  "evidence_explainer": {
+    "copy": "Read verified as every frozen round meeting the country, tenor, date, value, and identity contract. Provider-negative means the returned result did not satisfy that contract for the tested request; it is not an enduring support claim. Evidence-insufficient preserves cases where the Release establishes neither verified nor Provider-negative behavior.",
+    "fact_refs": ["article:evidence-states", "article:scope", "article:limitations"]
+  },
+  "cap_explainer": {
+    "copy": "A sovereign yield payload can look numerically plausible while representing the wrong country, tenor, date, or sampling convention. This CAP therefore requires a finite in-window observation and a frozen benchmark identity, then tests unsupported input separately. The result is a decision fact about a specific Access Path, not a claim about every curve exposed by the underlying source.",
+    "fact_refs": ["article:scope", "path:qveris-finance-govt-bond-yield-qveris:sample", "path:stlouisfed-fred-govt-bond-yield-qveris:sample", "article:limitations"]
+  },
+  "chart_explanations": {
+    "market": {
+      "copy": "Read each row as one structurally identified Access Path and each column as one country-qualified representative case. The state and fraction come from the frozen rounds; a wrong-country response remains Provider-negative, while an infrastructure-blocked cell remains evidence-insufficient.",
+      "fact_refs": ["article:markets", "article:evidence-states", "article:limitations"]
+    },
+    "tradeoff": {
+      "copy": "Use the horizontal and vertical dimensions independently: one is observed gateway latency and the other is the frozen public list price. A tie or advantage on one axis does not erase country-identity or error-handling differences, and neither axis is a provider-wide quality score.",
+      "fact_refs": ["article:runtime-tradeoff", "article:no-overall-winner", "article:limitations"]
+    }
+  },
+  "provider_analyses": [
+    {
+      "access_path_id": "qveris-finance-govt-bond-yield-qveris",
+      "copy": "This path fits a country cell where the released response identity is verified and source routing is acceptable to the application. In the other tested country cells it returned a plausible benchmark tied to a different country identity, so agents must validate the returned benchmark instead of trusting the request parameters alone. Its unsupported-country control also did not establish explicit rejection.",
+      "fact_refs": ["path:qveris-finance-govt-bond-yield-qveris:sample", "path:qveris-finance-govt-bond-yield-qveris:market-coverage", "path:qveris-finance-govt-bond-yield-qveris:invalid-input", "article:agent-boundary"]
+    },
+    {
+      "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
+      "copy": "This path fits developers prioritizing broad released country verification, lower observed gateway latency, and explicit rejection of the tested unsupported identifier. One country cell remained evidence-insufficient after runtime blocking, so the broader matrix still cannot be promoted into universal country support. Consumers should also preserve each series sampling frequency and reported date.",
+      "fact_refs": ["path:stlouisfed-fred-govt-bond-yield-qveris:sample", "path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage", "path:stlouisfed-fred-govt-bond-yield-qveris:latency", "path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input", "article:limitations"]
+    }
+  ],
+  "agent_notes": {
+    "copy": "The evidence makes returned benchmark identity the first application-side guardrail. Agents should also preserve observation date and unit, distinguish source routing from the named Access Path, and keep explicit validation, Provider-negative mismatch, rate limiting, entitlement, and infrastructure blocking as separate states. Pagination, schema stability, language mapping, and single-tool behavior remain unmeasured.",
+    "fact_refs": ["article:agent-boundary", "path:qveris-finance-govt-bond-yield-qveris:invalid-input", "path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input", "article:limitations"]
+  },
+  "limitations": {
+    "copy": "This edition measures a fixed historical window, one sovereign benchmark tenor, and a small number of gateway observations through the named Access Paths. It does not establish every curve, instrument, sampling frequency, native interface, future routing decision, or service level. Public list price and observed runtime are separate from direct subscription terms and account billing.",
+    "fact_refs": ["article:scope", "article:limitations", "article:runtime-tradeoff", "article:evidence-states"]
+  },
+  "faq": [
+    {
+      "question": "Is there a single winner?",
+      "answer": "No. Choose by the country cell, identity behavior, observed runtime, public list price, and invalid-input contract that matter to the application. Those dimensions can point to different paths.",
+      "fact_refs": ["article:no-overall-winner", "article:markets", "article:runtime-tradeoff", "article:agent-boundary"]
+    },
+    {
+      "question": "Why can a numerically valid yield still fail the CAP?",
+      "answer": "Because a plausible value for the wrong sovereign benchmark is unsafe. The frozen contract requires returned identity, date, and value to agree with the requested country-qualified case.",
+      "fact_refs": ["article:scope", "article:evidence-states", "article:agent-boundary"]
+    },
+    {
+      "question": "Can the publication be reproduced without Provider credentials?",
+      "answer": "Yes. Offline reproduction rebuilds the publication from immutable released facts and sanitized public evidence. It verifies the cited package without making fresh Provider calls.",
+      "fact_refs": ["article:scope", "article:limitations"]
+    },
+    {
+      "question": "How is a fresh live edition created?",
+      "answer": "Run the frozen workflows with an authorized credential and publish the results under new immutable Release identities. A rerun must not overwrite the evidence boundary used by this edition.",
+      "fact_refs": ["article:scope", "article:evidence-states", "article:limitations"]
+    },
+    {
+      "question": "Does a verified country cell prove every sovereign curve is supported?",
+      "answer": "No. Verification applies only to the frozen representative request and rounds. It does not extend to other tenors, instruments, dates, sampling conventions, or native interfaces.",
+      "fact_refs": ["article:evidence-states", "article:limitations", "article:scope"]
+    }
+  ]
+}

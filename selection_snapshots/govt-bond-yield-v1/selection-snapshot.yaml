@@ -1,0 +1,36 @@
+snapshot_id: govt-bond-yield-selection-2026-q3-v1
+version: 1.0.0
+edition: "2026-08-14"
+cap_id: govt-bond-yield
+historical_execution_contract:
+  suite_fingerprint: edd7b7059298b2975ab4d02c5947544b35fddb14a3f0f924b9d443ce27632dd4
+  execution_contract_digest: sha256:edd7b7059298b2975ab4d02c5947544b35fddb14a3f0f924b9d443ce27632dd4
+cap_release:
+  release: releases/govt-bond-yield-2026-q3-v1/release.json
+  digest: sha256:d9b966e4bc999d88470e3d7828236505dbd5b730f06a3d915ebd19c32c4f6532
+suite: cap_packs/govt-bond-yield/suite.yaml
+cases: cap_packs/govt-bond-yield/cases.yaml
+providers_root: providers
+qveris_list_pricing:
+  snapshot: selection_snapshots/govt-bond-yield-v1/qveris-list-pricing.json
+  bindings: cap_packs/govt-bond-yield/direct-bindings.json
+observation_window:
+  start: "2026-08-14"
+  end: "2026-08-14"
+market_coverage_release:
+  release: releases/govt-bond-yield-markets-2026-q3-v1/release.json
+  digest: sha256:61430776e40e478ccdea052740e6f795bba7b8ef8f9023b9da897ba7f8a1f87d
+  suite: cap_packs/govt-bond-yield/market-suite.yaml
+  cases: cap_packs/govt-bond-yield/market-cases.yaml
+  historical_execution_contract:
+    suite_fingerprint: 75e8a1a8b587d736da685be47d15a0d0db54ba134699ec90f12b4289584689e1
+    execution_contract_digest: sha256:75e8a1a8b587d736da685be47d15a0d0db54ba134699ec90f12b4289584689e1
+include_release_identity: true
+include_case_observations: true
+include_market_run_observations: true
+gateway_latency_scope: positive_cases
+limitations:
+  - The seven-country matrix uses one frozen 10-year sovereign benchmark case per country and does not establish exhaustive bond or tenor coverage.
+  - A returned benchmark with the wrong country identity is Provider-negative for this CAP, not a verified market result.
+  - Infra-blocked or mixed rounds remain evidence-insufficient and are not proof of permanent Provider support or non-support.
+  - QVeris list credits are sanitized Inspect list prices, not account billing.
