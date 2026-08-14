@@ -55,7 +55,7 @@ def evaluate_corporate_action_document(
     request_identity: CorporateActionRequestIdentity | None = None,
 ) -> CorporateDirectResult:
     status_code = payload.get("status_code")
-    if status_code in {401, 429} or (
+    if status_code in {401, 402, 403, 429} or (
         isinstance(status_code, int) and status_code >= 500
     ):
         return _infra_result(case, _transport_attribution(payload))
@@ -418,7 +418,7 @@ def _blocked(attribution: FailureAttribution) -> CorporateTerminal:
 
 def _transport_attribution(payload: Mapping[str, Any]) -> FailureAttribution:
     status_code = payload.get("status_code")
-    if status_code == 401:
+    if status_code in {401, 402, 403}:
         return FailureAttribution.AUTH_OR_ENTITLEMENT
     if status_code == 429:
         return FailureAttribution.RATE_LIMITED

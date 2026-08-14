@@ -351,11 +351,9 @@ def _validate_infra_blocked_attribution(cells: tuple[RunCell, ...]) -> None:
     invalid = [
         cell.run_key
         for cell in cells
-        if cell.state is CellState.INFRA_BLOCKED
-        and cell.failure_attribution is None
+        if cell.state is CellState.INFRA_BLOCKED and cell.failure_attribution is None
     ]
     if invalid:
         raise ReleaseGateError(
-            "infra_blocked cells require a failure attribution: "
-            + ", ".join(invalid)
+            "infra_blocked cells require a failure attribution: " + ", ".join(invalid)
         )

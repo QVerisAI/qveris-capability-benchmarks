@@ -6,6 +6,13 @@ from pathlib import Path
 
 import pytest
 
+from qveris_bench.cap_packs.corporate_actions.direct import (
+    CorporateDirectResult,
+    evaluate_corporate_action_document,
+)
+from qveris_bench.cap_packs.corporate_actions.models import (
+    corporate_action_request_identity,
+)
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.evidence.store import PublicArtifactStore
 from qveris_bench.execution.direct_binding import (
@@ -32,30 +39,8 @@ def _terminal_bytes(
     fingerprint: str,
     registry_digest: str,
     raw_digest: str,
-    *,
-    infra_blocked: bool = False,
+    outcome: CorporateDirectResult,
 ) -> bytes:
-    if infra_blocked:
-        state = CellState.INFRA_BLOCKED
-        facts = {"execution_failure": "rate_limited"}
-        unmet_conditions = list(case.completion_conditions)
-        attribution = FailureAttribution.RATE_LIMITED
-    elif case.negative_control:
-        state = CellState.COMPLETED
-        facts = {"validation_error": "provider_validation_error"}
-        unmet_conditions = []
-        attribution = FailureAttribution.PROVIDER_VALIDATION_ERROR
-    else:
-        state = CellState.COMPLETED
-        facts = {
-            "symbol": case.input["symbol"],
-            "identity_verified": True,
-            "identity_basis": "request_bound",
-            "action_type": "split",
-            "date": str(case.input["start_date"]),
-        }
-        unmet_conditions = []
-        attribution = None
     return (
         json.dumps(
             {
@@ -64,10 +49,10 @@ def _terminal_bytes(
                 "provider_id": binding.provider_id,
                 "access_path_id": binding.access_path_id,
                 "transport": binding.transport,
-                "state": state,
-                "facts": facts,
-                "unmet_conditions": unmet_conditions,
-                "failure_attribution": attribution,
+                "state": outcome.state,
+                "facts": outcome.facts,
+                "unmet_conditions": outcome.unmet_conditions,
+                "failure_attribution": outcome.failure_attribution,
                 "raw_digest": raw_digest,
                 "binding_registry_digest": registry_digest,
                 "extractor_version": "2.0.0",
@@ -93,7 +78,10 @@ def _zip(path: Path, name: str, content: bytes) -> str:
 
 
 def _github_exports(
-    tmp_path: Path, *, infra_binding_id: str | None = None
+    tmp_path: Path,
+    *,
+    infra_binding_id: str | None = None,
+    forge_infra_as_negative: bool = False,
 ) -> tuple[Path, Path, Path]:
     suite_path = PACK / "baseline-suite.yaml"
     cases_path = PACK / "baseline-cases.yaml"
@@ -114,18 +102,40 @@ def _github_exports(
             continue
         binding = bindings[(cell.case_id, cell.access_path_id)]
         evidence_id = f"{binding.binding_id}-round-{cell.round}"
-        raw_bytes = json.dumps({"run_key": cell.run_key}, sort_keys=True).encode()
+        case = cases[cell.case_id]
+        provider_payload = _provider_payload(
+            str(binding.provider_id), case, binding.binding_id == infra_binding_id
+        )
+        raw_bytes = json.dumps(
+            {"elapsed_time_ms": 10.0, "cost": 2.0, "result": provider_payload},
+            sort_keys=True,
+        ).encode()
         raw_digest = sha256_digest(raw_bytes)
+        outcome = evaluate_corporate_action_document(
+            str(binding.provider_id),
+            provider_payload,
+            case,
+            request_identity=corporate_action_request_identity(
+                binding.request_identity
+            ),
+        )
+        if forge_infra_as_negative and binding.binding_id == infra_binding_id:
+            outcome = CorporateDirectResult(
+                CellState.PROVIDER_NEGATIVE,
+                {},
+                tuple(case.completion_conditions),
+                FailureAttribution.EMPTY_OR_PARTIAL_DATA,
+            )
         terminal_record = public_store.persist(
             evidence_id,
             _terminal_bytes(
                 binding,
                 cell,
-                cases[cell.case_id],
+                case,
                 compiled.fingerprint,
                 direct_binding_registry_digest(registry_path),
                 raw_digest,
-                infra_blocked=binding.binding_id == infra_binding_id,
+                outcome,
             ),
         )
         public_name = f"corporate-actions-baseline-{evidence_id}"
@@ -149,7 +159,12 @@ def _github_exports(
             {
                 "id": artifact_id,
                 "name": private_name,
-                "digest": _zip(private_zip, "execute.json", raw_bytes),
+                "digest": _zip(
+                    private_zip,
+                    f"{evidence_id}-search-execute-"
+                    f"{raw_digest.removeprefix('sha256:')}.json",
+                    raw_bytes,
+                ),
                 "expired": False,
             }
         )
@@ -171,6 +186,26 @@ def _github_exports(
     artifact_export = tmp_path / "artifacts.json"
     artifact_export.write_text(json.dumps({"artifacts": artifact_rows}))
     return run_export, artifact_export, archives
+
+
+def _provider_payload(provider_id, case, infra_blocked: bool):
+    if infra_blocked:
+        return {"status_code": 429, "data": "rate limited"}
+    if case.negative_control:
+        return {"status_code": 404, "data": "Symbol not found"}
+    event_date = str(case.input["start_date"])
+    symbol = str(case.input["symbol"])
+    if provider_id == "eodhd":
+        data = f'Date,"Stock Splits"\n{event_date},\n'
+    elif provider_id == "twelve-data":
+        data = {"meta": {"symbol": symbol}, "splits": [{"date": event_date}]}
+    elif provider_id == "alpha-vantage":
+        data = {"symbol": symbol, "data": [{"effective_date": event_date}]}
+    elif provider_id == "massive-stocks":
+        data = {"results": [{"ticker": symbol, "execution_date": event_date}]}
+    else:
+        raise AssertionError("unsupported synthetic provider")
+    return {"status_code": 200, "data": data}
 
 
 def test_build_release_verifies_github_archives_and_private_raw(
@@ -234,8 +269,7 @@ def test_build_release_preserves_attested_infra_blocked_terminal(
 
     cells = json.loads(
         (
-            tmp_path
-            / "published/releases/corporate-actions-v2-test/cells.json"
+            tmp_path / "published/releases/corporate-actions-v2-test/cells.json"
         ).read_text()
     )
     blocked = [
@@ -247,3 +281,24 @@ def test_build_release_preserves_attested_infra_blocked_terminal(
     ]
     assert len(blocked) == 3
     assert all(cell["failure_attribution"] == "rate_limited" for cell in blocked)
+
+
+def test_build_release_rejects_public_outcome_forged_against_private_raw(
+    tmp_path: Path,
+) -> None:
+    binding_id = "twelve-data-invalid-corporate-actions-symbol-v2"
+    run_export, artifact_export, archives = _github_exports(
+        tmp_path,
+        infra_binding_id=binding_id,
+        forge_infra_as_negative=True,
+    )
+
+    with pytest.raises(ValueError, match="private raw outcome"):
+        build_release_from_artifacts(
+            run_export,
+            artifact_export,
+            archives,
+            tmp_path / "published",
+            suite_name="baseline",
+            release_id="corporate-actions-v2-test",
+        )

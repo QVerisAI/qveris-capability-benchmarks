@@ -7,8 +7,12 @@ import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from qveris_bench.cap_packs.corporate_actions.direct import validate_public_outcome
+from qveris_bench.cap_packs.corporate_actions.direct import (
+    evaluate_corporate_action_document,
+    validate_public_outcome,
+)
 from qveris_bench.cap_packs.corporate_actions.models import (
+    corporate_action_request_identity,
     validate_corporate_action_request_identities,
 )
 from qveris_bench.evidence.hashing import sha256_digest
@@ -17,6 +21,7 @@ from qveris_bench.execution.direct_binding import (
     load_direct_binding_registry,
     validate_direct_binding_registry,
 )
+from qveris_bench.execution.qveris import gateway_metrics
 from qveris_bench.releases.canonical import release_digest
 from qveris_bench.releases.public_terminal import (
     PublicTerminal,
@@ -80,6 +85,7 @@ def build_release_from_artifacts(
         (binding.case_id, binding.access_path_id): binding
         for binding in registry.bindings
     }
+    cases = {case.case_id: case for case in compiled.cases}
     evidence_ids = set()
     for cell in cells.values():
         binding = bindings_by_cell[(cell.case_id, cell.access_path_id)]
@@ -139,10 +145,35 @@ def build_release_from_artifacts(
             or terminal.github_sha != github_sha
         ):
             raise ValueError("public terminal provenance or cell identity mismatch")
-        private_digests = {sha256_digest(value) for value in private_entries.values()}
-        if terminal.raw_digest not in private_digests:
+        binding = bindings_by_cell[(matched_cell.case_id, matched_cell.access_path_id)]
+        if binding.binding_id != terminal.binding_id:
+            raise ValueError("public terminal binding identity mismatch")
+        raw_document = _private_execution_document(
+            private_entries, evidence_id, terminal.raw_digest
+        )
+        payload = raw_document.get("result")
+        if not isinstance(payload, dict):
+            raise ValueError("private raw execution is missing result")
+        case = cases[binding.case_id]
+        raw_outcome = evaluate_corporate_action_document(
+            str(binding.provider_id),
+            payload,
+            case,
+            request_identity=corporate_action_request_identity(
+                binding.request_identity
+            ),
+        )
+        if (
+            terminal.state is not raw_outcome.state
+            or terminal.facts != raw_outcome.facts
+            or terminal.unmet_conditions != raw_outcome.unmet_conditions
+            or terminal.failure_attribution is not raw_outcome.failure_attribution
+        ):
+            raise ValueError("public terminal does not match private raw outcome")
+        latency_ms, cost_credits = gateway_metrics(raw_document)
+        if terminal.latency_ms != latency_ms or terminal.cost_credits != cost_credits:
             raise ValueError(
-                "private raw artifact does not contain terminal raw digest"
+                "public terminal metrics do not match private raw evidence"
             )
         terminals[evidence_id] = terminal, public_bytes
         attested_artifacts.append(
@@ -258,6 +289,40 @@ def _verified_archive(
     if not entries:
         raise ValueError("GitHub artifact archive is empty")
     return entries, archive_digest
+
+
+def _private_execution_document(
+    entries: dict[str, bytes], evidence_id: str, raw_digest: str
+) -> dict[str, Any]:
+    for name, content in entries.items():
+        digest = sha256_digest(content).removeprefix("sha256:")
+        path = PurePosixPath(name)
+        suffix = f"-{digest}.json"
+        artifact_id = name.removesuffix(suffix)
+        if (
+            path.name != name
+            or not name.endswith(suffix)
+            or artifact_id
+            not in {
+                f"{evidence_id}-search",
+                f"{evidence_id}-search-describe",
+                f"{evidence_id}-search-execute",
+            }
+        ):
+            raise ValueError("private raw artifact contains an unbound entry")
+    expected_name = (
+        f"{evidence_id}-search-execute-{raw_digest.removeprefix('sha256:')}.json"
+    )
+    raw_bytes = entries.get(expected_name)
+    if raw_bytes is None or sha256_digest(raw_bytes) != raw_digest:
+        raise ValueError("private raw artifact does not contain terminal raw digest")
+    try:
+        document = json.loads(raw_bytes)
+    except json.JSONDecodeError as exc:
+        raise ValueError("private raw execution is not JSON") from exc
+    if not isinstance(document, dict):
+        raise ValueError("private raw execution must be an object")
+    return document
 
 
 def main() -> None:
