@@ -1,0 +1,64 @@
+name: Live Corporate Actions Nine-Market E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  direct:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-live-corporate-actions-market'
+    runs-on: ubuntu-latest
+    environment: benchmark-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2]
+        binding_id:
+          - eodhd-us-aapl-split-market
+          - eodhd-hk-0700-split-market
+          - eodhd-cn-600519-split-market
+          - eodhd-jp-7203-split-market
+          - eodhd-de-sap-split-market
+          - eodhd-fr-mc-split-market
+          - eodhd-br-petr4-split-market
+          - eodhd-in-reliance-split-market
+          - eodhd-es-itx-split-market
+          - eodhd-invalid-corporate-actions-market-symbol-v2
+          - twelve-data-us-aapl-split-market
+          - twelve-data-hk-0700-split-market
+          - twelve-data-cn-600519-split-market
+          - twelve-data-jp-7203-split-market
+          - twelve-data-de-sap-split-market
+          - twelve-data-fr-mc-split-market
+          - twelve-data-br-petr4-split-market
+          - twelve-data-in-reliance-split-market
+          - twelve-data-es-itx-split-market
+          - twelve-data-invalid-corporate-actions-market-symbol-v2
+          - alpha-vantage-us-aapl-split-market
+          - alpha-vantage-invalid-corporate-actions-market-symbol-v2
+          - massive-us-aapl-split-market
+          - massive-invalid-corporate-actions-market-symbol-v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --all-groups
+      - run: uv run pytest tests/e2e/test_live_corporate_actions_v2.py -q
+        env:
+          QVERIS_API_KEY: ${{ secrets.QVERIS_API_KEY }}
+          RUN_LIVE_CORPORATE_ACTIONS: "1"
+          CORPORATE_ACTIONS_SUITE: market
+          CORPORATE_ACTIONS_BINDING_ID: ${{ matrix.binding_id }}
+          CORPORATE_ACTIONS_ROUND: ${{ matrix.round }}
+          LIVE_PUBLIC_EVIDENCE_ROOT: ${{ runner.temp }}/public-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corporate-actions-market-${{ matrix.binding_id }}-round-${{ matrix.round }}
+          path: ${{ runner.temp }}/public-evidence
+          if-no-files-found: error

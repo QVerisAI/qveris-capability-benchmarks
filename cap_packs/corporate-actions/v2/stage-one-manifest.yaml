@@ -1,0 +1,13 @@
+schema_version: 1
+stage: test_and_evidence
+article_generation: forbidden
+allowed_output_roots:
+  - cap_packs/corporate-actions/v2
+  - evidence/corporate-actions-v2
+  - releases/corporate-actions-v2
+  - selection_snapshots/corporate-actions-v2
+required_markets: [US, HK, CN, JP, DE, FR, BR, IN, ES]
+planned_live_calls:
+  baseline: 24
+  market: 48
+  total: 72

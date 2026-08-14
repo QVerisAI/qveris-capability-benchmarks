@@ -1,0 +1,16 @@
+cases:
+  - case_id: us-aapl-split-baseline
+    cap_id: corporate-actions
+    question: Return the AAPL split event in the fixed 2020 United States sample window.
+    input: {market: US, symbol: AAPL, start_date: 2020-01-01, end_date: 2020-12-31}
+    expected_observations: [symbol, identity_verified, identity_basis, action_type, date]
+    completion_conditions: [symbol, identity_verified, action_type, date]
+    disclosure_limits: [sanitized_public]
+  - case_id: invalid-corporate-actions-symbol-v2
+    cap_id: corporate-actions
+    question: Explicitly reject an invalid split-event symbol without returning an event.
+    input: {symbol: NOTASTOCK}
+    negative_control: true
+    expected_observations: [validation_error]
+    completion_conditions: [validation_error]
+    disclosure_limits: [sanitized_public]

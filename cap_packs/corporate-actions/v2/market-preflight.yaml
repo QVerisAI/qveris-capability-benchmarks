@@ -1,0 +1,17 @@
+schema_version: 1
+source_snapshot:
+  captured_at: "2026-08-14T04:00:44Z"
+  digest: sha256:7579d22a0e6a552f5c1225e5e208a0834fca8173c5b8253d949eb96d294cf7a4
+decisions:
+  - access_path_id: alpha-vantage-corporate-actions-qveris
+    disposition: not_applicable
+    basis: access_path_contract
+    markets: [HK, CN, JP, DE, FR, BR, IN, ES]
+    official_source: https://www.alphavantage.co/documentation/#splits
+    evidence_digest: sha256:7579d22a0e6a552f5c1225e5e208a0834fca8173c5b8253d949eb96d294cf7a4
+  - access_path_id: massive-stocks-corporate-actions-qveris
+    disposition: not_applicable
+    basis: access_path_contract
+    markets: [HK, CN, JP, DE, FR, BR, IN, ES]
+    official_source: https://massive.com/docs/rest/stocks/corporate-actions/splits
+    evidence_digest: sha256:7579d22a0e6a552f5c1225e5e208a0834fca8173c5b8253d949eb96d294cf7a4
