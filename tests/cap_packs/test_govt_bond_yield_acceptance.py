@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from qveris_bench.cap_packs.govt_bond_yield.models import (
@@ -9,6 +10,7 @@ from qveris_bench.cap_packs.govt_bond_yield.models import (
 )
 from qveris_bench.evidence.hashing import sha256_digest
 from qveris_bench.execution.direct_binding import (
+    DirectBindingRegistryError,
     load_direct_binding_registry,
     validate_direct_binding_registry,
 )
@@ -127,6 +129,73 @@ def test_ac4_every_applicable_cell_has_one_frozen_direct_binding() -> None:
         assert all(
             binding.request_identity is not None for binding in registry.bindings
         )
+
+
+def test_ac4_rejects_binding_owned_country_or_alias_identity() -> None:
+    registry = load_direct_binding_registry(PACK / "market-direct-bindings.json")
+    compiled = _compile("market")
+    au_index = next(
+        index
+        for index, binding in enumerate(registry.bindings)
+        if binding.binding_id == "fred-au-10y-market"
+    )
+    au = registry.bindings[au_index]
+    identity = dict(au.request_identity or {})
+    identity["vendor_identifier"] = "IRLTLT01CAM156N"
+    tampered_bindings = list(registry.bindings)
+    tampered_bindings[au_index] = au.model_copy(
+        update={
+            "parameters": {**au.parameters, "series_id": "IRLTLT01CAM156N"},
+            "request_identity": identity,
+        }
+    )
+
+    with pytest.raises(
+        DirectBindingRegistryError,
+        match="canonical identity contract",
+    ):
+        validate_government_bond_request_identities(
+            registry.model_copy(update={"bindings": tuple(tampered_bindings)}),
+            compiled,
+        )
+
+    qf_index = next(
+        index
+        for index, binding in enumerate(registry.bindings)
+        if binding.binding_id == "qveris-finance-au-10y-market"
+    )
+    qf = registry.bindings[qf_index]
+    qf_identity = dict(qf.request_identity or {})
+    qf_identity["response_aliases"] = [
+        *qf_identity["response_aliases"],
+        "10-Year Treasury Constant Maturity Rate",
+    ]
+    tampered_bindings = list(registry.bindings)
+    tampered_bindings[qf_index] = qf.model_copy(
+        update={"request_identity": qf_identity}
+    )
+
+    with pytest.raises(
+        DirectBindingRegistryError,
+        match="canonical identity contract",
+    ):
+        validate_government_bond_request_identities(
+            registry.model_copy(update={"bindings": tuple(tampered_bindings)}),
+            compiled,
+        )
+
+
+def test_ac4_rejects_binding_source_digest_drift() -> None:
+    registry = load_direct_binding_registry(PACK / "direct-bindings.json")
+    first = registry.bindings[0].model_copy(
+        update={"source_digest": "sha256:" + "0" * 64}
+    )
+    tampered = registry.model_copy(
+        update={"bindings": (first, *registry.bindings[1:])}
+    )
+
+    with pytest.raises(DirectBindingRegistryError, match="source digest"):
+        validate_government_bond_request_identities(tampered, _compile("baseline"))
 
 
 def test_ac5_question_bank_promotes_only_the_selected_cap() -> None:

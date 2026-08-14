@@ -70,12 +70,12 @@
     },
     {
       "access_path_id": "stlouisfed-fred-govt-bond-yield-qveris",
-      "copy": "This path fits developers prioritizing broad released country verification, lower observed gateway latency, and explicit rejection of the tested unsupported identifier. One country cell remained evidence-insufficient after runtime blocking, so the broader matrix still cannot be promoted into universal country support. Consumers should also preserve each series sampling frequency and reported date.",
+      "copy": "The released FRED payload did not independently echo benchmark identity; verification was bound to the frozen request series. This path fits developers prioritizing broad released country verification, lower observed gateway latency, and explicit rejection of the tested unsupported identifier. One country cell remained evidence-insufficient after runtime blocking, so the broader matrix still cannot be promoted into universal country support. Consumers must preserve the series-to-country mapping, sampling frequency, and reported date.",
       "fact_refs": ["path:stlouisfed-fred-govt-bond-yield-qveris:sample", "path:stlouisfed-fred-govt-bond-yield-qveris:market-coverage", "path:stlouisfed-fred-govt-bond-yield-qveris:latency", "path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input", "article:limitations"]
     }
   ],
   "agent_notes": {
-    "copy": "The evidence makes returned benchmark identity the first application-side guardrail. Agents should also preserve observation date and unit, distinguish source routing from the named Access Path, and keep explicit validation, Provider-negative mismatch, rate limiting, entitlement, and infrastructure blocking as separate states. Pagination, schema stability, language mapping, and single-tool behavior remain unmeasured.",
+    "copy": "The evidence makes identity basis the first application-side guardrail: validate response-field identity when present, and preserve the frozen request-series mapping when a payload does not echo identity. Agents should also preserve observation date and unit, distinguish source routing from the named Access Path, and keep explicit validation, Provider-negative mismatch, rate limiting, entitlement, and infrastructure blocking as separate states. Pagination, schema stability, language mapping, and single-tool behavior remain unmeasured.",
     "fact_refs": ["article:agent-boundary", "path:qveris-finance-govt-bond-yield-qveris:invalid-input", "path:stlouisfed-fred-govt-bond-yield-qveris:invalid-input", "article:limitations"]
   },
   "limitations": {

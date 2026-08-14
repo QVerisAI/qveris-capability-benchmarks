@@ -125,7 +125,8 @@ def article_build(
     ] = None,
 ) -> None:
     """Build an English article and charts without calling provider APIs."""
-    from qveris_bench.articles.factory import ArticleBuildError, build_article_package
+    from qveris_bench.articles.factory import ArticleBuildError
+    from qveris_bench.articles.factory_v2 import build_article_package
 
     try:
         built = build_article_package(
@@ -191,10 +192,8 @@ def article_reproduce(
     ] = None,
 ) -> None:
     """Rebuild and verify an article package without provider API calls."""
-    from qveris_bench.articles.factory import (
-        ArticleBuildError,
-        reproduce_article_package,
-    )
+    from qveris_bench.articles.factory import ArticleBuildError
+    from qveris_bench.articles.factory_v2 import reproduce_article_package
 
     try:
         reproduce_article_package(

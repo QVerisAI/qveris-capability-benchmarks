@@ -5,7 +5,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from qveris_bench.articles.factory import reproduce_article_package
+from qveris_bench.articles.factory_v2 import reproduce_article_package
 from qveris_bench.articles.writer import WriterInputBuildError, build_writer_input
 from qveris_bench.models.publication import PublicationPackageSpec
 from qveris_bench.profiles.selection import (

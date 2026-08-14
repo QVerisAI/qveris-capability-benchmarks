@@ -1,7 +1,7 @@
 title: Best Government Bond Yield APIs for Developers
 meta_description: Compare two QVeris government bond yield paths using 36 live calls across seven countries, with identity checks, latency, public credits, and evidence limits.
-cap_label: Government Bond Yield
-approved_editorial_copy_digest: sha256:58e963992c94610af44707da8bedabf5e0c40b78f0ffeb1a3d2c8afd890453a1
+cap_label: 10Y Sovereign Yield
+approved_editorial_copy_digest: sha256:4982c19fff88ef172d1487e713c44cd44e4f299e6bda0be4b100140bf0c02928
 scope: Fixed-window 10-year sovereign benchmark yield retrieval for US, CN, UK, DE, JP, AU, and CA, plus an unsupported-country control through the tested QVeris Access Paths.
 cap_contract_explanation: A usable sovereign benchmark observation must preserve country and tenor identity together with an in-window date and a finite numeric yield. A plausible yield for the wrong country is unsafe, so the CAP separates verified identity, Provider-negative identity mismatch, explicit invalid-input rejection, and infrastructure blocking.
 baseline_method: The baseline suite froze one US 10-year benchmark request and one unsupported-country control for each included Access Path.
@@ -13,6 +13,7 @@ sample_field_labels:
   unit: reported unit
   source: observed source
   identity_verified: identity verification
+  identity_basis: identity basis
 agent_unmeasured_dimensions: [pagination behavior, schema stability across versions, language mapping, single-tool completion]
 agent_validation_dimensions: [returned country identity, tenor semantics, observation date, yield unit, source routing, invalid-input behavior]
 cap_limitations:
@@ -35,7 +36,7 @@ allowed_links:
   - https://qveris.ai/providers/qveris_finance
 provider_links:
   stlouisfed-fred:
-    name: Federal Reserve Economic Data (FRED)
+    name: FRED
     official: https://fred.stlouisfed.org/
     qveris: https://qveris.ai/providers/stlouisfed_fred
   qveris-finance:
